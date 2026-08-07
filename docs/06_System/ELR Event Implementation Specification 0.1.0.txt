@@ -1,0 +1,403 @@
+================================================================================
+English Learning Repository (ELR)
+
+ELR Event Implementation Specification
+
+Version: 0.1.0
+Status: DRAFT
+=============
+
+# Document Identity
+
+Document Name:
+
+ELR Event Implementation Specification
+
+Document Version:
+
+0.1.0
+
+Status:
+
+DRAFT
+
+Dependencies:
+
+* ELR Event Model Specification
+* ELR Application Service Implementation Specification
+* ELR Core Domain Implementation Specification
+* ELR Persistence Implementation Specification
+* ELR Implementation Architecture Specification
+
+================================================================================
+Scopo
+=====
+
+La ELR Event Implementation Specification definisce la prima implementazione
+del modello eventi dell'English Learning Repository.
+
+Gli eventi rappresentano fatti avvenuti nel sistema.
+
+Gli eventi:
+
+* non comandano il sistema;
+* non sostituiscono le API;
+* non contengono logica applicativa.
+
+================================================================================
+Event Principles
+================
+
+EVENT-IMPLEMENTATION-001 — Facts Only
+
+Gli eventi descrivono eventi già completati.
+
+EVENT-IMPLEMENTATION-002 — Immutable Events
+
+Un evento pubblicato non viene modificato.
+
+EVENT-IMPLEMENTATION-003 — Domain Origin
+
+Gli eventi significativi originano dal dominio o dall'application layer.
+
+EVENT-IMPLEMENTATION-004 — Loose Coupling
+
+I consumer non devono conoscere il produttore interno dell'evento.
+
+================================================================================
+Event Architecture
+==================
+
+Application Service
+
+```
+    |
+
+    v
+```
+
+Domain Event Publisher
+
+```
+    |
+
+    v
+```
+
+Event Store / Event Bus
+
+```
+    |
+
+    +----------------+
+
+    |                |
+```
+
+Audit Consumer   Future Services
+
+================================================================================
+Event Envelope
+==============
+
+Ogni evento utilizza una struttura comune:
+
+{
+
+```
+"event_id": "uuid",
+
+"event_type": "string",
+
+"entity_id": "uuid",
+
+"entity_type": "string",
+
+"timestamp": "datetime",
+
+"version": "integer",
+
+"payload": {}
+```
+
+}
+
+================================================================================
+Core Events v0.1
+================
+
+================================================================================
+LearningObjectCreated
+=====================
+
+Descrizione:
+
+Un nuovo Learning Object Candidate è stato creato.
+
+Producer:
+
+LearningObjectService
+
+Payload:
+
+{
+
+```
+"learning_object_id": "uuid",
+
+"anchor_id": "uuid",
+
+"state": "Candidate"
+```
+
+}
+
+================================================================================
+LearningObjectSubmitted
+=======================
+
+Descrizione:
+
+Un Learning Object è stato inviato a revisione.
+
+Producer:
+
+LearningObjectService
+
+Payload:
+
+{
+
+```
+"learning_object_id": "uuid",
+
+"previous_state": "Candidate",
+
+"new_state": "Proposed"
+```
+
+}
+
+================================================================================
+LearningObjectApproved
+======================
+
+Descrizione:
+
+Un Learning Object è diventato Active.
+
+Producer:
+
+LearningReview / Application Service
+
+Payload:
+
+{
+
+```
+"learning_object_id": "uuid",
+
+"version": 1
+```
+
+}
+
+================================================================================
+LearningObjectRejected
+======================
+
+Descrizione:
+
+Una proposta è stata rifiutata.
+
+Payload:
+
+{
+
+```
+"learning_object_id": "uuid",
+
+"reason": "string"
+```
+
+}
+
+================================================================================
+LearningObjectUpdated
+=====================
+
+Descrizione:
+
+Una nuova versione è stata creata.
+
+Payload:
+
+{
+
+```
+"learning_object_id": "uuid",
+
+"new_version": 2
+```
+
+}
+
+================================================================================
+Event Persistence
+=================
+
+La prima implementazione utilizza:
+
+PostgreSQL Event Table
+
+Tabella:
+
+events
+
+Campi:
+
+id
+
+UUID
+
+event_type
+
+VARCHAR
+
+entity_id
+
+UUID
+
+payload
+
+JSONB
+
+created_at
+
+TIMESTAMP
+
+================================================================================
+Event Flow Example
+==================
+
+Approve Learning Object:
+
+Command
+
+```
+|
+
+v
+```
+
+Application Service
+
+```
+|
+
+v
+```
+
+Domain Transition
+
+```
+|
+
+v
+```
+
+Persist Entity
+
+```
+|
+
+v
+```
+
+Create Version
+
+```
+|
+
+v
+```
+
+Publish Event
+
+LearningObjectApproved
+
+================================================================================
+Event Consumers
+===============
+
+Consumer iniziali:
+
+Audit Consumer
+
+Responsabilità:
+
+registrare eventi significativi.
+
+Future:
+
+Mastery Engine
+
+Learning Analytics
+
+KEP Pipeline
+
+================================================================================
+Error Handling
+==============
+
+La mancata pubblicazione evento non deve compromettere la consistenza del
+dominio.
+
+Prima implementazione:
+
+Transactional Event Record
+
+Successivamente:
+
+Outbox Pattern
+
+================================================================================
+Excluded Scope
+==============
+
+Non incluso:
+
+* Kafka/RabbitMQ;
+* distribuzione multi servizio;
+* event streaming;
+* analytics pipeline.
+
+================================================================================
+Prossimo Incremento
+===================
+
+Il prossimo documento previsto:
+
+ELR Security Implementation Specification
+
+che definirà il primo modello concreto di accesso e protezione.
+
+================================================================================
+Principio conclusivo
+====================
+
+Gli eventi ELR rappresentano la memoria dinamica dell'evoluzione della
+conoscenza.
+
+Il dominio rimane la fonte della verità.
+
+================================================================================
+Fine documento
+
+English Learning Repository (ELR)
+
+ELR Event Implementation Specification
+
+Version: 0.1.0
+
+================================================================================
