@@ -1,0 +1,590 @@
+================================================================================
+English Learning Repository (ELR)
+
+ELR Versioning Model Specification
+
+Version: 1.0.0
+Status: DRAFT
+================================================================================
+
+
+Document Identity
+================================================================================
+
+Document Name:
+
+ELR Versioning Model Specification
+
+
+Document Version:
+
+1.0.0
+
+
+Status:
+
+DRAFT
+
+
+Dependencies:
+
+- ELR Architecture Specification
+
+- ELR Architecture Decision Log
+
+- ELR Domain Model Specification
+
+- Learning Object Specification
+
+- Learning State Specification
+
+- ELR Persistence Model Specification
+
+- ELR Lifecycle Specification
+
+- Knowledge Extraction Pipeline Specification
+
+- Learning Review Specification
+
+
+================================================================================
+Scopo
+================================================================================
+
+La ELR Versioning Model Specification definisce i principi con cui l'English
+Learning Repository gestisce l'evoluzione delle proprie entità nel tempo.
+
+
+Il Versioning Model garantisce che le modifiche alla conoscenza siano:
+
+
+- tracciabili;
+
+- reversibili quando necessario;
+
+- coerenti con la storia del Repository;
+
+- separate dagli eventi di apprendimento.
+
+
+Il versioning riguarda l'evoluzione delle entità ELR.
+
+
+Non rappresenta:
+
+
+- progresso dell'utente;
+
+- Mastery;
+
+- cronologia conversazionale.
+
+
+================================================================================
+Responsabilità del documento
+================================================================================
+
+Questo documento definisce:
+
+
+- concetto di versione;
+
+- tipi di cambiamento;
+
+- relazione tra identità e versione;
+
+- gestione della storia evolutiva.
+
+
+Questo documento NON definisce:
+
+
+- criteri KEP CREATE / MERGE / UPDATE;
+
+- approvazione delle modifiche;
+
+- calcolo della Mastery;
+
+- persistenza fisica.
+
+
+================================================================================
+Principio fondamentale
+================================================================================
+
+Una versione rappresenta una variazione controllata della stessa entità.
+
+
+La versione risponde alla domanda:
+
+
+"Come è cambiata questa conoscenza nel tempo?"
+
+
+Non risponde alla domanda:
+
+
+"Quanto l'utente conosce questa informazione?"
+
+
+================================================================================
+1. Versioning Boundary
+================================================================================
+
+Il Versioning Model opera sul livello di evoluzione del Repository.
+
+
+Relazione:
+
+
+Learning Process
+
+        |
+
+        v
+
+Change Proposal
+
+        |
+
+        v
+
+Versioned Entity
+
+        |
+
+        v
+
+Repository History
+
+
+================================================================================
+2. Versioning Principles
+================================================================================
+
+
+--------------------------------------------------------------------------------
+VERSION-001 — Identity Before Version
+--------------------------------------------------------------------------------
+
+L'identità di una entità precede le sue versioni.
+
+
+Una modifica non deve creare una nuova identità quando rappresenta la stessa
+conoscenza.
+
+
+--------------------------------------------------------------------------------
+VERSION-002 — History Preservation
+--------------------------------------------------------------------------------
+
+Le modifiche significative devono preservare la storia precedente.
+
+
+--------------------------------------------------------------------------------
+VERSION-003 — Knowledge Evolution Separation
+--------------------------------------------------------------------------------
+
+L'evoluzione della conoscenza è separata dall'evoluzione della Mastery.
+
+
+--------------------------------------------------------------------------------
+VERSION-004 — Explicit Change
+--------------------------------------------------------------------------------
+
+Ogni cambiamento deve essere riconducibile a un processo autorizzato.
+
+
+================================================================================
+3. Versioned Entities
+================================================================================
+
+Le entità che possono avere versionamento includono:
+
+
+- Learning Object;
+
+- Anchor;
+
+- Knowledge Statement;
+
+- Knowledge Category;
+
+- Taxonomy Elements;
+
+- Repository Schema.
+
+
+================================================================================
+4. Learning Object Versioning
+================================================================================
+
+Il Learning Object rappresenta la principale entità soggetta a evoluzione.
+
+
+Una nuova versione può derivare da:
+
+
+- miglioramento della formulazione;
+
+- correzione di errore;
+
+- arricchimento informativo;
+
+- aggiornamento della rappresentazione.
+
+
+L'identità del Learning Object rimane invariata quando la conoscenza fondamentale
+rimane la stessa.
+
+
+================================================================================
+5. Version Change Types
+================================================================================
+
+Il modello ELR distingue:
+
+
+--------------------------------------------------------------------------------
+Minor Change
+--------------------------------------------------------------------------------
+
+Modifica della rappresentazione senza variazione della conoscenza.
+
+
+Esempi:
+
+
+- miglioramento linguistico del Knowledge Statement;
+
+- chiarimento di un esempio.
+
+
+--------------------------------------------------------------------------------
+Major Change
+--------------------------------------------------------------------------------
+
+Modifica significativa della conoscenza rappresentata.
+
+
+Esempi:
+
+
+- cambiamento dell'Anchor;
+
+- ridefinizione della conoscenza fondamentale;
+
+- fusione di conoscenze precedenti.
+
+
+--------------------------------------------------------------------------------
+Structural Change
+--------------------------------------------------------------------------------
+
+Modifica del modello dati o dello schema del Repository.
+
+
+================================================================================
+6. Relationship with CREATE / MERGE / UPDATE
+================================================================================
+
+Le operazioni KEP:
+
+
+CREATE;
+
+MERGE;
+
+UPDATE;
+
+
+non corrispondono automaticamente a una versione.
+
+
+Relazione:
+
+
+CREATE
+
+        |
+
+        v
+
+Nuova identità
+
+
+MERGE
+
+        |
+
+        v
+
+Nuova versione possibile della stessa identità
+
+
+UPDATE
+
+        |
+
+        v
+
+Nuova versione della stessa identità
+
+
+La decisione finale appartiene ai processi di revisione.
+
+
+================================================================================
+7. Version History
+================================================================================
+
+Ogni entità versionata deve mantenere informazioni sulla propria storia.
+
+
+Può includere:
+
+
+- identificativo dell'entità;
+
+- numero versione;
+
+- data modifica;
+
+- motivo modifica;
+
+- origine della modifica;
+
+- riferimento alla Change Proposal.
+
+
+================================================================================
+8. Version Immutability
+================================================================================
+
+Una versione approvata non deve essere modificata direttamente.
+
+
+Una correzione richiede:
+
+
+Versione precedente
+
+        |
+
+        v
+
+Nuova versione
+
+
+La storia precedente rimane disponibile.
+
+
+================================================================================
+9. Versioning and Learning State
+================================================================================
+
+Il Learning State non segue direttamente le versioni della conoscenza.
+
+
+La Mastery appartiene all'utente.
+
+
+Se un Learning Object evolve:
+
+
+- la storia della conoscenza viene preservata;
+
+- il sistema valuta l'impatto sulla Mastery secondo regole dedicate.
+
+
+Il Versioning Model non aggiorna la Mastery.
+
+
+================================================================================
+10. Versioning and Evidence
+================================================================================
+
+Le Evidence possono riferirsi a una specifica versione.
+
+
+Esempio:
+
+
+Change Evidence:
+
+
+Motiva la creazione della versione 2.0 di un Learning Object.
+
+
+La Evidence non diventa parte della conoscenza versionata.
+
+
+================================================================================
+11. Version Compatibility
+================================================================================
+
+Le versioni devono mantenere compatibilità quando possibile.
+
+
+Una modifica incompatibile deve essere esplicitamente identificata.
+
+
+Esempi:
+
+
+Compatibile:
+
+
+Correzione di una frase esplicativa.
+
+
+Non necessariamente compatibile:
+
+
+Cambio completo della conoscenza rappresentata.
+
+
+================================================================================
+12. Version Retirement
+================================================================================
+
+Una versione può essere ritirata quando:
+
+
+- è stata sostituita;
+
+- contiene informazioni errate;
+
+- non rappresenta più il modello corrente.
+
+
+Il ritiro non elimina automaticamente la storia.
+
+
+================================================================================
+13. Anti-Patterns
+================================================================================
+
+
+Non validi:
+
+
+--------------------------------------------------------------------------------
+Silent Mutation
+--------------------------------------------------------------------------------
+
+Modificare conoscenza senza creare nuova versione.
+
+
+--------------------------------------------------------------------------------
+Identity Fragmentation
+--------------------------------------------------------------------------------
+
+Creare nuove identità per semplici variazioni della stessa conoscenza.
+
+
+--------------------------------------------------------------------------------
+History Loss
+--------------------------------------------------------------------------------
+
+Eliminare versioni precedenti senza processo autorizzato.
+
+
+--------------------------------------------------------------------------------
+Mastery Coupling
+--------------------------------------------------------------------------------
+
+Usare il versioning come misura della conoscenza dell'utente.
+
+
+================================================================================
+14. Relationship with Other Specifications
+================================================================================
+
+
+Learning Object Specification:
+
+definisce l'entità versionata.
+
+
+KEP Specification:
+
+produce proposte di cambiamento.
+
+
+Learning Review:
+
+approva evoluzioni.
+
+
+Persistence Model:
+
+conserva la storia.
+
+
+Mastery Engine:
+
+gestisce la padronanza indipendentemente.
+
+
+Lifecycle Specification:
+
+definisce gli stati di vita delle entità.
+
+
+================================================================================
+Principi conclusivi
+================================================================================
+
+
+## VERSION-001 — Knowledge has identity
+
+La conoscenza mantiene continuità durante la propria evoluzione.
+
+
+## VERSION-002 — Changes are historical events
+
+Ogni cambiamento significativo lascia una traccia.
+
+
+## VERSION-003 — Version is not mastery
+
+La versione descrive la conoscenza, non l'apprendimento.
+
+
+## VERSION-004 — Evolution requires control
+
+L'evoluzione del Repository deve essere governata.
+
+
+================================================================================
+Principio conclusivo
+================================================================================
+
+La ELR Versioning Model Specification garantisce che il Repository possa
+evolvere senza perdere:
+
+
+- identità;
+
+- storia;
+
+- coerenza;
+
+
+L'ELR conserva la conoscenza corrente.
+
+Il Versioning Model conserva il percorso attraverso cui quella conoscenza è
+evoluta.
+
+
+================================================================================
+Fine documento
+
+English Learning Repository (ELR)
+
+ELR Versioning Model Specification
+
+Version: 1.0.0
+
+================================================================================

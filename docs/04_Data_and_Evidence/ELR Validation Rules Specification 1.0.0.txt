@@ -1,0 +1,734 @@
+================================================================================
+English Learning Repository (ELR)
+
+ELR Validation Rules Specification
+
+Version: 1.0.0
+Status: DRAFT
+================================================================================
+
+
+Document Identity
+================================================================================
+
+Document Name:
+
+ELR Validation Rules Specification
+
+
+Document Version:
+
+1.0.0
+
+
+Status:
+
+DRAFT
+
+
+Dependencies:
+
+- ELR Architecture Specification
+
+- ELR Domain Model Specification
+
+- ELR Taxonomy
+
+- Learning Object Specification
+
+- Anchor Specification
+
+- Phrasebook Specification
+
+- Learning State Specification
+
+- Evidence Model Specification
+
+- Knowledge Extraction Pipeline Specification
+
+- ELR Persistence Model Specification
+
+
+================================================================================
+Scopo
+================================================================================
+
+La ELR Validation Rules Specification definisce le regole utilizzate per
+verificare la correttezza, coerenza e integrità delle entità e dei processi
+all'interno dell'English Learning Repository.
+
+
+Il documento stabilisce i criteri attraverso cui il sistema verifica:
+
+
+- validità delle entità;
+
+- coerenza delle relazioni;
+
+- conformità ai principi ELR;
+
+- integrità delle modifiche.
+
+
+La validazione garantisce che il Repository conservi esclusivamente conoscenza
+coerente con il modello ELR.
+
+
+================================================================================
+Responsabilità del documento
+================================================================================
+
+Questo documento definisce:
+
+
+- regole di validazione del dominio;
+
+- regole di validazione delle relazioni;
+
+- controlli di integrità;
+
+- controlli di coerenza semantica.
+
+
+Questo documento NON definisce:
+
+
+- algoritmi di estrazione KEP;
+
+- algoritmi Mastery;
+
+- procedure di Learning Review;
+
+- implementazioni tecniche di database.
+
+
+================================================================================
+Principio fondamentale
+================================================================================
+
+Una validazione ELR risponde alla domanda:
+
+
+"Questa informazione è coerente con il modello della conoscenza ELR?"
+
+
+Non risponde alla domanda:
+
+
+"Questa informazione deve essere creata?"
+
+
+La validazione controlla la qualità.
+
+I processi decisionali controllano l'evoluzione.
+
+
+================================================================================
+1. Validation Boundary
+================================================================================
+
+Le regole di validazione operano tra:
+
+
+Input Data
+
+        |
+
+        v
+
+Validation Layer
+
+        |
+
+        v
+
+ELR Domain Model
+
+        |
+
+        v
+
+Persistence
+
+
+La validazione può essere applicata durante:
+
+
+- creazione;
+
+- modifica;
+
+- importazione;
+
+- migrazione;
+
+- sincronizzazione.
+
+
+================================================================================
+2. Validation Categories
+================================================================================
+
+Il modello ELR definisce quattro categorie principali:
+
+
+1.
+
+Structural Validation
+
+
+2.
+
+Domain Validation
+
+
+3.
+
+Semantic Validation
+
+
+4.
+
+Integrity Validation
+
+
+================================================================================
+3. Structural Validation
+================================================================================
+
+La Structural Validation verifica la correttezza formale delle entità.
+
+
+Controlla:
+
+
+- presenza dei campi obbligatori;
+
+- formato degli identificatori;
+
+- correttezza dei riferimenti;
+
+- struttura dei dati.
+
+
+Una entità strutturalmente invalida non può essere persistita.
+
+
+================================================================================
+4. Domain Validation
+================================================================================
+
+La Domain Validation verifica la coerenza con il significato del modello ELR.
+
+
+================================================================================
+4.1 Learning Object Validation
+================================================================================
+
+Un Learning Object valido deve:
+
+
+- avere un Anchor;
+
+- contenere un Knowledge Statement;
+
+- appartenere a una Knowledge Category valida;
+
+- rappresentare una conoscenza atomica;
+
+- essere riutilizzabile.
+
+
+Non valido:
+
+
+Learning Object:
+
+"Past Tense"
+
+
+Motivo:
+
+categoria astratta senza Anchor acquisibile.
+
+
+================================================================================
+4.2 Anchor Validation
+================================================================================
+
+Un Anchor valido deve:
+
+
+- appartenere alla lingua target;
+
+- essere osservabile;
+
+- essere collegato a una conoscenza acquisibile;
+
+- poter comparire in produzioni linguistiche future.
+
+
+Non valido:
+
+
+Anchor:
+
+"Grammar Rule"
+
+
+Motivo:
+
+rappresenta un concetto metalinguistico.
+
+
+================================================================================
+4.3 Knowledge Statement Validation
+================================================================================
+
+Un Knowledge Statement valido deve essere:
+
+
+- positivo;
+
+- atomico;
+
+- comprensibile;
+
+- collegato all'Anchor.
+
+
+Non valido:
+
+
+"Non usare X"
+
+
+Valido:
+
+
+"Per esprimere Y si usa X"
+
+
+================================================================================
+4.4 Phrasebook Validation
+================================================================================
+
+Una Phrasebook Entry valida deve:
+
+
+- rappresentare una combinazione riutilizzabile;
+
+- essere linguisticamente significativa;
+
+- non essere una frase casuale.
+
+
+Non valido:
+
+
+"I went to London yesterday"
+
+
+Valido:
+
+
+look forward to
+
+
+================================================================================
+5. Semantic Validation
+================================================================================
+
+La Semantic Validation verifica che il contenuto rappresenti correttamente la
+conoscenza dichiarata.
+
+
+Controlla:
+
+
+- relazione Anchor / Knowledge Statement;
+
+- assenza di contraddizioni;
+
+- assenza di duplicazioni concettuali.
+
+
+================================================================================
+5.1 Anchor Knowledge Consistency
+================================================================================
+
+L'Anchor deve rappresentare direttamente la conoscenza descritta.
+
+
+Esempio:
+
+
+Anchor:
+
+take + photo
+
+
+Knowledge Statement:
+
+Per scattare una fotografia si usa take + photo.
+
+
+Valido.
+
+
+================================================================================
+5.2 Knowledge Independence
+================================================================================
+
+Una conoscenza deve poter essere verificata indipendentemente.
+
+
+Se due conoscenze possono essere apprese e valutate separatamente, devono
+rimanere separate.
+
+
+================================================================================
+6. Repository Integrity Validation
+================================================================================
+
+Il Repository deve mantenere:
+
+
+- identità stabile;
+
+- relazioni valide;
+
+- assenza di duplicati;
+
+- storia coerente.
+
+
+================================================================================
+6.1 Identity Integrity
+================================================================================
+
+Una modifica non deve creare una nuova identità quando rappresenta la stessa
+conoscenza.
+
+
+Esempio:
+
+
+Stesso Anchor:
+
+take + photo
+
+
+Nuova formulazione del Knowledge Statement:
+
+
+possibile aggiornamento dello stesso Learning Object.
+
+
+================================================================================
+6.2 Duplicate Prevention
+================================================================================
+
+Il sistema deve prevenire Learning Object equivalenti duplicati.
+
+
+La verifica deve considerare:
+
+
+- Anchor;
+
+- Knowledge Statement;
+
+- equivalenza concettuale.
+
+
+Non solo similarità testuale.
+
+
+================================================================================
+7. Change Proposal Validation
+================================================================================
+
+Ogni ELR Change Proposal deve essere validabile.
+
+
+Deve contenere:
+
+
+- tipo di modifica;
+
+- contenuto proposto;
+
+- Evidence;
+
+- motivazione.
+
+
+================================================================================
+7.1 CREATE Validation
+================================================================================
+
+Una CREATE valida richiede:
+
+
+- conoscenza non presente;
+
+- Anchor valido;
+
+- Knowledge Statement valido;
+
+- assenza di duplicati.
+
+
+================================================================================
+7.2 MERGE Validation
+================================================================================
+
+Un MERGE valido richiede:
+
+
+- Learning Object esistente;
+
+- equivalenza concettuale;
+
+- mantenimento dell'identità.
+
+
+================================================================================
+7.3 UPDATE Validation
+================================================================================
+
+Un UPDATE valido richiede:
+
+
+- Learning Object identificato;
+
+- modifica coerente;
+
+- miglioramento della rappresentazione.
+
+
+================================================================================
+8. Learning State Validation
+================================================================================
+
+Un Learning State valido deve:
+
+
+- riferirsi a un Learning Object esistente;
+
+- appartenere a un utente valido;
+
+- essere aggiornato solo dal Mastery Engine.
+
+
+Il Learning State non può contenere conoscenza linguistica.
+
+
+================================================================================
+9. Evidence Validation
+================================================================================
+
+Una Evidence valida deve:
+
+
+- avere origine identificabile;
+
+- essere associata a un processo;
+
+- mantenere separazione dalla conoscenza.
+
+
+Non valido:
+
+
+Evidence contenente un nuovo Learning Object senza processo di approvazione.
+
+
+================================================================================
+10. Import Validation Rules
+================================================================================
+
+Ogni dato importato deve superare:
+
+
+- Structural Validation;
+
+- Domain Validation;
+
+- Integrity Validation.
+
+
+Un dato non valido deve essere rifiutato o isolato.
+
+
+================================================================================
+11. Validation and Security
+================================================================================
+
+Le regole di validazione collaborano con il Security Model.
+
+
+La validazione verifica:
+
+
+"Cosa è corretto"
+
+
+La sicurezza verifica:
+
+
+"Chi può modificarlo"
+
+
+Entrambe sono necessarie per proteggere il Repository.
+
+
+================================================================================
+12. Validation Failure Handling
+================================================================================
+
+Quando una validazione fallisce il sistema deve:
+
+
+- identificare la regola violata;
+
+- impedire la persistenza;
+
+- produrre informazione diagnostica.
+
+
+Un errore di validazione non modifica il Repository.
+
+
+================================================================================
+13. Anti-Patterns
+================================================================================
+
+
+Non validi:
+
+
+--------------------------------------------------------------------------------
+Invalid Knowledge Persistence
+--------------------------------------------------------------------------------
+
+Salvare conoscenza senza Anchor o Knowledge Statement.
+
+
+--------------------------------------------------------------------------------
+Semantic Duplication
+--------------------------------------------------------------------------------
+
+Creare Learning Object diversi per la stessa conoscenza.
+
+
+--------------------------------------------------------------------------------
+Process Contamination
+--------------------------------------------------------------------------------
+
+Inserire dati temporanei nel dominio persistente.
+
+
+--------------------------------------------------------------------------------
+Silent Correction
+--------------------------------------------------------------------------------
+
+Modificare conoscenza senza processo autorizzato.
+
+
+================================================================================
+14. Relationship with Other Specifications
+================================================================================
+
+
+Domain Model:
+
+definisce cosa è valido.
+
+
+Learning Object Specification:
+
+definisce la struttura cognitiva.
+
+
+KEP Specification:
+
+definisce come nasce una proposta.
+
+
+Learning Review:
+
+definisce approvazione.
+
+
+Persistence Model:
+
+definisce conservazione.
+
+
+Security Model:
+
+definisce autorizzazioni.
+
+
+================================================================================
+Principi conclusivi
+================================================================================
+
+
+## VALIDATION-001 — Invalid knowledge must not persist
+
+La conoscenza non conforme non entra nel Repository.
+
+
+## VALIDATION-002 — Meaning matters more than form
+
+La validazione considera il significato, non solo la struttura.
+
+
+## VALIDATION-003 — Validation protects evolution
+
+Ogni cambiamento deve mantenere coerenza storica.
+
+
+## VALIDATION-004 — Quality is independent from creation
+
+La validazione controlla una proposta senza determinarne la necessità.
+
+
+================================================================================
+Principio conclusivo
+================================================================================
+
+La ELR Validation Rules Specification garantisce che il Repository evolva
+mantenendo:
+
+
+- coerenza;
+
+- qualità;
+
+- integrità;
+
+- significato.
+
+
+La KEP propone conoscenza.
+
+La Learning Review controlla l'evoluzione.
+
+Il Validation Layer garantisce che ciò che entra nell'ELR sia conforme al
+modello.
+
+
+================================================================================
+Fine documento
+
+English Learning Repository (ELR)
+
+ELR Validation Rules Specification
+
+Version: 1.0.0
+
+================================================================================

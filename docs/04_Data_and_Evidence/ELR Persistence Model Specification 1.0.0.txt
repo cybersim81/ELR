@@ -1,0 +1,680 @@
+================================================================================
+English Learning Repository (ELR)
+
+ELR Persistence Model Specification
+
+Version: 1.0.0
+Status: DRAFT
+================================================================================
+
+
+Document Identity
+================================================================================
+
+Document Name:
+
+ELR Persistence Model Specification
+
+
+Document Version:
+
+1.0.0
+
+
+Status:
+
+DRAFT
+
+
+Dependencies:
+
+- ELR Architecture Specification
+
+- ELR Architecture Decision Log
+
+- ELR Domain Model Specification
+
+- ELR Taxonomy
+
+- Learning Object Specification
+
+- Anchor Specification
+
+- Learning State Specification
+
+- Evidence Model Specification
+
+- ELR API Specification
+
+
+================================================================================
+Scopo
+================================================================================
+
+La ELR Persistence Model Specification definisce il modello concettuale
+utilizzato per la persistenza delle informazioni all'interno dell'English
+Learning Repository.
+
+
+Il documento descrive:
+
+- quali elementi del modello ELR sono persistenti;
+
+- quali relazioni devono essere conservate;
+
+- quali informazioni appartengono al repository;
+
+- quali informazioni appartengono invece ai processi esterni.
+
+
+La Persistence Model Specification non definisce:
+
+- tecnologia database;
+
+- schema SQL;
+
+- implementazione fisica;
+
+- strategie di indicizzazione.
+
+
+Il modello fisico può evolvere mantenendo invariati i principi definiti in
+questo documento.
+
+
+================================================================================
+Responsabilità del documento
+================================================================================
+
+Questo documento definisce:
+
+
+- entità persistenti;
+
+- confini della persistenza;
+
+- relazioni tra entità;
+
+- principi di versionamento;
+
+- regole di integrità.
+
+
+Questo documento NON definisce:
+
+
+- estrazione della conoscenza;
+
+- generazione degli esercizi;
+
+- calcolo della Mastery;
+
+- gestione delle Evidence operative.
+
+
+================================================================================
+Principio fondamentale
+================================================================================
+
+Il Repository ELR conserva conoscenza approvata.
+
+
+Non conserva:
+
+
+- conversazioni;
+
+- errori grezzi;
+
+- ragionamenti della KEP;
+
+- eventi temporanei;
+
+- tentativi di estrazione.
+
+
+La persistenza deve rappresentare ciò che il sistema considera conoscenza
+stabile.
+
+
+================================================================================
+1. Persistence Boundary
+================================================================================
+
+Il confine della persistenza ELR è:
+
+
+Persistente:
+
+- Learning Object;
+
+- Anchor;
+
+- Knowledge Statement;
+
+- Knowledge Category;
+
+- Learning State;
+
+- relazioni approvate;
+
+- metadati evolutivi.
+
+
+Non persistente nel Repository:
+
+- Conversation Episode;
+
+- Trigger;
+
+- Knowledge Candidate;
+
+- Change Proposal non approvate;
+
+- spiegazioni temporanee;
+
+- eventi operativi.
+
+
+================================================================================
+2. Repository Conceptual Model
+================================================================================
+
+
+La struttura concettuale è:
+
+
+                    Anchor
+
+                       |
+
+                       v
+
+              Learning Object
+
+                       |
+
+                       v
+
+          Knowledge Statement
+
+                       |
+
+                       v
+
+             Learning State
+
+
+
+Le Evidence e gli eventi appartengono ai processi esterni.
+
+
+================================================================================
+3. Persistent Entities
+================================================================================
+
+
+================================================================================
+3.1 Anchor
+================================================================================
+
+Anchor rappresenta l'unità linguistica a cui è associata una conoscenza.
+
+
+Un Anchor persistente deve essere:
+
+
+- osservabile;
+
+- nella lingua target;
+
+- riutilizzabile.
+
+
+Esempi:
+
+
+- yesterday
+
+- make + mistake
+
+- look forward to
+
+
+Un Anchor non contiene:
+
+
+- errori;
+
+- spiegazioni temporanee;
+
+- categorie grammaticali astratte.
+
+
+================================================================================
+3.2 Learning Object
+================================================================================
+
+Il Learning Object rappresenta l'unità principale di conoscenza persistente.
+
+
+Un Learning Object contiene:
+
+
+- identità;
+
+- Anchor associato;
+
+- Knowledge Statement;
+
+- Knowledge Category;
+
+- stato di apprendimento associato.
+
+
+Un Learning Object rappresenta una conoscenza atomica.
+
+
+================================================================================
+3.3 Knowledge Statement
+================================================================================
+
+Il Knowledge Statement rappresenta il contenuto cognitivo del Learning Object.
+
+
+Deve essere:
+
+
+- positivo;
+
+- atomico;
+
+- riutilizzabile.
+
+
+Non deve contenere:
+
+
+- cronologia conversazionale;
+
+- errori dell'utente;
+
+- istruzioni temporanee.
+
+
+================================================================================
+3.4 Knowledge Category
+================================================================================
+
+La Knowledge Category classifica il tipo di conoscenza rappresentata.
+
+
+Esempi:
+
+
+- Meaning;
+
+- Construction;
+
+- Function;
+
+- Morphology;
+
+- Pronunciation;
+
+- Phraseology.
+
+
+La categoria è metadato della conoscenza e non conoscenza autonoma.
+
+
+================================================================================
+3.5 Learning State
+================================================================================
+
+Learning State rappresenta lo stato associato all'apprendimento del Learning
+Object.
+
+
+Contiene informazioni relative a:
+
+
+- stato corrente;
+
+- progressione;
+
+- condizioni di apprendimento.
+
+
+La logica di aggiornamento appartiene al Mastery Engine.
+
+
+================================================================================
+4. Persistence Relationships
+================================================================================
+
+
+Relazioni principali:
+
+
+--------------------------------------------------------------------------------
+Anchor → Learning Object
+--------------------------------------------------------------------------------
+
+Un Anchor può essere associato a uno o più Learning Object quando rappresenta
+conoscenze indipendenti.
+
+
+Esempio:
+
+
+Anchor:
+
+look forward to
+
+
+Learning Object:
+
+
+1.
+
+Construction:
+
+look forward to + verb-ing
+
+
+2.
+
+Meaning:
+
+look forward to = attendere con piacere
+
+
+--------------------------------------------------------------------------------
+Learning Object → Learning State
+--------------------------------------------------------------------------------
+
+Ogni Learning Object può avere uno stato di apprendimento associato.
+
+
+--------------------------------------------------------------------------------
+Learning Object → Knowledge Statement
+--------------------------------------------------------------------------------
+
+Ogni Learning Object conserva il Knowledge Statement approvato.
+
+
+================================================================================
+5. Persistence and Versioning
+================================================================================
+
+La conoscenza ELR è evolutiva.
+
+
+Gli aggiornamenti devono preservare:
+
+
+- identità del Learning Object;
+
+- storia delle modifiche;
+
+- tracciabilità.
+
+
+Un aggiornamento non deve cancellare arbitrariamente la storia della
+conoscenza.
+
+
+================================================================================
+6. Immutable Knowledge Identity
+================================================================================
+
+L'identità di un Learning Object deve rimanere stabile durante la sua
+evoluzione.
+
+
+Modifiche possibili:
+
+
+- miglioramento formulazione;
+
+- arricchimento esempio;
+
+- correzione descrizione.
+
+
+Modifiche che richiedono nuova identità:
+
+
+- conoscenza completamente diversa;
+
+- Anchor differente;
+
+- Knowledge Category incompatibile.
+
+
+================================================================================
+7. Persistence and Change Process
+================================================================================
+
+La persistenza segue il flusso:
+
+
+KEP
+
+ |
+
+ v
+
+Change Proposal
+
+ |
+
+ v
+
+Learning Review
+
+ |
+
+ v
+
+Repository Update
+
+
+Solo una modifica approvata può modificare la persistenza ELR.
+
+
+================================================================================
+8. Persistence and Evidence
+================================================================================
+
+Evidence e Repository sono separati.
+
+
+Il Repository contiene:
+
+
+conoscenza approvata.
+
+
+Evidence contiene:
+
+
+motivazioni e osservazioni operative.
+
+
+Una Evidence può giustificare una modifica senza diventare parte del Learning
+Object.
+
+
+================================================================================
+9. Persistence Integrity Rules
+================================================================================
+
+
+Il Repository deve garantire:
+
+
+--------------------------------------------------------------------------------
+Knowledge Integrity
+--------------------------------------------------------------------------------
+
+Ogni Learning Object deve avere una conoscenza identificabile.
+
+
+--------------------------------------------------------------------------------
+Anchor Integrity
+--------------------------------------------------------------------------------
+
+Ogni Learning Object deve riferirsi a un Anchor valido.
+
+
+--------------------------------------------------------------------------------
+Atomicity Integrity
+--------------------------------------------------------------------------------
+
+Un Learning Object non deve contenere conoscenze indipendenti unite
+artificialmente.
+
+
+--------------------------------------------------------------------------------
+Consistency Integrity
+--------------------------------------------------------------------------------
+
+Learning Object, Anchor e Knowledge Statement devono rimanere coerenti.
+
+
+================================================================================
+10. Persistence Anti-Patterns
+================================================================================
+
+Non devono essere persistiti:
+
+
+--------------------------------------------------------------------------------
+Conversation Memory
+--------------------------------------------------------------------------------
+
+Esempio non valido:
+
+
+"Utente X ha sbagliato yesterday."
+
+
+--------------------------------------------------------------------------------
+Error Storage as Knowledge
+--------------------------------------------------------------------------------
+
+Esempio non valido:
+
+
+"do + photo"
+
+
+--------------------------------------------------------------------------------
+Explanation Dump
+--------------------------------------------------------------------------------
+
+Esempio non valido:
+
+
+intera spiegazione generata dall'LLM come contenuto del Learning Object.
+
+
+--------------------------------------------------------------------------------
+Temporary Process Data
+--------------------------------------------------------------------------------
+
+Esempio:
+
+
+Trigger e Candidate Metadata.
+
+
+================================================================================
+11. Relationship with External Components
+================================================================================
+
+
+KEP:
+
+produce proposte.
+
+
+Learning Review:
+
+approva modifiche.
+
+
+ELR:
+
+conserva conoscenza.
+
+
+Mastery Engine:
+
+gestisce stato e padronanza.
+
+
+Exercise System:
+
+utilizza conoscenza persistente.
+
+
+================================================================================
+Principi conclusivi
+================================================================================
+
+
+## PERSIST-001 — Repository stores approved knowledge
+
+L'ELR conserva solo conoscenza approvata.
+
+
+## PERSIST-002 — Process data remains outside repository
+
+I dati temporanei dei processi non diventano conoscenza.
+
+
+## PERSIST-003 — Knowledge identity is stable
+
+L'evoluzione mantiene la continuità del Learning Object.
+
+
+## PERSIST-004 — Persistence follows domain boundaries
+
+La struttura persistente rispetta il modello concettuale ELR.
+
+
+================================================================================
+Principio conclusivo
+================================================================================
+
+La Persistence Model Specification definisce il confine tra:
+
+ciò che il sistema osserva,
+
+ciò che il sistema elabora,
+
+e ciò che il sistema conserva.
+
+
+La KEP produce proposte.
+
+
+La Learning Review autorizza cambiamenti.
+
+
+Il Repository conserva conoscenza stabile.
+
+
+================================================================================
+Fine documento
+
+English Learning Repository (ELR)
+
+ELR Persistence Model Specification
+
+Version: 1.0.0
+
+================================================================================
