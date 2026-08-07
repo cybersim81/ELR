@@ -1,0 +1,311 @@
+================================================================================
+English Learning Repository (ELR)
+
+ELR Implementation Architecture Specification
+
+Version: 0.1.0
+Status: DRAFT
+=============
+
+# Document Identity
+
+Document Name:
+
+ELR Implementation Architecture Specification
+
+Document Version:
+
+0.1.0
+
+Status:
+
+DRAFT
+
+Dependencies:
+
+* ELR Architecture Specification
+* ELR Architecture Decision Log
+* ELR Domain Model Specification
+* ELR Persistence Model Specification
+* ELR API Specification
+* ELR Event Model Specification
+
+================================================================================
+Scopo
+=====
+
+La ELR Implementation Architecture Specification definisce la prima
+architettura implementativa dell'English Learning Repository.
+
+Il documento traduce i principi architetturali ELR in una struttura software
+concreta mantenendo separazione tra:
+
+* dominio;
+* processi;
+* persistenza;
+* interazione;
+* infrastruttura.
+
+Questo documento NON sostituisce la ELR Architecture Specification.
+
+La Architecture Specification definisce cosa deve essere ELR.
+
+Questo documento definisce come il primo sistema software implementa tali
+principi.
+
+================================================================================
+Implementation Principles
+=========================
+
+IMPLEMENTATION-001 — Domain First
+
+Il modello software deve essere guidato dal modello dominio.
+
+IMPLEMENTATION-002 — Separation of Layers
+
+Ogni responsabilità deve appartenere al proprio livello.
+
+IMPLEMENTATION-003 — Replaceable Infrastructure
+
+Le dipendenze infrastrutturali devono poter essere sostituite senza modificare
+il dominio.
+
+IMPLEMENTATION-004 — Traceable Evolution
+
+Ogni modifica significativa deve mantenere tracciabilità.
+
+================================================================================
+Technology Baseline
+===================
+
+La prima implementazione ELR utilizza:
+
+Backend Language:
+
+Python
+
+API Framework:
+
+FastAPI
+
+Persistence Database:
+
+PostgreSQL
+
+ORM:
+
+SQLAlchemy
+
+Validation Layer:
+
+Pydantic
+
+Migration System:
+
+Alembic
+
+================================================================================
+Logical Software Architecture
+=============================
+
+ELR System
+
+```
+|
++-- API Layer
+|
++-- Application Layer
+|
++-- Domain Layer
+|
++-- Persistence Layer
+|
++-- Infrastructure Layer
+```
+
+================================================================================
+Domain Layer
+============
+
+Il Domain Layer contiene le entità ELR:
+
+* Anchor;
+* Learning Object;
+* Knowledge Statement;
+* Knowledge Category;
+* Version;
+* Learning State.
+
+Il Domain Layer non dipende da:
+
+* database;
+* API;
+* framework;
+* sistemi esterni.
+
+================================================================================
+Application Layer
+=================
+
+L'Application Layer coordina i casi d'uso:
+
+* creazione Candidate;
+* proposta modifica;
+* approvazione;
+* aggiornamento versione;
+* recupero conoscenza.
+
+L'Application Layer applica le regole di processo.
+
+================================================================================
+API Layer
+=========
+
+L'API Layer espone operazioni verso sistemi esterni.
+
+Prima versione:
+
+Learning Object:
+
+* create candidate;
+* submit for review;
+* approve;
+* reject;
+* retrieve;
+* retrieve history.
+
+Le API non modificano direttamente il dominio.
+
+Ogni modifica passa attraverso Application Layer.
+
+================================================================================
+Persistence Layer
+=================
+
+La persistenza iniziale conserva:
+
+* Learning Object;
+* Anchor;
+* Knowledge Statement;
+* Version;
+* Audit Record.
+
+La persistenza non contiene logica di dominio.
+
+================================================================================
+Event Layer
+===========
+
+Gli eventi iniziali sono:
+
+LearningObjectCreated
+
+LearningObjectSubmitted
+
+LearningObjectApproved
+
+LearningObjectRejected
+
+LearningObjectUpdated
+
+Gli eventi rappresentano fatti avvenuti.
+
+================================================================================
+Repository Structure
+====================
+
+Struttura iniziale prevista:
+
+elr/
+
+```
+app/
+
+    api/
+
+    application/
+
+    domain/
+
+    persistence/
+
+    infrastructure/
+
+
+tests/
+
+
+migrations/
+```
+
+================================================================================
+Architecture Decision
+=====================
+
+ADR-001 — Technology Stack
+
+Decisione:
+
+La prima implementazione ELR utilizza Python, FastAPI e PostgreSQL.
+
+Motivazione:
+
+Lo stack supporta:
+
+* sviluppo rapido;
+* separazione dominio/infrastruttura;
+* futura integrazione KEP;
+* gestione API;
+* persistenza strutturata.
+
+Conseguenze:
+
+Positive:
+
+* elevata velocità di prototipazione;
+* ecosistema adatto a sistemi AI.
+
+Negative:
+
+* richiede disciplina architetturale per mantenere separazione dei livelli.
+
+================================================================================
+Scope v0.1
+==========
+
+Incluso:
+
+* dominio core;
+* persistenza base;
+* lifecycle minimo;
+* API fondamentali;
+* audit iniziale.
+
+Escluso:
+
+* interfaccia utente;
+* KEP completa;
+* Mastery Engine completo;
+* Exercise System;
+* sistemi distribuiti.
+
+================================================================================
+Principio conclusivo
+====================
+
+L'Implementation Architecture Specification definisce il primo ponte tra il
+modello ELR e una realizzazione software concreta.
+
+L'implementazione deve rispettare il modello cognitivo e architetturale ELR,
+senza modificarne i principi fondamentali.
+
+================================================================================
+Fine documento
+
+English Learning Repository (ELR)
+
+ELR Implementation Architecture Specification
+
+Version: 0.1.0
+
+================================================================================
