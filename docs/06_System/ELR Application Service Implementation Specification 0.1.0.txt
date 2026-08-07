@@ -1,0 +1,381 @@
+================================================================================
+English Learning Repository (ELR)
+
+ELR Application Service Implementation Specification
+
+Version: 0.1.0
+Status: DRAFT
+=============
+
+# Document Identity
+
+Document Name:
+
+ELR Application Service Implementation Specification
+
+Document Version:
+
+0.1.0
+
+Status:
+
+DRAFT
+
+Dependencies:
+
+* ELR Core Domain Implementation Specification
+* ELR Persistence Implementation Specification
+* ELR API Implementation Specification
+* ELR Lifecycle Specification
+* ELR Versioning Model Specification
+* ELR Security and Access Model Specification
+
+================================================================================
+Scopo
+=====
+
+La ELR Application Service Implementation Specification definisce il livello
+applicativo dell'English Learning Repository.
+
+L'Application Layer coordina:
+
+* API requests;
+* casi d'uso;
+* regole dominio;
+* persistenza;
+* audit.
+
+L'Application Layer NON contiene:
+
+* logica cognitiva;
+* schema database;
+* dettagli HTTP.
+
+================================================================================
+Application Principles
+======================
+
+APPLICATION-001 — Use Case Ownership
+
+Ogni operazione applicativa rappresenta un caso d'uso esplicito.
+
+APPLICATION-002 — Domain Authority
+
+Le regole di dominio rimangono nel Domain Layer.
+
+APPLICATION-003 — Transaction Control
+
+Le operazioni applicative definiscono il confine transazionale.
+
+APPLICATION-004 — Process Coordination
+
+L'Application Layer coordina componenti senza sostituirne la responsabilità.
+
+================================================================================
+Application Architecture
+========================
+
+API Layer
+
+```
+|
+
+v
+```
+
+Application Services
+
+```
+|
+
++----------------+
+
+|                |
+```
+
+Domain Layer     Repository
+
+```
+|
+```
+
+Audit Service
+
+================================================================================
+Application Services
+====================
+
+================================================================================
+Learning Object Service
+=======================
+
+Responsabilità:
+
+Gestire i casi d'uso relativi ai Learning Object.
+
+Metodi:
+
+create_candidate()
+
+Crea un nuovo Learning Object nello stato Candidate.
+
+submit_for_review()
+
+Avvia il processo di revisione.
+
+approve_learning_object()
+
+Applica approvazione autorizzata.
+
+reject_learning_object()
+
+Gestisce rifiuto della proposta.
+
+get_learning_object()
+
+Recupera conoscenza persistente.
+
+get_history()
+
+Recupera version history.
+
+================================================================================
+Category Service
+================
+
+Responsabilità:
+
+Gestire consultazione della tassonomia.
+
+Metodi:
+
+get_categories()
+
+get_category_tree()
+
+================================================================================
+Version Service
+===============
+
+Responsabilità:
+
+Gestire accesso alla storia evolutiva.
+
+Metodi:
+
+create_version()
+
+get_versions()
+
+================================================================================
+Audit Service
+=============
+
+Responsabilità:
+
+Registrare eventi significativi.
+
+Metodi:
+
+record_event()
+
+get_events()
+
+================================================================================
+Use Case Flow
+=============
+
+================================================================================
+Create Candidate
+================
+
+API Request
+
+```
+|
+
+v
+```
+
+LearningObjectService
+
+```
+|
+
+v
+```
+
+Create Domain Entity
+
+```
+|
+
+v
+```
+
+Repository Save
+
+```
+|
+
+v
+```
+
+Audit Record
+
+================================================================================
+Approve Learning Object
+=======================
+
+Request
+
+```
+|
+```
+
+Authorization Check
+
+```
+|
+```
+
+Load Entity
+
+```
+|
+```
+
+Validate State
+
+```
+|
+```
+
+Domain Transition
+
+```
+|
+```
+
+Create Version
+
+```
+|
+```
+
+Persist
+
+```
+|
+```
+
+Audit Event
+
+================================================================================
+Transaction Rules
+=================
+
+Ogni use case di modifica deve essere atomico.
+
+Esempio:
+
+Approve:
+
+BEGIN TRANSACTION
+
+* validate;
+* transition;
+* version creation;
+* persistence;
+* audit.
+
+COMMIT
+
+In caso di errore:
+
+ROLLBACK
+
+================================================================================
+Dependency Rules
+================
+
+Application Layer può dipendere da:
+
+* Domain Layer;
+* Repository Interface;
+* Services tecnici.
+
+Application Layer NON può dipendere da:
+
+* FastAPI;
+* SQLAlchemy;
+* PostgreSQL;
+* framework infrastrutturali.
+
+================================================================================
+Error Handling
+==============
+
+Gli Application Services traducono errori dominio in errori applicativi.
+
+Esempi:
+
+InvalidStateTransition
+
+EntityNotFound
+
+UnauthorizedOperation
+
+ValidationFailure
+
+================================================================================
+Testing Boundary
+================
+
+Gli Application Services devono essere verificati con:
+
+* unit test use case;
+* domain integration test;
+* repository mock.
+
+================================================================================
+Excluded Scope
+==============
+
+Non incluso:
+
+* autenticazione completa;
+* message broker;
+* workflow distribuiti;
+* Mastery Service;
+* KEP Service.
+
+================================================================================
+Prossimo Incremento
+===================
+
+Il prossimo documento previsto:
+
+ELR Event Implementation Specification
+
+che definirà la realizzazione concreta del modello eventi ELR.
+
+================================================================================
+Principio conclusivo
+====================
+
+L'Application Layer è il coordinatore operativo dell'ELR.
+
+Non crea conoscenza e non conserva conoscenza:
+orchestra il percorso controllato attraverso cui la conoscenza evolve.
+
+================================================================================
+Fine documento
+
+English Learning Repository (ELR)
+
+ELR Application Service Implementation Specification
+
+Version: 0.1.0
+
+================================================================================
