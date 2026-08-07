@@ -1,0 +1,240 @@
+================================================================================
+English Learning Repository (ELR)
+
+Architecture Baseline
+
+Version: 1.0.0
+Status: BASELINE
+================================================================================
+
+
+Document Identity
+================================================================================
+
+Document Name:
+
+ELR Architecture Baseline
+
+
+Document Version:
+
+1.0.0
+
+
+Status:
+
+BASELINE
+
+
+Dependencies:
+
+- ELR Architecture Specification
+
+- ELR Documentation Index
+
+Scopo
+=====
+
+La ELR Architecture Baseline identifica l'insieme delle specifiche che
+costituiscono la base architetturale ufficiale dell'English Learning Repository
+(ELR).
+
+Questo documento non introduce nuovi requisiti architetturali.
+
+Il suo scopo è definire quali documenti rappresentano la baseline coerente del
+progetto in uno specifico momento della sua evoluzione.
+
+La Baseline costituisce il riferimento per:
+
+* sviluppo del sistema;
+
+* evoluzione delle specifiche;
+
+* verifica di consistenza;
+
+* gestione delle versioni.
+
+================================================================================
+Principi
+========
+
+La Baseline rappresenta una fotografia coerente dell'architettura.
+
+Tutti i documenti inclusi devono essere compatibili tra loro.
+
+Ogni modifica successiva dovrà preservare la coerenza dell'intero insieme.
+
+La Baseline non sostituisce i singoli documenti, ma ne certifica la compatibilità
+reciproca.
+
+================================================================================
+Documenti inclusi nella Baseline 1.0
+====================================
+
+---
+
+Architecture
+
+---
+
+* ELR Architecture Specification 1.1.0
+
+* ELR Architecture Baseline 1.0.0
+
+* ELR Architecture Decision Log 1.0.0
+
+* ELR Architecture Consistency Matrix 1.0.0
+
+* ELR Documentation Architecture
+
+* ELR Design Protocol
+
+Il documento ELR Architecture Baseline appartiene alla baseline stessa in quanto documento di certificazione dell'insieme documentale corrente.
+
+---
+
+Core Model
+
+---
+
+* ELR Domain Model Specification 1.0.0
+
+* ELR Taxonomy 0.4
+
+* Learning Object Specification 1.0.0
+
+* Anchor Specification 1.0.0
+
+* Phrasebook Specification 1.0.0
+
+* Learning State Specification 1.0.0
+
+
+---
+
+Processes
+
+---
+
+* Knowledge Extraction Pipeline (KEP) Specification 1.0.1
+
+* Evidence Model Specification 1.0.1
+
+* Learning Review Specification 1.0.0
+
+* Mastery Engine Specification 1.0.0
+
+* Exercise System Specification 1.0.0
+
+* Learning Activity Specification 1.0.0
+
+---
+
+Data and Evidence
+
+---
+
+* Data Model Specification 1.0.0
+
+* ELR Persistence Model Specification 1.0.0
+
+* ELR Validation Rules Specification 1.0.0
+
+* ELR Versioning Model Specification 1.0.0
+
+---
+
+Interaction
+
+---
+
+* Learning Interaction Language (LIL) Specification 1.0.0
+
+---
+
+System
+
+---
+
+* ELR API Specification 1.0.0
+
+* ELR Event Model Specification 1.0.0
+
+* ELR Lifecycle Specification 1.0.0
+
+* ELR Security and Access Model Specification 1.0.0
+
+* ELR Import Export Specification 1.0.0
+
+---
+
+Governance
+
+---
+
+* ELR Roadmap
+
+* ELR Stress Test Log
+
+* ELR Continuity Package
+
+Collocazione repository:
+
+00_Current_Architecture
+
+================================================================================
+Documenti esclusi dalla Baseline
+================================
+
+Non fanno parte della Baseline:
+
+* documenti di lavoro;
+
+* bozze sperimentali;
+
+* note progettuali temporanee;
+
+* versioni archiviate;
+
+* materiale storico.
+
+Tali documenti possono essere conservati nelle rispettive cartelle o
+nell'archivio, ma non costituiscono riferimento architetturale ufficiale.
+
+================================================================================
+Gestione della Baseline
+=======================
+
+Una nuova Baseline deve essere pubblicata solo quando:
+
+* l'insieme delle specifiche rimane architetturalmente coerente;
+
+* le dipendenze tra documenti risultano aggiornate;
+
+* le modifiche sono state consolidate.
+
+Le evoluzioni ordinarie dei singoli documenti non richiedono necessariamente la
+creazione di una nuova Baseline.
+
+================================================================================
+Principio conclusivo
+====================
+
+La ELR Architecture Baseline rappresenta il punto di riferimento ufficiale
+dell'architettura del sistema in una determinata fase della sua evoluzione.
+
+Le singole specifiche descrivono i componenti.
+
+La Baseline certifica che tali componenti costituiscono un insieme coerente,
+compatibile e utilizzabile come fondamento per lo sviluppo futuro.
+
+================================================================================
+Fine documento
+
+English Learning Repository (ELR)
+
+Architecture Baseline
+
+Version: 1.0.0
+
+================================================================================
