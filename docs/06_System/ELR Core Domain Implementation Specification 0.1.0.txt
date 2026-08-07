@@ -1,0 +1,438 @@
+================================================================================
+English Learning Repository (ELR)
+
+ELR Core Domain Implementation Specification
+
+Version: 0.1.0
+Status: DRAFT
+=============
+
+# Document Identity
+
+Document Name:
+
+ELR Core Domain Implementation Specification
+
+Document Version:
+
+0.1.0
+
+Status:
+
+DRAFT
+
+Dependencies:
+
+* ELR Domain Model Specification
+* Anchor Specification
+* Learning Object Specification
+* Learning State Specification
+* ELR Persistence Model Specification
+* ELR Versioning Model Specification
+* ELR Validation Rules Specification
+* ELR Implementation Architecture Specification
+
+================================================================================
+Scopo
+=====
+
+La ELR Core Domain Implementation Specification definisce la prima
+rappresentazione software del dominio cognitivo ELR.
+
+Il documento descrive:
+
+* entità dominio;
+* relazioni;
+* invarianti;
+* responsabilità;
+* regole fondamentali.
+
+Il dominio rappresenta la conoscenza ELR senza dipendere da:
+
+* database;
+* API;
+* framework;
+* sistemi esterni.
+
+================================================================================
+Domain Principles
+=================
+
+DOMAIN-IMPLEMENTATION-001 — Domain Independence
+
+Le entità dominio non devono conoscere dettagli infrastrutturali.
+
+DOMAIN-IMPLEMENTATION-002 — Explicit State
+
+Ogni entità con ciclo di vita deve rappresentare esplicitamente il proprio
+stato.
+
+DOMAIN-IMPLEMENTATION-003 — Immutable History
+
+La storia delle modifiche non viene sovrascritta.
+
+DOMAIN-IMPLEMENTATION-004 — Controlled Mutation
+
+Le modifiche alle entità avvengono attraverso operazioni autorizzate.
+
+================================================================================
+Core Domain Model
+=================
+
+Il dominio iniziale contiene:
+
+Anchor
+
+```
+|
+|
+```
+
+LearningObject
+
+```
+|
+|
+```
+
+KnowledgeStatement
+
+LearningObject
+
+```
+|
+|
+```
+
+Version
+
+LearningObject
+
+```
+|
+|
+```
+
+AuditRecord
+
+================================================================================
+Entity: Anchor
+==============
+
+Responsabilità:
+
+Rappresentare il riferimento linguistico fondamentale.
+
+Attributi concettuali:
+
+id:
+
+Identificativo univoco.
+
+content:
+
+Rappresentazione dell'anchor.
+
+type:
+
+Tipo di anchor.
+
+metadata:
+
+Informazioni descrittive.
+
+Vincoli:
+
+* un Anchor deve avere un identificativo;
+* un Anchor non viene modificato distruggendo la storia;
+* un Anchor può essere collegato a più Learning Object.
+
+================================================================================
+Entity: LearningObject
+======================
+
+Responsabilità:
+
+Rappresentare una unità persistente di conoscenza ELR.
+
+Attributi concettuali:
+
+id:
+
+Identificativo univoco.
+
+anchor_id:
+
+Riferimento all'Anchor.
+
+statement:
+
+Knowledge Statement associato.
+
+category:
+
+Categoria cognitiva.
+
+state:
+
+Stato lifecycle.
+
+current_version:
+
+Versione corrente.
+
+created_at:
+
+Data creazione.
+
+updated_at:
+
+Ultimo aggiornamento.
+
+================================================================================
+LearningObject State
+====================
+
+Gli stati consentiti sono:
+
+Candidate
+
+Proposed
+
+Reviewed
+
+Active
+
+Updated
+
+Retired
+
+Sono vietate transizioni non definite dal Lifecycle Model.
+
+================================================================================
+Entity: KnowledgeStatement
+==========================
+
+Responsabilità:
+
+Rappresentare il contenuto cognitivo del Learning Object.
+
+Attributi:
+
+id:
+
+Identificativo.
+
+text:
+
+Contenuto della conoscenza.
+
+language:
+
+Lingua.
+
+evidence_reference:
+
+Riferimento alle evidenze utilizzate.
+
+Vincoli:
+
+* il Knowledge Statement non contiene dati personali;
+* il Knowledge Statement non contiene informazioni temporanee di processo.
+
+================================================================================
+Entity: KnowledgeCategory
+=========================
+
+Responsabilità:
+
+Classificare la conoscenza.
+
+Attributi:
+
+id:
+
+Identificativo.
+
+name:
+
+Nome categoria.
+
+parent_id:
+
+Categoria superiore opzionale.
+
+Vincoli:
+
+* la tassonomia deve mantenere coerenza gerarchica.
+
+================================================================================
+Entity: Version
+===============
+
+Responsabilità:
+
+Conservare la storia evolutiva.
+
+Attributi:
+
+id:
+
+Identificativo versione.
+
+entity_id:
+
+Entità associata.
+
+number:
+
+Numero versione.
+
+status:
+
+Stato versione.
+
+created_at:
+
+Data creazione.
+
+content_snapshot:
+
+Rappresentazione storica.
+
+Vincoli:
+
+* una versione attiva è unica;
+* una versione precedente non viene eliminata.
+
+================================================================================
+Entity: AuditRecord
+===================
+
+Responsabilità:
+
+Tracciare eventi significativi.
+
+Attributi:
+
+id:
+
+Identificativo.
+
+entity_id:
+
+Entità coinvolta.
+
+event_type:
+
+Tipo evento.
+
+actor:
+
+Componente responsabile.
+
+timestamp:
+
+Data evento.
+
+================================================================================
+Domain Operations
+=================
+
+Le operazioni dominio iniziali:
+
+create_learning_object()
+
+Crea un nuovo Candidate.
+
+submit_learning_object()
+
+Avvia il processo di revisione.
+
+approve_learning_object()
+
+Porta il Learning Object allo stato Active.
+
+reject_learning_object()
+
+Rifiuta una proposta.
+
+create_new_version()
+
+Genera una nuova versione preservando la precedente.
+
+================================================================================
+Domain Rules
+============
+
+RULE-001
+
+Un Learning Object non può diventare Active senza Review.
+
+RULE-002
+
+Una versione storica non può essere modificata.
+
+RULE-003
+
+Il dominio non accede direttamente alla persistenza.
+
+RULE-004
+
+Ogni modifica significativa genera AuditRecord.
+
+RULE-005
+
+Le transizioni di stato devono rispettare il Lifecycle Model.
+
+================================================================================
+Implementation Boundary
+=======================
+
+Il dominio espone:
+
+* entità;
+* regole;
+* comportamenti.
+
+Il dominio NON espone:
+
+* query database;
+* endpoint HTTP;
+* serializzazione API;
+* configurazioni infrastrutturali.
+
+================================================================================
+Prossimo Incremento
+===================
+
+Il prossimo livello implementativo sarà:
+
+ELR Persistence Implementation Specification
+
+che definirà:
+
+* mapping relazionale;
+* repository;
+* database schema;
+* migrazioni.
+
+================================================================================
+Principio conclusivo
+====================
+
+Il Core Domain rappresenta il nucleo cognitivo dell'ELR.
+
+La tecnologia implementativa deve adattarsi al dominio e non modificare il
+significato della conoscenza rappresentata.
+
+================================================================================
+Fine documento
+
+English Learning Repository (ELR)
+
+ELR Core Domain Implementation Specification
+
+Version: 0.1.0
+
+================================================================================
