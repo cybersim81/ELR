@@ -1,0 +1,316 @@
+================================================================================
+English Learning Repository (ELR)
+
+Architecture Consistency Matrix
+
+Version: 1.1.0
+Status: APPROVED
+================================================================================
+
+Document Identity
+
+Document Type:
+Architecture Governance Document
+
+Purpose:
+Defines consistency relationships, alignment rules, and verification
+criteria across ELR architectural documents.
+
+Dependencies:
+- ELR Architecture Baseline
+- ELR Architecture Specification
+- ELR Architecture Decision Log
+- ELR Documentation Architecture
+
+Maintained By:
+ELR Architecture Governance
+================================================================================
+
+Scopo
+================================================================================
+
+La Architecture Consistency Matrix definisce la relazione tra i concetti
+architetturali ELR, i documenti che li descrivono e il livello di dettaglio
+appropriato.
+
+La matrice viene utilizzata come strumento di controllo durante la creazione,
+revisione ed evoluzione della documentazione ELR.
+
+Principio guida:
+
+Ogni concetto deve avere un documento proprietario principale.
+
+Gli altri documenti possono riferirsi al concetto, ma non duplicarne la
+definizione completa.
+
+La matrice non definisce il comportamento dei componenti,
+ma verifica che ogni responsabilità progettuale sia assegnata
+al documento appropriato.
+
+================================================================================
+Matrice di consistenza architetturale
+================================================================================
+
+
+| Concetto                         | AS | Process | Documento proprietario                    | Azione |
+|----------------------------------|----|---------|--------------------------------------------|--------|
+| Learning Object                  | R  | R       | Learning Object Specification              | Nessuna modifica |
+| Anchor                           | R  | R       | Anchor Specification                       | Nessuna modifica |
+| Knowledge Statement              | R  | R       | Learning Object Specification              | Nessuna modifica |
+| Knowledge Category               | R  | R       | ELR Taxonomy / Knowledge Model             | Separare tassonomia e uso operativo |
+| Learning State                   | R  | R       | Learning State Specification               | Nessuna modifica |
+| Mastery                          | R  | R       | Mastery Engine Specification               | Mantenere solo ruolo architetturale in AS |
+| Evidence                         | R  | R       | Evidence Model Specification               | Modello comune delle Evidence |
+| Change Evidence                  | R  | R       | Evidence Model Specification               | Tipo specifico di Evidence |
+| Mastery Evidence                 | R  | R       | Evidence Model Specification               | Tipo specifico di Evidence |
+| Conversation Episode             | R  | R       | KEP Specification                          | Concetto operativo KEP |
+| Trigger                          | R  | R       | KEP Specification                          | Definizione operativa KEP |
+| Knowledge Candidate              | R  | R       | KEP Specification                          | Output temporaneo KEP |
+| ELR Change Proposal              | R  | R       | KEP Specification                          | Output KEP verso Learning Review |
+| CREATE / MERGE / UPDATE          | R  | R       | KEP Specification                          | Operazioni KEP |
+| Learning Review                  | R  | R       | Learning Review Specification              | Processo approvativo |
+| LIL                              | R  | R       | Learning Interaction Language Specification | Nessuna modifica |
+| Derived Views                    | R  | R       | Specifiche sistemi derivati                | Separare per dominio |
+| Phrasebook                       | R  | R       | Phrasebook Specification                   | Sistema derivato |
+| Exercise System                  | R  | R       | Exercise System Specification              | Sistema derivato |
+| Dashboard / Reporting            | R  | R       | Reporting Specification                    | Documento futuro |
+
+
+================================================================================
+Legenda
+================================================================================
+
+
+✓ = definizione primaria presente nel documento proprietario.
+
+R = riferimento al concetto senza ridefinizione completa.
+
+Il documento proprietario è l'unico documento autorizzato a definire:
+
+- significato completo del concetto;
+
+- responsabilità;
+
+- comportamento interno;
+
+- regole operative.
+
+
+Gli altri documenti possono utilizzare il concetto esclusivamente tramite
+riferimento architetturale.
+
+================================================================================
+Current Ownership Status
+================================================================================
+
+Lo stato corrente dell'ownership documentale è:
+
+
+Architecture:
+
+- ELR Architecture Specification
+
+- ELR Architecture Decision Log
+
+- ELR Architecture Consistency Matrix
+
+
+Domain Model:
+
+- ELR Domain Model Specification
+
+- Learning Object Specification
+
+- Anchor Specification
+
+- Learning State Specification
+
+- ELR Taxonomy
+
+
+Process Model:
+
+- KEP Specification
+
+- Evidence Model Specification
+
+- Learning Review Specification
+
+- Mastery Engine Specification
+
+- Exercise System Specification
+
+
+Interaction:
+
+- Learning Interaction Language Specification
+
+
+Derived Systems:
+
+- Phrasebook Specification
+
+- Exercise System Specification
+
+- Reporting Specification (futuro)
+
+
+Governance:
+
+- ELR Documentation Index
+
+- ELR Architectural Roadmap
+
+- ELR Stress Test Log
+
+- ELR Continuity Package
+
+
+================================================================================
+Regole di ownership documentale
+================================================================================
+
+
+1. Architecture Specification (AS)
+
+Responsabilità:
+
+Definire:
+
+- componenti architetturali;
+
+- responsabilità;
+
+- confini;
+
+- relazioni tra sistemi;
+
+- principi fondamentali.
+
+
+Non deve contenere:
+
+- algoritmi;
+
+- strutture operative dettagliate;
+
+- procedure interne dei componenti.
+
+
+-------------------------------------------------------------------------------
+
+
+2. Component Specifications
+
+Responsabilità:
+
+Definire il funzionamento interno di un componente.
+
+
+Esempi:
+
+- KEP Specification;
+
+- Evidence Model Specification;
+
+- Mastery Engine Specification;
+
+- Learning Review Specification;
+
+- Anchor Specification;
+
+- Learning Object Specification;
+
+- Learning State Specification;
+
+- Phrasebook Specification;
+
+- Exercise System Specification.
+
+
+Contengono:
+
+- modelli operativi;
+
+- strutture dati;
+
+- criteri decisionali;
+
+- flussi interni.
+
+
+-------------------------------------------------------------------------------
+
+
+3. Architecture Decision Log (ADR)
+
+Responsabilità:
+
+Definire il motivo delle scelte architetturali.
+
+
+Contiene:
+
+- problema;
+
+- alternative considerate;
+
+- decisione;
+
+- conseguenze.
+
+
+Non contiene:
+
+- specifiche operative aggiornate.
+
+-------------------------------------------------------------------------------
+
+4. Document Ownership Rule
+
+
+Ogni concetto architetturale deve rispettare:
+
+
+- un solo documento proprietario;
+
+- riferimenti negli altri documenti;
+
+- assenza di definizioni duplicate.
+
+
+La Architecture Consistency Matrix costituisce il controllo formale
+dell'assegnazione delle responsabilità documentali.
+
+
+================================================================================
+Criterio finale di consistenza
+================================================================================
+
+
+Una modifica architetturale è considerata coerente quando:
+
+
+- ogni concetto possiede un documento proprietario;
+
+- gli altri documenti mantengono solamente riferimenti;
+
+- la Architecture Specification contiene esclusivamente responsabilità
+  architetturali;
+
+- gli ADR descrivono motivazioni e conseguenze delle decisioni;
+
+- le Specification descrivono comportamento interno e dettagli operativi;
+
+- i sistemi derivati dipendono esclusivamente dal repository ELR;
+
+- non esistono duplicazioni semantiche tra documenti.
+
+
+================================================================================
+Fine documento
+
+ELR Architecture Consistency Matrix
+
+Versione 1.0.0
+================================================================================

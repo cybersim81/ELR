@@ -1,0 +1,371 @@
+================================================================================
+English Learning Repository (ELR)
+
+Architecture Specification (AS)
+
+Version: 1.1.0
+Status: APPROVED
+================================================================================
+
+
+Document Identity
+================================================================================
+
+Document Name:
+
+English Learning Repository (ELR) Architecture Specification
+
+
+Document Version:
+
+1.1.0
+
+
+Status:
+
+APPROVED
+
+
+Last Updated:
+
+2026-08-01
+
+
+Dependencies:
+
+None (Root Architecture Document)
+
+
+================================================================================
+Scopo
+================================================================================
+
+L'English Learning Repository (ELR) è il repository personale della conoscenza
+linguistica dell'utente.
+
+Il repository rappresenta esclusivamente la conoscenza linguistica acquisita,
+organizzata in Learning Object atomici, persistenti ed evolutivi.
+
+L'ELR non rappresenta:
+
+• il processo di apprendimento;
+
+• la cronologia delle conversazioni;
+
+• i ragionamenti dell'LLM;
+
+• gli stati intermedi dei processi di estrazione.
+
+
+L'ELR costituisce la sorgente autorevole della conoscenza linguistica
+persistente dell'utente.
+
+La padronanza relativa a tale conoscenza è gestita separatamente dal
+Mastery Engine.
+
+Ogni altra rappresentazione del sistema:
+
+• Phrasebook;
+
+• esercizi;
+
+• statistiche;
+
+• dashboard;
+
+• report;
+
+• viste di progresso;
+
+è una vista derivata generata a partire dal repository.
+
+
+================================================================================
+Ruolo del documento
+================================================================================
+
+Questa Architecture Specification descrive l'architettura corrente
+dell'English Learning Repository.
+
+Il documento definisce:
+
+• modello concettuale;
+
+• componenti architetturali;
+
+• responsabilità dei componenti;
+
+• confini tra sistemi;
+
+• relazioni architetturali;
+
+• principi strutturali.
+
+
+Le decisioni che hanno determinato l'evoluzione del modello sono mantenute
+nell'ELR Architecture Decision Log.
+
+
+Le specifiche operative dei singoli componenti sono mantenute nei documenti
+specialistici dedicati.
+
+
+================================================================================
+Relazione con Architecture Decision Log
+================================================================================
+
+L'ELR Architecture Decision Log costituisce la sorgente autorevole delle
+decisioni architetturali.
+
+Questa Architecture Specification descrive lo stato architetturale derivato
+dalle decisioni approvate.
+
+
+Le modifiche architetturali devono seguire il processo di progettazione definito nell'ELR Design Protocol:
+
+1.
+
+identificazione del problema progettuale;
+
+
+2.
+
+analisi delle alternative;
+
+
+3.
+
+approvazione della decisione;
+
+
+4.
+
+registrazione dell'ADR;
+
+
+5.
+
+aggiornamento della Architecture Specification.
+
+
+La Architecture Specification non incorpora gli ADR completi.
+
+
+================================================================================
+Principi fondamentali
+================================================================================
+
+
+-------------------------------------------------------------------------------
+Repository della conoscenza
+-------------------------------------------------------------------------------
+
+L'ELR conserva conoscenza linguistica persistente, non conversazioni o processi.
+
+
+-------------------------------------------------------------------------------
+Learning Object atomici
+-------------------------------------------------------------------------------
+
+Ogni Learning Object rappresenta una singola conoscenza linguistica
+indipendente, acquisibile, persistente e verificabile.
+
+
+-------------------------------------------------------------------------------
+Anchor-centric Knowledge
+-------------------------------------------------------------------------------
+
+Ogni Learning Object è associato ad un Anchor che rappresenta l'unità
+linguistica osservabile da acquisire.
+
+
+-------------------------------------------------------------------------------
+Knowledge Statement First
+-------------------------------------------------------------------------------
+
+Il contenuto conoscitivo del Learning Object è rappresentato dal Knowledge
+Statement associato all'Anchor.
+
+
+-------------------------------------------------------------------------------
+Repository First
+-------------------------------------------------------------------------------
+
+Tutte le funzionalità derivate utilizzano l'ELR come sorgente primaria.
+
+
+-------------------------------------------------------------------------------
+Human Approval
+-------------------------------------------------------------------------------
+
+Gli aggiornamenti del repository richiedono approvazione mediante Learning
+Review.
+
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+Mastery as Learning Object State
+-------------------------------------------------------------------------------
+
+La padronanza relativa a ciascun Learning Object è rappresentata dalla Mastery.
+
+La Mastery non appartiene al contenuto conoscitivo del Learning Object.
+
+
+================================================================================
+Riferimenti ADR
+================================================================================
+
+I principi precedenti sono definiti attraverso le seguenti decisioni:
+
+
+- ADR-001 — Atomic Learning Objects
+
+- ADR-002 — Repository First
+
+- ADR-004 — Stable Identity
+
+- ADR-005 — Knowledge Repository
+
+- ADR-006 — Human Approval
+
+- ADR-007 — Anchor-centric Knowledge
+
+- ADR-008 — Knowledge Statement First
+
+- ADR-013 — Mastery Representation
+
+
+================================================================================
+Domain Model
+================================================================================
+
+Il Domain Model descrive le entità concettuali che costituiscono il repository
+ELR e gli oggetti necessari alla sua interpretazione.
+
+
+Il modello persistente dell'ELR rappresenta esclusivamente conoscenza
+linguistica consolidata.
+
+
+Gli oggetti appartenenti ai processi di estrazione, valutazione o interazione
+possono essere utilizzati dai sistemi correlati ma non costituiscono entità
+persistenti del repository.
+
+Evidence appartiene al Process Layer e supporta i processi ELR senza
+costituire conoscenza persistente del repository.
+
+================================================================================
+Process Objects
+================================================================================
+
+Il sistema ELR utilizza oggetti di processo che supportano l'evoluzione del
+repository ma non appartengono al modello persistente della conoscenza.
+
+Esempi:
+
+- Knowledge Candidate;
+
+- ELR Change Proposal;
+
+- Evidence.
+
+Questi oggetti appartengono ai processi di evoluzione, valutazione e gestione
+del repository.
+
+================================================================================
+Learning Object
+================================================================================
+
+Il Learning Object rappresenta l'unità fondamentale di conoscenza persistente
+dell'ELR.
+
+
+Un Learning Object è composto concettualmente da:
+
+    Anchor + Knowledge Statement
+
+e include informazioni descrittive e classificative necessarie alla
+rappresentazione della conoscenza, come la Knowledge Category.
+
+
+Un Learning Object rappresenta una singola conoscenza linguistica:
+
+
+• atomica;
+
+• indipendente;
+
+• acquisibile;
+
+• riutilizzabile;
+
+• verificabile.
+
+
+Un Learning Object possiede un'identità stabile durante tutta la propria
+esistenza.
+
+
+L'evoluzione del Learning Object avviene attraverso miglioramenti della
+conoscenza rappresentata senza modificare la sua identità quando la conoscenza
+rimane concettualmente equivalente.
+
+
+Riferimenti ADR:
+
+
+- ADR-001 — Atomic Learning Objects
+
+- ADR-004 — Stable Identity
+
+- ADR-010 — Reusable Knowledge
+
+
+================================================================================
+Anchor
+================================================================================
+
+L'Anchor rappresenta l'unità linguistica osservabile a cui viene associata una
+conoscenza acquisibile.
+
+
+L'Anchor rappresenta:
+
+
+• la forma linguistica nella lingua target;
+
+• la conoscenza corretta da acquisire;
+
+• un elemento riconoscibile nella produzione linguistica.
+
+
+L'Anchor non rappresenta:
+
+
+• l'errore dell'utente;
+
+• una categoria grammaticale astratta;
+
+• una spiegazione metalinguistica generale.
+
+
+Per la definizione completa dell'Anchor si rimanda alla
+Anchor Specification.
+
+
+Riferimento ADR:
+
+
+- ADR-007 — Anchor-centric Knowledge
+
+================================================================================
+Fine documento
+
+English Learning Repository (ELR)
+
+Architecture Specification (AS)
+
+Version: 1.1.0
+
+================================================================================

@@ -1,0 +1,505 @@
+================================================================================
+English Learning Repository (ELR)
+
+Documentation Architecture
+
+Version: 1.1.0
+Status: APPROVED
+================================================================================
+
+
+Document Identity
+================================================================================
+
+Document Name:
+
+ELR Documentation Architecture
+
+
+Document Version:
+
+1.1.0
+
+
+Status:
+
+APPROVED
+
+
+Dependencies:
+
+- ELR Architecture Specification
+
+- ELR Documentation Index
+
+================================================================================
+Document Header Standard
+================================================================================
+
+All ELR documentation artifacts MUST follow a common header structure.
+
+The document header provides:
+- document identification;
+- version control;
+- lifecycle status;
+- architectural ownership;
+- dependency traceability.
+
+The mandatory header structure is:
+
+================================================================================
+English Learning Repository (ELR)
+
+<Document Title>
+
+Version: X.Y.Z
+Status: <STATUS>
+================================================================================
+
+Document Identity
+
+Document Type:
+<Architecture Document | Specification | Process Document | Governance Document>
+
+Purpose:
+<Short description of the document responsibility>
+
+Dependencies:
+- <Required ELR documents>
+
+Maintained By:
+<Responsible ELR domain or governance entity>
+
+================================================================================
+
+Header Rules
+
+1. The version declared inside the document MUST match the document filename.
+
+2. Version numbers MUST follow semantic versioning:
+   - MAJOR: architectural breaking changes;
+   - MINOR: compatible additions;
+   - PATCH: corrections and clarifications.
+
+3. Every document MUST declare its lifecycle status.
+
+Allowed lifecycle statuses:
+
+- DRAFT
+- REVIEW
+- APPROVED
+- BASELINE
+- DEPRECATED
+
+4. Archived documents MUST preserve their original headers and MUST NOT be
+modified after archival.
+
+5. Current documents MUST never depend on archived versions.
+
+================================================================================
+Document Lifecycle Management
+================================================================================
+
+ELR documents progress through controlled lifecycle states.
+
+DRAFT:
+Document under active development.
+
+REVIEW:
+Document submitted for architectural or domain review.
+
+APPROVED:
+Document accepted as valid and usable.
+
+BASELINE:
+Document represents an official architectural reference point.
+
+DEPRECATED:
+Document remains available for historical purposes but is no longer active.
+
+Lifecycle transitions MUST be recorded through the Architecture Decision Log
+when they affect architectural consistency.
+
+================================================================================
+Scopo
+================================================================================
+
+Questo documento definisce l'architettura del corpus documentale
+dell'English Learning Repository (ELR).
+
+La Documentation Architecture stabilisce:
+
+- come è organizzata la documentazione;
+
+- quali documenti esistono;
+
+- le responsabilità di ciascun documento;
+
+- il principio di ownership dei concetti;
+
+- le regole che evitano duplicazioni e incoerenze.
+
+La Documentation Architecture non definisce il modello ELR.
+
+Definisce esclusivamente l'organizzazione della documentazione.
+
+
+================================================================================
+Principi fondamentali
+================================================================================
+
+
+## DOC-001 — Single Source of Truth
+================================================================================
+
+Ogni concetto architetturale possiede un unico documento proprietario.
+
+Gli altri documenti possono fare riferimento al concetto ma non devono
+ridefinirlo.
+
+
+================================================================================
+## DOC-002 — Responsibility Separation
+================================================================================
+
+Ogni documento descrive esclusivamente le responsabilità del proprio dominio.
+
+Le definizioni non devono essere duplicate tra documenti differenti.
+
+
+================================================================================
+## DOC-003 — Progressive Detail
+================================================================================
+
+L'architettura documentale procede dal generale allo specifico.
+
+I documenti di livello superiore descrivono i principi.
+
+I documenti di livello inferiore descrivono il funzionamento dei singoli
+componenti.
+
+
+================================================================================
+Livello 1 — Architecture Core
+================================================================================
+
+Definisce l'architettura complessiva dell'ELR.
+
+Documenti:
+
+• ELR Architecture Specification
+
+• ELR Architecture Decision Log
+
+• ELR Architecture Consistency Matrix
+
+• ELR Architecture Baseline
+
+Responsabilità:
+
+- architettura generale;
+
+- principi architetturali;
+
+- componenti;
+
+- responsabilità;
+
+- decisioni progettuali;
+
+- consistenza dell'architettura.
+
+
+================================================================================
+Livello 2 — Domain Model
+================================================================================
+
+Definisce il modello concettuale persistente.
+
+Documenti:
+
+• ELR Domain Model Specification
+
+• Learning Object Specification
+
+• Anchor Specification
+
+• Learning State Specification
+
+• Phrasebook Specification
+
+• ELR Taxonomy
+
+Responsabilità:
+
+- concetti persistenti;
+
+- relazioni del dominio;
+
+- classificazione della conoscenza;
+
+- modello linguistico.
+
+
+================================================================================
+Livello 3 — Process Model
+================================================================================
+
+Definisce i processi che operano sul modello.
+
+Documenti:
+
+• Knowledge Extraction Pipeline Specification
+
+• Evidence Model Specification
+
+• Learning Review Specification
+
+• Mastery Engine Specification
+
+• Exercise System Specification
+
+• Learning Activity Specification
+
+
+Responsabilità:
+
+- workflow;
+
+- analisi;
+
+- produzione di Evidence;
+
+- gestione della Mastery;
+
+- processi didattici.
+
+
+================================================================================
+Livello 4 — Interaction
+================================================================================
+
+Definisce l'interazione tra utente e sistema.
+
+Documenti:
+
+• Learning Interaction Language Specification
+
+Responsabilità:
+
+- linguaggio di interazione;
+
+- shortcut;
+
+- marker;
+
+- segnali espliciti.
+
+
+================================================================================
+Livello 5 — Platform & Operations
+================================================================================
+
+Definisce gli aspetti infrastrutturali del sistema.
+
+Documenti:
+
+• Data Model Specification
+
+• ELR API Specification
+
+• ELR Event Model Specification
+
+• ELR Persistence Model Specification
+
+• ELR Security and Access Model Specification
+
+• ELR Import Export Specification
+
+• ELR Validation Rules Specification
+
+• ELR Versioning Model Specification
+
+• ELR Lifecycle Specification
+
+Responsabilità:
+
+- persistenza;
+
+- API;
+
+- eventi;
+
+- sicurezza;
+
+- versionamento;
+
+- validazione;
+
+- lifecycle.
+
+
+================================================================================
+Livello 6 — Governance
+================================================================================
+
+Supporta la gestione evolutiva del progetto.
+
+Documenti:
+
+• ELR Documentation Architecture
+
+• ELR Documentation Index
+
+• ELR Design Protocol
+
+• ELR Roadmap
+
+• ELR Stress Test Log
+
+• ELR Continuity Package
+
+
+
+Responsabilità:
+
+- organizzazione della documentazione;
+
+- pianificazione evolutiva;
+
+- continuità progettuale;
+
+- validazione dell'architettura.
+
+
+================================================================================
+Ownership Rule
+================================================================================
+
+Ogni concetto appartiene ad un solo documento.
+
+Le responsabilità principali sono:
+
+Architettura
+
+→ ELR Architecture Specification
+
+Decisioni progettuali
+
+→ ELR Architecture Decision Log
+
+Knowledge Extraction
+
+→ KEP Specification
+
+Learning Object
+
+→ Learning Object Specification
+
+Anchor
+
+→ Anchor Specification
+
+Evidence
+
+→ Evidence Model Specification
+
+Learning Review
+
+→ Learning Review Specification
+
+Mastery
+
+→ Mastery Engine Specification
+
+Learning State
+
+→ Learning State Specification
+
+Phrasebook
+
+→ Phrasebook Specification
+
+Interaction
+
+→ Learning Interaction Language Specification
+
+Data Model
+
+→ Data Model Specification
+
+Platform Operations
+
+→ rispettive Platform Specifications
+
+Exercise System
+
+→ Exercise System Specification
+
+Learning Activity
+
+→ Learning Activity Specification
+
+================================================================================
+Document Design Principle
+================================================================================
+
+Il corpus documentale segue una gerarchia stabile.
+
+Architecture Specification
+
+descrive cosa esiste.
+
+Domain Specifications
+
+descrivono il modello persistente.
+
+Process Specifications
+
+descrivono il comportamento dei processi.
+
+Platform Specifications
+
+descrivono l'infrastruttura.
+
+Architecture Decision Log
+
+descrive perché una decisione è stata presa.
+
+Documentation Index
+
+descrive dove trovare ogni documento.
+
+Architecture Baseline
+
+identifica l'insieme ufficiale delle specifiche che costituiscono la baseline architetturale corrente.
+
+Questa separazione consente l'evoluzione indipendente dei singoli documenti
+preservando la coerenza dell'intero corpus.
+
+
+================================================================================
+Principio conclusivo
+================================================================================
+
+La Documentation Architecture rappresenta la struttura ufficiale della
+documentazione ELR.
+
+Ogni concetto possiede un unico documento proprietario.
+
+Ogni documento ha una responsabilità chiaramente delimitata.
+
+L'intero corpus documentale costituisce una rappresentazione coerente,
+modulare ed evolutiva dell'architettura dell'English Learning Repository.
+
+
+================================================================================
+Fine documento
+
+English Learning Repository (ELR)
+
+Documentation Architecture
+
+Version: 1.1.0
+
+================================================================================
