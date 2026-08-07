@@ -1,0 +1,554 @@
+================================================================================
+English Learning Repository (ELR)
+
+ELR API Specification
+
+Version: 1.0.0
+Status: DRAFT
+================================================================================
+
+
+Document Identity
+================================================================================
+
+Document Name:
+
+ELR API Specification
+
+
+Document Version:
+
+1.0.0
+
+
+Status:
+
+DRAFT
+
+
+Dependencies:
+
+- ELR Architecture Specification
+
+- ELR Domain Model Specification
+
+- ELR Taxonomy
+
+- Learning Object Specification
+
+- Learning State Specification
+
+- Evidence Model Specification
+
+- Mastery Engine Specification
+
+- Learning Review Specification
+
+
+================================================================================
+Scopo
+================================================================================
+
+La ELR API Specification definisce il contratto di accesso programmatico
+all'English Learning Repository (ELR).
+
+L'API consente ai componenti autorizzati di:
+
+- interrogare conoscenza persistente;
+
+- recuperare Learning Object;
+
+- accedere allo stato di apprendimento;
+
+- proporre modifiche al repository;
+
+- registrare eventi di processo previsti dall'architettura.
+
+
+L'API non definisce:
+
+- logica di estrazione della conoscenza;
+
+- criteri KEP;
+
+- calcolo della Mastery;
+
+- decisioni di Learning Review.
+
+
+Queste responsabilità appartengono ai componenti dedicati.
+
+
+================================================================================
+Responsabilità del documento
+================================================================================
+
+Questo documento definisce:
+
+- principi dell'interfaccia API;
+
+- confini di accesso;
+
+- operazioni principali;
+
+- modelli di richiesta e risposta;
+
+- separazione tra lettura e modifica.
+
+
+Questo documento NON definisce:
+
+- implementazione tecnica;
+
+- database interno;
+
+- algoritmi applicativi;
+
+- interfaccia utente.
+
+
+================================================================================
+Principio fondamentale
+================================================================================
+
+L'API rappresenta il contratto tra sistemi.
+
+L'API espone capacità.
+
+L'API non espone direttamente il funzionamento interno del repository.
+
+
+Principio:
+
+"Il sistema accede alla conoscenza attraverso contratti stabili,
+non attraverso strutture interne."
+
+
+================================================================================
+1. API Boundary
+================================================================================
+
+L'ELR API appartiene al livello Integration Layer.
+
+
+Relazione:
+
+
+Application Layer
+
+        |
+
+        v
+
+ELR API
+
+        |
+
+        v
+
+ELR Services
+
+        |
+
+        v
+
+ELR Repository
+
+
+L'API non sostituisce i componenti di dominio.
+
+Coordina l'accesso.
+
+
+================================================================================
+2. API Design Principles
+================================================================================
+
+
+--------------------------------------------------------------------------------
+API-001 — Repository Protection
+--------------------------------------------------------------------------------
+
+L'API non consente modifiche dirette al repository.
+
+
+Le modifiche devono seguire:
+
+
+Proposal
+
+        |
+
+        v
+
+Review
+
+        |
+
+        v
+
+Persistence
+
+
+--------------------------------------------------------------------------------
+API-002 — Domain Based Access
+--------------------------------------------------------------------------------
+
+Le operazioni API devono riflettere concetti ELR.
+
+
+Esempi validi:
+
+- Learning Object;
+
+- Anchor;
+
+- Mastery;
+
+- Evidence.
+
+
+Esempi non validi:
+
+- tabelle interne;
+
+- strutture database;
+
+- campi tecnici.
+
+
+--------------------------------------------------------------------------------
+API-003 — Separation of Read and Write
+--------------------------------------------------------------------------------
+
+Le operazioni di consultazione e modifica devono essere separate.
+
+
+Read:
+
+accesso alla conoscenza.
+
+
+Write:
+
+proposta di cambiamento.
+
+
+================================================================================
+3. API Consumers
+================================================================================
+
+Possibili utilizzatori dell'API:
+
+
+--------------------------------------------------------------------------------
+Knowledge Extraction Pipeline
+--------------------------------------------------------------------------------
+
+Utilizza l'API per:
+
+- verificare Learning Object esistenti;
+
+- recuperare conoscenza;
+
+- proporre modifiche.
+
+
+--------------------------------------------------------------------------------
+Learning Review
+--------------------------------------------------------------------------------
+
+Utilizza l'API per:
+
+- recuperare Change Proposal;
+
+- approvare o rifiutare modifiche.
+
+
+--------------------------------------------------------------------------------
+Mastery Engine
+--------------------------------------------------------------------------------
+
+Utilizza l'API per:
+
+- recuperare Learning Object;
+
+- associare Evidence;
+
+- aggiornare stato di padronanza secondo le proprie regole.
+
+
+--------------------------------------------------------------------------------
+Exercise System
+--------------------------------------------------------------------------------
+
+Utilizza l'API per:
+
+- recuperare conoscenze;
+
+- selezionare Learning Object;
+
+- produrre attività.
+
+
+================================================================================
+4. Read Operations
+================================================================================
+
+
+L'API deve supportare operazioni di sola lettura.
+
+
+Esempi:
+
+
+--------------------------------------------------------------------------------
+Get Learning Object
+--------------------------------------------------------------------------------
+
+Permette il recupero di un Learning Object.
+
+
+Input:
+
+- Learning Object identifier
+
+
+Output:
+
+- Anchor;
+
+- Knowledge Statement;
+
+- Knowledge Category;
+
+- Learning State.
+
+
+--------------------------------------------------------------------------------
+Search Learning Object
+--------------------------------------------------------------------------------
+
+Permette la ricerca di conoscenza.
+
+
+La ricerca deve considerare:
+
+- Anchor;
+
+- categoria;
+
+- relazione concettuale.
+
+
+Non deve dipendere esclusivamente dalla similarità testuale.
+
+
+--------------------------------------------------------------------------------
+Get Knowledge by Anchor
+--------------------------------------------------------------------------------
+
+Permette il recupero delle conoscenze associate a un Anchor.
+
+
+================================================================================
+5. Write Operations
+================================================================================
+
+Le operazioni di scrittura non modificano direttamente l'ELR.
+
+
+L'API deve supportare:
+
+
+--------------------------------------------------------------------------------
+Create Change Proposal
+--------------------------------------------------------------------------------
+
+Permette alla KEP di proporre una modifica.
+
+
+Input:
+
+- Change Type;
+
+- Change Payload;
+
+- Change Evidence.
+
+
+Output:
+
+- identificativo della proposta.
+
+
+--------------------------------------------------------------------------------
+Update Proposal Status
+--------------------------------------------------------------------------------
+
+Permette alla Learning Review di aggiornare lo stato della proposta.
+
+
+Possibili stati:
+
+- Pending;
+
+- Approved;
+
+- Rejected.
+
+
+================================================================================
+6. Mastery Operations
+================================================================================
+
+L'API deve consentire l'accesso ai dati relativi alla Mastery senza incorporare
+la logica di calcolo.
+
+
+Operazioni:
+
+
+- recupero Mastery State;
+
+- registrazione Mastery Evidence;
+
+- recupero storico delle evidenze.
+
+
+Il calcolo rimane responsabilità del Mastery Engine.
+
+
+================================================================================
+7. Evidence Operations
+================================================================================
+
+L'API deve mantenere separata Evidence da Knowledge.
+
+
+Operazioni possibili:
+
+
+- creare Evidence;
+
+- recuperare Evidence;
+
+- associare Evidence a Learning Object.
+
+
+Evidence non diventa automaticamente Learning Object.
+
+
+================================================================================
+8. Security and Access Boundary
+================================================================================
+
+L'accesso API deve rispettare:
+
+
+- autenticazione;
+
+- autorizzazione;
+
+- separazione dei ruoli.
+
+
+Esempio:
+
+
+KEP:
+
+può proporre modifiche.
+
+
+Learning Review:
+
+può approvare.
+
+
+Mastery Engine:
+
+può aggiornare dati di padronanza.
+
+
+Un componente non deve assumere responsabilità di altri componenti.
+
+
+================================================================================
+9. Versioning
+================================================================================
+
+L'API deve essere versionata.
+
+
+Modifiche incompatibili richiedono una nuova versione.
+
+
+Esempio:
+
+
+/api/v1/
+
+
+Versionamento API separato dal versionamento dei Learning Object.
+
+
+================================================================================
+10. API Boundary Summary
+================================================================================
+
+
+L'API:
+
+- espone conoscenza;
+
+- riceve proposte;
+
+- collega componenti.
+
+
+L'API non:
+
+- decide conoscenza;
+
+- calcola Mastery;
+
+- sostituisce Learning Review;
+
+- conserva conversazioni.
+
+
+================================================================================
+Principio conclusivo
+================================================================================
+
+La ELR API Specification definisce il confine tecnico attraverso cui i
+componenti dell'ecosistema accedono alla conoscenza.
+
+
+L'ELR conserva conoscenza.
+
+
+La KEP propone evoluzioni.
+
+
+La Learning Review decide modifiche.
+
+
+Il Mastery Engine interpreta evidenze.
+
+
+L'API garantisce che ogni componente interagisca attraverso responsabilità
+chiare e contratti stabili.
+
+
+================================================================================
+Fine documento
+
+English Learning Repository (ELR)
+
+ELR API Specification
+
+Version: 1.0.0
+
+================================================================================
