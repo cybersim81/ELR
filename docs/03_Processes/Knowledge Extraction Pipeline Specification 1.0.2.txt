@@ -1,0 +1,3022 @@
+================================================================================
+English Learning Repository (ELR)
+
+Knowledge Extraction Pipeline Specification
+
+Version: 1.0.2
+Status: APPROVED
+================================================================================
+
+Document Identity
+
+Document Type:
+Process Specification
+
+Purpose:
+Defines the extraction pipeline responsible for transforming linguistic
+sources into validated ELR knowledge objects.
+
+Dependencies:
+- ELR Domain Model Specification
+- Learning Object Specification
+- Evidence Model Specification
+- ELR Validation Rules Specification
+
+Maintained By:
+ELR Process Architecture
+
+================================================================================
+Scopo
+================================================================================
+
+La Knowledge Extraction Pipeline (KEP) definisce il processo attraverso cui
+eventi conversazionali vengono analizzati per individuare eventuali conoscenze
+linguistiche persistenti da proporre all'English Learning Repository (ELR).
+
+
+La KEP rappresenta il livello di trasformazione tra:
+
+• interazione conversazionale;
+
+• conoscenza candidata;
+
+• proposta di aggiornamento del repository.
+
+
+La KEP non rappresenta il repository della conoscenza.
+
+La KEP non conserva il processo di apprendimento.
+
+La KEP produce risultati intermedi e proposte strutturate destinate ai sistemi
+successivi.
+
+Gli output principali della KEP sono:
+
+• Knowledge Candidate;
+
+• ELR Change Proposal;
+
+• Evidence Candidate secondo il modello Evidence.
+
+Il Knowledge Candidate rappresenta una possibile conoscenza linguistica identificata durante l'analisi della Conversation Episode.
+
+La ELR Change Proposal rappresenta una proposta atomica di modifica del repository derivata dalla valutazione del Knowledge Candidate.
+
+L'Evidence Candidate rappresenta una rappresentazione strutturata di un evento osservabile potenzialmente rilevante per un successivo processo di validazione secondo il modello definito nella Evidence Model Specification.
+
+L'Evidence Candidate non rappresenta Evidence persistente, Mastery Evidence validata o stato dell'utente.
+
+La trasformazione di un Evidence Candidate in Change Evidence o Mastery Evidence non appartiene alla KEP, ma al sistema Evidence secondo le regole definite nella Evidence Model Specification.
+
+La trasformazione da Knowledge Candidate a ELR Change Proposal non è automatica e richiede il superamento dei criteri di validazione definiti dalla KEP.
+
+
+================================================================================
+Obiettivo della KEP
+================================================================================
+
+L'obiettivo della KEP è identificare la minima conoscenza linguistica
+necessaria che emerge dalla conversazione e rappresentarla in una forma
+compatibile con il modello ELR.
+
+
+La KEP deve:
+
+• individuare conoscenze linguistiche riutilizzabili;
+
+• evitare sovraestrazione;
+
+• separare errore osservato e conoscenza acquisibile;
+
+• identificare correttamente l'Anchor;
+
+• produrre Knowledge Statement atomici;
+
+• proporre modifiche coerenti con Learning Object esistenti.
+
+
+================================================================================
+Principi fondamentali
+================================================================================
+
+
+## KEP-001 — Knowledge Extraction not Conversation Storage
+================================================================================
+
+La KEP analizza conversazioni ma non le memorizza come conoscenza.
+
+
+La conversazione rappresenta esclusivamente una fonte temporanea di evidenza.
+
+
+Il risultato prodotto dalla KEP è esclusivamente:
+
+• ELR Change Proposal;
+
+• Mastery Evidence.
+
+La persistenza dei Learning Object appartiene all'ELR dopo approvazione.
+
+L'aggiornamento della Mastery appartiene al Mastery Engine.
+
+
+================================================================================
+## KEP-002 — Minimal Knowledge Extraction
+================================================================================
+
+La KEP deve estrarre la minima conoscenza sufficiente per rappresentare
+l'apprendimento.
+
+
+La quantità di conoscenza estratta non deve dipendere da:
+
+• lunghezza della spiegazione;
+
+• numero di errori;
+
+• complessità della frase originale.
+
+
+La KEP deve preferire:
+
+una conoscenza piccola, atomica e riutilizzabile
+
+rispetto a:
+
+una rappresentazione completa ma difficilmente riutilizzabile.
+
+================================================================================
+## KEP-006 — Knowledge Granularity Control
+================================================================================
+
+La KEP deve mantenere una granularità uniforme dei Learning Object.
+
+La dimensione di una conoscenza non deve dipendere dalla complessità della
+Conversation Episode.
+
+Ogni Knowledge Statement deve rappresentare la più piccola unità di conoscenza
+che possa essere:
+
+• appresa;
+
+• riutilizzata;
+
+• verificata;
+
+• mantenuta indipendentemente.
+
+La KEP deve evitare sia la frammentazione eccessiva sia l'aggregazione
+artificiale della conoscenza.
+
+================================================================================
+## KEP-007 — Candidate Confidence Model
+================================================================================
+
+La KEP può associare ad ogni Knowledge Candidate una valutazione della
+confidenza con cui la conoscenza è stata identificata.
+
+La Candidate Confidence rappresenta esclusivamente una misura della qualità
+dell'estrazione.
+
+Non rappresenta:
+
+• probabilità di apprendimento;
+
+• livello di Mastery;
+
+• probabilità di approvazione della proposta;
+
+• importanza della conoscenza.
+
+La Candidate Confidence supporta il processo di valutazione della Learning
+Review senza modificare i criteri di persistenza dell'ELR.
+
+La definizione del modello matematico o algoritmico utilizzato per calcolare
+la Candidate Confidence non appartiene alla presente specifica.
+
+
+La Candidate Confidence può considerare fattori quali:
+
+• chiarezza del Trigger;
+
+• qualità dell'Anchor Resolution;
+
+• precisione del Knowledge Statement;
+
+• presenza di evidenze convergenti;
+
+• ambiguità del contesto linguistico.
+
+
+La Candidate Confidence è un'informazione operativa della KEP e non modifica
+la struttura o il significato dei Learning Object persistenti.
+
+================================================================================
+## KEP-008 — Episode Segmentation
+================================================================================
+
+La KEP opera su una Conversation Episode definita come unità temporanea di
+analisi.
+
+La segmentazione della Conversation Episode deve fornire il contesto minimo
+necessario per identificare una possibile conoscenza linguistica persistente.
+
+Una Episode deve essere:
+
+• sufficientemente piccola da evitare l'aggregazione artificiale di conoscenze
+indipendenti;
+
+• sufficientemente ampia da preservare il contesto necessario alla corretta
+interpretazione linguistica.
+
+
+La segmentazione influenza esclusivamente il processo di estrazione.
+
+Non determina:
+
+• persistenza della Conversation Episode;
+
+• creazione automatica di Learning Object;
+
+• modifica dello stato dell'utente.
+
+
+La presente specifica definisce il ruolo della segmentazione ma non impone
+specifici algoritmi di identificazione delle Episode.
+
+================================================================================
+## KEP-003 — Knowledge over Error
+================================================================================
+
+La KEP non estrae errori.
+
+La KEP utilizza gli errori come possibile Trigger per individuare una
+conoscenza corretta.
+
+
+Esempio:
+
+
+Errore:
+
+"I did a photo"
+
+
+Non viene estratto:
+
+
+do + photo
+
+
+Viene identificata:
+
+
+Anchor:
+
+take + photo
+
+
+Knowledge Statement:
+
+Per esprimere l'azione di scattare una fotografia si usa
+"take + photo".
+
+
+================================================================================
+## KEP-004 — Repository Consistency
+================================================================================
+
+Ogni proposta della KEP deve essere compatibile con il modello persistente
+dell'ELR.
+
+
+La KEP deve rispettare:
+
+• Anchor-centric Knowledge;
+
+• Atomic Learning Objects;
+
+• Positive Knowledge Representation;
+
+• Reusable Knowledge.
+
+
+================================================================================
+## KEP-005 — Separation of Responsibilities
+================================================================================
+
+La KEP mantiene separati:
+
+-------------------------------------------------------------------------------
+
+Estrazione della conoscenza
+
+Responsabilità della KEP.
+
+
+-------------------------------------------------------------------------------
+
+Approvazione della modifica
+
+Responsabilità della Learning Review.
+
+
+-------------------------------------------------------------------------------
+
+Persistenza della conoscenza
+
+Responsabilità dell'ELR.
+
+
+-------------------------------------------------------------------------------
+
+Aggiornamento della padronanza
+
+Responsabilità del Mastery Engine.
+
+================================================================================
+## KEP-010 — Human Review Boundary
+================================================================================
+
+La KEP produce esclusivamente proposte.
+
+La decisione finale sull'evoluzione del repository appartiene alla
+Learning Review.
+
+La KEP non approva, modifica o rifiuta autonomamente un Learning Object.
+
+La Proposal Rationale e la Change Evidence supportano la valutazione umana ma
+non costituiscono una decisione.
+
+La Learning Review mantiene il controllo finale sull'approvazione delle
+modifiche al repository.
+
+================================================================================
+## KEP-009 — Extraction Determinism
+================================================================================
+
+A parità di:
+
+• Conversation Episode;
+
+• stato dell'ELR;
+
+• configurazione della KEP;
+
+la Knowledge Extraction Pipeline deve produrre lo stesso insieme di:
+
+• Knowledge Candidate;
+
+• ELR Change Proposal;
+
+• Mastery Evidence.
+
+Eventuali modelli probabilistici utilizzati internamente devono produrre risultati normalizzati secondo la configurazione della KEP.
+
+Il comportamento della KEP deve essere deterministico.
+
+Eventuali differenze implementative non devono modificare il significato
+concettuale dell'estrazione.
+
+================================================================================
+Boundary della KEP
+================================================================================
+
+La KEP si colloca tra il livello conversazionale e il repository.
+
+
+Il confine architetturale è:
+
+
+Conversation
+
+      |
+
+      v
+
+KEP
+
+      |
+
+      v
+
+ELR Change Proposal
+
+      |
+
+      v
+
+Learning Review
+
+      |
+
+      v
+
+ELR
+
+
+================================================================================
+Responsabilità della KEP
+================================================================================
+
+La KEP è responsabile di:
+
+
+• analisi della Conversation Episode;
+
+• individuazione dei Trigger;
+
+• creazione dei Knowledge Candidate;
+
+• Anchor Resolution;
+
+• estrazione del Knowledge Statement;
+
+• classificazione della conoscenza;
+
+• confronto con Learning Object esistenti;
+
+• classificazione CREATE / MERGE / UPDATE;
+
+• produzione di Evidence Candidate destinati alla successiva validazione secondo il modello Evidence;
+
+• identificazione di eventi potenzialmente utilizzabili come Mastery Evidence.
+
+
+================================================================================
+Non responsabilità della KEP
+================================================================================
+
+La KEP non è responsabile di:
+
+
+• memorizzare conversazioni;
+
+• modificare direttamente il repository;
+
+• calcolare Mastery;
+
+• decidere il valore numerico della padronanza;
+
+• generare viste derivate;
+
+• sostituire il giudizio dell'utente nella Learning Review.
+
+
+================================================================================
+KEP Input Model
+================================================================================
+
+Il KEP Input Model definisce gli elementi che la Knowledge Extraction Pipeline
+riceve come ingresso durante l'analisi di una interazione.
+
+
+L'input principale della KEP è rappresentato dalla:
+
+Conversation Episode
+
+
+La Conversation Episode viene analizzata per individuare:
+
+• Trigger;
+
+• possibili conoscenze linguistiche;
+
+• contesto necessario alla valutazione;
+
+• elementi utili alla produzione di Evidence.
+
+
+================================================================================
+Conversation Episode
+================================================================================
+
+La Conversation Episode rappresenta una unità temporanea di analisi
+conversazionale.
+
+
+Una Conversation Episode contiene gli elementi necessari alla KEP per
+valutare se dalla conversazione emerga una conoscenza linguistica persistente.
+
+
+Può includere:
+
+
+• identificativo temporaneo dell'episodio;
+
+• messaggi utente rilevanti;
+
+• messaggi del sistema rilevanti;
+
+• contesto linguistico necessario;
+
+• Trigger individuati;
+
+• informazioni utili alla produzione di Evidence.
+
+
+================================================================================
+Conversation Episode Boundary
+================================================================================
+
+La Conversation Episode non rappresenta una entità del repository ELR.
+
+
+Non costituisce:
+
+• memoria conversazionale;
+
+• cronologia dell'apprendimento;
+
+• conoscenza linguistica;
+
+• stato dell'utente.
+
+
+La Conversation Episode esiste esclusivamente durante il processo di
+estrazione.
+
+
+Terminata l'elaborazione della KEP, la Conversation Episode può essere
+abbandonata.
+
+
+Eventuali riferimenti utilizzati nelle Change Evidence non trasformano la
+Conversation Episode in conoscenza persistente.
+
+La Conversation Episode può essere eliminata dopo il completamento del
+processo KEP.
+
+Eventuali Evidence Reference successivamente conservati devono essere
+interpretati come riferimenti a eventi osservati e non come copie della
+conversazione originale.
+
+Riferimento:
+
+ADR-014 — Conversation Episode Boundary
+
+================================================================================
+Conversation Episode Segmentation
+================================================================================
+
+La KEP deve determinare il confine operativo della Conversation Episode
+utilizzata durante il processo di estrazione.
+
+La segmentazione ha lo scopo di individuare l'insieme minimo di interazioni
+necessarie per valutare l'emergere di una conoscenza linguistica persistente.
+
+La segmentazione può considerare elementi quali:
+
+• cambio dell'argomento linguistico;
+
+• cambio dell'obiettivo didattico;
+
+• esplicita indicazione tramite Learning Interaction Language (LIL);
+
+• altri criteri definiti dal processo di analisi.
+
+Le regole di segmentazione influenzano esclusivamente l'analisi della KEP e
+non determinano la persistenza della Conversation Episode.
+
+================================================================================
+Trigger
+================================================================================
+
+Il Trigger rappresenta l'evento che genera la possibilità di estrarre nuova
+conoscenza.
+
+
+Il Trigger non è una conoscenza.
+
+
+Il Trigger non costituisce un Learning Object.
+
+
+Il Trigger rappresenta esclusivamente il punto di origine dell'analisi.
+
+
+================================================================================
+Tipologie di Trigger
+================================================================================
+
+
+La KEP può ricevere differenti tipi di Trigger:
+
+
+-------------------------------------------------------------------------------
+Errore linguistico
+-------------------------------------------------------------------------------
+
+Esempio:
+
+
+Utente:
+
+"I have gone yesterday."
+
+
+Possibile Trigger:
+
+
+Uso incompatibile tra yesterday e struttura verbale.
+
+
+Il Trigger non diventa:
+
+"errore sul Present Perfect"
+
+
+La KEP ricerca invece la conoscenza acquisibile.
+
+
+-------------------------------------------------------------------------------
+Uso corretto spontaneo
+-------------------------------------------------------------------------------
+
+Un uso corretto può fornire evidenza positiva di conoscenza emergente.
+
+Esempio:
+
+
+Utente:
+
+"I have lived here for ten years."
+
+
+Possibile Trigger:
+
+
+Uso corretto spontaneo di:
+
+for + duration
+
+Un singolo uso corretto non implica automaticamente acquisizione.
+
+La valutazione dell'evidenza positiva appartiene al modello Evidence
+e al Mastery Engine.
+
+
+-------------------------------------------------------------------------------
+Richiesta esplicita
+-------------------------------------------------------------------------------
+
+Esempi:
+
+
+"Come si dice questa parola?"
+
+
+"Perché si usa questa forma?"
+
+
+"Qual è la differenza tra X e Y?"
+
+
+La richiesta può indicare un bisogno di acquisizione.
+
+
+-------------------------------------------------------------------------------
+Richiesta di chiarimento
+-------------------------------------------------------------------------------
+
+Una richiesta relativa ad un Learning Object esistente può indicare:
+
+• difficoltà di comprensione;
+
+• necessità di consolidamento;
+
+• possibile evidenza di Mastery.
+
+-------------------------------------------------------------------------------
+Implicit Production Gap
+-------------------------------------------------------------------------------
+
+Una produzione spontanea può evidenziare una possibile lacuna di conoscenza
+anche in assenza di una richiesta esplicita o di un errore formalmente
+riconosciuto.
+
+Esempio:
+
+Utente:
+
+"I have 30 years."
+
+Possibile Trigger:
+
+produzione che suggerisce una conoscenza linguistica potenzialmente mancante.
+
+La presenza di un Implicit Production Gap non determina automaticamente la
+creazione di un Learning Object.
+
+La KEP deve comunque verificare che emerga una conoscenza linguistica
+persistente, riutilizzabile e compatibile con il modello ELR.
+
+-------------------------------------------------------------------------------
+Segnale LIL
+-------------------------------------------------------------------------------
+
+Un comando o marker LIL può rendere esplicita una intenzione didattica.
+
+
+Il segnale LIL non determina automaticamente una modifica dell'ELR.
+
+
+La KEP valuta comunque la presenza di conoscenza persistente.
+
+
+================================================================================
+Knowledge Candidate
+================================================================================
+
+Il Knowledge Candidate rappresenta il risultato intermedio dell'analisi KEP
+prima della proposta di modifica del repository.
+
+
+Un Knowledge Candidate rappresenta:
+
+"Una possibile conoscenza linguistica che potrebbe diventare un Learning
+Object."
+
+
+Il Knowledge Candidate non è ancora conoscenza persistente.
+
+
+================================================================================
+Struttura del Knowledge Candidate
+================================================================================
+
+
+Un Knowledge Candidate è composto da:
+
+
+-------------------------------------------------------------------------------
+Candidate Payload
+-------------------------------------------------------------------------------
+
+Contiene la conoscenza candidata.
+
+
+Include:
+
+
+• Anchor candidato;
+
+• Knowledge Statement candidato;
+
+• Knowledge Category candidata.
+
+
+Il Candidate Payload rappresenta il contenuto cognitivo che potrebbe essere
+persistito nell'ELR.
+
+
+-------------------------------------------------------------------------------
+Candidate Context
+-------------------------------------------------------------------------------
+
+Contiene il contesto che ha generato la candidatura.
+
+
+Può includere:
+
+
+• frase originale;
+
+• produzione dell'utente;
+
+• spiegazione fornita;
+
+• elemento linguistico osservato;
+
+• relazione con il Trigger.
+
+
+Il Candidate Context serve alla valutazione ma non diventa automaticamente
+parte del Learning Object.
+
+
+-------------------------------------------------------------------------------
+Candidate Metadata
+-------------------------------------------------------------------------------
+
+Contiene informazioni operative sulla candidatura.
+
+
+Può includere:
+
+
+• origine del candidato;
+
+• tipo di Trigger;
+
+• momento dell'estrazione;
+
+• informazioni necessarie alla classificazione.
+
+
+Il Candidate Metadata supporta il processo KEP ma non rappresenta conoscenza
+linguistica.
+
+================================================================================
+Knowledge Candidate Validation
+================================================================================
+
+Un Knowledge Candidate può procedere verso una ELR Change Proposal solo se
+supera i criteri di validazione.
+
+
+La KEP verifica:
+
+
+-------------------------------------------------------------------------------
+Validità linguistica
+-------------------------------------------------------------------------------
+
+La conoscenza deve rappresentare un fenomeno linguistico reale.
+
+
+-------------------------------------------------------------------------------
+Validità dell'Anchor
+-------------------------------------------------------------------------------
+
+L'Anchor deve essere:
+
+• osservabile;
+
+• nella lingua target;
+
+• direttamente collegato alla produzione.
+
+
+-------------------------------------------------------------------------------
+Validità del Knowledge Statement
+-------------------------------------------------------------------------------
+
+Il Knowledge Statement deve essere:
+
+
+• atomico;
+
+• positivo;
+
+• riutilizzabile.
+
+
+-------------------------------------------------------------------------------
+Validità di apprendimento
+-------------------------------------------------------------------------------
+
+La conoscenza deve essere qualcosa che l'utente può riutilizzare in future
+produzioni linguistiche.
+
+-------------------------------------------------------------------------------
+Validità ELR
+-------------------------------------------------------------------------------
+
+La conoscenza candidata deve poter essere rappresentata nel modello ELR senza
+violare i principi architetturali del repository.
+
+In particolare, la KEP verifica che la conoscenza sia compatibile con:
+
+• Anchor-centric Knowledge;
+
+• Atomic Learning Objects;
+
+• Positive Knowledge Representation;
+
+• Reusable Knowledge.
+
+Una conoscenza linguisticamente corretta può essere scartata se non può essere
+rappresentata come Learning Object coerente con il modello ELR.
+
+La verifica della Validità ELR conclude il processo di validazione del
+Knowledge Candidate prima della fase di Repository Comparison.
+
+================================================================================
+Fattori di valutazione
+================================================================================
+
+La Candidate Confidence può essere determinata considerando elementi quali:
+
+• chiarezza del Trigger;
+
+• qualità dell'Anchor Resolution;
+
+• precisione del Knowledge Statement;
+
+• presenza di evidenze convergenti;
+
+• ambiguità del contesto linguistico.
+
+La metodologia utilizzata per il calcolo della Candidate Confidence è
+indipendente dal modello ELR e può evolvere senza modificare la struttura dei
+Learning Object.
+
+================================================================================
+Utilizzo della Candidate Confidence
+================================================================================
+
+La Candidate Confidence può essere utilizzata per:
+
+• supportare la Learning Review;
+
+• facilitare la prioritizzazione delle Change Proposal;
+
+• evidenziare candidature che richiedono una valutazione più approfondita.
+
+La Candidate Confidence non determina automaticamente
+l'approvazione, il rifiuto o la persistenza di una proposta.
+
+================================================================================
+Candidate Lifecycle
+================================================================================
+
+Il ciclo di vita concettuale del Knowledge Candidate è:
+
+
+                    Conversation Episode
+
+                           |
+
+                           v
+
+                    Knowledge Candidate
+
+                           |
+
+             +-------------+-------------+
+
+             |             |             |
+
+             v             v             v
+
+          Scarto        Revisione    Change Proposal
+
+
+                           |
+
+                           v
+
+                    Learning Review
+
+
+                           |
+
+                           v
+
+                         ELR
+
+
+================================================================================
+Candidate Discard
+================================================================================
+
+Un Knowledge Candidate può essere scartato quando:
+
+
+• rappresenta solo un errore occasionale;
+
+• non esiste una conoscenza riutilizzabile;
+
+• l'Anchor non è valido;
+
+• la conoscenza è già completamente rappresentata;
+
+• la generalizzazione produrrebbe sovraestrazione.
+
+================================================================================
+Knowledge Candidate Boundary
+================================================================================
+
+Il Knowledge Candidate rappresenta un'ipotesi di conoscenza prodotta dalla KEP durante il processo di analisi.
+
+Non rappresenta ancora:
+
+• un Learning Object;
+
+• una modifica del repository;
+
+• una conoscenza approvata.
+
+
+Il passaggio da Knowledge Candidate a ELR Change Proposal
+richiede una ulteriore valutazione di:
+
+• unicità;
+
+• equivalenza;
+
+• necessità di persistenza.
+
+================================================================================
+Knowledge Identification Pipeline
+================================================================================
+
+La Knowledge Identification Pipeline definisce il processo attraverso cui la
+KEP determina se un elemento emerso dalla Conversation Episode rappresenta una
+conoscenza linguistica persistente.
+
+
+Il processo comprende:
+
+
+1.
+
+Trigger Analysis
+
+
+2.
+
+Knowledge Validation
+
+
+3.
+
+Anchor Resolution
+
+
+4.
+
+Knowledge Statement Extraction
+
+
+5.
+
+Knowledge Independence Analysis
+
+
+================================================================================
+Trigger Analysis
+================================================================================
+
+La Trigger Analysis identifica gli elementi della Conversation Episode che
+possono indicare una possibile opportunità di apprendimento.
+
+
+Il Trigger rappresenta il punto di partenza dell'analisi.
+
+Il Trigger non determina automaticamente:
+
+• un Learning Object;
+
+• una modifica del repository;
+
+• una nuova conoscenza.
+
+
+La KEP deve sempre distinguere:
+
+
+Evento osservato
+
+↓
+
+Conoscenza potenzialmente acquisibile
+
+↓
+
+Learning Object eventualmente necessario
+
+
+================================================================================
+Esempi di Trigger Analysis
+================================================================================
+
+
+-------------------------------------------------------------------------------
+Caso 1 — Errore
+-------------------------------------------------------------------------------
+
+Input:
+
+
+"I did a mistake."
+
+
+Analisi:
+
+
+Trigger:
+
+uso non naturale della collocazione verbale.
+
+
+La KEP non crea:
+
+
+❌ do + mistake
+
+
+La KEP ricerca:
+
+
+Anchor:
+
+make + mistake
+
+
+Knowledge Statement:
+
+Per esprimere il concetto di commettere un errore si usa
+"make + mistake".
+
+
+-------------------------------------------------------------------------------
+Caso 2 — Richiesta di traduzione
+-------------------------------------------------------------------------------
+
+Input:
+
+
+"Come si dice tracina in inglese?"
+
+
+Analisi:
+
+
+Trigger:
+
+richiesta lessicale esplicita.
+
+
+La KEP valuta se esiste una conoscenza persistente.
+
+
+Possibile risultato:
+
+
+Anchor:
+
+weever
+
+
+Knowledge Statement:
+
+weever → tracina
+
+
+-------------------------------------------------------------------------------
+Caso 3 — Richiesta di spiegazione
+-------------------------------------------------------------------------------
+
+Input:
+
+
+"Perché si usa since e non for?"
+
+
+Analisi:
+
+
+Trigger:
+
+richiesta contrastiva.
+
+
+La KEP ricerca una conoscenza riutilizzabile.
+
+
+Possibile risultato:
+
+
+Anchor:
+
+since + date
+
+
+Knowledge Statement:
+
+Per indicare il momento iniziale di una durata si usa
+"since + date".
+
+
+================================================================================
+Knowledge Validation
+================================================================================
+
+Prima di procedere alla creazione di un Knowledge Candidate valido, la KEP
+deve verificare che la conoscenza individuata soddisfi i criteri ELR.
+
+
+================================================================================
+Validità della conoscenza
+================================================================================
+
+La conoscenza deve essere:
+
+
+• linguistica;
+
+• acquisibile;
+
+• indipendente;
+
+• riutilizzabile.
+
+
+Una semplice osservazione occasionale non costituisce conoscenza.
+
+
+Esempio:
+
+
+Utente:
+
+"I goed there yesterday."
+
+
+Non necessariamente genera un Learning Object.
+
+
+La KEP deve verificare se emerge una conoscenza stabile:
+
+
+Anchor:
+
+go
+
+
+Knowledge Statement:
+
+Il passato di go è "went".
+
+
+Solo questa conoscenza è riutilizzabile.
+
+
+================================================================================
+Validità dell'Anchor
+================================================================================
+
+L'Anchor Resolution deve produrre una unità linguistica osservabile.
+
+
+Un Anchor valido deve:
+
+
+• identificare un elemento linguistico
+osservabile o direttamente collegato alla produzione target;
+
+• essere riconoscibile nella produzione;
+
+• rappresentare la conoscenza corretta;
+
+
+Non sono Anchor validi:
+
+
+❌ Present Perfect
+
+
+❌ Past Tense Rules
+
+
+❌ Modal Verbs
+
+
+Questi rappresentano categorie metalinguistiche, non elementi acquisibili
+direttamente.
+
+
+================================================================================
+Anchor Resolution
+================================================================================
+
+Anchor Resolution rappresenta il processo attraverso cui la KEP identifica
+l'elemento linguistico a cui associare la nuova conoscenza.
+
+
+La domanda guida è:
+
+
+"Quale elemento linguistico l'utente deve riconoscere e riutilizzare?"
+
+
+Non:
+
+
+"Quale errore ha commesso?"
+
+================================================================================
+Obiettivo dell'Anchor Resolution
+================================================================================
+
+L'Anchor Resolution deve identificare l'elemento linguistico minimo che
+consente di associare una conoscenza persistente e riutilizzabile.
+
+L'Anchor rappresenta il punto di riferimento stabile a cui il Learning Object
+viene associato.
+
+L'Anchor non deve essere scelto in funzione dell'errore osservato, ma della
+conoscenza che l'utente dovrà riconoscere e riutilizzare in produzioni future.
+================================================================================
+Criteri di Anchor Resolution
+================================================================================
+
+
+La KEP deve:
+
+
+-------------------------------------------------------------------------------
+1. Cercare la causa linguistica
+-------------------------------------------------------------------------------
+
+L'Anchor deve essere collegato alla conoscenza necessaria per produrre una
+forma corretta.
+
+
+Esempio:
+
+
+"I have seen him yesterday."
+
+
+Anchor:
+
+yesterday
+
+
+Non:
+
+have seen
+
+
+Perché la conoscenza riguarda la compatibilità tra riferimento temporale e
+costruzione verbale.
+
+
+-------------------------------------------------------------------------------
+2. Evitare Anchor generici
+-------------------------------------------------------------------------------
+
+Non creare Anchor che rappresentano categorie astratte.
+
+
+Esempio non valido:
+
+
+❌ Past Time Reference
+
+
+Esempio valido:
+
+
+✅ yesterday
+
+
+-------------------------------------------------------------------------------
+3. Preferire Anchor riutilizzabili
+-------------------------------------------------------------------------------
+
+L'Anchor deve poter comparire in future produzioni.
+
+
+Esempio:
+
+
+take + photo
+
+
+è preferibile rispetto a:
+
+
+"I take a photo yesterday"
+
+================================================================================
+Anchor Boundary Rules
+================================================================================
+
+L'Anchor non rappresenta:
+
+• l'errore osservato;
+
+• la spiegazione fornita;
+
+• la categoria grammaticale utilizzata per descrivere il fenomeno.
+
+
+L'Anchor rappresenta l'unità linguistica della lingua target
+a cui l'utente deve associare una conoscenza riutilizzabile.
+
+
+================================================================================
+Knowledge Statement Extraction
+================================================================================
+
+Una volta identificato l'Anchor, la KEP deve formulare il Knowledge Statement.
+
+
+Il Knowledge Statement deve rappresentare:
+
+
+• una sola conoscenza;
+
+• una relazione chiara con l'Anchor;
+
+• una formulazione positiva.
+
+
+================================================================================
+Regole di formulazione
+================================================================================
+
+
+Preferire:
+
+
+"Per esprimere X si usa Y"
+
+
+"Per riferirsi a X si usa Y"
+
+
+"Y richiede X"
+
+
+Evitare:
+
+
+"Non usare X"
+
+
+"X è sbagliato"
+
+
+"Errore con X"
+
+================================================================================
+Statement Testability
+================================================================================
+
+Il Knowledge Statement deve permettere una futura verifica osservabile della
+conoscenza rappresentata.
+
+La conoscenza deve poter essere confermata o smentita attraverso produzioni
+linguistiche successive dell'utente.
+
+Un Knowledge Statement non deve descrivere conoscenze troppo generiche,
+ambigue o prive di criteri osservabili di utilizzo.
+
+La testabilità favorisce la raccolta di Mastery Evidence e la valutazione
+dell'acquisizione senza introdurre dipendenze dal contesto della conversazione.
+
+================================================================================
+Esempio
+================================================================================
+
+
+Input:
+
+
+"I am interested on music."
+
+
+Analisi:
+
+
+Anchor:
+
+interested in
+
+
+Knowledge Statement:
+
+Per esprimere interesse verso qualcosa si usa
+"interested in + noun".
+
+
+Non:
+
+
+"Non usare interested on"
+
+
+================================================================================
+Knowledge Independence Analysis
+================================================================================
+
+La Knowledge Independence Analysis determina quante conoscenze indipendenti
+sono emerse da una Conversation Episode.
+
+
+Il numero di Learning Object non dipende dal numero di errori osservati.
+
+
+Dipende dal numero di conoscenze acquisibili.
+
+
+================================================================================
+Criterio di indipendenza
+================================================================================
+
+Due conoscenze devono generare Learning Object distinti quando:
+
+
+• hanno Anchor differenti;
+
+oppure
+
+• hanno Knowledge Statement indipendenti;
+
+oppure
+
+• possono essere apprese e verificate separatamente.
+
+================================================================================
+Causal Independence
+================================================================================
+
+Due possibili conoscenze non devono essere considerate indipendenti soltanto
+perché emergono contemporaneamente dalla stessa Conversation Episode.
+
+La KEP deve valutare se rappresentano realmente fenomeni linguistici distinti
+oppure differenti manifestazioni della stessa conoscenza sottostante.
+
+Quando più errori o osservazioni derivano dalla medesima causa linguistica,
+la KEP deve preferire un singolo Knowledge Candidate che rappresenti la
+conoscenza più generale e riutilizzabile.
+
+Al contrario, quando le conoscenze possono essere acquisite, utilizzate e
+verificate separatamente, devono generare Learning Object distinti.
+
+
+================================================================================
+Esempio
+================================================================================
+
+
+Frase:
+
+
+"I have went yesterday to London."
+
+
+Possibili conoscenze:
+
+
+1.
+
+
+Anchor:
+
+go
+
+
+Knowledge Statement:
+
+Il Past Simple di go è went.
+
+
+2.
+
+
+Anchor:
+
+yesterday
+
+
+Knowledge Statement:
+
+Con yesterday si usa il Past Simple.
+
+
+Risultato:
+
+
+Due Learning Object distinti.
+
+
+================================================================================
+Criterio di merge concettuale
+================================================================================
+
+Due conoscenze non devono essere separate quando:
+
+
+• rappresentano la stessa conoscenza;
+
+• hanno lo stesso Anchor;
+
+• una è solo una diversa formulazione dell'altra.
+
+
+Esempio:
+
+
+Anchor:
+
+tell + person
+
+
+Knowledge Statement 1:
+
+Tell richiede un destinatario diretto.
+
+
+Knowledge Statement 2:
+
+Tell si usa quando si comunica qualcosa a una persona.
+
+
+Possibile stesso Learning Object.
+
+
+================================================================================
+Anti-overextraction Rules
+================================================================================
+
+La KEP deve evitare la creazione artificiale di conoscenza.
+
+
+Non deve creare Learning Object per:
+
+
+• ogni parola presente nella frase;
+
+• ogni elemento grammaticale coinvolto;
+
+• ogni errore locale;
+
+• ogni dettaglio della spiegazione.
+
+
+================================================================================
+Principio guida
+================================================================================
+
+La domanda fondamentale della KEP è:
+
+
+"Questa informazione cambia ciò che l'utente sarà in grado di produrre
+correttamente in futuro?"
+
+
+Se la risposta è negativa:
+
+nessun Learning Object.
+
+
+================================================================================
+Repository Comparison and Change Proposal
+================================================================================
+
+
+La fase di Repository Comparison determina la relazione tra una conoscenza
+candidata e la conoscenza già presente nell'ELR.
+
+
+L'obiettivo è evitare:
+
+• duplicazione di Learning Object;
+
+• frammentazione artificiale della conoscenza;
+
+• perdita di evoluzione storica del Learning Object.
+
+
+================================================================================
+Learning Object Retrieval
+================================================================================
+
+Dopo la validazione di un Knowledge Candidate, la KEP ricerca eventuali
+Learning Object esistenti compatibili.
+
+
+La ricerca deve considerare principalmente:
+
+
+• Anchor;
+
+• Knowledge Category;
+
+• natura della conoscenza rappresentata;
+
+• equivalenza concettuale del Knowledge Statement.
+
+
+La ricerca non deve basarsi esclusivamente su:
+
+
+• similarità testuale;
+
+• parole condivise;
+
+• forma superficiale.
+
+
+Due Knowledge Statement possono rappresentare la stessa conoscenza anche se
+formulati diversamente.
+
+
+================================================================================
+Knowledge Equivalence Analysis
+================================================================================
+
+La Knowledge Equivalence Analysis determina se una conoscenza candidata è:
+
+
+• nuova;
+
+• equivalente a una conoscenza esistente;
+
+• un'estensione di una conoscenza esistente;
+
+• una correzione di formulazione.
+
+
+La KEP deve distinguere:
+
+
+-------------------------------------------------------------------------------
+Equivalenza concettuale
+-------------------------------------------------------------------------------
+
+La conoscenza rappresenta lo stesso concetto linguistico.
+
+
+Esempio:
+
+
+Learning Object esistente:
+
+
+Anchor:
+
+tell + person
+
+
+Knowledge Statement:
+
+Tell richiede un destinatario diretto.
+
+
+Nuova formulazione:
+
+
+Tell si usa quando si comunica qualcosa direttamente a una persona.
+
+
+Risultato:
+
+MERGE
+
+
+-------------------------------------------------------------------------------
+Conoscenza differente
+-------------------------------------------------------------------------------
+
+La nuova conoscenza può essere verificata indipendentemente.
+
+
+Esempio:
+
+
+Anchor:
+
+tell + person
+
+
+Knowledge Statement esistente:
+
+Tell richiede un destinatario.
+
+
+Nuova conoscenza:
+
+
+Tell può essere usato per riportare informazioni a qualcuno.
+
+
+Risultato possibile:
+
+nuovo Learning Object se rappresenta una conoscenza indipendente.
+
+================================================================================
+Negative Retrieval
+================================================================================
+
+Quando la ricerca non individua alcun Learning Object compatibile, la KEP
+registra un Negative Retrieval.
+
+Un Negative Retrieval indica esclusivamente che la fase di Repository
+Comparison non ha trovato una conoscenza equivalente secondo i criteri di
+ricerca disponibili.
+
+Un Negative Retrieval non implica automaticamente che la conoscenza sia nuova.
+
+Prima di proporre una classificazione CREATE, la KEP deve verificare che:
+
+non esistano Learning Object concettualmente equivalenti;
+non siano presenti Anchor alternativi che rappresentano la stessa conoscenza;
+la mancata corrispondenza non dipenda esclusivamente dalla formulazione del
+Knowledge Statement.
+
+Solo dopo tali verifiche un Negative Retrieval può supportare una proposta di
+tipo CREATE.
+
+
+================================================================================
+Change Classification
+================================================================================
+
+La KEP propone una classificazione iniziale della modifica in una delle seguenti categorie:
+
+
+CREATE
+
+MERGE
+
+UPDATE
+
+SPLIT
+
+La classificazione è una decisione del processo KEP e non una decisione
+architetturale.
+
+La Change Classification descrive esclusivamente la relazione tra Knowledge
+Candidate e Learning Object esistenti.
+
+Non modifica:
+
+• l'identità del Learning Object;
+
+• il significato della conoscenza persistente;
+
+• i criteri di approvazione della Learning Review.
+
+La classificazione può essere modificata durante la Learning Review senza
+modificare la validità del Knowledge Candidate originario.
+
+La classificazione proposta dalla KEP può essere modificata
+durante la Learning Review.
+
+================================================================================
+CREATE
+================================================================================
+
+CREATE viene utilizzato quando la conoscenza candidata non è rappresentata
+nell'ELR.
+
+
+Condizioni:
+
+
+• non esiste un Learning Object equivalente;
+
+• la conoscenza è atomica;
+
+• la conoscenza è riutilizzabile;
+
+• l'Anchor è valido.
+
+
+Esempio:
+
+
+Nuova conoscenza:
+
+
+Anchor:
+
+weever
+
+
+Knowledge Statement:
+
+weever → tracina
+
+
+Risultato:
+
+
+CREATE nuovo Learning Object.
+
+
+================================================================================
+MERGE
+================================================================================
+
+MERGE viene utilizzato quando una conoscenza candidata rappresenta lo stesso
+concetto di un Learning Object esistente.
+
+
+Il Learning Object mantiene:
+
+
+• identità;
+
+• Anchor;
+
+• storia evolutiva.
+
+
+Può cambiare:
+
+
+• formulazione del Knowledge Statement;
+
+• esempi;
+
+• informazioni esplicative.
+
+
+Esempio:
+
+
+Learning Object esistente:
+
+
+Anchor:
+
+take + photo
+
+
+Knowledge Statement:
+
+Per fare una fotografia si usa take + photo.
+
+
+Nuova evidenza:
+
+
+Per scattare una fotografia si usa take + photo.
+
+
+Risultato:
+
+
+MERGE
+
+
+================================================================================
+UPDATE
+================================================================================
+
+UPDATE viene utilizzato quando un Learning Object esistente deve essere
+modificato senza cambiare la conoscenza fondamentale rappresentata.
+
+
+Esempi:
+
+
+• correzione di una formulazione ambigua;
+
+• miglioramento della precisione;
+
+• eliminazione di una spiegazione fuorviante.
+
+
+L'identità del Learning Object rimane invariata.
+
+================================================================================
+SPLIT
+================================================================================
+
+SPLIT viene utilizzato quando un Learning Object esistente rappresenta
+più conoscenze indipendenti che dovrebbero essere modellate separatamente.
+
+Lo SPLIT non introduce nuova conoscenza.
+
+Riorganizza la rappresentazione della conoscenza già presente nel repository.
+
+Uno SPLIT può essere necessario quando un Learning Object:
+
+• contiene Anchor indipendenti;
+
+• contiene Knowledge Statement verificabili separatamente;
+
+• rappresenta più concetti linguistici distinti;
+
+• impedisce una valutazione accurata della Mastery.
+
+Il risultato di uno SPLIT è la proposta di sostituire un singolo Learning
+Object con due o più Learning Object atomici.
+
+
+================================================================================
+Distinzione CREATE / MERGE / UPDATE / SPLIT
+================================================================================
+
+La distinzione principale è:
+
+CREATE:
+
+Introduce una nuova identità conoscitiva.
+Viene proposta una nuova conoscenza non rappresentata nel repository.
+
+
+MERGE:
+
+Conserva una identità conoscitiva esistente.
+Una nuova evidenza viene integrata in un Learning Object esistente senza modificarne l'identità.
+
+
+UPDATE:
+
+Conserva una identità conoscitiva esistente migliorandone la rappresentazione.
+Viene migliorata o corretta la rappresentazione di un Learning Object mantenendo invariata la conoscenza fondamentale.
+
+SPLIT:
+
+Sostituisce una rappresentazione non atomica con più identità conoscitive indipendenti.
+Un Learning Object esistente viene suddiviso perché rappresenta più conoscenze indipendenti.
+
+
+
+
+Esempio: CREATE
+
+Nessun Learning Object esistente.
+
+Knowledge Candidate:
+
+Anchor
+
+weever
+
+Knowledge Statement
+
+"Weever" è il termine inglese per "tracina".
+
+Risultato:
+
+CREATE
+
+Motivazione:
+
+La conoscenza non è rappresentata nel repository.
+
+
+Esempio: MERGE
+
+Learning Object esistente
+
+Anchor
+
+take + photo
+
+Knowledge Statement
+
+Per esprimere l'azione di scattare una fotografia si usa
+"take + photo".
+
+Nuovo Knowledge Candidate
+
+Anchor
+
+take + picture
+
+Knowledge Statement
+
+"Take" si usa anche con "picture" per indicare l'azione di
+scattare una fotografia.
+
+Risultato:
+
+MERGE
+
+Motivazione:
+
+La nuova conoscenza amplia lo stesso concetto linguistico già rappresentato
+dal Learning Object.
+
+
+Esempio: UPDATE
+
+Learning Object esistente
+
+Anchor
+
+since
+
+Knowledge Statement
+
+Since si usa con il passato.
+
+Nuovo Knowledge Candidate
+
+Anchor
+
+since
+
+Knowledge Statement
+
+Since introduce il momento iniziale di una durata.
+
+Risultato:
+
+UPDATE
+
+Motivazione:
+
+La conoscenza fondamentale è la stessa, ma il Knowledge Statement precedente
+è impreciso e viene sostituito con una formulazione più corretta.
+
+
+Esempio: SPLIT
+
+Learning Object esistente
+
+Anchor
+
+say / tell
+
+Knowledge Statement
+
+Say e tell hanno usi differenti nella comunicazione.
+
+Durante successive analisi emerge che il Learning Object contiene due
+conoscenze indipendenti.
+
+Nuovi Learning Object
+
+Anchor
+
+say
+
+Knowledge Statement
+
+"Say" introduce il contenuto di ciò che viene detto.
+
+Anchor
+
+tell + person
+
+Knowledge Statement
+
+"Tell" richiede normalmente un destinatario diretto.
+
+Risultato:
+
+SPLIT
+
+Motivazione:
+
+Il Learning Object originario rappresentava due conoscenze che possono essere
+apprese, utilizzate e verificate separatamente.
+
+
+================================================================================
+ELR Change Proposal
+================================================================================
+
+La ELR Change Proposal rappresenta l'output principale della KEP.
+
+
+Una Change Proposal descrive una singola modifica atomica proposta al
+repository.
+
+
+Una Conversation Episode può generare più Change Proposal indipendenti.
+
+
+================================================================================
+Struttura della Change Proposal
+================================================================================
+
+
+Una ELR Change Proposal contiene:
+
+
+-------------------------------------------------------------------------------
+Change Type
+-------------------------------------------------------------------------------
+
+Indica il tipo di modifica:
+
+
+• CREATE;
+
+• MERGE;
+
+• UPDATE;
+
+• SPLIT.
+
+
+-------------------------------------------------------------------------------
+Change Payload
+-------------------------------------------------------------------------------
+
+Contiene il contenuto della modifica proposta.
+
+Può includere:
+
+Per CREATE:
+
+• nuovo Anchor;
+
+• nuovo Knowledge Statement;
+
+• Knowledge Category.
+
+Per MERGE:
+
+• Learning Object identificato;
+
+• conoscenza candidata integrata;
+
+• elementi conoscitivi aggiuntivi coerenti con lo stesso concetto linguistico.
+
+Per UPDATE:
+
+• Learning Object identificato;
+
+• modifica proposta.
+
+Per SPLIT:
+
+• Learning Object da suddividere;
+
+• insieme dei nuovi Learning Object proposti;
+
+• relazione tra il Learning Object originario e quelli derivati.
+
+-------------------------------------------------------------------------------
+Proposal Rationale
+-------------------------------------------------------------------------------
+
+La Proposal Rationale descrive la motivazione con cui la KEP propone una
+specifica modifica del repository.
+
+La Proposal Rationale non rappresenta conoscenza linguistica.
+
+Non costituisce parte del Learning Object.
+
+Il suo scopo è rendere esplicito il ragionamento seguito dalla KEP durante la
+classificazione della proposta.
+
+Può includere, ad esempio:
+
+• motivazione della classificazione CREATE, MERGE, UPDATE o SPLIT;
+
+• relazione con Learning Object esistenti;
+
+• motivazione della scelta dell'Anchor;
+
+• sintesi della valutazione di equivalenza concettuale;
+
+• eventuali considerazioni rilevanti emerse durante la Repository Comparison.
+
+La Proposal Rationale supporta la Learning Review ma non sostituisce il
+giudizio umano nella decisione finale.
+
+
+-------------------------------------------------------------------------------
+Change Evidence
+-------------------------------------------------------------------------------
+
+Rappresenta gli elementi che giustificano la proposta.
+
+
+Può includere:
+
+
+• frase originale;
+
+• errore osservato;
+
+• Trigger;
+
+• contesto linguistico;
+
+• motivazione della classificazione.
+
+
+Change Evidence non rappresenta conoscenza persistente.
+
+
+-------------------------------------------------------------------------------
+Change Metadata
+-------------------------------------------------------------------------------
+
+Contiene informazioni operative sulla proposta.
+
+
+Può includere:
+
+
+• identificativo temporaneo;
+
+• origine della proposta;
+
+• timestamp;
+
+• versione del processo KEP.
+
+
+================================================================================
+Atomicità della Change Proposal
+================================================================================
+
+Ogni Change Proposal deve rappresentare una singola modifica coerente.
+
+
+Una proposta non deve contenere modifiche indipendenti unite artificialmente.
+
+
+Esempio non valido:
+
+
+Una frase genera:
+
+
+1.
+
+nuova costruzione grammaticale;
+
+
+2.
+
+nuovo vocabolo;
+
+
+3.
+
+nuova regola di pronuncia.
+
+
+Una sola Change Proposal non deve contenere tutte e tre.
+
+
+Devono essere generate:
+
+
+tre Knowledge Candidate;
+
+
+tre Change Proposal.
+
+
+================================================================================
+Relazione con Learning Review
+================================================================================
+
+La Change Proposal viene sottoposta alla Learning Review prima della
+persistenza.
+
+
+Flusso:
+
+
+Knowledge Candidate
+
+        |
+
+        v
+
+ELR Change Proposal
+
+        |
+
+        v
+
+Learning Review
+
+        |
+
+        +------------+
+
+        |            |
+
+        v            v
+
+    Approvata    Rifiutata
+
+
+        |
+
+        v
+
+       ELR
+
+
+La KEP termina con la produzione della Change Proposal.
+
+
+L'approvazione e la persistenza appartengono a componenti successivi.
+
+
+================================================================================
+Evidence Candidate Production
+================================================================================
+
+La Knowledge Extraction Pipeline può produrre Evidence Candidate come risultato del
+processo di analisi.
+
+La KEP non determina autonomamente se un evento costituisce evidenza valida di
+Mastery.
+
+La KEP può individuare eventi osservabili rilevanti.
+
+La classificazione, validazione e utilizzo della Mastery Evidence appartengono
+al modello Evidence e al Mastery Engine.
+
+L'Evidence non rappresenta conoscenza linguistica persistente.
+
+La definizione del modello Evidence, delle sue tipologie e delle regole di
+utilizzo appartiene al documento:
+
+Evidence Model Specification
+
+================================================================================
+Evidence Candidate Boundary
+===========================
+
+La KEP non produce Evidence persistenti.
+
+Durante il processo di analisi, la KEP può produrre Evidence Candidate,
+ovvero rappresentazioni strutturate di eventi osservabili potenzialmente
+rilevanti per un successivo processo di validazione.
+
+Un Evidence Candidate non rappresenta:
+
+• conoscenza linguistica persistente;
+
+• Mastery validata;
+
+• stato dell'utente;
+
+• modifica del repository ELR.
+
+L'Evidence Candidate rappresenta esclusivamente un output intermedio della KEP
+destinato al sistema Evidence.
+
+Il sistema Evidence è responsabile di:
+
+• validare l'evidenza;
+
+• determinarne la tipologia;
+
+• applicare le regole definite nella Evidence Model Specification;
+
+• stabilire se l'evento osservato può diventare Change Evidence o Mastery
+Evidence.
+
+La KEP può quindi identificare eventi potenzialmente utilizzabili come
+Evidence, ma non determina autonomamente la loro validità finale.
+
+================================================================================
+Relazione tra KEP ed Evidence
+=============================
+
+Il flusso concettuale è:
+
+Conversation Episode
+
+```
+    |
+
+    v
+```
+
+Evidence Candidate
+
+```
+    |
+
+    v
+```
+
+Evidence Validation
+
+```
+    |
+
+    +----------------+
+
+    |                |
+
+    v                v
+```
+
+Change Evidence     Mastery Evidence
+
+La classificazione finale e la gestione del ciclo di vita dell'Evidence
+appartengono al sistema Evidence e ai componenti responsabili.
+==============================================================
+
+
+
+================================================================================
+Evidence Types
+================================================================================
+
+La KEP può produrre:
+
+
+-------------------------------------------------------------------------------
+Change Evidence
+-------------------------------------------------------------------------------
+
+La Change Evidence supporta una ELR Change Proposal fornendo gli elementi che
+giustificano una proposta di modifica del repository.
+
+
+La struttura e le regole della Change Evidence sono definite in:
+
+Evidence Model Specification
+
+
+
+-------------------------------------------------------------------------------
+Mastery Evidence
+-------------------------------------------------------------------------------
+
+La Mastery Evidence rappresenta elementi osservabili relativi alla padronanza
+di conoscenze già presenti nell'ELR.
+
+
+La struttura e le regole della Mastery Evidence sono definite in:
+
+Evidence Model Specification
+
+================================================================================
+Evidence Reference
+================================================================================
+
+La Change Evidence e la Mastery Evidence possono contenere uno o più
+Evidence Reference.
+
+Un Evidence Reference identifica gli elementi della Conversation Episode che
+hanno contribuito alla produzione dell'Evidence.
+
+L'Evidence Reference non rappresenta conoscenza linguistica.
+
+Non costituisce un Learning Object.
+
+Non rende persistente la Conversation Episode.
+
+Il suo scopo è consentire la ricostruzione del contesto osservato durante la
+Learning Review.
+
+-------------------------------------------------------------------------------
+Contenuto di un Evidence Reference
+-------------------------------------------------------------------------------
+
+Un Evidence Reference può includere:
+
+• identificativo della Conversation Episode;
+
+• riferimento al messaggio osservato;
+
+• riferimento al Trigger che ha originato l'analisi;
+
+• eventuale segmento della conversazione rilevante per la valutazione.
+
+L'implementazione concreta degli identificativi appartiene al livello
+tecnologico e non è definita dalla presente specifica.
+
+-------------------------------------------------------------------------------
+Riutilizzo
+-------------------------------------------------------------------------------
+
+Più Change Proposal possono condividere gli stessi Evidence Reference.
+
+Allo stesso modo, una singola Conversation Episode può produrre
+Evidence Reference utilizzati da:
+
+• più Change Proposal;
+
+• Mastery Evidence;
+
+• entrambe.
+
+-------------------------------------------------------------------------------
+Boundary
+-------------------------------------------------------------------------------
+
+Un Evidence Reference rappresenta esclusivamente un collegamento verso eventi
+osservati.
+
+Non rappresenta:
+
+• conoscenza persistente;
+
+• stato dell'utente;
+
+• memoria conversazionale.
+
+Un Evidence Reference non mantiene il contenuto della Conversation Episode.
+
+Esso mantiene esclusivamente un collegamento identificativo verso una fonte
+osservata utilizzata durante un processo di valutazione.
+
+La persistenza dell'Evidence Reference non implica la persistenza della
+Conversation Episode.
+
+La rimozione della Conversation Episode non modifica il significato della
+conoscenza eventualmente approvata nell'ELR.
+
+================================================================================
+Evidence Independence
+================================================================================
+
+La ripetizione immediatamente successiva alla spiegazione
+non costituisce automaticamente evidenza indipendente.
+
+La KEP deve distinguere:
+
+• riproduzione assistita;
+
+• utilizzo autonomo;
+
+• nuova produzione osservabile.
+
+================================================================================
+Evidence Boundary
+================================================================================
+
+La KEP identifica eventi osservabili potenzialmente utilizzabili come Evidence.
+
+La produzione formale, validazione e persistenza delle Evidence appartengono al sistema Evidence secondo quanto definito nella Evidence Model Specification.
+
+
+La KEP non:
+
+- salva Evidence come Learning Object;
+
+- modifica direttamente la Mastery;
+
+- modifica direttamente il Repository.
+
+
+La gestione successiva delle Evidence appartiene ai componenti responsabili:
+
+- Learning Review;
+
+- Mastery Engine.
+
+
+
+================================================================================
+Casi speciali
+================================================================================
+
+
+================================================================================
+Richieste di traduzione
+================================================================================
+
+
+Una richiesta di traduzione non genera automaticamente un Learning Object.
+
+
+La KEP deve valutare se emerge una conoscenza linguistica persistente.
+
+
+-------------------------------------------------------------------------------
+Caso valido
+-------------------------------------------------------------------------------
+
+
+Utente:
+
+
+"Come si dice tracina in inglese?"
+
+
+Risultato:
+
+
+Anchor:
+
+weever
+
+
+Knowledge Statement:
+
+weever → tracina
+
+
+Possibile CREATE.
+
+
+-------------------------------------------------------------------------------
+Caso non valido
+-------------------------------------------------------------------------------
+
+
+Utente:
+
+
+"Come si traduce questa frase per questa email?"
+
+
+La richiesta potrebbe riguardare esclusivamente un evento comunicativo
+specifico.
+
+
+Nessun Learning Object obbligatorio.
+
+
+================================================================================
+Richieste di chiarimento
+================================================================================
+
+
+Una richiesta di chiarimento può avere due significati diversi.
+
+
+-------------------------------------------------------------------------------
+Nuova acquisizione
+-------------------------------------------------------------------------------
+
+
+L'utente incontra una conoscenza non presente.
+
+
+Possibile:
+
+CREATE.
+
+
+-------------------------------------------------------------------------------
+Difficoltà su conoscenza esistente
+-------------------------------------------------------------------------------
+
+
+L'utente richiede spiegazione su un Learning Object già presente.
+
+
+Possibile:
+
+
+Mastery Evidence.
+
+
+Non deve essere creato un nuovo Learning Object se la conoscenza è già
+rappresentata.
+
+
+================================================================================
+Conversazioni metalinguistiche
+================================================================================
+
+
+Le conversazioni metalinguistiche riguardano spiegazioni sulla lingua.
+
+
+La KEP deve distinguere:
+
+
+-------------------------------------------------------------------------------
+Metalinguistica come supporto
+-------------------------------------------------------------------------------
+
+
+La spiegazione viene utilizzata per descrivere una conoscenza associata ad un
+Anchor valido.
+
+
+Esempio:
+
+
+Anchor:
+
+tell + person
+
+
+Knowledge Statement:
+
+Tell richiede un destinatario diretto.
+
+
+La spiegazione metalinguistica è parte del KS.
+
+
+-------------------------------------------------------------------------------
+Metalinguistica autonoma
+-------------------------------------------------------------------------------
+
+
+Informazioni generali prive di Anchor acquisibile non costituiscono Learning
+Object.
+
+
+Esempio:
+
+
+"Il Past Perfect è un tempo verbale composto."
+
+
+Nessun Learning Object.
+
+
+================================================================================
+Learning Interaction Language (LIL)
+================================================================================
+
+
+I segnali LIL rappresentano intenzioni esplicite dell'utente.
+
+
+La KEP può utilizzare tali segnali come Trigger aggiuntivi.
+
+
+Il LIL non modifica i criteri di estrazione.
+
+
+Un comando LIL non determina automaticamente:
+
+
+• creazione di Learning Object;
+
+• modifica dell'ELR;
+
+• aumento della Mastery.
+
+
+La KEP valuta comunque:
+
+
+• Anchor;
+
+• Knowledge Statement;
+
+• riutilizzabilità;
+
+• validità della conoscenza.
+
+
+================================================================================
+Relazione con Mastery Engine
+================================================================================
+
+
+La gestione della Mastery è separata dalla KEP.
+
+
+La KEP può produrre:
+
+• Mastery Evidence;
+
+
+ma non determina:
+
+• valore della Mastery;
+
+• algoritmo di aggiornamento;
+
+• scheduling del ripasso.
+
+
+Il calcolo della Mastery appartiene a un componente dedicato:
+
+
+Mastery Engine.
+
+
+================================================================================
+Output formali della KEP
+================================================================================
+
+
+La KEP produce esclusivamente:
+
+
+-------------------------------------------------------------------------------
+Knowledge Candidate
+-------------------------------------------------------------------------------
+
+Output intermedio utilizzato durante l'analisi.
+
+
+-------------------------------------------------------------------------------
+ELR Change Proposal
+-------------------------------------------------------------------------------
+
+Proposta atomica di modifica del repository.
+
+
+-------------------------------------------------------------------------------
+Evidence Candidate
+-------------------------------------------------------------------------------
+
+Output intermedio prodotto dalla KEP e destinato alla validazione secondo il modello definito nella Evidence Model Specification.
+
+================================================================================
+Fine del processo KEP
+================================================================================
+
+
+Il ciclo completo della Knowledge Extraction Pipeline è:
+
+
+Conversation Episode
+
+        |
+
+        v
+
+Trigger Analysis
+
+        |
+
+        v
+
+Knowledge Candidate
+
+        |
+
+        v
+
+Knowledge Validation
+
+        |
+
+        v
+
+Anchor Resolution
+
+        |
+
+        v
+
+Knowledge Statement Extraction
+
+        |
+
+        v
+
+Repository Comparison
+
+        |
+
+        v
+
+ELR Change Proposal
+
+        |
+
+        v
+
+Learning Review
+
+        |
+
+        v
+
+ELR
+
+
+Parallelamente:
+
+
+Conversation Episode
+
+        |
+
+        v
+
+Mastery Evidence
+
+        |
+
+        v
+
+Mastery Engine
+
+
+================================================================================
+Principio conclusivo
+================================================================================
+
+
+La KEP non apprende al posto dell'utente.
+
+La KEP identifica, struttura e propone conoscenza.
+
+
+L'ELR conserva la conoscenza approvata.
+
+
+Il Mastery Engine misura la padronanza.
+
+
+La Learning Review mantiene il controllo umano sull'evoluzione del repository.
+
+================================================================================
+Versioning and Approval
+================================================================================
+
+Version changes indicate evolution of the KEP specification.
+
+Minor versions preserve architectural compatibility.
+
+Approval of this specification does not imply approval of generated Change
+Proposal or Learning Object modifications.
+
+The approved specification defines the normative behavior of the KEP process.
+
+
+================================================================================
+Fine documento
+
+Knowledge Extraction Pipeline (KEP)
+
+Specification
+
+Version: 1.0.2
+
+================================================================================

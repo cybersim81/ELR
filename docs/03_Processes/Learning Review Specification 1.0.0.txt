@@ -1,0 +1,656 @@
+================================================================================
+English Learning Repository (ELR)
+
+Learning Review Specification
+
+Version: 1.0.0
+Status: DRAFT
+================================================================================
+
+
+Document Identity
+================================================================================
+
+Document Name:
+
+Learning Review Specification
+
+
+Document Version:
+
+1.0.0
+
+
+Status:
+
+DRAFT
+
+
+Dependencies:
+
+- ELR Architecture Specification
+
+- ELR Architecture Decision Log
+
+- ELR Taxonomy
+
+- Knowledge Extraction Pipeline Specification
+
+- Evidence Model Specification
+
+- Learning Object Model Specification
+
+
+================================================================================
+Scopo
+================================================================================
+
+La Learning Review Specification definisce il processo attraverso cui le
+proposte di modifica generate dalla Knowledge Extraction Pipeline (KEP) vengono
+valutate prima della loro persistenza nell'English Learning Repository (ELR).
+
+
+La Learning Review rappresenta il livello di controllo tra:
+
+• proposta di conoscenza;
+
+• decisione di persistenza;
+
+• evoluzione del repository.
+
+
+La Learning Review non estrae conoscenza.
+
+La Learning Review non calcola la Mastery.
+
+La Learning Review non sostituisce il processo KEP.
+
+
+================================================================================
+Obiettivo della Learning Review
+================================================================================
+
+L'obiettivo della Learning Review è garantire che ogni modifica proposta
+all'ELR sia:
+
+
+• coerente con il modello di conoscenza;
+
+• sufficientemente atomica;
+
+• non duplicata;
+
+• linguisticamente valida;
+
+• compatibile con l'architettura ELR.
+
+
+La Learning Review deve prevenire:
+
+
+• sovraestrazione;
+
+• duplicazione di Learning Object;
+
+• introduzione di conoscenza non riutilizzabile;
+
+• contaminazione del repository con errori o contesto conversazionale.
+
+
+================================================================================
+Principi fondamentali
+================================================================================
+
+
+## LR-001 — Review not Extraction
+================================================================================
+
+La Learning Review valuta conoscenza proposta.
+
+Non genera nuova conoscenza.
+
+
+La sorgente della conoscenza candidata è esclusivamente:
+
+
+Conversation Episode
+
+        |
+
+        v
+
+KEP
+
+        |
+
+        v
+
+ELR Change Proposal
+
+
+La Learning Review può:
+
+
+• approvare;
+
+• rifiutare;
+
+• richiedere modifica;
+
+
+ma non sostituisce il processo KEP.
+
+
+================================================================================
+## LR-002 — Repository Protection
+================================================================================
+
+La Learning Review protegge l'integrità dell'ELR.
+
+
+Nessuna modifica diventa persistente senza superare il processo di Review.
+
+
+L'ELR conserva esclusivamente:
+
+
+• conoscenza approvata;
+
+• Learning Object validi;
+
+• relazioni coerenti.
+
+
+================================================================================
+## LR-003 — Evidence Based Decision
+================================================================================
+
+Ogni decisione della Learning Review deve essere supportata da Evidence.
+
+
+La Review utilizza:
+
+
+• Change Evidence;
+
+• struttura della Change Proposal;
+
+• Learning Object esistenti;
+
+
+La Evidence supporta la decisione ma non costituisce conoscenza.
+
+
+================================================================================
+## LR-004 — Separation of Responsibilities
+================================================================================
+
+La Learning Review mantiene separati:
+
+
+-------------------------------------------------------------------------------
+Knowledge Extraction
+-------------------------------------------------------------------------------
+
+Responsabilità:
+
+KEP
+
+
+-------------------------------------------------------------------------------
+Repository Decision
+-------------------------------------------------------------------------------
+
+Responsabilità:
+
+Learning Review
+
+
+-------------------------------------------------------------------------------
+Knowledge Persistence
+-------------------------------------------------------------------------------
+
+Responsabilità:
+
+ELR
+
+
+-------------------------------------------------------------------------------
+Mastery Update
+-------------------------------------------------------------------------------
+
+Responsabilità:
+
+Mastery Engine
+
+
+================================================================================
+Boundary della Learning Review
+================================================================================
+
+La Learning Review si colloca tra il processo KEP e il repository.
+
+
+Flusso:
+
+
+Conversation Episode
+
+        |
+
+        v
+
+Knowledge Extraction Pipeline
+
+        |
+
+        v
+
+ELR Change Proposal
+
+        |
+
+        v
+
+Learning Review
+
+        |
+
+        v
+
+ELR
+
+
+================================================================================
+Input Model
+================================================================================
+
+L'input principale della Learning Review è:
+
+
+ELR Change Proposal
+
+
+Una Change Proposal contiene:
+
+
+• Change Type;
+
+• Change Payload;
+
+• Change Evidence;
+
+• Change Metadata.
+
+
+La Learning Review può inoltre accedere a:
+
+
+• Learning Object esistenti;
+
+• tassonomia ELR;
+
+• vincoli architetturali.
+
+
+================================================================================
+Review Process
+================================================================================
+
+Il processo di Learning Review comprende:
+
+
+1.
+
+Proposal Validation
+
+
+2.
+
+Knowledge Validation
+
+
+3.
+
+Repository Consistency Check
+
+
+4.
+
+Decision
+
+
+================================================================================
+1. Proposal Validation
+================================================================================
+
+La Learning Review verifica che la proposta sia formalmente valida.
+
+
+Controlla:
+
+
+• presenza del Change Type;
+
+• presenza del Change Payload;
+
+• presenza della Change Evidence;
+
+• atomicità della modifica.
+
+
+Una proposta incompleta può essere rifiutata.
+
+
+================================================================================
+2. Knowledge Validation
+================================================================================
+
+La Learning Review verifica che la conoscenza proposta sia compatibile con i
+principi ELR.
+
+
+Deve verificare:
+
+
+-------------------------------------------------------------------------------
+Anchor Validity
+-------------------------------------------------------------------------------
+
+L'Anchor deve essere:
+
+
+• osservabile;
+
+• nella lingua target;
+
+• riutilizzabile.
+
+
+-------------------------------------------------------------------------------
+Knowledge Statement Validity
+-------------------------------------------------------------------------------
+
+Il Knowledge Statement deve essere:
+
+
+• positivo;
+
+• atomico;
+
+• comprensibile;
+
+• associato all'Anchor.
+
+
+-------------------------------------------------------------------------------
+Learning Object Validity
+-------------------------------------------------------------------------------
+
+La conoscenza deve rappresentare una competenza linguistica acquisibile.
+
+
+================================================================================
+3. Repository Consistency Check
+================================================================================
+
+La Learning Review verifica la relazione tra proposta e repository esistente.
+
+
+Deve determinare se:
+
+
+• creare un nuovo Learning Object;
+
+• integrare un Learning Object esistente;
+
+• correggere una rappresentazione esistente.
+
+
+La Review non modifica la classificazione KEP automaticamente.
+
+Può però rifiutare una classificazione incoerente.
+
+
+================================================================================
+Review Decision
+================================================================================
+
+La Learning Review produce una decisione.
+
+
+Le decisioni possibili sono:
+
+
+-------------------------------------------------------------------------------
+APPROVE
+-------------------------------------------------------------------------------
+
+La proposta è accettata.
+
+
+Il cambiamento può essere applicato all'ELR.
+
+
+-------------------------------------------------------------------------------
+REJECT
+-------------------------------------------------------------------------------
+
+La proposta non deve entrare nel repository.
+
+
+Motivazioni possibili:
+
+
+• conoscenza non valida;
+
+• duplicazione;
+
+• Anchor non corretto;
+
+• sovraestrazione.
+
+
+-------------------------------------------------------------------------------
+REQUEST REVISION
+-------------------------------------------------------------------------------
+
+La proposta necessita di modifica prima della valutazione finale.
+
+
+================================================================================
+CREATE Review
+================================================================================
+
+Per una proposta CREATE la Learning Review verifica:
+
+
+• assenza di Learning Object equivalente;
+
+• validità dell'Anchor;
+
+• atomicità della conoscenza;
+
+• riutilizzabilità futura.
+
+
+Esempio:
+
+
+Proposal:
+
+
+Anchor:
+
+weever
+
+
+Knowledge Statement:
+
+weever → tracina
+
+
+Decisione possibile:
+
+APPROVE
+
+
+================================================================================
+MERGE Review
+================================================================================
+
+Per una proposta MERGE la Learning Review verifica:
+
+
+• esistenza del Learning Object target;
+
+• equivalenza concettuale;
+
+• assenza di duplicazione.
+
+
+Il MERGE non crea una nuova identità.
+
+
+Il Learning Object mantiene:
+
+
+• identità;
+
+• storia;
+
+• relazioni esistenti.
+
+
+================================================================================
+UPDATE Review
+================================================================================
+
+Per una proposta UPDATE la Learning Review verifica:
+
+
+• che la conoscenza fondamentale rimanga invariata;
+
+• che la modifica migliori la rappresentazione;
+
+• che non introduca nuova conoscenza mascherata.
+
+
+================================================================================
+Review Evidence
+================================================================================
+
+La decisione della Learning Review deve produrre una traccia operativa.
+
+
+Può includere:
+
+
+• decisione;
+
+• motivazione;
+
+• Evidence utilizzata;
+
+• eventuali osservazioni.
+
+
+La Review Evidence non rappresenta conoscenza persistente.
+
+
+================================================================================
+Relazione con ELR
+================================================================================
+
+Solo le Change Proposal approvate possono aggiornare il repository.
+
+
+Flusso:
+
+
+ELR Change Proposal
+
+        |
+
+        v
+
+Learning Review
+
+        |
+
+        +----------------+
+
+        |                |
+
+        v                v
+
+    APPROVE          REJECT
+
+
+        |
+
+        v
+
+       ELR
+
+
+================================================================================
+Relazione con Mastery Engine
+================================================================================
+
+La Learning Review non aggiorna la Mastery.
+
+
+Una volta che un Learning Object è presente nell'ELR:
+
+
+• il Mastery Engine può ricevere Mastery Evidence;
+
+• il Mastery Engine gestisce il livello di padronanza.
+
+
+================================================================================
+Anti-corruption Rules
+================================================================================
+
+La Learning Review deve impedire:
+
+
+• inserimento di errori come conoscenza;
+
+• inserimento di conversazioni complete nel repository;
+
+• duplicazione di Learning Object;
+
+• persistenza di categorie grammaticali astratte prive di Anchor.
+
+
+================================================================================
+Principio conclusivo
+================================================================================
+
+La Learning Review rappresenta il controllo di qualità del repository.
+
+
+La KEP propone conoscenza.
+
+
+La Learning Review decide se la conoscenza è degna di persistenza.
+
+
+L'ELR conserva esclusivamente conoscenza approvata.
+
+
+Il Mastery Engine misura esclusivamente conoscenza già presente.
+
+
+================================================================================
+Fine documento
+
+English Learning Repository (ELR)
+
+Learning Review Specification
+
+Version: 1.0.0
+
+================================================================================

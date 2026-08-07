@@ -1,0 +1,706 @@
+================================================================================
+English Learning Repository (ELR)
+
+Mastery Engine Specification
+
+Version: 1.0.0
+Status: DRAFT
+================================================================================
+
+
+Document Identity
+================================================================================
+
+Document Name:
+
+Mastery Engine Specification
+
+
+Document Version:
+
+1.0.0
+
+
+Status:
+
+DRAFT
+
+
+Dependencies:
+
+- ELR Architecture Specification
+
+- ELR Architecture Decision Log
+
+- ELR Taxonomy
+
+- Evidence Model Specification
+
+- Learning Object Model Specification
+
+- Learning Review Specification
+
+
+================================================================================
+Scopo
+================================================================================
+
+La Mastery Engine Specification definisce il componente responsabile della
+gestione della padronanza dell'utente rispetto ai Learning Object presenti
+nell'English Learning Repository (ELR).
+
+
+Il Mastery Engine analizza Evidence relative alla padronanza e aggiorna lo
+stato di apprendimento associato alle conoscenze già presenti.
+
+
+Il Mastery Engine rappresenta il livello di trasformazione tra:
+
+
+• osservazioni di utilizzo della lingua;
+
+• evidenze di padronanza;
+
+• stato di Mastery.
+
+
+================================================================================
+Boundary del Mastery Engine
+================================================================================
+
+Il Mastery Engine opera esclusivamente su conoscenza già presente nell'ELR.
+
+
+Flusso:
+
+
+Learning Object
+
+        |
+
+        v
+
+Mastery Evidence
+
+        |
+
+        v
+
+Mastery Engine
+
+        |
+
+        v
+
+Mastery State
+
+
+================================================================================
+Non responsabilità del Mastery Engine
+================================================================================
+
+Il Mastery Engine non è responsabile di:
+
+
+• estrarre nuova conoscenza;
+
+• creare Learning Object;
+
+• modificare Anchor;
+
+• modificare Knowledge Statement;
+
+• approvare modifiche al repository;
+
+• interpretare conversazioni complete.
+
+
+Queste responsabilità appartengono rispettivamente a:
+
+
+KEP:
+
+estrazione della conoscenza
+
+
+Learning Review:
+
+approvazione repository
+
+
+ELR:
+
+persistenza conoscenza
+
+
+================================================================================
+Obiettivo del Mastery Engine
+================================================================================
+
+L'obiettivo del Mastery Engine è rappresentare l'evoluzione della padronanza
+dell'utente rispetto ai Learning Object.
+
+
+Il Mastery Engine deve:
+
+
+• ricevere Mastery Evidence;
+
+• associare Evidence a Learning Object esistenti;
+
+• aggiornare lo stato di padronanza;
+
+• supportare il ripasso e la selezione delle attività.
+
+
+================================================================================
+Principi fondamentali
+================================================================================
+
+
+## ME-001 — Mastery over Knowledge
+================================================================================
+
+La Mastery rappresenta il rapporto tra utente e conoscenza.
+
+
+Non rappresenta la conoscenza stessa.
+
+
+La conoscenza appartiene:
+
+
+ELR
+
+        |
+
+        v
+
+Learning Object
+
+
+La padronanza appartiene:
+
+
+User
+
+        |
+
+        v
+
+Mastery State
+
+
+================================================================================
+## ME-002 — Evidence Driven Mastery
+================================================================================
+
+La Mastery viene aggiornata esclusivamente attraverso Evidence.
+
+
+Il Mastery Engine non modifica la padronanza sulla base di:
+
+
+• tempo trascorso;
+
+• ipotesi;
+
+• assenza di errori;
+
+• semplice presenza di un Learning Object.
+
+
+Ogni cambiamento deve essere giustificato da Mastery Evidence.
+
+
+================================================================================
+## ME-003 — Separation from KEP
+================================================================================
+
+La Mastery Evidence può derivare da eventi analizzati durante una conversazione.
+
+
+Tuttavia:
+
+
+KEP:
+
+"Questa conoscenza deve esistere?"
+
+
+Mastery Engine:
+
+"Quanto l'utente padroneggia questa conoscenza?"
+
+
+Le due domande devono rimanere separate.
+
+
+================================================================================
+## ME-004 — Learning Object Identity
+================================================================================
+
+La Mastery è sempre associata all'identità di un Learning Object.
+
+
+La Mastery non è associata direttamente a:
+
+
+• frasi;
+
+• errori;
+
+• parole isolate;
+
+• conversazioni.
+
+
+================================================================================
+Input Model
+================================================================================
+
+L'input principale del Mastery Engine è:
+
+
+Mastery Evidence
+
+
+Una Mastery Evidence contiene:
+
+
+• Learning Object di riferimento;
+
+• evento osservato;
+
+• tipo di evidenza;
+
+• contesto necessario;
+
+• informazioni temporali.
+
+
+La struttura dettagliata delle Evidence è definita in:
+
+
+Evidence Model Specification
+
+
+================================================================================
+Mastery Evidence Types
+================================================================================
+
+Il Mastery Engine può ricevere differenti tipi di Evidence.
+
+
+================================================================================
+Correct Usage Evidence
+================================================================================
+
+Rappresenta un utilizzo corretto di una conoscenza già presente.
+
+
+Esempio:
+
+
+Learning Object:
+
+
+Anchor:
+
+make + mistake
+
+
+Utente:
+
+
+"I made a mistake yesterday."
+
+
+Possibile interpretazione:
+
+
+evidenza positiva di applicazione.
+
+
+================================================================================
+Incorrect Usage Evidence
+================================================================================
+
+Rappresenta un utilizzo non corretto relativo a una conoscenza esistente.
+
+
+Esempio:
+
+
+Learning Object:
+
+
+Anchor:
+
+make + mistake
+
+
+Utente:
+
+
+"I did a mistake."
+
+
+Possibile interpretazione:
+
+
+evidenza di difficoltà.
+
+
+================================================================================
+Uncertainty Evidence
+================================================================================
+
+Rappresenta un segnale di incertezza rispetto a una conoscenza.
+
+
+Esempio:
+
+
+Utente:
+
+
+"Why do we say make a mistake?"
+
+
+Se il Learning Object esiste già:
+
+
+Possibile Evidence:
+
+incertezza relativa alla conoscenza.
+
+
+================================================================================
+Explicit Recall Evidence
+================================================================================
+
+Rappresenta una produzione intenzionale della conoscenza.
+
+
+Esempio:
+
+
+Utente:
+
+
+"I remembered that after interested in we use verb-ing."
+
+
+Possibile evidenza positiva.
+
+
+================================================================================
+Mastery State
+================================================================================
+
+Il Mastery State rappresenta lo stato corrente della relazione tra utente e
+Learning Object.
+
+
+Il Mastery State può includere:
+
+
+• livello di padronanza;
+
+• storico delle Evidence;
+
+• informazioni temporali;
+
+• stato di revisione.
+
+
+Il modello preciso dello stato è definito separatamente.
+
+
+================================================================================
+Mastery Update Process
+================================================================================
+
+Il processo concettuale di aggiornamento è:
+
+
+Mastery Evidence
+
+        |
+
+        v
+
+Evidence Interpretation
+
+        |
+
+        v
+
+Mastery Update Decision
+
+        |
+
+        v
+
+Mastery State
+
+
+================================================================================
+Evidence Interpretation
+================================================================================
+
+Il Mastery Engine interpreta l'Evidence in relazione a:
+
+
+• Learning Object;
+
+• storico precedente;
+
+• frequenza delle osservazioni;
+
+• tipo di comportamento osservato.
+
+
+L'interpretazione non modifica il contenuto del Learning Object.
+
+
+================================================================================
+Mastery Update Decision
+================================================================================
+
+La decisione di aggiornamento può produrre:
+
+
+• aumento della Mastery;
+
+• diminuzione della Mastery;
+
+• mantenimento dello stato;
+
+• richiesta di ulteriore evidenza.
+
+
+================================================================================
+Mastery Stability
+================================================================================
+
+La Mastery non deve dipendere da una singola osservazione isolata.
+
+
+Il sistema deve considerare:
+
+
+• ripetizione;
+
+• indipendenza delle Evidence;
+
+• contesto;
+
+• consistenza nel tempo.
+
+
+Una singola produzione corretta non implica automaticamente padronanza
+completa.
+
+
+================================================================================
+Independent Evidence
+================================================================================
+
+Evidence consecutive non devono essere considerate automaticamente
+indipendenti.
+
+
+Esempio:
+
+
+LLM:
+
+"The correct form is make a mistake."
+
+
+Utente:
+
+"I make a mistake."
+
+
+Questa ripetizione immediata non costituisce necessariamente evidenza
+indipendente.
+
+
+Il Mastery Engine deve distinguere:
+
+
+riproduzione immediata
+
+da
+
+utilizzo autonomo.
+
+
+================================================================================
+Relazione con Learning Review
+================================================================================
+
+La Learning Review determina se una conoscenza entra nell'ELR.
+
+
+Il Mastery Engine opera solo dopo tale decisione.
+
+
+Flusso:
+
+
+KEP
+
+ |
+
+ v
+
+Learning Review
+
+ |
+
+ v
+
+ELR
+
+ |
+
+ v
+
+Mastery Engine
+
+
+================================================================================
+Relazione con KEP
+================================================================================
+
+Una stessa Conversation Episode può produrre:
+
+
+Change Evidence
+
+        |
+
+        v
+
+KEP / Learning Review
+
+
+e:
+
+
+Mastery Evidence
+
+        |
+
+        v
+
+Mastery Engine
+
+
+Le due Evidence devono rimanere separate.
+
+
+================================================================================
+Anti-corruption Rules
+================================================================================
+
+Il Mastery Engine non deve:
+
+
+• creare Learning Object;
+
+• trasformare errori in conoscenza;
+
+• modificare Knowledge Statement;
+
+• dedurre conoscenze mancanti;
+
+• utilizzare Mastery come prova di validità linguistica.
+
+
+================================================================================
+Output del Mastery Engine
+================================================================================
+
+Il Mastery Engine produce:
+
+
+--------------------------------------------------------------------------------
+Mastery State Update
+--------------------------------------------------------------------------------
+
+Aggiornamento dello stato di padronanza associato a un Learning Object.
+
+
+--------------------------------------------------------------------------------
+Mastery History
+--------------------------------------------------------------------------------
+
+Storico delle Evidence utilizzate per la valutazione.
+
+
+--------------------------------------------------------------------------------
+Learning Signals
+--------------------------------------------------------------------------------
+
+Informazioni utilizzabili da sistemi successivi:
+
+
+• selezione attività;
+
+• scheduling;
+
+• priorità di ripasso.
+
+
+================================================================================
+Relazione con Learning Activities
+================================================================================
+
+Il Mastery Engine può fornire segnali per la pianificazione delle attività.
+
+
+Tuttavia non definisce:
+
+
+• contenuti didattici;
+
+• esercizi;
+
+• strategie pedagogiche.
+
+
+================================================================================
+Principio conclusivo
+================================================================================
+
+Il Mastery Engine misura la relazione dell'utente con una conoscenza già
+approvata.
+
+
+La KEP identifica conoscenza.
+
+
+La Learning Review protegge il repository.
+
+
+L'ELR conserva conoscenza.
+
+
+Il Mastery Engine misura la padronanza.
+
+
+================================================================================
+Fine documento
+
+English Learning Repository (ELR)
+
+Mastery Engine Specification
+
+Version: 1.0.0
+
+================================================================================

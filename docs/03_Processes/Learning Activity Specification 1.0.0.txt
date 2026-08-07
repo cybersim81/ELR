@@ -1,0 +1,573 @@
+================================================================================
+English Learning Repository (ELR)
+
+Learning Activity Specification
+
+Version: 1.0.0
+Status: DRAFT
+================================================================================
+
+
+Document Identity
+================================================================================
+
+Document Name:
+
+Learning Activity Specification
+
+
+Document Version:
+
+1.0.0
+
+
+Status:
+
+DRAFT
+
+
+Dependencies:
+
+- ELR Architecture Specification
+
+- ELR Taxonomy
+
+- Learning Object Model Specification
+
+- Mastery Engine Specification
+
+- Exercise System Specification
+
+
+================================================================================
+Scopo
+================================================================================
+
+La Learning Activity Specification definisce il modello concettuale delle
+attività di apprendimento generate utilizzando la conoscenza presente nell'ELR
+e le informazioni di padronanza prodotte dal Mastery Engine.
+
+
+La Learning Activity rappresenta il livello di collegamento tra:
+
+
+• conoscenza disponibile;
+
+• stato di apprendimento dell'utente;
+
+• azione didattica proposta.
+
+
+La Learning Activity non rappresenta:
+
+
+• conoscenza linguistica;
+
+• Learning Object;
+
+• esercizio specifico;
+
+• stato di Mastery.
+
+
+================================================================================
+Principio fondamentale
+================================================================================
+
+Una Learning Activity risponde alla domanda:
+
+
+"Quale attività è appropriata per aiutare l'utente rispetto a una conoscenza?"
+
+
+Non risponde alla domanda:
+
+
+"Quale conoscenza deve essere memorizzata?"
+
+
+La conoscenza appartiene all'ELR.
+
+La padronanza appartiene al Mastery Engine.
+
+L'attività appartiene al Learning Activity Layer.
+
+
+================================================================================
+Boundary architetturale
+================================================================================
+
+Relazione:
+
+
+ELR Repository
+
+        |
+
+        v
+
+Learning Object
+
+
+        +
+
+        |
+
+
+Mastery Engine
+
+        |
+
+        v
+
+Mastery State
+
+
+        |
+
+        v
+
+
+Learning Activity
+
+
+        |
+
+        v
+
+
+Exercise System
+
+
+================================================================================
+Responsabilità
+================================================================================
+
+La Learning Activity Specification definisce:
+
+
+• modello delle attività;
+
+• relazione tra attività e Learning Object;
+
+• criteri generali di selezione;
+
+• obiettivo didattico dell'attività.
+
+
+================================================================================
+Non responsabilità
+================================================================================
+
+La Learning Activity non definisce:
+
+
+• generazione degli esercizi;
+
+• formato delle domande;
+
+• valutazione delle risposte;
+
+• feedback linguistico dettagliato;
+
+• algoritmi di Mastery.
+
+
+Queste responsabilità appartengono a:
+
+
+Exercise System:
+
+generazione e gestione degli esercizi
+
+
+Mastery Engine:
+
+valutazione della padronanza
+
+
+================================================================================
+Learning Activity Concept
+================================================================================
+
+Una Learning Activity rappresenta una proposta strutturata di interazione
+didattica associata a uno o più Learning Object.
+
+
+Una Learning Activity contiene:
+
+
+• obiettivo di apprendimento;
+
+• conoscenza target;
+
+• livello di intervento;
+
+• relazione con Mastery;
+
+• tipo di attività richiesto.
+
+
+================================================================================
+Relazione con Learning Object
+================================================================================
+
+Ogni Learning Activity deve riferirsi almeno a un Learning Object.
+
+
+La Learning Activity non modifica il Learning Object.
+
+
+Esempio:
+
+
+Learning Object:
+
+
+Anchor:
+
+make + mistake
+
+
+Knowledge Statement:
+
+Per esprimere l'azione di commettere un errore si usa
+"make a mistake".
+
+
+Possibili Learning Activity:
+
+
+• riconoscimento della collocazione;
+
+• produzione guidata;
+
+• produzione libera.
+
+
+La conoscenza rimane invariata.
+
+
+================================================================================
+Relazione con Mastery
+================================================================================
+
+La scelta di una Learning Activity può dipendere da:
+
+
+• livello di Mastery;
+
+• storico delle Evidence;
+
+• difficoltà osservate;
+
+• necessità di consolidamento.
+
+
+Esempio:
+
+
+Mastery bassa:
+
+
+Attività:
+
+riconoscimento guidato.
+
+
+Mastery intermedia:
+
+
+Attività:
+
+produzione controllata.
+
+
+Mastery alta:
+
+
+Attività:
+
+produzione libera.
+
+
+================================================================================
+Learning Activity Types
+================================================================================
+
+Il modello può includere differenti categorie di attività.
+
+
+================================================================================
+Recognition Activity
+================================================================================
+
+Obiettivo:
+
+
+riconoscere una conoscenza linguistica.
+
+
+Esempio:
+
+
+Identificare la forma corretta:
+
+
+make a mistake
+
+vs
+
+do a mistake
+
+
+================================================================================
+Controlled Production Activity
+================================================================================
+
+Obiettivo:
+
+
+produrre una conoscenza con vincoli.
+
+
+Esempio:
+
+
+Completa:
+
+
+I made a ______ yesterday.
+
+
+================================================================================
+Free Production Activity
+================================================================================
+
+Obiettivo:
+
+
+utilizzare autonomamente una conoscenza.
+
+
+Esempio:
+
+
+Descrivere un'esperienza usando:
+
+make + mistake
+
+
+================================================================================
+Contrast Activity
+================================================================================
+
+Obiettivo:
+
+
+distinguere conoscenze linguistiche vicine.
+
+
+Esempio:
+
+
+since
+
+vs
+
+for
+
+
+================================================================================
+Review Activity
+================================================================================
+
+Obiettivo:
+
+
+consolidare una conoscenza già acquisita.
+
+
+Può essere generata sulla base di:
+
+
+• decadimento temporale;
+
+• rischio di perdita;
+
+• Evidence precedente.
+
+
+================================================================================
+Activity Selection
+================================================================================
+
+La selezione delle attività può utilizzare:
+
+
+• Learning Object;
+
+• Mastery State;
+
+• priorità didattiche.
+
+
+La selezione non modifica:
+
+
+• conoscenza;
+
+• Mastery;
+
+• repository.
+
+
+================================================================================
+Activity Lifecycle
+================================================================================
+
+Il ciclo concettuale è:
+
+
+Learning Object
+
+        |
+
+        v
+
+Mastery Analysis
+
+        |
+
+        v
+
+Learning Activity Generation
+
+        |
+
+        v
+
+Exercise System
+
+        |
+
+        v
+
+User Interaction
+
+        |
+
+        v
+
+Evidence Generation
+
+
+================================================================================
+Evidence Generation
+================================================================================
+
+Una Learning Activity può produrre nuovi eventi osservabili.
+
+
+Questi eventi possono diventare:
+
+
+• Mastery Evidence;
+
+• nuove Conversation Episode;
+
+• input per processi successivi.
+
+
+L'attività non produce direttamente conoscenza.
+
+
+================================================================================
+Separation Principle
+================================================================================
+
+Il sistema deve mantenere separati:
+
+
+Knowledge Layer
+
+        |
+
+        v
+
+Learning Object
+
+
+Learning State Layer
+
+        |
+
+        v
+
+Mastery
+
+
+Interaction Layer
+
+        |
+
+        v
+
+Learning Activity
+
+
+Exercise Layer
+
+        |
+
+        v
+
+Exercise Instance
+
+
+================================================================================
+Anti-corruption Rules
+================================================================================
+
+Una Learning Activity non deve:
+
+
+• contenere conoscenza non presente nell'ELR;
+
+• modificare Learning Object;
+
+• trasformare un esercizio in conoscenza;
+
+• sostituire il Mastery Engine.
+
+
+================================================================================
+Principio conclusivo
+================================================================================
+
+La Learning Activity rappresenta il collegamento tra conoscenza e azione
+didattica.
+
+
+L'ELR conserva ciò che deve essere imparato.
+
+
+Il Mastery Engine misura quanto è stato imparato.
+
+
+La Learning Activity determina quale tipo di intervento è appropriato.
+
+
+L'Exercise System realizza concretamente l'interazione.
+
+
+================================================================================
+Fine documento
+
+English Learning Repository (ELR)
+
+Learning Activity Specification
+
+Version: 1.0.0
+
+================================================================================

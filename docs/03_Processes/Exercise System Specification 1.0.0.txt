@@ -1,0 +1,645 @@
+================================================================================
+English Learning Repository (ELR)
+
+Exercise System Specification
+
+Version: 1.0.0
+Status: DRAFT
+================================================================================
+
+
+Document Identity
+================================================================================
+
+Document Name:
+
+Exercise System Specification
+
+
+Document Version:
+
+1.0.0
+
+
+Status:
+
+DRAFT
+
+
+Dependencies:
+
+- ELR Architecture Specification
+
+- ELR Taxonomy
+
+- Knowledge Extraction Pipeline Specification
+
+- Evidence Model Specification
+
+- Mastery Engine Specification
+
+- Learning Review Specification
+
+
+================================================================================
+Scopo
+================================================================================
+
+La Exercise System Specification definisce il modello attraverso cui l'ELR
+utilizza Learning Object esistenti per generare, proporre e valutare attività
+di apprendimento.
+
+
+Il sistema Exercise rappresenta il livello operativo attraverso cui la
+conoscenza persistente viene trasformata in attività esercitative.
+
+
+Exercise System non rappresenta:
+
+- nuova conoscenza linguistica;
+
+- repository della conoscenza;
+
+- calcolo della Mastery;
+
+- decisione finale sulla validità dei Learning Object.
+
+
+La conoscenza utilizzata dagli esercizi proviene esclusivamente dall'ELR.
+
+
+================================================================================
+Responsabilità del documento
+================================================================================
+
+Questo documento definisce:
+
+
+- concetto di Exercise;
+
+- relazione tra Exercise e Learning Object;
+
+- principi di generazione degli esercizi;
+
+- struttura degli Exercise Object;
+
+- produzione di Evidence durante gli esercizi;
+
+- relazione con Mastery Engine.
+
+
+Questo documento NON definisce:
+
+
+- estrazione della conoscenza;
+
+- approvazione dei Learning Object;
+
+- algoritmo di Mastery;
+
+- scheduling del ripasso.
+
+
+Queste responsabilità appartengono ai rispettivi componenti.
+
+
+================================================================================
+Principio fondamentale
+================================================================================
+
+Un esercizio non crea conoscenza.
+
+
+Un esercizio espone l'utente a una conoscenza già presente nell'ELR e genera
+evidenza relativa alla sua capacità di utilizzarla.
+
+
+La relazione fondamentale è:
+
+
+Learning Object
+
+        |
+
+        v
+
+Exercise
+
+        |
+
+        v
+
+User Response
+
+        |
+
+        v
+
+Evidence
+
+        |
+
+        v
+
+Mastery Engine
+
+
+================================================================================
+1. Exercise Concept
+================================================================================
+
+Un Exercise rappresenta una attività progettata per verificare, consolidare o
+applicare una conoscenza rappresentata da uno o più Learning Object.
+
+
+Un Exercise contiene:
+
+
+- obiettivo linguistico;
+
+- Learning Object target;
+
+- contesto operativo;
+
+- richiesta all'utente;
+
+- risposta prodotta;
+
+- risultato dell'analisi.
+
+
+Un Exercise non diventa parte del contenuto del Learning Object.
+
+
+================================================================================
+2. Exercise Boundary
+================================================================================
+
+L'Exercise System appartiene al livello Process Layer.
+
+
+Relazione architetturale:
+
+
+ELR Repository
+
+        |
+
+        | fornisce
+
+        v
+
+Learning Object
+
+        |
+
+        v
+
+Exercise System
+
+        |
+
+        v
+
+User Interaction
+
+        |
+
+        v
+
+Evidence
+
+
+================================================================================
+3. Exercise Lifecycle
+================================================================================
+
+Il ciclo di vita concettuale di un Exercise è:
+
+
+Selezione Learning Object
+
+        |
+
+        v
+
+Generazione Exercise
+
+        |
+
+        v
+
+Presentazione all'utente
+
+        |
+
+        v
+
+Produzione risposta
+
+        |
+
+        v
+
+Analisi risposta
+
+        |
+
+        v
+
+Generazione Evidence
+
+
+Un Exercise concluso non modifica automaticamente il Learning Object.
+
+
+================================================================================
+4. Exercise Relationship with Learning Object
+================================================================================
+
+Ogni Exercise deve essere collegato almeno a un Learning Object.
+
+
+Il collegamento rappresenta:
+
+"Quale conoscenza viene esercitata?"
+
+
+L'Exercise non deve contenere una copia autonoma del Knowledge Statement.
+
+
+Deve invece referenziare:
+
+
+- Learning Object;
+
+- Anchor;
+
+- Knowledge Category.
+
+
+================================================================================
+5. Exercise Types
+================================================================================
+
+Il sistema può definire differenti tipologie di Exercise.
+
+
+Tipologie principali:
+
+
+-------------------------------------------------------------------------------
+Recognition Exercise
+-------------------------------------------------------------------------------
+
+Obiettivo:
+
+verificare il riconoscimento della conoscenza.
+
+
+Esempio:
+
+
+Selezionare la frase corretta:
+
+
+I have lived here for ten years.
+
+I lived here for ten years.
+
+
+Learning Object target:
+
+for + duration
+
+
+-------------------------------------------------------------------------------
+Production Exercise
+-------------------------------------------------------------------------------
+
+Obiettivo:
+
+verificare la capacità di produrre la conoscenza.
+
+
+Esempio:
+
+
+Completa:
+
+
+I have lived here ______ ten years.
+
+
+-------------------------------------------------------------------------------
+Transformation Exercise
+-------------------------------------------------------------------------------
+
+Obiettivo:
+
+verificare la capacità di modificare una struttura mantenendo il significato.
+
+
+Esempio:
+
+
+Trasforma:
+
+
+I started living here in 2015.
+
+
+Risultato atteso:
+
+
+I have lived here since 2015.
+
+
+-------------------------------------------------------------------------------
+Contrastive Exercise
+-------------------------------------------------------------------------------
+
+Obiettivo:
+
+verificare la distinzione tra conoscenze linguistiche vicine.
+
+
+Esempio:
+
+
+make a mistake
+
+vs
+
+do a mistake
+
+
+================================================================================
+6. Exercise Generation Principles
+================================================================================
+
+La generazione degli esercizi deve rispettare:
+
+
+-------------------------------------------------------------------------------
+Knowledge Alignment
+-------------------------------------------------------------------------------
+
+Ogni esercizio deve essere riconducibile a una conoscenza specifica.
+
+
+-------------------------------------------------------------------------------
+Atomicity
+-------------------------------------------------------------------------------
+
+Un esercizio dovrebbe verificare una conoscenza principale.
+
+
+Non deve introdurre contemporaneamente molte conoscenze indipendenti.
+
+
+-------------------------------------------------------------------------------
+Reusability
+-------------------------------------------------------------------------------
+
+Gli esercizi devono poter essere riutilizzati per lo stesso Learning Object.
+
+
+-------------------------------------------------------------------------------
+Difficulty Adaptation
+-------------------------------------------------------------------------------
+
+La difficoltà può variare senza modificare la conoscenza target.
+
+
+================================================================================
+7. Exercise Content Boundary
+================================================================================
+
+Il contenuto generato dall'esercizio non modifica il Knowledge Statement.
+
+
+Esempio:
+
+
+Learning Object:
+
+
+Anchor:
+
+make + mistake
+
+
+Knowledge Statement:
+
+Per riferirsi all'azione di commettere un errore si usa "make a mistake".
+
+
+Exercise:
+
+
+Choose the correct option:
+
+I made / did a mistake.
+
+
+La risposta dell'utente costituisce Evidence.
+
+
+Non costituisce nuova conoscenza.
+
+
+================================================================================
+8. Exercise Evaluation
+================================================================================
+
+La valutazione dell'esercizio produce informazioni relative alla risposta
+dell'utente.
+
+
+Può includere:
+
+
+- corretto;
+
+- errato;
+
+- parzialmente corretto;
+
+- richiesta di aiuto;
+
+- tempo impiegato;
+
+- livello di sicurezza dichiarato.
+
+
+La valutazione non modifica direttamente la Mastery.
+
+
+================================================================================
+9. Exercise Evidence
+================================================================================
+
+Gli esercizi possono generare Mastery Evidence.
+
+
+Una Exercise Evidence può rappresentare:
+
+
+- uso corretto;
+
+- errore;
+
+- esitazione;
+
+- richiesta di supporto;
+
+- miglioramento rispetto a tentativi precedenti.
+
+
+La struttura dell'Evidence appartiene a:
+
+
+Evidence Model Specification.
+
+
+================================================================================
+10. Relationship with Mastery Engine
+================================================================================
+
+Exercise System e Mastery Engine hanno responsabilità separate.
+
+
+Exercise System produce:
+
+
+- risposta;
+
+- risultato;
+
+- Evidence.
+
+
+Mastery Engine interpreta:
+
+
+- Evidence disponibile;
+
+- storico delle prestazioni;
+
+- stato della conoscenza.
+
+
+Exercise System non determina:
+
+
+- Mastery score;
+
+- livello acquisito;
+
+- scheduling.
+
+
+================================================================================
+11. Exercise Quality Criteria
+================================================================================
+
+Un Exercise valido deve essere:
+
+
+-------------------------------------------------------------------------------
+Coerente
+-------------------------------------------------------------------------------
+
+Deve esercitare il Learning Object associato.
+
+
+-------------------------------------------------------------------------------
+Comprensibile
+-------------------------------------------------------------------------------
+
+La richiesta deve essere interpretabile dall'utente.
+
+
+-------------------------------------------------------------------------------
+Misurabile
+-------------------------------------------------------------------------------
+
+La risposta deve produrre Evidence utilizzabile.
+
+
+-------------------------------------------------------------------------------
+Non trasformativo
+-------------------------------------------------------------------------------
+
+L'esercizio non deve modificare autonomamente la conoscenza persistente.
+
+
+================================================================================
+12. Anti-patterns
+================================================================================
+
+Il sistema deve evitare:
+
+
+-------------------------------------------------------------------------------
+Exercise senza Learning Object
+-------------------------------------------------------------------------------
+
+Un esercizio non deve esistere senza conoscenza target.
+
+
+-------------------------------------------------------------------------------
+Exercise che crea conoscenza
+-------------------------------------------------------------------------------
+
+Gli esercizi non sostituiscono la KEP.
+
+
+-------------------------------------------------------------------------------
+Exercise troppo ampio
+-------------------------------------------------------------------------------
+
+Un singolo esercizio non deve verificare troppe conoscenze indipendenti.
+
+
+-------------------------------------------------------------------------------
+Exercise come spiegazione permanente
+-------------------------------------------------------------------------------
+
+La spiegazione può supportare l'apprendimento ma non diventa automaticamente
+Knowledge Statement.
+
+
+================================================================================
+Principio conclusivo
+================================================================================
+
+L'Exercise System trasforma conoscenza persistente in attività di pratica.
+
+
+L'ELR conserva la conoscenza.
+
+
+La KEP propone nuova conoscenza.
+
+
+Il Learning Review approva l'evoluzione del repository.
+
+
+L'Exercise System permette all'utente di utilizzare e consolidare la conoscenza.
+
+
+Il Mastery Engine interpreta le evidenze prodotte dagli esercizi.
+
+
+================================================================================
+Fine documento
+
+English Learning Repository (ELR)
+
+Exercise System Specification
+
+Version: 1.0.0
+
+================================================================================
