@@ -1,0 +1,1360 @@
+================================================================================
+ELR Stress Test Log
+
+Version: 0.1
+Status: APPROVED candidate
+
+Document Type:
+Validation and Assessment Log
+
+Purpose:
+Records architectural stress tests, identified risks, observations,
+and validation outcomes.
+
+Dependencies:
+- ELR Architecture Baseline
+- ELR Architecture Consistency Matrix
+
+Maintained By:
+ELR Architecture Governance
+================================================================================
+
+Scopo
+-----
+
+Questo documento raccoglie casi utilizzati per validare l'architettura
+dell'English Learning Repository (ELR), la tassonomia dei Learning Object e i
+principi della Knowledge Extraction Policy (KEP).
+
+Lo Stress Test Log non rappresenta conoscenza linguistica dell'utente.
+
+Non appartiene all'ELR.
+
+Il suo scopo è documentare:
+
+• casi limite;
+
+• decisioni architetturali validate;
+
+• principi emersi durante la progettazione;
+
+• situazioni potenzialmente critiche per la KEP.
+
+================================================================================
+Struttura del caso
+================================================================================
+
+Ogni stress test contiene:
+
+• Scenario
+
+• Problema progettuale
+
+• Analisi
+
+• Decisione
+
+• Principio validato
+
+================================================================================
+ST-001 — Anchor positivo derivato da errore
+================================================================================
+
+Scenario:
+
+Utente:
+
+Yesterday I have gone.
+
+Problema progettuale:
+
+L'errore contiene più elementi linguistici.
+Occorre individuare quale elemento genera la conoscenza da acquisire.
+
+Analisi:
+
+L'elemento causale è "yesterday".
+
+L'utente deve acquisire la relazione:
+
+yesterday → Past Simple
+
+Non deve essere creato un Anchor relativo a:
+
+❌ Present Perfect
+
+❌ Past Time Reference
+
+Decisione:
+
+Anchor:
+
+yesterday
+
+KS:
+
+Per riferirsi a un evento concluso nel passato si usa "yesterday" con il
+Past Simple.
+
+Principio validato:
+
+Anchor Resolution deve individuare l'Anchor causale e non l'errore superficiale.
+
+================================================================================
+ST-002 — Anchor causale unico con più indicatori
+================================================================================
+
+Scenario:
+
+Utente:
+
+I have already seen that movie yesterday.
+
+Problema progettuale:
+
+Più elementi temporali sono presenti.
+
+Analisi:
+
+"already" è compatibile con il Present Perfect.
+
+"yesterday" rende necessario il Past Simple.
+
+L'errore è causato da "yesterday".
+
+Decisione:
+
+Anchor:
+
+yesterday
+
+already non genera un Learning Object autonomo.
+
+Principio validato:
+
+La presenza di un elemento linguistico non implica automaticamente la
+generazione di conoscenza.
+
+================================================================================
+ST-003 — Pattern parametrizzato
+================================================================================
+
+Scenario:
+
+Utente:
+
+I have lived here since 2010.
+
+Problema progettuale:
+
+Evitare Learning Object duplicati.
+
+Analisi:
+
+2010 rappresenta un valore specifico.
+
+La conoscenza generale riguarda:
+
+since + year
+
+Decisione:
+
+Anchor:
+
+since + year
+
+KS:
+
+Per esprimere un punto iniziale nel passato che continua fino al presente si usa
+"since + year".
+
+Principio validato:
+
+Gli Anchor possono contenere placeholder.
+
+================================================================================
+ST-004 — Durata continua
+================================================================================
+
+Scenario:
+
+Utente:
+
+I have lived here for ten years.
+
+Problema progettuale:
+
+Distinguere Anchor concreto e categoria grammaticale.
+
+Analisi:
+
+La conoscenza riguarda la costruzione:
+
+for + duration
+
+Non:
+
+❌ Present Perfect
+
+Decisione:
+
+Anchor:
+
+for + duration
+
+KS:
+
+Per esprimere continuità nel passato fino al presente si usa
+"for + duration".
+
+Principio validato:
+
+Il KS deve essere positivo e riferito all'Anchor osservabile.
+
+================================================================================
+ST-005 — Conoscenza contrastiva
+================================================================================
+
+Scenario:
+
+Confronto:
+
+tell vs say
+
+Problema progettuale:
+
+Il confronto genera nuovi Anchor?
+
+Analisi:
+
+La conoscenza è comparativa.
+
+Anchor principale:
+
+tell + person
+
+L'altro Anchor serve solo come riferimento contrastivo.
+
+Decisione:
+
+Il confronto può essere contenuto nel KS.
+
+Non viene creato automaticamente un nuovo Learning Object.
+
+Principio validato:
+
+Contrastive Knowledge non modifica l'identità dell'Anchor.
+
+================================================================================
+ST-006 — Collocazione vs regola generale
+================================================================================
+
+Scenario:
+
+Utente:
+
+heavy rain
+
+Problema progettuale:
+
+Distinguere conoscenza lessicale da conoscenza grammaticale.
+
+Analisi:
+
+"heavy rain" è una collocazione.
+
+La conoscenza non riguarda semplicemente l'aggettivo.
+
+Decisione:
+
+Anchor:
+
+heavy rain
+
+Principio validato:
+
+Le collocazioni possono costituire Anchor validi.
+
+================================================================================
+ST-007 — Misuse come Evidence
+================================================================================
+
+Scenario:
+
+Utente:
+
+do a photo
+
+Correzione:
+
+take a photo
+
+Problema progettuale:
+
+Dove rappresentare l'errore?
+
+Analisi:
+
+L'errore non deve diventare conoscenza.
+
+La conoscenza positiva è:
+
+take + photo
+
+Il misuse può costituire Evidence associata alla proposta di modifica del repository.
+
+Decisione:
+
+Anchor:
+
+take + photo
+
+KS:
+
+Per riferirsi all'azione di scattare una fotografia si usa "take + photo".
+
+Change Evidence:
+
+Uso osservato:
+
+do + photo
+
+Principio validato:
+
+Il misuse può essere conservato come evidenza senza diventare Knowledge Statement.
+
+================================================================================
+ST-008 — Morphology
+================================================================================
+
+Scenario:
+
+Utente:
+
+more tall
+
+Correzione:
+
+taller
+
+Problema progettuale:
+
+Distinguere forma corretta e regola astratta.
+
+Decisione:
+
+Anchor:
+
+tall
+
+KS:
+
+Il comparativo di "tall" è "taller".
+
+Principio validato:
+
+Morphology rappresenta la forma corretta dell'Anchor.
+
+================================================================================
+ST-009 — Pronome soggetto
+================================================================================
+
+Scenario:
+
+Utente:
+
+John and me went home.
+
+Problema progettuale:
+
+Distinguere collocazione e conoscenza morfologica.
+
+Analisi:
+
+"John and I" non è una collocazione.
+
+La conoscenza riguarda:
+
+uso del pronome personale come soggetto.
+
+Decisione:
+
+"I" è la forma del pronome personale usata come soggetto.
+
+Principio validato:
+
+Non ogni sequenza frequente costituisce una collocazione.
+
+================================================================================
+ST-010 — Uso corretto non spontaneo
+================================================================================
+
+Scenario:
+
+LLM corregge:
+
+I take a photo.
+
+Utente ripete immediatamente:
+
+I take a photo.
+
+Problema progettuale:
+
+La ripetizione costituisce mastery evidence?
+
+Decisione:
+
+No.
+
+La ripetizione immediatamente successiva alla correzione non costituisce
+Mastery Evidence sufficiente.
+
+Principio validato:
+
+Una ripetizione immediatamente successiva a una correzione non costituisce
+Mastery Evidence sufficiente.
+
+================================================================================
+ST-011 — Context e naturalezza
+================================================================================
+
+Scenario:
+
+Discussione su ordine delle parole.
+
+Problema progettuale:
+
+Ogni variazione sintattica deve diventare conoscenza?
+
+Analisi:
+
+Non necessariamente.
+
+Alcune scelte dipendono dall'enfasi comunicativa.
+
+Decisione:
+
+La KEP deve valutare se esiste una conoscenza stabile e riutilizzabile.
+
+Principio validato:
+
+Non ogni preferenza stilistica genera un Learning Object.
+
+================================================================================
+ST-012 — Trigger
+================================================================================
+
+Scenario:
+
+Utente chiede:
+
+"Cosa significa questa parola?"
+
+Problema progettuale:
+
+La domanda genera automaticamente conoscenza?
+
+Decisione:
+
+No.
+
+La domanda è un Trigger.
+
+La KEP valuta successivamente se emerge una conoscenza persistente.
+
+Principio validato:
+
+Trigger ed Evidence sono separati dalla conoscenza.
+
+================================================================================
+ST-013 — Numero dei Learning Object
+================================================================================
+
+Scenario:
+
+Yesterday I have buyed...
+
+Decisione:
+
+Nascono due Learning Object indipendenti:
+
+Anchor:
+yesterday
+
+Anchor:
+buy
+
+Principio validato:
+
+Il numero dei Learning Object coincide con il numero delle nuove competenze indipendenti acquisite, non con il numero degli errori osservati.
+
+================================================================================
+ST-014 — Naturalezza
+================================================================================
+
+Scenario:
+
+Go to my home
+
+LLM corregge:
+
+Go home
+
+Principio validato:
+
+Una conoscenza convenzionale può diventare un Learning Object anche in assenza di un errore grammaticale, purché rappresenti una conoscenza linguistica stabile e riutilizzabile.
+
+================================================================================
+ST-015 — Anchor multipli nella stessa frase
+================================================================================
+
+Scenario:
+
+Utente:
+
+Yesterday I have buyed a new car.
+
+Problema progettuale:
+
+Una singola frase può contenere più errori derivanti da conoscenze linguistiche
+indipendenti.
+
+Occorre determinare se il numero dei Learning Object debba dipendere:
+
+• dalla frase;
+
+• dagli errori;
+
+• dalle conoscenze acquisite.
+
+Analisi:
+
+Sono presenti due conoscenze linguistiche indipendenti.
+
+Prima conoscenza:
+
+Anchor:
+
+yesterday
+
+Knowledge Category:
+
+Function
+
+Knowledge Statement:
+
+Con "yesterday" si usa il Past Simple per riferirsi a un evento concluso nel
+passato.
+
+Seconda conoscenza:
+
+Anchor:
+
+buy
+
+Knowledge Category:
+
+Morphology
+
+Knowledge Statement:
+
+Il Past Simple di "buy" è "bought".
+
+Le due conoscenze possono essere:
+
+• acquisite indipendentemente;
+
+• verificate indipendentemente;
+
+• aggiornate indipendentemente.
+
+Decisione:
+
+Devono essere creati due Learning Object.
+
+Principio validato:
+
+Il numero di Learning Object coincide con il numero di conoscenze linguistiche
+indipendenti emerse, non con il numero di errori osservati o di frasi analizzate.
+
+================================================================================
+ST-016 — Anchor per costruzione con verbo reggente
+================================================================================
+
+Scenario:
+
+Utente:
+
+I look forward to see you.
+
+Correzione:
+
+I look forward to seeing you.
+
+Problema progettuale:
+
+Determinare se l'Anchor debba rappresentare:
+
+• una struttura grammaticale astratta;
+
+• il verbo specifico;
+
+• l'espressione linguistica che richiede una costruzione.
+
+Analisi:
+
+Possibili Anchor candidati:
+
+• look forward to
+
+• to + verb-ing
+
+• look forward to + verb-ing
+
+• see
+
+"to + verb-ing" rappresenta una generalizzazione grammaticale eccessiva e non
+identifica direttamente l'unità linguistica responsabile della conoscenza.
+
+"see" non costituisce la causa della necessità di acquisizione.
+
+"look forward to" è una unità linguistica osservabile e riutilizzabile che
+determina la costruzione richiesta.
+
+Decisione:
+
+Anchor:
+
+look forward to
+
+Knowledge Statement:
+
+Dopo "look forward to" si usa il verbo nella forma in -ing.
+
+Knowledge Category:
+
+Construction
+
+Principio validato:
+
+L'Anchor deve rappresentare l'unità linguistica che richiede la conoscenza,
+mentre la struttura esplicativa appartiene al Knowledge Statement.
+
+================================================================================
+ST-017 — Construction o Complement
+================================================================================
+
+Scenario:
+
+Utente:
+
+I am interested in learn English.
+
+Correzione:
+
+I am interested in learning English.
+
+Problema progettuale:
+
+Determinare se la conoscenza riguarda:
+
+• l'espressione "interested in";
+
+• la struttura astratta "in + verb-ing";
+
+• il complemento richiesto;
+
+• il verbo specifico utilizzato.
+
+Analisi:
+
+Possibili Anchor candidati:
+
+• interested in
+
+• in + verb-ing
+
+• learning English
+
+• learn
+
+"learning English" non rappresenta la conoscenza acquisibile, perché il
+fenomeno si applica a diversi verbi.
+
+"in + verb-ing" rappresenta una struttura astratta eccessivamente generale e
+non identifica l'unità linguistica responsabile della costruzione.
+
+"interested in" è una unità linguistica osservabile e riutilizzabile che
+determina il comportamento del complemento successivo.
+
+Decisione:
+
+Anchor:
+
+interested in
+
+Knowledge Statement:
+
+Dopo "interested in" si usa un verbo nella forma in -ing.
+
+Knowledge Category:
+
+Construction
+
+Principio validato:
+
+Una locuzione può costituire un Anchor quando determina una costruzione
+linguistica specifica.
+
+Le strutture grammaticali astratte non costituiscono automaticamente Anchor.
+
+================================================================================
+ST-018 — Conflitto tra Anchor candidati
+================================================================================
+
+Scenario:
+
+Utente:
+
+I made a mistake.
+
+Durante la conversazione emerge la domanda:
+
+Why do we say "make a mistake" and not "do a mistake"?
+
+Problema progettuale:
+
+La KEP deve determinare quale sia l'Anchor corretto quando più elementi
+linguistici possono sembrare candidati.
+
+Possibili candidati:
+
+• make
+
+• make + mistake
+
+• mistake
+
+• do + noun
+
+Analisi:
+
+"make" non rappresenta la conoscenza completa perché il fenomeno non riguarda il
+verbo isolato.
+
+Esempi diversi richiedono conoscenze diverse:
+
+• make a decision
+
+• make a choice
+
+• make progress
+
+• make a mistake
+
+"mistake" non rappresenta la conoscenza perché il problema non riguarda il
+significato del sostantivo.
+
+"do + noun" rappresenta la forma errata osservata e non deve diventare Anchor.
+
+"make + mistake" rappresenta una collocazione linguistica osservabile,
+riutilizzabile e sufficientemente specifica.
+
+Decisione:
+
+Anchor:
+
+make + mistake
+
+Knowledge Statement:
+
+Per riferirsi all'azione di commettere un errore si usa "make a mistake".
+
+Knowledge Category:
+
+Construction
+
+Principio validato:
+
+Quando più Anchor sono candidati, la KEP deve selezionare l'unità linguistica minima che rappresenta una conoscenza riutilizzabile completa, evitando Anchor troppo generici, categorie metalinguistiche o forme derivate dall'errore.
+
+================================================================================
+ST-019 — Conoscenza metalinguistica
+================================================================================
+
+Scenario:
+
+Utente:
+
+Why do we use the Present Perfect here?
+
+Contesto:
+
+La conversazione riguarda la frase:
+
+I have lived here for ten years.
+
+Problema progettuale:
+
+Una domanda metalinguistica può generare una grande quantità di spiegazioni
+grammaticali.
+
+La KEP deve distinguere tra:
+
+• spiegazione sulla lingua;
+
+• categoria grammaticale;
+
+• conoscenza linguistica persistente associabile a un Anchor.
+
+Analisi:
+
+"Present Perfect" non costituisce un Anchor valido.
+
+È una categoria metalinguistica generale e non rappresenta una unità
+linguistica osservabile e riutilizzabile.
+
+Le domande metalinguistiche costituiscono Trigger e non generano automaticamente
+Learning Object.
+
+Una conoscenza può essere estratta solo quando è riconducibile a un Anchor
+osservabile.
+
+Nel caso analizzato la conoscenza riguarda:
+
+Anchor:
+
+for + period of time
+
+Knowledge Category:
+
+Function
+
+Knowledge Statement:
+
+Per esprimere una durata che continua fino al presente si usa "for + period of
+time".
+
+Decisione:
+
+Le domande metalinguistiche costituiscono Trigger e non generano automaticamente Learning Object. La conoscenza metalinguistica astratta non viene persistita nell'ELR. Solo conoscenze linguistiche riconducibili ad Anchor validi possono essere estratte.
+
+Principio validato:
+
+Le categorie grammaticali generali e le spiegazioni metalinguistiche non sono
+conoscenza persistente.
+
+Il Trigger conversazionale deve essere separato dalla conoscenza linguistica
+estratta.
+
+
+================================================================================
+ST-020 — Richiesta di traduzione
+================================================================================
+
+Scenario:
+
+Utente:
+
+Come si dice "tracina" in inglese?
+
+LLM:
+
+Weever.
+
+Problema progettuale:
+
+Determinare se una richiesta esplicita di traduzione debba generare un
+Learning Object.
+
+Occorre distinguere tra:
+
+• presenza casuale di una parola nella conversazione;
+
+• richiesta intenzionale di acquisizione linguistica;
+
+• conoscenza lessicale persistente.
+
+Analisi:
+
+La richiesta di traduzione costituisce un Trigger che evidenzia una intenzione
+di apprendimento.
+
+La conoscenza estratta non deve essere limitata a regole grammaticali o
+costruzioni complesse.
+
+Anche una singola unità lessicale può rappresentare una conoscenza linguistica
+atomica, acquisibile e riutilizzabile.
+
+L'Anchor deve rappresentare la forma linguistica nella lingua target che
+l'utente deve acquisire.
+
+Pertanto:
+
+Anchor:
+
+weever
+
+Knowledge Statement:
+
+weever → tracina
+
+Knowledge Category:
+
+Meaning
+
+Una traduzione non richiesta, emersa casualmente durante una conversazione, non
+genera automaticamente un Learning Object.
+
+Decisione:
+
+Una richiesta esplicita di traduzione genera un Learning Object quando la
+conoscenza richiesta rappresenta un elemento linguistico persistente.
+
+La complessità della conoscenza non determina la creazione del Learning Object:
+anche una conoscenza lessicale minima può costituire un LO.
+
+Principio validato:
+
+L'intenzione esplicita dell'utente è un indicatore valido di acquisizione.
+
+L'Anchor rappresenta sempre la forma linguistica da acquisire nella lingua
+target.
+
+Il Knowledge Statement può rappresentare una relazione lessicale minima quando
+la conoscenza è esclusivamente traduttiva.
+
+La conoscenza lessicale atomica è una forma valida di conoscenza persistente.
+
+
+================================================================================
+ST-021 — Richiesta di chiarimento
+================================================================================
+
+Scenario:
+
+Utente:
+
+Why do we say "make a mistake" and not "do a mistake"?
+
+LLM:
+
+Because "make a mistake" is the conventional collocation used in English.
+
+Problema progettuale:
+
+Una richiesta di chiarimento deve generare automaticamente un Learning Object?
+
+Occorre distinguere tra:
+
+• richiesta di spiegazione;
+
+• nuova conoscenza linguistica;
+
+• conoscenza già presente nell'ELR;
+
+• evidenza di incertezza sulla padronanza della conoscenza.
+
+Analisi:
+
+La domanda dell'utente costituisce un Trigger.
+
+Il Trigger non genera automaticamente un nuovo Learning Object.
+
+La KEP deve verificare se la conoscenza emersa è già rappresentata
+nell'ELR.
+
+Caso 1:
+
+Il Learning Object non esiste.
+
+La richiesta può generare un nuovo Learning Object se emerge una conoscenza
+linguistica persistente riferibile a un Anchor valido.
+
+Esempio:
+
+Anchor:
+
+make + mistake
+
+Knowledge Statement:
+
+make + mistake è la forma usata per riferirsi all'azione di commettere un
+errore.
+
+Knowledge Category:
+
+Construction
+
+Caso 2:
+
+Il Learning Object esiste già.
+
+La richiesta di chiarimento non crea un nuovo LO.
+
+La richiesta può produrre Mastery Evidence indicativa di possibile incertezza
+dell'utente, secondo le regole definite dalla Mastery Engine Specification.
+
+La Mastery relativa al Learning Object può essere modificata secondo le
+regole definite dalla KEP.
+
+Decisione:
+
+Le richieste di chiarimento sono Trigger.
+
+Possono generare nuove conoscenze solo quando non esiste già un Learning Object
+corrispondente.
+
+Quando riferite a un Learning Object esistente, costituiscono Evidence di
+incertezza e possono influenzare Mastery.
+
+Principio validato:
+
+La richiesta di spiegazione costituisce un Trigger e non rappresenta
+conoscenza persistente.
+
+Una richiesta di chiarimento relativa a un Learning Object esistente fornisce
+invece Evidence sul livello di padronanza dell'utente rispetto alla conoscenza
+rappresentata.
+
+La conoscenza può essere estratta solo quando la spiegazione contiene una
+conoscenza linguistica riutilizzabile riferibile a un Anchor valido.
+
+================================================================================
+ST-022 — Richiesta di chiarimento su Learning Object esistente
+================================================================================
+
+Scenario:
+
+ELR contiene:
+
+Anchor:
+
+make + mistake
+
+Knowledge Statement:
+
+Per riferirsi all'azione di commettere un errore si usa "make a mistake".
+
+Utente:
+
+Why do we say "make a mistake" and not "do a mistake"?
+
+Problema progettuale:
+
+Una richiesta di chiarimento relativa a una conoscenza già presente genera un
+nuovo Learning Object?
+
+Analisi:
+
+La richiesta dell'utente costituisce un Trigger.
+
+La KEP deve analizzare l'intero episodio conversazionale per determinare se
+emerge nuova conoscenza linguistica.
+
+Se la risposta dell'LLM contiene esclusivamente una spiegazione della
+conoscenza già presente:
+
+- non viene creato un nuovo Learning Object;
+- non viene effettuato un MERGE;
+- La richiesta può produrre Mastery Evidence indicativa di possibile incertezza
+dell'utente, secondo le regole definite dalla Mastery Engine Specification.
+
+Se invece emerge una nuova conoscenza atomica riferibile allo stesso Anchor,
+alla stessa Knowledge Category e allo stesso concetto linguistico, può essere
+proposto un MERGE.
+
+Decisione:
+
+Una richiesta di chiarimento non determina automaticamente una modifica
+dell'ELR.
+
+L'eventuale aggiornamento dipende dalla presenza di nuova conoscenza atomica.
+
+Principio validato:
+
+Il Trigger non costituisce conoscenza.
+
+La risposta conversazionale deve essere analizzata per distinguere spiegazione,
+evidenza e nuova conoscenza persistente.
+
+
+================================================================================
+ST-023 — Traduzione di elemento culturale
+================================================================================
+
+Scenario:
+
+Utente:
+
+Come si dice "Ferragosto" in inglese?
+
+LLM:
+
+Assumption Day.
+
+Problema progettuale:
+
+Determinare quale sia l'Anchor corretto quando la conoscenza riguarda una
+traduzione culturale.
+
+Analisi:
+
+La conoscenza da acquisire è la forma linguistica nella lingua target.
+
+Non deve essere creato:
+
+Ferragosto → Assumption Day
+
+perché rappresenta la prospettiva della lingua sorgente.
+
+La conoscenza acquisibile è:
+
+Anchor:
+
+Assumption Day
+
+Knowledge Statement:
+
+Assumption Day → Ferragosto
+
+Knowledge Category:
+
+Meaning
+
+Decisione:
+
+La richiesta di traduzione può generare un Learning Object anche quando
+riguarda elementi culturali.
+
+L'Anchor rappresenta la forma linguistica nella lingua target che l'utente deve
+acquisire.
+
+Principio validato:
+
+La direzione della conoscenza nell'ELR è determinata dalla lingua da acquisire,
+non dalla lingua di origine della richiesta.
+
+
+================================================================================
+ST-024 — Conoscenza derivata da esempio
+================================================================================
+
+Scenario:
+
+Utente:
+
+Can I say "I am agree"?
+
+LLM:
+
+No, "agree" is a verb, so we say "I agree".
+
+Problema progettuale:
+
+Determinare se la conoscenza riguarda una frase specifica o il comportamento
+linguistico della parola.
+
+Analisi:
+
+La conoscenza non riguarda esclusivamente la frase "I agree".
+
+La causa della correzione è il comportamento del verbo "agree".
+
+Anchor:
+
+agree
+
+Knowledge Statement:
+
+"Agree" si usa senza il verbo "be".
+
+Knowledge Category:
+
+Construction
+
+Decisione:
+
+Viene creato un Learning Object relativo all'Anchor "agree".
+
+Principio validato:
+
+Una singola parola può costituire un Anchor valido quando la conoscenza
+linguistica riguarda il suo comportamento d'uso.
+
+
+================================================================================
+ST-025 — Alternativa stilistica
+================================================================================
+
+Scenario:
+
+Utente:
+
+Can I say "big mistake"?
+
+LLM:
+
+Yes, but "huge mistake" is stronger.
+
+Problema progettuale:
+
+Ogni differenza tra due espressioni linguistiche genera conoscenza
+persistente?
+
+Analisi:
+
+Entrambe le forme sono linguisticamente corrette.
+
+La differenza riguarda esclusivamente intensità o preferenza stilistica.
+
+Non emerge una conoscenza necessaria per produrre correttamente la lingua.
+
+Decisione:
+
+Non viene creato alcun Learning Object.
+
+Principio validato:
+
+Le differenze stilistiche o di intensità non generano automaticamente
+conoscenza persistente.
+
+================================================================================
+ST-026 — Knowledge Candidate già presente
+================================================================================
+
+Scenario:
+
+L'ELR contiene già:
+
+Anchor:
+
+since + year
+
+Knowledge Statement:
+
+Per esprimere un punto iniziale nel passato che continua fino al presente si usa
+"since + year".
+
+Knowledge Category:
+
+Function
+
+
+Durante una nuova Conversation Episode emerge:
+
+Utente:
+
+I have lived here since 2010.
+
+La Knowledge Extraction Pipeline identifica:
+
+Knowledge Candidate:
+
+Anchor:
+
+since + year
+
+Knowledge Statement:
+
+Per esprimere un punto iniziale nel passato che continua fino al presente si usa
+"since + year".
+
+Knowledge Category:
+
+Function
+
+
+Problema progettuale:
+
+Determinare il comportamento della Repository Comparison quando un nuovo
+Knowledge Candidate rappresenta una conoscenza già presente nell'ELR.
+
+Occorre distinguere tra:
+
+• nuova conoscenza linguistica;
+
+• aggiornamento di conoscenza esistente;
+
+• duplicazione di un Learning Object.
+
+
+Analisi:
+
+Il Knowledge Candidate non introduce una nuova conoscenza atomica.
+
+L'Anchor coincide:
+
+since + year
+
+La Knowledge Category coincide:
+
+Function
+
+Il Knowledge Statement rappresenta lo stesso concetto linguistico già
+persistito nel repository.
+
+La presenza di una nuova osservazione non implica automaticamente una modifica
+del Learning Object.
+
+La Repository Comparison deve verificare se il Candidate:
+
+• rappresenta la stessa conoscenza già presente;
+
+• amplia o migliora una conoscenza esistente;
+
+• introduce una nuova conoscenza atomica.
+
+
+Nel caso analizzato:
+
+Il Knowledge Candidate rappresenta la stessa conoscenza già presente.
+
+Non deve essere creato un nuovo Learning Object.
+
+Non deve essere generata una nuova identità.
+
+Non deve essere effettuato un MERGE, perché il Knowledge Candidate non
+rappresenta un'evoluzione del Knowledge Statement esistente né un nuovo
+Learning Object candidato.
+
+
+Decisione:
+
+La Repository Comparison classifica il Knowledge Candidate come conoscenza già
+presente nell'ELR.
+
+Output:
+
+Nessuna ELR Change Proposal.
+
+Il Learning Object esistente mantiene:
+
+• la propria identità;
+
+• il proprio Knowledge Statement;
+
+• la propria Mastery.
+
+
+Principio validato:
+
+La presenza di un Knowledge Candidate equivalente a una conoscenza già
+persistita non genera automaticamente un nuovo Learning Object o una modifica
+del repository.
+
+La Repository Comparison deve distinguere tra:
+
+• nuova conoscenza;
+
+• evoluzione della conoscenza esistente;
+
+• conoscenza già rappresentata.
+
+La duplicazione di conoscenza equivalente deve essere evitata mantenendo la
+Single Source of Truth del repository.
+
+================================================================================
+Fine documento
+================================================================================

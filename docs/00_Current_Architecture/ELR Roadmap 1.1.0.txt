@@ -1,0 +1,559 @@
+================================================================================
+English Learning Repository (ELR)
+
+Architectural Roadmap
+
+Version: 1.1.0
+Status: ACTIVE
+================================================================================
+
+
+Document Identity
+================================================================================
+
+Document Name:
+
+ELR Architectural Roadmap
+
+
+Document Version:
+
+1.1.0
+
+
+Status:
+
+ACTIVE
+
+Document Type:
+Strategic Planning Document
+
+Purpose:
+Defines the planned evolution path of the ELR architecture and identifies
+future architectural milestones.
+
+Dependencies:
+
+- ELR Architecture Specification
+
+- ELR Documentation Architecture
+
+- ELR Architecture Baseline
+
+- ELR Architecture Decision Log
+
+- ELR Architecture Consistency Matrix
+
+- ELR Continuity Package
+
+Maintained By:
+ELR Architecture Governance
+
+
+================================================================================
+
+Document Purpose:
+
+La Architectural Roadmap definisce l'evoluzione prevista
+dell'English Learning Repository e identifica le attività necessarie per
+completare e consolidare l'architettura.
+
+La Roadmap non definisce requisiti architetturali né sostituisce le singole
+Specification.
+
+Le decisioni architetturali sono mantenute nell'ELR Architecture Decision Log.
+
+================================================================================
+
+
+================================================================================
+Principio della nuova Roadmap
+================================================================================
+
+La Roadmap ELR viene organizzata secondo tre livelli evolutivi:
+
+
+Livello 1
+
+Fondazioni architetturali
+
+Definisce cosa è l'ELR e quali principi governano il sistema.
+
+
+Livello 2
+
+Specifiche dei componenti
+
+Definisce come i singoli componenti implementano i principi architetturali.
+
+
+Livello 3
+
+Sistemi derivati e funzionalità utente
+
+Definisce le capacità costruite sopra il repository.
+
+
+================================================================================
+Fase 0 — Fondazioni Architetturali
+================================================================================
+
+Stato:
+
+Completata.
+
+
+Obiettivo:
+
+Definizione del modello concettuale fondamentale dell'ELR.
+
+
+Comprende:
+
+
+✓ ELR Architecture Specification
+
+
+Definisce:
+
+- repository della conoscenza;
+
+- Learning Object;
+
+- Anchor;
+
+- Knowledge Statement;
+
+- Mastery come stato persistente;
+
+- confini architetturali;
+
+- separazione Domain / Process / Interaction Model.
+
+
+✓ ELR Architecture Decision Log
+
+
+Definisce:
+
+- motivazioni delle decisioni;
+
+- principi permanenti;
+
+- conseguenze architetturali.
+
+
+✓ ELR Architecture Consistency Matrix
+
+
+Definisce:
+
+- ownership documentale;
+
+- distribuzione delle responsabilità;
+
+- regole di consistenza.
+
+
+================================================================================
+Fase 1 — ELR Knowledge Model
+================================================================================
+
+Stato:
+
+Completata.
+
+
+Obiettivo:
+
+Stabilizzare il modello della conoscenza rappresentata dal repository.
+
+
+Comprende:
+
+
+✓ Learning Object
+
+
+✓ Anchor
+
+
+✓ Knowledge Statement
+
+
+✓ Knowledge Category
+
+
+✓ Learning State
+
+
+Documenti proprietari:
+
+
+- Learning Object Specification
+
+- Anchor Specification
+
+- Learning State Specification
+
+- ELR Taxonomy
+
+
+Responsabilità:
+
+
+- identità degli oggetti di conoscenza;
+
+- struttura concettuale;
+
+- classificazione della conoscenza;
+
+- stato persistente dell'apprendimento.
+
+
+================================================================================
+Fase 2 — Knowledge Extraction Architecture
+================================================================================
+
+Stato:
+
+In corso.
+
+
+Obiettivo:
+
+Definire il sistema che trasforma eventi conversazionali in proposte di
+aggiornamento del repository.
+
+
+Documenti:
+
+
+✓ KEP Specification
+
+
+Responsabilità:
+
+
+- pipeline operativa;
+
+- Knowledge Candidate;
+
+- Anchor Resolution operativa;
+
+- Change Proposal;
+
+- CREATE / MERGE / UPDATE;
+
+- criteri decisionali;
+
+- produzione Evidence.
+
+
+La Architecture Specification mantiene solamente il ruolo architetturale
+della KEP.
+
+
+================================================================================
+Fase 3 — Evidence Architecture
+================================================================================
+
+Stato:
+
+In evoluzione.
+
+
+Obiettivo:
+
+Definire un modello comune delle informazioni di supporto prodotte dai
+processi ELR.
+
+
+Documento proprietario:
+
+
+Evidence Model Specification
+
+
+Responsabilità:
+
+
+- definizione generale di Evidence;
+
+- Change Evidence;
+
+- Mastery Evidence;
+
+- relazione tra Evidence e processi.
+
+
+Risultato atteso:
+
+
+Separazione definitiva tra:
+
+- conoscenza persistente;
+
+- informazioni che giustificano modifiche;
+
+- informazioni che supportano valutazioni.
+
+
+================================================================================
+Fase 4 — Mastery Architecture
+================================================================================
+
+Stato:
+
+Da iniziare.
+
+
+Obiettivo:
+
+Separare il concetto architetturale di Mastery dalla logica di aggiornamento.
+
+
+Documento proprietario:
+
+
+Mastery Engine Specification
+
+
+Responsabilità:
+
+
+- modello Mastery;
+
+- interpretazione Evidence;
+
+- aggiornamento dello stato;
+
+- evoluzione futura dell'adaptive learning.
+
+
+La Architecture Specification mantiene:
+
+
+Mastery = stato persistente della padronanza.
+
+
+================================================================================
+Fase 5 — Human Learning Control
+================================================================================
+
+Stato:
+
+Da iniziare.
+
+
+Obiettivo:
+
+Definire il controllo umano sugli aggiornamenti del repository.
+
+
+Documento proprietario:
+
+
+Learning Review Specification
+
+
+Responsabilità:
+
+
+- ciclo approvativo;
+
+- gestione Change Proposal;
+
+- approvazione;
+
+- rifiuto;
+
+- revisione.
+
+
+Principio:
+
+
+La conoscenza entra nell'ELR solamente dopo approvazione.
+
+
+================================================================================
+Fase 6 — Derived Learning Systems
+================================================================================
+
+Stato:
+
+Da definire.
+
+
+Obiettivo:
+
+Costruire sistemi derivati basati sull'ELR come unica sorgente.
+
+
+Comprende:
+
+
+Phrasebook Specification
+
+
+Responsabilità:
+
+- navigazione;
+
+- visualizzazione Learning Object;
+
+- ricerca;
+
+
+Exercise System Specification
+
+
+Responsabilità:
+
+- generazione esercizi;
+
+- interazioni;
+
+- produzione Mastery Evidence;
+
+
+Adaptive Review Specification (futura estensione)
+
+
+Responsabilità:
+
+- selezione contenuti;
+
+- scheduling;
+
+- revisione.
+
+
+================================================================================
+Fase 7 — Interaction Layer
+================================================================================
+
+Stato:
+
+Da definire.
+
+
+Obiettivo:
+
+Evolvere le modalità di interazione con l'utente.
+
+
+Comprende:
+
+
+Learning Interaction Language Specification
+
+
+Responsabilità:
+
+
+- comandi espliciti;
+
+- shortcut;
+
+- interazioni didattiche strutturate.
+
+
+Estensioni future:
+
+
+- speaking;
+
+- pronunciation;
+
+- audio;
+
+- input multimodale.
+
+
+================================================================================
+Sequenza documentale di ripristino ambiente
+================================================================================
+
+Per una nuova sessione progettuale:
+
+
+1.
+
+ELR Architecture Specification
+
+
+2.
+
+ELR Architecture Decision Log
+
+
+3.
+
+ELR Architecture Consistency Matrix
+
+
+4.
+
+KEP Specification
+
+
+5.
+
+Evidence Model Specification
+
+
+6.
+
+Mastery Engine Specification
+
+
+7.
+
+Learning Review Specification
+
+
+8.
+
+ELR Stress Test Log
+
+
+9.
+
+ELR Roadmap
+
+
+10.
+
+Learning Interaction Language Specification
+
+
+================================================================================
+Criterio di completamento architetturale
+================================================================================
+
+L'architettura ELR sarà considerata stabile quando:
+
+
+- ogni concetto possiede un documento proprietario;
+
+- la Architecture Specification non contiene dettagli operativi;
+
+- gli ADR spiegano il perché delle decisioni;
+
+- le Specification spiegano il funzionamento interno;
+
+- i sistemi derivati dipendono esclusivamente dall'ELR;
+
+- il repository rimane la Source of Truth della conoscenza linguistica.
+
+
+================================================================================
+Fine documento
+
+ELR Architectural Roadmap
+
+Versione 1.1.0
+
+================================================================================
