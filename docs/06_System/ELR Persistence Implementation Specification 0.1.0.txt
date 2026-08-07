@@ -1,0 +1,470 @@
+================================================================================
+English Learning Repository (ELR)
+
+ELR Persistence Implementation Specification
+
+Version: 0.1.0
+Status: DRAFT
+=============
+
+# Document Identity
+
+Document Name:
+
+ELR Persistence Implementation Specification
+
+Document Version:
+
+0.1.0
+
+Status:
+
+DRAFT
+
+Dependencies:
+
+* ELR Persistence Model Specification
+* ELR Data Model Specification
+* ELR Versioning Model Specification
+* ELR Validation Rules Specification
+* ELR Core Domain Implementation Specification
+* ELR Implementation Architecture Specification
+
+================================================================================
+Scopo
+=====
+
+La ELR Persistence Implementation Specification definisce la prima
+implementazione del livello di persistenza dell'English Learning Repository.
+
+Il documento traduce il modello dominio in strutture persistenti mantenendo:
+
+* integrità della conoscenza;
+* continuità storica;
+* tracciabilità delle modifiche;
+* separazione tra dominio e database.
+
+================================================================================
+Persistence Principles
+======================
+
+PERSISTENCE-IMPLEMENTATION-001 — Domain Independence
+
+La persistenza non modifica il significato delle entità dominio.
+
+PERSISTENCE-IMPLEMENTATION-002 — Historical Preservation
+
+Le modifiche non cancellano la storia precedente.
+
+PERSISTENCE-IMPLEMENTATION-003 — Explicit Versioning
+
+Ogni variazione significativa genera una nuova versione.
+
+PERSISTENCE-IMPLEMENTATION-004 — Audit Traceability
+
+Le operazioni rilevanti devono essere ricostruibili.
+
+================================================================================
+Database Technology
+===================
+
+Database:
+
+PostgreSQL
+
+Access Layer:
+
+SQLAlchemy
+
+Migration System:
+
+Alembic
+
+================================================================================
+Persistence Architecture
+========================
+
+Domain Layer
+
+```
+    |
+
+    v
+```
+
+Repository Interface
+
+```
+    |
+
+    v
+```
+
+Persistence Implementation
+
+```
+    |
+
+    v
+```
+
+PostgreSQL Database
+
+Il dominio non conosce il database.
+
+================================================================================
+Initial Database Schema
+=======================
+
+================================================================================
+Table: anchors
+==============
+
+Scopo:
+
+Conservare gli Anchor ELR.
+
+Campi:
+
+id
+
+UUID primary key
+
+content
+
+TEXT
+
+type
+
+VARCHAR
+
+created_at
+
+TIMESTAMP
+
+================================================================================
+Table: knowledge_categories
+===========================
+
+Scopo:
+
+Conservare la tassonomia.
+
+Campi:
+
+id
+
+UUID primary key
+
+name
+
+VARCHAR
+
+parent_id
+
+UUID nullable
+
+================================================================================
+Table: learning_objects
+=======================
+
+Scopo:
+
+Conservare le unità di conoscenza.
+
+Campi:
+
+id
+
+UUID primary key
+
+anchor_id
+
+UUID foreign key
+
+category_id
+
+UUID foreign key
+
+state
+
+VARCHAR
+
+current_version_id
+
+UUID nullable
+
+created_at
+
+TIMESTAMP
+
+updated_at
+
+TIMESTAMP
+
+Vincoli:
+
+* anchor obbligatorio;
+* stato valido secondo Lifecycle Model;
+* versione corrente unica.
+
+================================================================================
+Table: knowledge_statements
+===========================
+
+Scopo:
+
+Conservare il contenuto cognitivo.
+
+Campi:
+
+id
+
+UUID primary key
+
+learning_object_id
+
+UUID foreign key
+
+text
+
+TEXT
+
+language
+
+VARCHAR
+
+created_at
+
+TIMESTAMP
+
+================================================================================
+Table: versions
+===============
+
+Scopo:
+
+Conservare la storia delle modifiche.
+
+Campi:
+
+id
+
+UUID primary key
+
+entity_type
+
+VARCHAR
+
+entity_id
+
+UUID
+
+version_number
+
+INTEGER
+
+status
+
+VARCHAR
+
+snapshot
+
+JSONB
+
+created_at
+
+TIMESTAMP
+
+Vincoli:
+
+* una sola versione Active per entità;
+* versioni precedenti immutabili.
+
+================================================================================
+Table: audit_records
+====================
+
+Scopo:
+
+Tracciare eventi significativi.
+
+Campi:
+
+id
+
+UUID primary key
+
+entity_type
+
+VARCHAR
+
+entity_id
+
+UUID
+
+event_type
+
+VARCHAR
+
+actor
+
+VARCHAR
+
+timestamp
+
+TIMESTAMP
+
+metadata
+
+JSONB
+
+================================================================================
+Repository Pattern
+==================
+
+I repository espongono operazioni dominio.
+
+Esempi:
+
+LearningObjectRepository
+
+Metodi:
+
+save()
+
+find_by_id()
+
+find_active()
+
+find_history()
+
+VersionRepository
+
+Metodi:
+
+create_version()
+
+get_versions()
+
+AuditRepository
+
+Metodi:
+
+record_event()
+
+find_events()
+
+================================================================================
+Transaction Rules
+=================
+
+Ogni modifica persistente deve essere transazionale.
+
+Esempio:
+
+Approve Learning Object:
+
+1. verifica stato corrente;
+
+2. aggiorna lifecycle;
+
+3. crea nuova versione;
+
+4. registra audit;
+
+5. conferma commit.
+
+================================================================================
+Persistence Validation
+======================
+
+La persistenza deve impedire:
+
+* Learning Object senza Anchor;
+
+* versione duplicata;
+
+* stato non valido;
+
+* modifica di snapshot storici;
+
+* eliminazione della storia.
+
+================================================================================
+Migration Strategy
+==================
+
+Le modifiche allo schema database devono utilizzare:
+
+Alembic migrations
+
+Ogni modifica deve essere:
+
+* versionata;
+* reversibile;
+* tracciabile.
+
+================================================================================
+Initial Migration Scope
+=======================
+
+La prima migrazione crea:
+
+* anchors;
+
+* knowledge_categories;
+
+* learning_objects;
+
+* knowledge_statements;
+
+* versions;
+
+* audit_records.
+
+================================================================================
+Excluded Scope
+==============
+
+Non incluso:
+
+* Evidence storage completo;
+
+* Mastery data;
+
+* User profile;
+
+* Conversation storage;
+
+* Event bus distribuito.
+
+================================================================================
+Prossimo Incremento
+===================
+
+Il prossimo documento previsto:
+
+ELR API Implementation Specification
+
+che definirà il primo boundary HTTP del sistema.
+
+================================================================================
+Principio conclusivo
+====================
+
+La persistenza ELR conserva conoscenza e storia senza introdurre logica
+cognitiva.
+
+Il database supporta il dominio, non lo governa.
+
+================================================================================
+Fine documento
+
+English Learning Repository (ELR)
+
+ELR Persistence Implementation Specification
+
+Version: 0.1.0
+
+================================================================================
