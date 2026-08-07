@@ -1,0 +1,777 @@
+================================================================================
+English Learning Repository (ELR)
+
+Continuity Package (CP)
+================================================================================
+
+Document Identity
+================================================================================
+
+Document Name:
+
+English Learning Repository (ELR) Continuity Package
+
+
+Document Version:
+
+1.0.1
+
+
+Status:
+
+DRAFT
+
+
+Document Type:
+Governance and Continuity Document
+
+Purpose:
+Defines the current project state, architectural context, active constraints,
+and continuation requirements for future ELR work.
+
+Dependencies:
+- ELR Architecture Baseline
+- ELR Architecture Decision Log
+- ELR Roadmap
+
+Maintained By:
+ELR Architecture Governance
+
+
+Purpose:
+
+Questo documento permette il ripristino dell'ambiente di lavoro ELR in una
+nuova sessione progettuale senza dipendere dal contesto conversazionale
+precedente.
+
+Il Continuity Package non sostituisce i documenti architetturali.
+
+Costituisce un indice operativo per ricostruire correttamente:
+
+- stato del progetto;
+
+- ordine di caricamento documentale;
+
+- principi architetturali consolidati;
+
+- vincoli progettuali;
+
+- attività successive autorizzate.
+
+
+================================================================================
+Current Architectural State
+================================================================================
+
+
+L'English Learning Repository (ELR) è attualmente definito come:
+
+
+Repository personale della conoscenza linguistica dell'utente.
+
+
+Principio fondamentale:
+
+L'ELR conserva esclusivamente conoscenza linguistica persistente consolidata.
+
+
+L'ELR NON conserva:
+
+- conversazioni;
+
+- processi di apprendimento;
+
+- ragionamenti dell'LLM;
+
+- stati intermedi della KEP;
+
+- evidenze operative;
+
+- decisioni temporanee.
+
+
+La conoscenza persistente è rappresentata attraverso:
+
+- Learning Object;
+
+- Anchor;
+
+- Knowledge Statement;
+
+- Knowledge Category;
+
+- Learning State;
+
+- Mastery.
+
+Stato architetturale corrente:
+
+Completato:
+
+✓ Architecture Specification
+✓ Architecture Decision Log
+✓ Architecture Consistency Matrix
+✓ Document ownership model
+✓ Repository / Process / Interaction separation
+
+
+In corso:
+
+→ Riallineamento delle Specification secondo Architecture Consistency Matrix.
+
+Obiettivo:
+
+Verificare che ogni concetto abbia un documento proprietario già esistente
+oppure una collocazione documentale approvata.
+
+
+Non ancora finalizzato:
+
+→ Component Specifications mancanti
+→ Formalizzazione completa dei modelli operativi
+
+
+================================================================================
+Architecture Source of Truth
+================================================================================
+
+
+La sorgente autorevole dell'architettura è:
+
+
+ELR Architecture Specification
+
+
+Responsabilità:
+
+Definisce:
+
+- modello architetturale;
+
+- componenti;
+
+- responsabilità;
+
+- confini;
+
+- relazioni tra sistemi.
+
+
+Non contiene:
+
+- algoritmi;
+
+- procedure operative interne;
+
+- implementazioni dettagliate.
+
+
+================================================================================
+Architecture Decision Source
+================================================================================
+
+
+La sorgente autorevole delle motivazioni architetturali è:
+
+
+ELR Architecture Decision Log
+
+
+Responsabilità:
+
+Contiene:
+
+- decisioni architetturali;
+
+- motivazioni;
+
+- conseguenze;
+
+- evoluzione del modello.
+
+
+Gli ADR non devono essere duplicati nell'Architecture Specification.
+
+
+================================================================================
+Document Consistency Control
+================================================================================
+
+
+Il documento di controllo della distribuzione delle responsabilità è:
+
+
+ELR Architecture Consistency Matrix
+
+
+Principio guida:
+
+
+Ogni concetto architetturale deve avere un documento proprietario.
+
+
+Gli altri documenti possono:
+
+- riferire;
+
+- utilizzare;
+
+- integrare;
+
+
+ma non devono duplicare la definizione completa.
+
+
+================================================================================
+Current Document Corpus
+================================================================================
+
+
+Documenti fondamentali:
+
+
+1.
+
+ELR Architecture Specification
+
+
+Stato:
+
+Presente.
+
+
+Ruolo:
+
+Architecture Source of Truth.
+
+
+
+2.
+
+ELR Architecture Decision Log
+
+
+Stato:
+
+Presente.
+
+
+Ruolo:
+
+Decision Source.
+
+
+
+3.
+
+ELR Architecture Consistency Matrix
+
+
+Stato:
+
+Presente.
+
+
+Ruolo:
+
+Controllo ownership documentale.
+
+
+
+4.
+
+Knowledge Extraction Pipeline Specification
+
+
+Stato:
+
+Da revisionare secondo la Consistency Matrix.
+
+
+Ruolo:
+
+Definizione operativa della KEP.
+
+
+
+5.
+
+ELR Stress Test Log
+
+
+Stato:
+
+Presente.
+
+
+Ruolo:
+
+Validazione del modello.
+
+
+
+6.
+
+ELR Roadmap
+
+
+Stato:
+
+Aggiornata secondo il nuovo assetto documentale.
+
+
+
+7.
+
+Learning Interaction Language Specification
+
+
+Stato:
+
+Documento specialistico separato.
+
+
+Ruolo:
+
+Definizione del livello di interazione.
+
+
+================================================================================
+Document Ownership Established
+================================================================================
+
+
+Documenti specialistici da verificare e riallineare:
+
+I documenti specialistici elencati nel Document Ownership Registry sono già
+parte del corpus ELR.
+
+Le attività future riguardano:
+
+- verifica della coerenza reciproca;
+- aggiornamento delle versioni;
+- riallineamento secondo Architecture Consistency Matrix;
+- eventuale completamento di specifiche mancanti.
+
+================================================================================
+Current Architectural Decisions
+================================================================================
+
+
+Decisioni consolidate:
+
+
+ADR-001
+
+Atomic Learning Objects
+
+
+ADR-002
+
+Repository First
+
+
+ADR-003
+
+Derivation Before Storage
+
+
+ADR-004
+
+Stable Identity
+
+
+ADR-005
+
+Knowledge Repository
+
+
+ADR-006
+
+Human Approval
+
+
+ADR-007
+
+Anchor-centric Knowledge
+
+
+ADR-008
+
+Knowledge Statement First
+
+
+ADR-009
+
+Monotonic Knowledge Evolution
+
+
+ADR-010
+
+Reusable Knowledge
+
+
+ADR-011
+
+Positive Knowledge Representation
+
+
+ADR-012
+
+Lexical Knowledge
+
+
+ADR-013
+
+Mastery Representation
+
+
+ADR-014
+
+Conversation Episode Boundary
+
+
+ADR-015
+
+Mastery Evidence and Mastery Engine Separation
+
+
+================================================================================
+Architectural Constraints
+================================================================================
+
+
+Durante la continuazione del progetto:
+
+
+NON modificare il Domain Model ELR introducendo:
+
+
+- Conversation Episode;
+
+- Knowledge Candidate;
+
+- Change Proposal;
+
+- Evidence operative;
+
+- processi KEP.
+
+
+Questi appartengono al Process Model.
+
+
+NON inserire nella Architecture Specification:
+
+
+- algoritmi;
+
+- strutture operative dettagliate;
+
+- procedure interne.
+
+
+NON creare nuovi concetti senza:
+
+
+1.
+
+identificazione del documento proprietario;
+
+
+2.
+
+valutazione nella Consistency Matrix;
+
+
+3.
+
+eventuale ADR se modifica l'architettura.
+
+
+================================================================================
+Session Bootstrap and Loading Protocol
+================================================================================
+
+Il caricamento del Continuity Package costituisce il bootstrap operativo.
+
+Dopo il caricamento del Continuity Package, i documenti architetturali
+devono essere acquisiti secondo l'ordine definito dal corpus ELR.
+
+Nella nuova sessione caricare i documenti nel seguente ordine:
+
+
+1.
+
+ELR Continuity Package
+
+
+(scopo: ricostruzione stato progetto)
+
+
+
+2.
+
+ELR Architecture Specification
+
+
+(scopo: caricamento modello architetturale)
+
+
+
+3.
+
+ELR Architecture Decision Log
+
+
+(scopo: caricamento motivazioni)
+
+
+
+4.
+
+ELR Architecture Consistency Matrix
+
+
+(scopo: verifica ownership documentale)
+
+
+
+5.
+
+KEP Specification
+
+
+(scopo: modello operativo)
+
+
+
+6.
+
+ELR Stress Test Log
+
+
+(scopo: validazione)
+
+
+
+7.
+
+ELR Roadmap
+
+
+(scopo: stato evolutivo)
+
+
+
+8.
+
+Learning Interaction Language Specification
+
+
+(scopo: modello interazione)
+
+
+================================================================================
+Session Restoration Rules
+================================================================================
+
+
+Durante il caricamento iniziale:
+
+
+L'LLM deve:
+
+
+- non proporre modifiche;
+
+- non analizzare parzialmente;
+
+- non introdurre miglioramenti spontanei;
+
+- non modificare decisioni esistenti;
+
+
+Deve esclusivamente:
+
+
+- acquisire il contesto;
+
+- confermare il caricamento;
+
+- richiedere il documento successivo.
+
+
+L'analisi progettuale riprende solo dopo il caricamento completo.
+
+
+================================================================================
+Next Authorized Activities
+================================================================================
+
+
+Dopo il ripristino completo:
+
+
+Priorità 1:
+
+Riallineamento definitivo dei documenti secondo la Architecture Consistency
+Matrix.
+
+
+Priorità 2:
+
+Riduzione dell'Architecture Specification eliminando dettagli operativi
+appartenenti alle Specification dedicate.
+
+
+Priorità 3:
+
+Creazione dei documenti specialistici mancanti.
+
+
+Priorità 4:
+
+Revisione della KEP Specification secondo il nuovo modello di ownership.
+
+
+Priorità 5:
+
+Aggiornamento finale della Roadmap architetturale.
+
+
+================================================================================
+Final Principle
+================================================================================
+
+
+L'ELR deve rimanere un sistema documentariamente autoportante.
+
+La continuità del progetto non dipende dalla conversazione.
+
+La continuità è garantita da:
+
+- documenti completi;
+
+- ownership chiara;
+
+- decisioni registrate;
+
+- separazione tra architettura, processi e interazione.
+
+================================================================================
+Document Corpus Authority Rule
+================================================================================
+
+Il Document Ownership Registry costituisce la fonte autorevole per determinare
+l'esistenza e la responsabilità dei documenti appartenenti al corpus ELR.
+
+La presenza di un documento nel Document Ownership Registry indica che:
+
+- il documento appartiene al corpus documentale ELR;
+
+- il documento possiede una responsabilità documentale definita;
+
+- il documento deve essere considerato disponibile durante il ripristino
+  dell'ambiente progettuale.
+
+
+Le sezioni che descrivono attività di creazione, revisione o riallineamento
+documentale non devono essere interpretate come indicazione di inesistenza del
+documento.
+
+Tali sezioni indicano esclusivamente possibili attività evolutive sul documento
+esistente.
+
+
+Durante una nuova sessione progettuale:
+
+- non devono essere inventati nuovi documenti non presenti nel Registry;
+
+- non devono essere classificati come mancanti documenti presenti nel Registry;
+
+- non devono essere introdotti nuovi nomi documentali per responsabilità già
+  assegnate;
+
+- eventuali nuovi documenti devono essere valutati attraverso la Document
+  Ownership Model e la Architecture Consistency Matrix.
+
+
+Principio:
+
+Il Document Ownership Registry definisce il corpus documentale ELR.
+Le interpretazioni operative devono rispettare il Registry come riferimento
+primario.
+
+================================================================================
+Document Ownership Registry
+================================================================================
+
+| Documento | Responsabilità |
+|-----------|----------------|
+| ELR Architecture Specification | Architettura complessiva |
+| ELR Architecture Decision Log | Motivazioni architetturali |
+| ELR Architecture Consistency Matrix | Distribuzione ownership |
+| ELR Domain Model Specification | Entità del dominio |
+| ELR Taxonomy | Classificazione della conoscenza |
+| KEP Specification | Processo operativo KEP |
+| Anchor Specification | Modello Anchor |
+| Evidence Model Specification | Modello Evidence |
+| Mastery Engine Specification | Evoluzione Mastery |
+| Learning Review Specification | Approvazione modifiche |
+| LIL Specification | Interazione utente-sistema |
+
+================================================================================
+Corpus Integrity Rule
+================================================================================
+
+Durante una nuova sessione progettuale:
+
+Un documento può essere considerato parte del corpus ELR solo se:
+
+- è presente nel Document Ownership Registry;
+
+oppure
+
+- è esplicitamente indicato come documento candidato da creare nella roadmap.
+
+
+Concetti emersi durante l'analisi progettuale non devono essere trasformati
+automaticamente in nuovi documenti.
+
+Prima di introdurre una nuova Specification occorre verificare:
+
+1.
+
+se il concetto appartiene a un documento già esistente;
+
+
+2.
+
+se richiede una nuova ownership documentale;
+
+
+3.
+
+se la modifica deve essere registrata nella Architecture Consistency Matrix;
+
+
+4.
+
+se è necessario un aggiornamento della Roadmap.
+
+
+Il termine "Specification" non implica automaticamente l'esistenza di un
+documento.
+
+La creazione di nuovi documenti richiede una decisione architetturale esplicita.
+
+================================================================================
+Fine documento
+
+English Learning Repository (ELR)
+
+Continuity Package
+
+Versione 1.0.0
+================================================================================
