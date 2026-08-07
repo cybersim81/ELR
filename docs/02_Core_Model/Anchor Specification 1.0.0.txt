@@ -1,0 +1,590 @@
+================================================================================
+English Learning Repository (ELR)
+
+Anchor Specification
+
+Version: 1.0.0
+Status: APPROVED
+=============
+
+# Document Identity
+
+Document Name:
+
+Anchor Specification
+
+Document Version:
+
+1.0.0
+
+Status:
+
+APPROVED
+
+Dependencies:
+
+* ELR Architecture Specification
+
+* ELR Domain Model Specification
+
+* ELR Taxonomy
+
+* Learning Object Specification
+
+* Evidence Model Specification
+
+* Knowledge Extraction Pipeline Specification
+
+* Phrasebook Specification
+
+================================================================================
+Scopo
+=====
+
+La Anchor Specification definisce il modello dell'Anchor all'interno
+dell'English Learning Repository (ELR).
+
+L'Anchor rappresenta l'unità linguistica osservabile a cui viene associata una
+conoscenza persistente.
+
+L'Anchor costituisce il punto di collegamento tra:
+
+* elemento linguistico osservato;
+
+* Knowledge Statement;
+
+* Learning Object.
+
+L'Anchor non rappresenta:
+
+* una categoria grammaticale astratta;
+
+* un errore dell'utente;
+
+* una spiegazione metalinguistica;
+
+* una frase completa non necessaria.
+
+================================================================================
+Responsabilità del documento
+============================
+
+Questo documento definisce:
+
+* il concetto di Anchor;
+
+* i criteri di validità;
+
+* le categorie di Anchor;
+
+* la relazione tra Anchor e Learning Object;
+
+* le regole di selezione dell'Anchor.
+
+Questo documento NON definisce:
+
+* processo di estrazione automatica;
+
+* algoritmo KEP;
+
+* calcolo della Mastery;
+
+* generazione degli esercizi.
+
+Queste responsabilità appartengono ai componenti dedicati.
+
+================================================================================
+Principio fondamentale
+======================
+
+L'Anchor risponde alla domanda:
+
+"Quale elemento linguistico l'utente deve riconoscere e riutilizzare?"
+
+Non risponde alla domanda:
+
+"Quale errore ha commesso l'utente?"
+
+L'Anchor rappresenta l'unità linguistica acquisibile a cui la conoscenza viene
+associata, non l'evento che l'ha generata.
+
+================================================================================
+
+1. Anchor Concept
+   ================================================================================
+
+Un Anchor è una unità linguistica osservabile nella lingua target che identifica
+il punto di riferimento di un Learning Object.
+
+Esempio:
+
+Anchor:
+
+make + mistake
+
+Knowledge Statement:
+
+Per riferirsi all'azione di commettere un errore si usa "make a mistake".
+
+L'Anchor identifica l'unità linguistica responsabile della conoscenza.
+
+L'Anchor non contiene il significato della conoscenza.
+La conoscenza è rappresentata dal Knowledge Statement associato.
+
+================================================================================
+2. Anchor Boundary
+==================
+
+Un Anchor appartiene al dominio linguistico ELR.
+
+Relazione:
+
+Learning Object
+
+    |
+
+    | contiene
+
+    v
+
+Anchor
+
+    |
+
+    | supporta
+
+    v
+
+Knowledge Statement
+
+L'Anchor non contiene:
+
+* Evidence;
+
+* Mastery;
+
+* stato dell'utente;
+
+* cronologia di apprendimento.
+
+================================================================================
+3. Anchor Validity Criteria
+===========================
+
+Un Anchor valido deve essere:
+
+---
+
+## Osservabile
+
+Deve poter essere identificato nella produzione linguistica reale.
+
+Esempio valido:
+
+yesterday
+
+Esempio non valido:
+
+Past Simple Rule
+
+---
+
+## Linguisticamente significativo
+
+Deve rappresentare un elemento che può essere appreso e riutilizzato.
+
+---
+
+## Specifico
+
+Deve evitare generalizzazioni eccessive.
+
+Esempio non valido:
+
+verb tense
+
+Esempio valido:
+
+look forward to
+
+---
+
+## Riutilizzabile
+
+Deve poter comparire in produzioni linguistiche future.
+
+================================================================================
+4. Anchor Types
+===============
+
+Il modello ELR riconosce differenti tipologie di Anchor.
+
+---
+
+## 4.1 Lexical Anchor
+
+Rappresenta una singola unità lessicale.
+
+Esempi:
+
+weever
+
+agree
+
+tall
+
+Può rappresentare:
+
+* significato;
+
+* comportamento linguistico;
+
+* forma morfologica.
+
+---
+
+## 4.2 Collocational Anchor
+
+Rappresenta una combinazione lessicale stabile.
+
+Esempi:
+
+make + mistake
+
+take + photo
+
+heavy rain
+
+La conoscenza riguarda la relazione tra gli elementi.
+
+---
+
+## 4.3 Construction Anchor
+
+Rappresenta una costruzione linguistica associata a un elemento osservabile.
+
+Esempi:
+
+look forward to
+
+interested in
+
+La struttura richiesta dal complemento appartiene al Knowledge Statement.
+
+La struttura sintattica necessaria alla costruzione appartiene al Knowledge Statement e non modifica l'identità dell'Anchor.
+
+---
+
+## 4.4 Pattern Anchor
+
+Rappresenta una costruzione parametrizzata.
+
+Esempi:
+
+since + year
+
+for + duration
+
+Il parametro rappresenta una variazione del valore, non una nuova conoscenza.
+
+================================================================================
+5. Anchor and Knowledge Statement Relationship
+==============================================
+
+L'Anchor identifica il riferimento.
+
+Il Knowledge Statement descrive la conoscenza associata.
+
+Esempio:
+
+Anchor:
+
+since + year
+
+Knowledge Statement:
+
+Per indicare il momento iniziale di una durata si usa "since + year".
+
+L'Anchor non deve contenere la spiegazione.
+
+================================================================================
+6. Anchor Resolution Principles
+===============================
+
+La selezione dell'Anchor segue i seguenti principi:
+
+---
+
+## 6.1 Causal Linguistic Element
+
+L'Anchor deve rappresentare l'elemento che determina la conoscenza necessaria.
+
+Esempio:
+
+Esempio:
+
+"I have gone yesterday."
+
+Possibili Anchor:
+
+yesterday
+
+per la relazione tra riferimento temporale concluso e tempo verbale.
+
+
+go
+
+per la forma verbale necessaria.
+
+
+La selezione dipende dalla conoscenza candidata identificata dalla KEP.
+
+---
+
+## 6.2 Positive Representation
+
+L'Anchor deve rappresentare la forma acquisibile.
+
+Non:
+
+do + photo
+
+Sì:
+
+take + photo
+
+---
+
+## 6.3 Minimal Complete Unit
+
+L'Anchor deve essere la minima unità che rappresenta una conoscenza completa.
+
+Troppo generico:
+
+make
+
+Troppo specifico:
+
+I made a mistake yesterday
+
+Valido:
+
+make + mistake
+
+================================================================================
+7. Invalid Anchors
+==================
+
+Non costituiscono Anchor validi:
+
+---
+
+## Categorie grammaticali
+
+Esempi:
+
+* Present Perfect
+
+* Modal Verbs
+
+* Past Tense
+
+Sono categorie descrittive, non unità acquisibili.
+
+---
+
+## Error Forms
+
+Esempi:
+
+do + mistake
+
+more tall
+
+Non rappresentano la conoscenza corretta.
+
+---
+
+## Frasi casuali
+
+Una frase completa non costituisce automaticamente un Anchor.
+
+================================================================================
+8. Multiple Anchors
+===================
+
+Una singola Conversation Episode può generare più Anchor.
+
+Esempio:
+
+"I have buyed a car yesterday."
+
+Conoscenze indipendenti:
+
+Anchor:
+
+buy
+
+Knowledge Statement:
+
+Il passato di buy è bought.
+
+Anchor:
+
+yesterday
+
+Knowledge Statement:
+
+Con yesterday si usa il Past Simple.
+
+Ogni Anchor indipendente può generare un Learning Object distinto.
+
+================================================================================
+9. Anchor Conflict Resolution
+=============================
+
+Quando più Anchor candidati sono possibili, la selezione segue:
+
+1.
+
+Unità linguistica responsabile della conoscenza.
+
+2.
+
+Minima unità completa.
+
+3.
+
+Maggiore riutilizzabilità.
+
+Esempio:
+
+"Why do we say make a mistake?"
+
+Candidati:
+
+make
+
+mistake
+
+do + mistake
+
+make + mistake
+
+Anchor selezionato:
+
+make + mistake
+
+================================================================================
+10. Anchor and Phrasebook Relationship
+======================================
+
+Il Phrasebook può utilizzare Anchor per rappresentare:
+
+* collocazioni;
+
+* chunks;
+
+* pattern comunicativi.
+
+Un Phrasebook Entry può essere associato a un Anchor.
+
+L'Anchor rimane l'unità linguistica di riferimento.
+
+================================================================================
+11. Anchor Persistence Rules
+============================
+
+Un Anchor può essere persistito nell'ELR solo quando:
+
+* è associato a una conoscenza valida;
+
+* il Knowledge Statement è definito;
+
+* la conoscenza è riutilizzabile;
+
+* il Learning Object è approvato.
+
+Un Anchor isolato non costituisce conoscenza persistente.
+
+================================================================================
+12. Anchor Identity
+================================================================================
+
+Un Anchor mantiene la propria identità quando rappresenta lo stesso elemento
+linguistico concettuale.
+
+La modifica della formulazione superficiale non implica necessariamente un
+nuovo Anchor.
+
+La modifica dell'unità linguistica rappresentata richiede una nuova valutazione
+della KEP.
+
+Esempio:
+
+take + photo
+
+e
+
+take a photo
+
+possono rappresentare lo stesso Anchor concettuale se la variazione è solo
+formale.
+
+Una modifica del concetto linguistico richiede un nuovo Anchor.
+
+================================================================================
+Principi conclusivi
+===================
+
+---
+
+## ANCHOR-001 — Anchor is Knowledge Reference
+
+L'Anchor identifica l'unità linguistica a cui appartiene la conoscenza.
+
+---
+
+## ANCHOR-002 — Anchor is not Error
+
+L'Anchor non rappresenta l'errore osservato.
+
+---
+
+## ANCHOR-003 — Anchor is not Metadata
+
+L'Anchor non rappresenta categorie grammaticali o spiegazioni astratte.
+
+---
+
+## ANCHOR-004 — Anchor is Minimal and Reusable
+
+L'Anchor deve essere la minima unità linguistica completa e riutilizzabile.
+
+================================================================================
+Principio conclusivo
+====================
+
+L'Anchor rappresenta il punto di accesso alla conoscenza linguistica nell'ELR.
+
+La KEP identifica gli Anchor.
+
+Il Learning Object conserva la conoscenza associata.
+
+Il Knowledge Statement descrive il comportamento linguistico.
+
+Il Mastery Engine misura la padronanza della conoscenza.
+
+L'Anchor costituisce il collegamento tra lingua osservata e conoscenza
+persistente.
+
+================================================================================
+Fine documento
+
+English Learning Repository (ELR)
+
+Anchor Specification
+
+Version: 1.0.0
+
+================================================================================
