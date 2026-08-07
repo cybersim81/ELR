@@ -1,0 +1,336 @@
+================================================================================
+English Learning Repository (ELR)
+
+ELR Core Repository Implementation Plan
+
+Version: 0.1.0
+Status: DRAFT
+=============
+
+# Document Identity
+
+Document Name:
+
+ELR Core Repository Implementation Plan
+
+Document Version:
+
+0.1.0
+
+Status:
+
+DRAFT
+
+Dependencies:
+
+* ELR Implementation Architecture Specification
+* ELR Core Domain Implementation Specification
+* ELR Persistence Implementation Specification
+* ELR API Implementation Specification
+* ELR Application Service Implementation Specification
+* ELR Event Implementation Specification
+* ELR Security Implementation Specification
+
+================================================================================
+Scopo
+=====
+
+Questo documento definisce il piano operativo per realizzare il primo
+incremento funzionante dell'English Learning Repository.
+
+Il piano traduce le specifiche architetturali in una sequenza implementativa
+controllata.
+
+================================================================================
+Implementation Goal
+===================
+
+Nome incremento:
+
+ELR Core Repository v0.1
+
+Obiettivo:
+
+Realizzare un sistema capace di:
+
+* creare Learning Object;
+* gestire lifecycle;
+* conservare versioni;
+* mantenere audit;
+* esporre API;
+* pubblicare eventi base.
+
+================================================================================
+Implementation Strategy
+=======================
+
+L'implementazione segue il principio:
+
+Domain First
+
+Ordine:
+
+1. Domain Model
+
+2. Persistence
+
+3. Application Services
+
+4. API
+
+5. Events
+
+6. Security
+
+7. Integration Testing
+
+================================================================================
+Milestone 1 — Project Foundation
+================================
+
+Obiettivo:
+
+Creare struttura software iniziale.
+
+Deliverables:
+
+* repository codice;
+* ambiente Python;
+* gestione dipendenze;
+* configurazione test.
+
+Struttura:
+
+elr/
+
+```
+app/
+
+
+tests/
+
+
+migrations/
+```
+
+Criterio completamento:
+
+Il progetto viene eseguito localmente.
+
+================================================================================
+Milestone 2 — Domain Implementation
+===================================
+
+Obiettivo:
+
+Implementare entità dominio.
+
+Componenti:
+
+* Anchor;
+* LearningObject;
+* KnowledgeStatement;
+* KnowledgeCategory;
+* Version;
+* AuditRecord.
+
+Criteri:
+
+* entità indipendenti;
+* regole dominio testate;
+* lifecycle implementato.
+
+================================================================================
+Milestone 3 — Persistence Layer
+===============================
+
+Obiettivo:
+
+Persistenza PostgreSQL.
+
+Componenti:
+
+* database schema;
+* migrations;
+* repositories.
+
+Criteri:
+
+* CRUD base;
+* version persistence;
+* audit persistence.
+
+================================================================================
+Milestone 4 — Application Layer
+===============================
+
+Obiettivo:
+
+Implementare casi d'uso.
+
+Use Case:
+
+* create candidate;
+* submit review;
+* approve;
+* reject;
+* retrieve;
+* history.
+
+Criteri:
+
+* transaction boundary;
+* error handling;
+* domain protection.
+
+================================================================================
+Milestone 5 — API Layer
+=======================
+
+Obiettivo:
+
+Esporre API REST.
+
+Endpoint iniziali:
+
+/learning-objects
+
+/categories
+
+/health
+
+Criteri:
+
+* API funzionanti;
+* validazione;
+* mapping corretto.
+
+================================================================================
+Milestone 6 — Event Layer
+=========================
+
+Obiettivo:
+
+Implementare eventi.
+
+Eventi:
+
+* LearningObjectCreated;
+* LearningObjectSubmitted;
+* LearningObjectApproved;
+* LearningObjectRejected;
+* LearningObjectUpdated.
+
+Criteri:
+
+* eventi persistiti;
+* eventi tracciabili.
+
+================================================================================
+Milestone 7 — Security Layer
+============================
+
+Obiettivo:
+
+Applicare controllo accessi.
+
+Implementare:
+
+* Identity Context;
+* Role checks;
+* Authorization middleware.
+
+Criteri:
+
+* operazioni protette;
+* audit attore.
+
+================================================================================
+Testing Strategy
+================
+
+Livelli:
+
+Unit Test
+
+Test dominio.
+
+Integration Test
+
+Test dominio + persistenza.
+
+API Test
+
+Test endpoint.
+
+System Test
+
+Test flusso completo.
+
+================================================================================
+Definition of Done
+==================
+
+ELR Core Repository v0.1 è completato quando:
+
+* un Learning Object può essere creato;
+* può attraversare lifecycle;
+* può essere versionato;
+* può essere recuperato via API;
+* ogni modifica è auditata;
+* gli eventi sono prodotti;
+* i test principali passano.
+
+================================================================================
+Excluded Scope
+==============
+
+Fuori dal primo incremento:
+
+* UI;
+* Mastery Engine completo;
+* KEP completa;
+* Exercise System;
+* analytics;
+* distribuzione cloud.
+
+================================================================================
+Future Evolution
+================
+
+Dopo v0.1:
+
+v0.2
+
+Knowledge Extraction Integration
+
+v0.3
+
+Mastery and Evidence Integration
+
+v0.4
+
+Learning Interaction Layer
+
+v1.0
+
+Complete ELR Platform
+
+================================================================================
+Principio conclusivo
+====================
+
+Questo piano rappresenta il ponte tra architettura e implementazione.
+
+Ogni incremento futuro deve mantenere coerenza con il corpus ELR.
+
+================================================================================
+Fine documento
+
+English Learning Repository (ELR)
+
+ELR Core Repository Implementation Plan
+
+Version: 0.1.0
+
+================================================================================
