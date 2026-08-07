@@ -1,0 +1,693 @@
+================================================================================
+English Learning Repository (ELR)
+
+Learning Interaction Language (LIL)
+
+Specification
+
+Version: 1.0.0
+Status: APPROVED
+================================================================================
+
+
+Document Identity
+================================================================================
+
+Document Name:
+
+Learning Interaction Language Specification
+
+
+Document Version:
+
+1.0.0
+
+
+Status:
+
+DRAFT
+
+
+Dependencies:
+
+- ELR Architecture Specification
+
+- Knowledge Extraction Pipeline Specification
+
+- Evidence Model Specification
+
+- Learning Review Specification
+
+
+================================================================================
+Scopo
+================================================================================
+
+La Learning Interaction Language (LIL) Specification definisce il linguaggio
+opzionale attraverso cui l'utente può esprimere intenzioni didattiche esplicite
+durante l'interazione con il sistema.
+
+
+Il LIL rappresenta il livello di comunicazione tra:
+
+
+Utente
+
+        |
+
+        v
+
+Interaction Layer
+
+        |
+
+        v
+
+Knowledge Extraction Pipeline
+
+
+Il LIL non rappresenta:
+
+- conoscenza linguistica;
+
+- repository;
+
+- stato di apprendimento;
+
+- evidenza persistente.
+
+
+Il LIL fornisce esclusivamente segnali interpretativi che possono facilitare
+l'analisi effettuata dai componenti ELR.
+
+
+================================================================================
+Responsabilità del documento
+================================================================================
+
+Questo documento definisce:
+
+
+- principi del linguaggio LIL;
+
+- ruolo dei Learning Shortcut;
+
+- ruolo dei Learning Marker;
+
+- relazione tra LIL e KEP;
+
+- vincoli di utilizzo.
+
+
+Questo documento NON definisce:
+
+
+- criteri di estrazione della conoscenza;
+
+- regole CREATE / MERGE / UPDATE;
+
+- struttura dei Learning Object;
+
+- calcolo della Mastery;
+
+- algoritmi di esercizio.
+
+
+Queste responsabilità appartengono ai rispettivi componenti.
+
+
+================================================================================
+Principi fondamentali
+================================================================================
+
+
+## LIL-001 — Interaction Layer Boundary
+================================================================================
+
+Il LIL appartiene esclusivamente al livello di interazione.
+
+
+Il LIL consente all'utente di comunicare intenzioni didattiche in forma
+strutturata.
+
+
+Il LIL non introduce nuove entità nel modello ELR.
+
+
+================================================================================
+## LIL-002 — Intent Signal not Knowledge
+================================================================================
+
+Un comando o marker LIL rappresenta un'intenzione dell'utente.
+
+
+Non rappresenta automaticamente:
+
+
+- conoscenza acquisita;
+
+- Learning Object;
+
+- Evidence;
+
+- Mastery.
+
+
+Il significato didattico deve essere valutato dai componenti responsabili.
+
+
+================================================================================
+## LIL-003 — Separation from KEP
+================================================================================
+
+Il LIL non modifica i criteri decisionali della Knowledge Extraction Pipeline.
+
+
+La KEP continua a valutare:
+
+
+- Anchor;
+
+- Knowledge Statement;
+
+- Knowledge Category;
+
+- Evidence;
+
+- riutilizzabilità della conoscenza.
+
+
+Un comando LIL può aumentare la chiarezza del Trigger,
+ma non forza la creazione di conoscenza.
+
+Il LIL può influenzare esclusivamente la fase di Trigger Analysis.
+
+Tutte le fasi successive della KEP, inclusa la generazione del
+Knowledge Candidate, la Repository Comparison e la produzione della
+ELR Change Proposal, rimangono indipendenti dal linguaggio di
+interazione utilizzato.
+
+
+================================================================================
+## LIL-004 — Natural Language Compatibility
+================================================================================
+
+Il sistema deve mantenere la capacità di interpretare richieste didattiche
+anche quando l'utente non utilizza il LIL.
+
+
+Il LIL è un acceleratore dell'interazione, non un requisito necessario.
+
+
+================================================================================
+Architecture Boundary
+================================================================================
+
+
+Il flusso concettuale è:
+
+
+Utente
+
+        |
+
+        v
+
+Learning Interaction Language
+
+        |
+
+        v
+
+Conversation Episode
+
+        |
+
+        v
+
+Knowledge Extraction Pipeline
+
+        |
+
+        v
+
+Knowledge Candidate
+
+        |
+
+        v
+
+Repository Comparison
+
+        |
+
+        v
+
+ELR Change Proposal
+
+        |
+
+        v
+
+Learning Review
+
+        |
+
+        v
+
+ELR
+
+Evidence e Mastery seguono un flusso parallelo
+definito dalla Evidence Model Specification.
+
+
+================================================================================
+Learning Signals
+================================================================================
+
+Il LIL definisce due categorie principali di segnali:
+
+
+1.
+
+Learning Shortcut
+
+
+2.
+
+Learning Marker
+
+
+
+I segnali LIL rappresentano intenzioni esplicite.
+
+Non rappresentano risultati dell'apprendimento.
+
+
+================================================================================
+Learning Shortcut
+================================================================================
+
+
+Un Learning Shortcut è una forma sintattica abbreviata che rappresenta una
+richiesta didattica frequente.
+
+
+Esempi concettuali:
+
+
+Richiesta completa:
+
+"Come si dice questa parola in inglese?"
+
+
+Shortcut:
+
+traduci
+
+
+oppure:
+
+
+Richiesta completa:
+
+"Spiegami perché questa forma è corretta."
+
+
+Shortcut:
+
+spiega
+
+
+La sintassi definitiva degli shortcut può variare in base
+all'interfaccia utilizzata.
+
+
+================================================================================
+Shortcut Interpretation
+================================================================================
+
+Ogni shortcut deve essere trasformabile in una intenzione equivalente espressa
+in linguaggio naturale.
+
+
+L'espansione automatica deve:
+
+
+- mantenere l'intenzione dell'utente;
+
+- non aggiungere conoscenza non richiesta;
+
+- non modificare il contenuto linguistico.
+
+
+Esempio:
+
+
+Shortcut:
+
+traduci
+
+
+Interpretazione:
+
+
+"Fornisci la traduzione dell'elemento indicato."
+
+
+================================================================================
+Learning Marker
+================================================================================
+
+
+Un Learning Marker è un segnale con cui l'utente indica che un elemento della
+conversazione è rilevante dal punto di vista didattico.
+
+
+Un Learning Marker può indicare:
+
+
+- interesse verso una espressione;
+
+- richiesta di attenzione futura;
+
+- intenzione di approfondimento;
+
+- richiesta esplicita di analisi.
+
+
+================================================================================
+Learning Marker Boundary
+================================================================================
+
+Un Learning Marker non determina automaticamente:
+
+
+- creazione di Learning Object;
+
+- modifica dell'ELR;
+
+- aumento della Mastery.
+
+
+Il marker costituisce un Trigger aggiuntivo per la KEP.
+
+
+================================================================================
+Examples
+================================================================================
+
+
+Caso 1 — Shortcut di traduzione
+
+
+Utente:
+
+
+/translate tracina
+
+
+Interpretazione LIL:
+
+
+Richiesta esplicita di traduzione.
+
+
+KEP:
+
+
+Valuta se esiste una conoscenza linguistica persistente.
+
+
+Possibile risultato:
+
+
+Anchor:
+
+weever
+
+
+Knowledge Statement:
+
+weever → tracina
+
+
+
+================================================================================
+
+
+Caso 2 — Marker di interesse
+
+
+Utente:
+
+
+I have lived here since 2010.
+
+
+Marker:
+
+
+@learn
+
+
+Interpretazione:
+
+
+L'utente segnala interesse verso l'espressione.
+
+
+Risultato:
+
+
+Il marker diventa Trigger.
+
+
+La KEP valuta:
+
+
+Anchor:
+
+since + date
+
+
+Knowledge Statement:
+
+
+Per indicare il punto iniziale di una durata si usa
+"since + date".
+
+
+================================================================================
+
+
+Caso 3 — Marker su conoscenza esistente
+
+
+ELR contiene:
+
+
+Anchor:
+
+make + mistake
+
+
+Utente:
+
+
+@explain
+
+
+"Why do we say make a mistake?"
+
+
+Risultato:
+
+
+Il marker non crea un nuovo Learning Object.
+
+
+La richiesta può produrre Mastery Evidence.
+
+
+================================================================================
+Relationship with Evidence Model
+================================================================================
+
+Il LIL non produce direttamente Evidence.
+
+
+Il LIL fornisce segnali che possono contribuire alla generazione di Evidence.
+
+
+Esempio:
+
+
+Learning Marker
+
+        |
+
+        v
+
+Trigger Analysis
+
+        |
+
+        v
+
+Knowledge Candidate
+
+        |
+
+        +-------------------+
+
+        |                   |
+
+        v                   v
+
+Change Evidence      Mastery Evidence
+
+
+La produzione effettiva di Evidence appartiene ai processi definiti
+nell'Evidence Model.
+
+
+================================================================================
+Relationship with Knowledge Extraction Pipeline
+================================================================================
+
+La KEP può utilizzare segnali LIL come:
+
+
+- Trigger aggiuntivi;
+
+- informazioni sull'intenzione dell'utente;
+
+- priorità di analisi.
+
+
+La presenza di un segnale LIL non elimina:
+
+
+- Anchor Resolution;
+
+- Knowledge Validation;
+
+- Knowledge Independence Analysis.
+
+================================================================================
+Relationship with Knowledge Candidate
+================================================================================
+
+I segnali LIL possono contribuire alla generazione di un Knowledge Candidate
+fornendo informazioni aggiuntive sull'intenzione dell'utente.
+
+Il contenuto del Knowledge Candidate viene comunque determinato dalla KEP
+attraverso l'analisi linguistica della conversazione.
+
+Il LIL non definisce:
+
+- Anchor;
+
+- Knowledge Statement;
+
+- Knowledge Category;
+
+- Candidate Payload;
+
+- Candidate Context;
+
+- Repository Comparison;
+
+- ELR Change Proposal.
+
+Questi elementi appartengono esclusivamente al modello della KEP.
+
+================================================================================
+Relationship with ELR Change Proposal
+================================================================================
+
+Il LIL non genera direttamente modifiche al repository.
+
+Eventuali proposte CREATE, MERGE, UPDATE o SPLIT derivano esclusivamente dalla
+ELR Change Proposal prodotta dalla Knowledge Extraction Pipeline.
+
+La presenza di un comando LIL non costituisce motivo sufficiente per proporre
+una modifica dell'ELR.
+
+
+================================================================================
+Relationship with Mastery Engine
+================================================================================
+
+Il LIL non modifica direttamente la Mastery.
+
+
+Un comando relativo a una conoscenza esistente può contribuire indirettamente alla produzione
+di Mastery Evidence qualora la KEP identifichi una interazione rilevante con un
+Learning Object già presente.
+
+La classificazione dell'Evidence appartiene esclusivamente alla KEP e
+all'Evidence Model.
+
+
+Il valore della Mastery viene determinato esclusivamente dal Mastery Engine.
+
+
+================================================================================
+Future Extensions
+================================================================================
+
+Possibili estensioni future:
+
+
+- sintassi formale dei comandi;
+
+- shortcut parametrizzati;
+
+- marker persistenti;
+
+- supporto multi-lingua;
+
+- integrazione con interfacce vocali;
+
+- integrazione con sistemi di esercizio.
+
+
+================================================================================
+Principio conclusivo
+================================================================================
+
+Il Learning Interaction Language permette all'utente di comunicare intenzioni
+didattiche in modo esplicito.
+
+
+Il LIL non crea conoscenza.
+
+
+La KEP identifica eventuali Knowledge Candidate.
+
+La Repository Comparison determina la relazione con il repository esistente.
+
+La ELR Change Proposal propone eventuali modifiche.
+
+La Learning Review approva o rifiuta la modifica.
+
+L'ELR conserva esclusivamente Learning Object approvati.
+
+
+Il Mastery Engine interpreta evidenze relative alla padronanza.
+
+Il LIL rappresenta esclusivamente un linguaggio di interazione e non modifica
+le responsabilità architetturali degli altri componenti del sistema ELR.
+
+================================================================================
+Fine documento
+
+English Learning Repository (ELR)
+
+Learning Interaction Language Specification
+
+Version: 1.0.0
+
+================================================================================
