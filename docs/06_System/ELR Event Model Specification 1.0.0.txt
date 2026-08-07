@@ -1,0 +1,742 @@
+================================================================================
+English Learning Repository (ELR)
+
+ELR Event Model Specification
+
+Version: 1.0.0
+Status: DRAFT
+================================================================================
+
+
+Document Identity
+================================================================================
+
+Document Name:
+
+ELR Event Model Specification
+
+
+Document Version:
+
+1.0.0
+
+
+Status:
+
+DRAFT
+
+
+Dependencies:
+
+- ELR Architecture Specification
+
+- ELR Architecture Decision Log
+
+- ELR API Specification
+
+- ELR Domain Model Specification
+
+- Evidence Model Specification
+
+- Knowledge Extraction Pipeline Specification
+
+- Learning Review Specification
+
+- Mastery Engine Specification
+
+- Exercise System Specification
+
+
+================================================================================
+Scopo
+================================================================================
+
+La ELR Event Model Specification definisce il modello degli eventi utilizzati
+all'interno dell'ecosistema English Learning Repository (ELR).
+
+
+L'Event Model descrive il modo in cui i componenti comunicano il verificarsi di
+fatti rilevanti.
+
+
+Gli eventi consentono di collegare:
+
+- processi;
+
+- componenti;
+
+- cambiamenti di stato;
+
+- attività operative.
+
+
+L'Event Model non rappresenta:
+
+- conoscenza linguistica persistente;
+
+- Learning Object;
+
+- Evidence;
+
+- stato di apprendimento.
+
+
+Gli eventi descrivono ciò che è accaduto.
+
+Non descrivono ciò che deve essere conservato come conoscenza.
+
+
+================================================================================
+Responsabilità del documento
+================================================================================
+
+Questo documento definisce:
+
+
+- concetto di evento ELR;
+
+- struttura generale degli eventi;
+
+- tipologie principali;
+
+- relazione tra eventi e componenti;
+
+- principi di pubblicazione e consumo.
+
+
+Questo documento NON definisce:
+
+
+- logica KEP;
+
+- algoritmi Mastery;
+
+- criteri Learning Review;
+
+- persistenza del Repository;
+
+- implementazioni tecniche specifiche.
+
+
+================================================================================
+Principio fondamentale
+================================================================================
+
+Un evento risponde alla domanda:
+
+
+"Quale fatto rilevante è avvenuto nel sistema?"
+
+
+Un evento non risponde alla domanda:
+
+
+"Quale conoscenza deve essere memorizzata?"
+
+
+La separazione tra evento e conoscenza impedisce che attività operative
+diventino automaticamente contenuto persistente.
+
+
+================================================================================
+1. Event Concept
+================================================================================
+
+Un ELR Event rappresenta una notifica immutabile relativa a un fatto avvenuto
+nell'ecosistema.
+
+
+Un evento può rappresentare:
+
+
+- creazione di una proposta;
+
+- approvazione di una modifica;
+
+- produzione di Evidence;
+
+- variazione di stato;
+
+- completamento di un processo.
+
+
+Un evento non modifica autonomamente il sistema.
+
+
+I componenti interessati interpretano gli eventi secondo le proprie
+responsabilità.
+
+
+================================================================================
+2. Event Boundary
+================================================================================
+
+L'Event Model appartiene al livello Integration Layer.
+
+
+Relazione:
+
+
+Component
+
+        |
+
+        v
+
+Event Publisher
+
+        |
+
+        v
+
+ELR Event
+
+        |
+
+        v
+
+Event Consumer
+
+
+Gli eventi collegano componenti senza trasferire responsabilità.
+
+
+================================================================================
+3. Event Principles
+================================================================================
+
+
+--------------------------------------------------------------------------------
+EVENT-001 — Event is Historical Fact
+--------------------------------------------------------------------------------
+
+Un evento rappresenta qualcosa che è avvenuto.
+
+
+Esempio:
+
+Learning Review Approved Change Proposal
+
+
+Non:
+
+Create Learning Object
+
+
+perché la persistenza è una conseguenza del processo.
+
+
+--------------------------------------------------------------------------------
+EVENT-002 — Event is Not Knowledge
+--------------------------------------------------------------------------------
+
+Un evento non contiene conoscenza linguistica persistente.
+
+
+Esempio:
+
+
+Evento:
+
+User requested explanation about make a mistake
+
+
+Non crea automaticamente:
+
+
+Learning Object:
+
+make + mistake
+
+
+--------------------------------------------------------------------------------
+EVENT-003 — Event Independence
+--------------------------------------------------------------------------------
+
+Un evento deve essere comprensibile indipendentemente dal componente che lo ha
+prodotto.
+
+
+--------------------------------------------------------------------------------
+EVENT-004 — Event Immutability
+--------------------------------------------------------------------------------
+
+Gli eventi rappresentano fatti storici e non devono essere modificati dopo la
+pubblicazione.
+
+
+Eventuali correzioni generano nuovi eventi.
+
+
+================================================================================
+4. Event Structure
+================================================================================
+
+Un evento ELR contiene:
+
+
+--------------------------------------------------------------------------------
+Event Identity
+--------------------------------------------------------------------------------
+
+Identifica univocamente l'evento.
+
+
+Include:
+
+
+- Event ID;
+
+- Event Type;
+
+- Timestamp.
+
+
+--------------------------------------------------------------------------------
+Event Source
+--------------------------------------------------------------------------------
+
+Indica il componente che ha prodotto l'evento.
+
+
+Esempi:
+
+
+- KEP;
+
+- Learning Review;
+
+- Mastery Engine;
+
+- Exercise System.
+
+
+--------------------------------------------------------------------------------
+Event Payload
+--------------------------------------------------------------------------------
+
+Contiene informazioni relative al fatto avvenuto.
+
+
+Il Payload non deve contenere conoscenza duplicata.
+
+
+--------------------------------------------------------------------------------
+Event Metadata
+--------------------------------------------------------------------------------
+
+Contiene informazioni operative.
+
+
+Può includere:
+
+
+- versione evento;
+
+- correlazione processo;
+
+- informazioni tecniche.
+
+
+================================================================================
+5. Event Categories
+================================================================================
+
+Il modello ELR definisce categorie principali di eventi:
+
+
+1.
+
+Knowledge Process Events
+
+
+2.
+
+Review Events
+
+
+3.
+
+Mastery Events
+
+
+4.
+
+Learning Activity Events
+
+
+================================================================================
+6. Knowledge Process Events
+================================================================================
+
+Gli Knowledge Process Events rappresentano eventi prodotti durante il processo
+di estrazione della conoscenza.
+
+
+Esempi:
+
+
+--------------------------------------------------------------------------------
+Knowledge Candidate Created
+--------------------------------------------------------------------------------
+
+Indica che la KEP ha prodotto un candidato di conoscenza.
+
+
+Non significa:
+
+
+che la conoscenza sia stata approvata.
+
+
+--------------------------------------------------------------------------------
+Change Proposal Created
+--------------------------------------------------------------------------------
+
+Indica la produzione di una ELR Change Proposal.
+
+
+Contiene riferimento alla proposta.
+
+
+Non contiene direttamente un nuovo Learning Object.
+
+
+--------------------------------------------------------------------------------
+Knowledge Candidate Rejected
+--------------------------------------------------------------------------------
+
+Indica che una candidatura non ha superato la validazione.
+
+
+================================================================================
+7. Review Events
+================================================================================
+
+I Review Events rappresentano decisioni della Learning Review.
+
+
+Esempi:
+
+
+--------------------------------------------------------------------------------
+Change Proposal Approved
+--------------------------------------------------------------------------------
+
+Indica approvazione di una modifica proposta.
+
+
+--------------------------------------------------------------------------------
+Change Proposal Rejected
+--------------------------------------------------------------------------------
+
+Indica rifiuto della proposta.
+
+
+--------------------------------------------------------------------------------
+Change Proposal Modified
+--------------------------------------------------------------------------------
+
+Indica una modifica effettuata durante il processo di revisione.
+
+
+================================================================================
+8. Mastery Events
+================================================================================
+
+I Mastery Events rappresentano eventi relativi alla padronanza.
+
+
+Esempi:
+
+
+--------------------------------------------------------------------------------
+Mastery Evidence Recorded
+--------------------------------------------------------------------------------
+
+Indica che una nuova Evidence relativa alla padronanza è stata registrata.
+
+
+Non determina direttamente:
+
+
+- aumento;
+
+- diminuzione;
+
+- valore numerico.
+
+
+--------------------------------------------------------------------------------
+Mastery State Updated
+--------------------------------------------------------------------------------
+
+Indica che il Mastery Engine ha aggiornato lo stato.
+
+
+La logica rimane interna al Mastery Engine.
+
+
+================================================================================
+9. Learning Activity Events
+================================================================================
+
+I Learning Activity Events rappresentano eventi generati dalle attività
+didattiche.
+
+
+Esempi:
+
+
+- Exercise Assigned;
+
+- Exercise Completed;
+
+- User Response Recorded.
+
+
+Questi eventi possono produrre Evidence secondo le regole definite dai
+componenti responsabili.
+
+
+================================================================================
+10. Event Flow Examples
+================================================================================
+
+
+--------------------------------------------------------------------------------
+Knowledge Creation Flow
+--------------------------------------------------------------------------------
+
+
+Conversation
+
+        |
+
+        v
+
+KEP
+
+        |
+
+        v
+
+Knowledge Candidate Created
+
+        |
+
+        v
+
+Change Proposal Created
+
+        |
+
+        v
+
+Learning Review
+
+        |
+
+        v
+
+Change Proposal Approved
+
+        |
+
+        v
+
+ELR Updated
+
+
+================================================================================
+11. Event and Evidence Relationship
+================================================================================
+
+Eventi ed Evidence sono concetti distinti.
+
+
+Esempio:
+
+
+Evento:
+
+Mastery Evidence Recorded
+
+
+Contiene:
+
+
+riferimento alla registrazione dell'Evidence.
+
+
+Non contiene:
+
+
+la conoscenza linguistica valutata.
+
+
+La Evidence Model Specification definisce il significato dell'Evidence.
+
+
+================================================================================
+12. Event Consumers
+================================================================================
+
+Possibili consumatori:
+
+
+--------------------------------------------------------------------------------
+Learning Review
+--------------------------------------------------------------------------------
+
+Consuma:
+
+- Change Proposal Created
+
+
+--------------------------------------------------------------------------------
+Mastery Engine
+--------------------------------------------------------------------------------
+
+Consuma:
+
+- Mastery Evidence Recorded;
+
+- Learning Activity Events.
+
+
+--------------------------------------------------------------------------------
+Exercise System
+--------------------------------------------------------------------------------
+
+Consuma:
+
+- Learning Object Updated;
+
+- Mastery State Updated.
+
+
+--------------------------------------------------------------------------------
+Analytics
+--------------------------------------------------------------------------------
+
+Può consumare eventi per analisi operative.
+
+
+Analytics non modifica il modello ELR.
+
+
+================================================================================
+13. Event Naming Principles
+================================================================================
+
+Gli eventi devono rappresentare fatti conclusi.
+
+
+Forma consigliata:
+
+
+[Entity] + [Past Event]
+
+
+Esempi:
+
+
+- LearningObjectCreated
+
+- ChangeProposalApproved
+
+- MasteryEvidenceRecorded
+
+
+Evitare:
+
+
+- CreateLearningObject
+
+- UpdateMastery
+
+
+perché rappresentano comandi, non eventi.
+
+
+================================================================================
+14. Event Boundary Rules
+================================================================================
+
+Gli eventi:
+
+
+- non sostituiscono API;
+
+- non sostituiscono Evidence;
+
+- non sostituiscono Learning Object;
+
+- non sostituiscono processi.
+
+
+Gli eventi collegano processi.
+
+
+================================================================================
+Principi conclusivi
+================================================================================
+
+
+## EVENT-001 — Events represent facts
+
+Gli eventi descrivono fatti accaduti.
+
+
+## EVENT-002 — Events do not create knowledge
+
+La presenza di un evento non implica creazione di conoscenza.
+
+
+## EVENT-003 — Events preserve component separation
+
+I componenti comunicano senza assumere responsabilità reciproche.
+
+
+## EVENT-004 — Events support evolution
+
+L'architettura può evolvere attraverso eventi senza creare accoppiamento diretto.
+
+
+================================================================================
+Principio conclusivo
+================================================================================
+
+L'ELR Event Model definisce il linguaggio di comunicazione tra componenti
+dell'ecosistema.
+
+
+L'API espone capacità.
+
+
+Gli eventi comunicano fatti.
+
+
+La KEP propone conoscenza.
+
+
+La Learning Review decide modifiche.
+
+
+Il Mastery Engine interpreta padronanza.
+
+
+L'ELR conserva conoscenza approvata.
+
+
+================================================================================
+Fine documento
+
+English Learning Repository (ELR)
+
+ELR Event Model Specification
+
+Version: 1.0.0
+
+================================================================================

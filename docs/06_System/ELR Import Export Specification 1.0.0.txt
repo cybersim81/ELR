@@ -1,0 +1,611 @@
+================================================================================
+English Learning Repository (ELR)
+
+ELR Import Export Specification
+
+Version: 1.0.0
+Status: DRAFT
+================================================================================
+
+
+Document Identity
+================================================================================
+
+Document Name:
+
+ELR Import Export Specification
+
+
+Document Version:
+
+1.0.0
+
+
+Status:
+
+DRAFT
+
+
+Dependencies:
+
+- ELR Architecture Specification
+
+- ELR Architecture Decision Log
+
+- ELR Domain Model Specification
+
+- ELR Persistence Model Specification
+
+- ELR API Specification
+
+- ELR Event Model Specification
+
+- ELR Security and Access Model Specification
+
+- Learning Object Specification
+
+- Learning State Specification
+
+- Evidence Model Specification
+
+
+================================================================================
+Scopo
+================================================================================
+
+La ELR Import Export Specification definisce i principi e le regole per
+l'importazione e l'esportazione di dati appartenenti all'English Learning
+Repository.
+
+
+Il documento descrive:
+
+- quali dati possono essere esportati;
+
+- quali dati possono essere importati;
+
+- come preservare l'integrità del modello ELR;
+
+- come mantenere la compatibilità tra versioni.
+
+
+La gestione Import / Export consente:
+
+- migrazione del repository;
+
+- backup;
+
+- sincronizzazione;
+
+- trasferimento controllato di conoscenza.
+
+
+================================================================================
+Responsabilità del documento
+================================================================================
+
+Questo documento definisce:
+
+
+- confini dell'importazione;
+
+- confini dell'esportazione;
+
+- regole di validazione;
+
+- principi di compatibilità;
+
+- protezione dei dati trasferiti.
+
+
+Questo documento NON definisce:
+
+
+- formato fisico dei file;
+
+- protocolli di trasferimento;
+
+- API specifiche;
+
+- implementazioni infrastrutturali.
+
+
+================================================================================
+Principio fondamentale
+================================================================================
+
+L'importazione e l'esportazione devono preservare il significato del modello
+ELR.
+
+
+Un trasferimento dati valido deve mantenere:
+
+
+- identità delle entità;
+
+- relazioni;
+
+- integrità della conoscenza;
+
+- separazione tra conoscenza e processo.
+
+
+================================================================================
+1. Data Exchange Boundary
+================================================================================
+
+Il sistema di scambio dati opera sul livello persistente dell'ELR.
+
+
+Relazione:
+
+
+External Source
+
+        |
+
+        v
+
+Import Validation
+
+        |
+
+        v
+
+ELR Repository
+
+
+e:
+
+
+ELR Repository
+
+        |
+
+        v
+
+Export Validation
+
+        |
+
+        v
+
+External Consumer
+
+
+================================================================================
+2. Import Export Principles
+================================================================================
+
+
+--------------------------------------------------------------------------------
+EXCHANGE-001 — Preserve Knowledge Meaning
+--------------------------------------------------------------------------------
+
+Un trasferimento non deve alterare il significato della conoscenza.
+
+
+--------------------------------------------------------------------------------
+EXCHANGE-002 — Validate Before Persistence
+--------------------------------------------------------------------------------
+
+Nessun dato importato può entrare nel Repository senza validazione.
+
+
+--------------------------------------------------------------------------------
+EXCHANGE-003 — Preserve Identity
+--------------------------------------------------------------------------------
+
+Le entità ELR devono mantenere identificatori stabili quando possibile.
+
+
+--------------------------------------------------------------------------------
+EXCHANGE-004 — Respect Security Boundary
+--------------------------------------------------------------------------------
+
+I dati esportati devono rispettare le regole di accesso definite dal Security
+Model.
+
+
+================================================================================
+3. Export Model
+================================================================================
+
+L'esportazione permette di produrre una rappresentazione controllata del
+Repository ELR.
+
+
+Possono essere esportati:
+
+
+- Learning Object;
+
+- Anchor;
+
+- Knowledge Statement;
+
+- Knowledge Category;
+
+- Learning State autorizzati;
+
+- metadati di versione.
+
+
+================================================================================
+4. Export Exclusions
+================================================================================
+
+Non devono essere esportati come conoscenza persistente:
+
+
+- Conversation Episode;
+
+- messaggi utente;
+
+- Trigger;
+
+- Knowledge Candidate;
+
+- Change Proposal non approvate;
+
+- dati temporanei della KEP.
+
+
+Le Evidence possono essere esportate solo secondo autorizzazione e contesto
+specifico.
+
+
+================================================================================
+5. Import Model
+================================================================================
+
+L'importazione rappresenta un tentativo controllato di introdurre dati nel
+Repository.
+
+
+Ogni importazione deve attraversare:
+
+
+External Data
+
+        |
+
+        v
+
+Schema Validation
+
+        |
+
+        v
+
+Semantic Validation
+
+        |
+
+        v
+
+Repository Integration
+
+
+================================================================================
+6. Import Validation
+================================================================================
+
+
+================================================================================
+6.1 Structural Validation
+================================================================================
+
+Verifica che i dati rispettino la struttura prevista.
+
+
+Controlla:
+
+
+- campi obbligatori;
+
+- tipi di dati;
+
+- relazioni.
+
+
+================================================================================
+6.2 Domain Validation
+================================================================================
+
+Verifica la coerenza con il modello ELR.
+
+
+Esempi:
+
+
+Un Learning Object deve avere:
+
+- Anchor valido;
+
+- Knowledge Statement;
+
+- categoria coerente.
+
+
+================================================================================
+6.3 Integrity Validation
+================================================================================
+
+Verifica che l'importazione non introduca:
+
+
+- duplicati;
+
+- relazioni impossibili;
+
+- perdita di identità.
+
+
+================================================================================
+7. Import Conflict Resolution
+================================================================================
+
+Durante un'importazione possono emergere conflitti.
+
+
+Esempi:
+
+
+- Learning Object già presente;
+
+- Anchor equivalente;
+
+- versione differente.
+
+
+La risoluzione deve rispettare:
+
+
+- identità del dominio;
+
+- regole MERGE / UPDATE;
+
+- controllo della Learning Review quando necessario.
+
+
+================================================================================
+8. Knowledge Import Rules
+================================================================================
+
+La conoscenza importata deve rispettare:
+
+
+--------------------------------------------------------------------------------
+Atomicity
+--------------------------------------------------------------------------------
+
+Ogni Learning Object deve rappresentare una conoscenza atomica.
+
+
+--------------------------------------------------------------------------------
+Anchor Validity
+--------------------------------------------------------------------------------
+
+Ogni conoscenza deve avere un Anchor valido.
+
+
+--------------------------------------------------------------------------------
+Reusability
+--------------------------------------------------------------------------------
+
+La conoscenza deve essere riutilizzabile.
+
+
+--------------------------------------------------------------------------------
+Repository Consistency
+--------------------------------------------------------------------------------
+
+La nuova conoscenza deve essere coerente con quella esistente.
+
+
+================================================================================
+9. Version Compatibility
+================================================================================
+
+Le versioni del modello ELR devono poter essere confrontate.
+
+
+Un import deve dichiarare:
+
+
+- versione origine;
+
+- versione modello;
+
+- eventuali trasformazioni applicate.
+
+
+Un aggiornamento di versione non deve modificare silenziosamente il significato
+delle entità.
+
+
+================================================================================
+10. Migration Principles
+================================================================================
+
+Una migrazione del Repository deve preservare:
+
+
+- identità dei Learning Object;
+
+- relazione con gli Anchor;
+
+- storia evolutiva;
+
+- stato di apprendimento.
+
+
+Le migrazioni non devono generare nuova conoscenza automaticamente.
+
+
+================================================================================
+11. Security and Privacy Rules
+================================================================================
+
+Ogni operazione Import / Export deve rispettare:
+
+
+- autorizzazioni;
+
+- protezione dati utente;
+
+- tracciabilità.
+
+
+I dati personali non devono essere inclusi in esportazioni di conoscenza
+condivisa salvo esplicita autorizzazione.
+
+
+================================================================================
+12. Import Export and Evidence
+================================================================================
+
+Le Evidence non sono conoscenza persistente.
+
+
+Durante un trasferimento:
+
+
+Change Evidence:
+
+può essere esportata per audit o tracciabilità.
+
+
+Mastery Evidence:
+
+può essere esportata secondo necessità del sistema di apprendimento.
+
+
+Nessuna Evidence diventa automaticamente Learning Object.
+
+
+================================================================================
+13. Import Export Anti-Patterns
+================================================================================
+
+
+Non validi:
+
+
+--------------------------------------------------------------------------------
+Raw Conversation Import
+--------------------------------------------------------------------------------
+
+Importare conversazioni come conoscenza ELR.
+
+
+--------------------------------------------------------------------------------
+Unvalidated Knowledge Import
+--------------------------------------------------------------------------------
+
+Inserire Learning Object senza validazione.
+
+
+--------------------------------------------------------------------------------
+Identity Duplication
+--------------------------------------------------------------------------------
+
+Creare duplicati dello stesso Learning Object.
+
+
+--------------------------------------------------------------------------------
+Process Data Pollution
+--------------------------------------------------------------------------------
+
+Inserire dati temporanei della KEP nel Repository.
+
+
+================================================================================
+14. Relationship with Other Specifications
+================================================================================
+
+
+Persistence Model:
+
+definisce cosa viene conservato.
+
+
+API Specification:
+
+definisce accesso programmatico.
+
+
+Security Model:
+
+definisce autorizzazioni.
+
+
+Validation Rules:
+
+definisce controlli di correttezza.
+
+
+Domain Model:
+
+definisce il significato delle entità.
+
+
+================================================================================
+Principi conclusivi
+================================================================================
+
+
+## EXCHANGE-001 — Transfer must preserve knowledge
+
+Lo scambio dati non deve modificare il significato della conoscenza.
+
+
+## EXCHANGE-002 — Import requires validation
+
+Nessun dato entra nel Repository senza controllo.
+
+
+## EXCHANGE-003 — Export respects boundaries
+
+Solo dati autorizzati possono essere esportati.
+
+
+## EXCHANGE-004 — Migration preserves identity
+
+L'evoluzione del sistema mantiene continuità delle entità.
+
+
+================================================================================
+Principio conclusivo
+================================================================================
+
+La ELR Import Export Specification garantisce che la conoscenza ELR possa essere
+trasferita, migrata e sincronizzata mantenendo:
+
+
+- integrità;
+
+- identità;
+
+- sicurezza;
+
+- coerenza.
+
+
+Il Repository conserva conoscenza.
+
+
+Il processo di scambio trasferisce conoscenza approvata.
+
+
+================================================================================
+Fine documento
+
+English Learning Repository (ELR)
+
+ELR Import Export Specification
+
+Version: 1.0.0
+
+================================================================================

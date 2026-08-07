@@ -1,0 +1,635 @@
+================================================================================
+English Learning Repository (ELR)
+
+ELR Security and Access Model Specification
+
+Version: 1.0.0
+Status: DRAFT
+================================================================================
+
+
+Document Identity
+================================================================================
+
+Document Name:
+
+ELR Security and Access Model Specification
+
+
+Document Version:
+
+1.0.0
+
+
+Status:
+
+DRAFT
+
+
+Dependencies:
+
+- ELR Architecture Specification
+
+- ELR Architecture Decision Log
+
+- ELR Domain Model Specification
+
+- ELR Persistence Model Specification
+
+- ELR API Specification
+
+- ELR Event Model Specification
+
+- Evidence Model Specification
+
+- Learning Review Specification
+
+
+================================================================================
+Scopo
+================================================================================
+
+La ELR Security and Access Model Specification definisce i principi di
+sicurezza, controllo degli accessi e protezione delle informazioni all'interno
+dell'ecosistema English Learning Repository (ELR).
+
+
+Il documento descrive:
+
+- confini di accesso;
+
+- ruoli dei componenti;
+
+- protezione delle informazioni;
+
+- principi di autorizzazione;
+
+- separazione delle responsabilità.
+
+
+La sicurezza ELR deve preservare:
+
+- integrità della conoscenza;
+
+- privacy dell'utente;
+
+- corretto funzionamento dei processi.
+
+
+================================================================================
+Responsabilità del documento
+================================================================================
+
+Questo documento definisce:
+
+
+- principi di sicurezza;
+
+- modello concettuale degli accessi;
+
+- ruoli e autorizzazioni;
+
+- protezione delle entità ELR;
+
+- audit e tracciabilità.
+
+
+Questo documento NON definisce:
+
+
+- implementazioni crittografiche;
+
+- provider di autenticazione;
+
+- protocolli specifici;
+
+- configurazioni infrastrutturali.
+
+
+================================================================================
+Principio fondamentale
+================================================================================
+
+La sicurezza ELR risponde alla domanda:
+
+
+"Chi può accedere, modificare o utilizzare una determinata informazione?"
+
+
+Non risponde alla domanda:
+
+
+"Quale conoscenza linguistica deve essere rappresentata?"
+
+
+La sicurezza protegge il modello ELR senza modificarne il significato.
+
+
+================================================================================
+1. Security Boundary
+================================================================================
+
+La sicurezza ELR attraversa tutti i livelli architetturali.
+
+
+Relazione:
+
+
+Interaction Layer
+
+        |
+
+        v
+
+Process Layer
+
+        |
+
+        v
+
+Domain Layer
+
+        |
+
+        v
+
+Persistence Layer
+
+
+Ogni livello applica controlli coerenti con la propria responsabilità.
+
+
+================================================================================
+2. Security Principles
+================================================================================
+
+
+--------------------------------------------------------------------------------
+SECURITY-001 — Least Privilege
+--------------------------------------------------------------------------------
+
+Ogni componente deve possedere solamente i permessi necessari al proprio ruolo.
+
+
+Un componente non deve poter modificare informazioni non necessarie.
+
+
+--------------------------------------------------------------------------------
+SECURITY-002 — Separation of Responsibilities
+--------------------------------------------------------------------------------
+
+Le responsabilità devono rimanere separate.
+
+
+Esempio:
+
+
+KEP:
+
+propone conoscenza.
+
+
+Learning Review:
+
+approva modifiche.
+
+
+ELR:
+
+conserva conoscenza.
+
+
+Mastery Engine:
+
+gestisce padronanza.
+
+
+Nessun componente deve sostituire gli altri.
+
+
+--------------------------------------------------------------------------------
+SECURITY-003 — Repository Integrity
+--------------------------------------------------------------------------------
+
+La conoscenza persistente può essere modificata solo attraverso processi
+autorizzati.
+
+
+--------------------------------------------------------------------------------
+SECURITY-004 — User Data Protection
+--------------------------------------------------------------------------------
+
+Le informazioni relative all'utente devono essere protette e separate dalla
+conoscenza linguistica.
+
+
+================================================================================
+3. Access Control Model
+================================================================================
+
+L'ELR utilizza un modello concettuale basato su:
+
+
+Identity
+
+        +
+
+Role
+
+        +
+
+Permission
+
+
+L'accesso viene determinato dalla combinazione di questi elementi.
+
+
+================================================================================
+4. Principal Types
+================================================================================
+
+I principali attori del sistema sono:
+
+
+================================================================================
+4.1 User
+================================================================================
+
+L'utente può:
+
+
+- utilizzare funzionalità didattiche;
+
+- produrre interazioni;
+
+- visualizzare conoscenza disponibile;
+
+- ricevere esercizi.
+
+
+L'utente non può modificare direttamente il Repository.
+
+
+================================================================================
+4.2 Learning Review
+================================================================================
+
+La Learning Review può:
+
+
+- valutare Change Proposal;
+
+- approvare modifiche;
+
+- rifiutare modifiche;
+
+- richiedere revisioni.
+
+
+================================================================================
+4.3 KEP
+================================================================================
+
+La KEP può:
+
+
+- analizzare conversazioni;
+
+- produrre Knowledge Candidate;
+
+- creare Change Proposal.
+
+
+La KEP non può:
+
+
+- modificare direttamente il Repository.
+
+
+================================================================================
+4.4 Mastery Engine
+================================================================================
+
+Il Mastery Engine può:
+
+
+- leggere Learning Object;
+
+- ricevere Mastery Evidence;
+
+- aggiornare Learning State.
+
+
+Il Mastery Engine non può:
+
+
+- modificare il contenuto cognitivo dei Learning Object.
+
+
+================================================================================
+4.5 Exercise System
+================================================================================
+
+L'Exercise System può:
+
+
+- leggere conoscenza persistente;
+
+- generare attività didattiche;
+
+- produrre Evidence.
+
+
+Non modifica direttamente la conoscenza.
+
+
+================================================================================
+5. Repository Access Rules
+================================================================================
+
+
+================================================================================
+5.1 Learning Object
+================================================================================
+
+Accesso:
+
+
+Lettura:
+
+- User;
+
+- Exercise System;
+
+- Mastery Engine.
+
+
+Scrittura:
+
+- solo processo approvato di aggiornamento ELR.
+
+
+================================================================================
+5.2 Knowledge Statement
+================================================================================
+
+Il Knowledge Statement è protetto perché rappresenta conoscenza approvata.
+
+
+Non può essere modificato direttamente da componenti operativi.
+
+
+================================================================================
+5.3 Learning State
+================================================================================
+
+Il Learning State appartiene al dominio della padronanza.
+
+
+Può essere modificato solo dal Mastery Engine.
+
+
+================================================================================
+5.4 Evidence
+================================================================================
+
+Le Evidence devono mantenere separazione dalla conoscenza.
+
+
+Accesso:
+
+
+Produzione:
+
+- KEP;
+
+- Exercise System;
+
+- Mastery Engine.
+
+
+Interpretazione:
+
+- Learning Review;
+
+- Mastery Engine.
+
+
+================================================================================
+6. User Data Separation
+================================================================================
+
+I dati personali dell'utente devono essere separati dalla conoscenza ELR.
+
+
+Il Repository non deve utilizzare dati personali come parte del contenuto
+linguistico.
+
+
+Esempio non valido:
+
+
+Learning Object:
+
+"Marco sbaglia sempre since."
+
+
+Esempio valido:
+
+
+Learning Object:
+
+since + date
+
+
+================================================================================
+7. Conversation Privacy
+================================================================================
+
+Le Conversation Episode sono temporanee.
+
+
+Non devono essere conservate come memoria linguistica persistente.
+
+
+Eventuali riferimenti utilizzati per Evidence devono rispettare le regole di
+protezione dei dati.
+
+
+================================================================================
+8. Audit and Traceability
+================================================================================
+
+Le modifiche significative devono essere tracciabili.
+
+
+Devono poter essere ricostruiti:
+
+
+- origine della modifica;
+
+- componente responsabile;
+
+- processo seguito;
+
+- approvazione effettuata.
+
+
+L'audit non modifica il contenuto della conoscenza.
+
+
+================================================================================
+9. Security and Change Management
+================================================================================
+
+Ogni modifica al Repository deve seguire:
+
+
+Proposal
+
+        |
+
+        v
+
+Review
+
+        |
+
+        v
+
+Authorization
+
+        |
+
+        v
+
+Persistence
+
+
+Non sono consentite modifiche dirette non tracciate.
+
+
+================================================================================
+10. Security Anti-Patterns
+================================================================================
+
+
+Non validi:
+
+
+--------------------------------------------------------------------------------
+Direct Repository Mutation
+--------------------------------------------------------------------------------
+
+Un componente modifica Learning Object senza processo autorizzato.
+
+
+--------------------------------------------------------------------------------
+Knowledge Leakage
+--------------------------------------------------------------------------------
+
+Dati temporanei di processo diventano contenuto persistente.
+
+
+--------------------------------------------------------------------------------
+Role Confusion
+--------------------------------------------------------------------------------
+
+Un componente assume responsabilità appartenenti ad altri componenti.
+
+
+--------------------------------------------------------------------------------
+Uncontrolled User Modification
+--------------------------------------------------------------------------------
+
+L'utente modifica direttamente conoscenza condivisa.
+
+
+================================================================================
+11. Relationship with Other Specifications
+================================================================================
+
+
+Architecture:
+
+definisce confini.
+
+
+Persistence Model:
+
+definisce cosa viene conservato.
+
+
+API:
+
+definisce accesso tecnico.
+
+
+Event Model:
+
+definisce comunicazione tra componenti.
+
+
+Security Model:
+
+definisce chi può effettuare operazioni.
+
+
+================================================================================
+Principi conclusivi
+================================================================================
+
+
+## SECURITY-001 — Knowledge requires controlled evolution
+
+La conoscenza ELR evolve attraverso processi autorizzati.
+
+
+## SECURITY-002 — Components access only required resources
+
+Ogni componente opera entro i propri confini.
+
+
+## SECURITY-003 — User data and linguistic knowledge remain separate
+
+L'apprendimento personale non modifica la natura del repository.
+
+
+## SECURITY-004 — All important changes are traceable
+
+L'evoluzione del sistema deve essere ricostruibile.
+
+
+================================================================================
+Principio conclusivo
+================================================================================
+
+La Security and Access Model Specification protegge l'integrità
+dell'ecosistema ELR.
+
+
+La KEP produce proposte.
+
+
+La Learning Review autorizza modifiche.
+
+
+Il Repository conserva conoscenza.
+
+
+Il Mastery Engine gestisce padronanza.
+
+
+La sicurezza garantisce che ogni componente operi secondo il proprio ruolo.
+
+
+================================================================================
+Fine documento
+
+English Learning Repository (ELR)
+
+ELR Security and Access Model Specification
+
+Version: 1.0.0
+
+================================================================================

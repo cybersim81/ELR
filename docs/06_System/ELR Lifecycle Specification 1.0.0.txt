@@ -1,0 +1,731 @@
+================================================================================
+English Learning Repository (ELR)
+
+ELR Lifecycle Specification
+
+Version: 1.0.0
+Status: DRAFT
+================================================================================
+
+
+Document Identity
+================================================================================
+
+Document Name:
+
+ELR Lifecycle Specification
+
+
+Document Version:
+
+1.0.0
+
+
+Status:
+
+DRAFT
+
+
+Dependencies:
+
+- ELR Architecture Specification
+
+- ELR Architecture Decision Log
+
+- ELR Domain Model Specification
+
+- Learning Object Specification
+
+- Learning State Specification
+
+- Knowledge Extraction Pipeline Specification
+
+- Evidence Model Specification
+
+- Learning Review Specification
+
+- Mastery Engine Specification
+
+- ELR Persistence Model Specification
+
+- ELR Versioning Model Specification
+
+
+================================================================================
+Scopo
+================================================================================
+
+La ELR Lifecycle Specification definisce il ciclo di vita delle entità e dei
+processi principali dell'English Learning Repository.
+
+
+Il documento descrive:
+
+
+- stati possibili delle entità;
+
+- transizioni consentite;
+
+- eventi che determinano cambiamenti;
+
+- responsabilità dei componenti coinvolti.
+
+
+Il Lifecycle Model garantisce che l'evoluzione dell'ELR avvenga attraverso
+processi controllati.
+
+
+================================================================================
+Responsabilità del documento
+================================================================================
+
+Questo documento definisce:
+
+
+- ciclo di vita dei Learning Object;
+
+- ciclo di vita delle Change Proposal;
+
+- ciclo di vita delle Evidence;
+
+- ciclo di vita delle versioni.
+
+
+Questo documento NON definisce:
+
+
+- contenuto linguistico dei Learning Object;
+
+- algoritmi KEP;
+
+- algoritmo Mastery;
+
+- struttura fisica del database.
+
+
+================================================================================
+Principio fondamentale
+================================================================================
+
+Ogni entità ELR attraversa stati definiti.
+
+
+Una transizione di stato deve essere:
+
+
+- esplicita;
+
+- motivata;
+
+- tracciabile.
+
+
+Il ciclo di vita risponde alla domanda:
+
+
+"Qual è lo stato corrente di questa entità e come può evolvere?"
+
+
+================================================================================
+1. Lifecycle Boundary
+================================================================================
+
+Il Lifecycle Model opera tra processo e persistenza.
+
+
+Relazione:
+
+
+Event
+
+        |
+
+        v
+
+Process Decision
+
+        |
+
+        v
+
+Entity State Transition
+
+        |
+
+        v
+
+Repository Update
+
+
+================================================================================
+2. Lifecycle Principles
+================================================================================
+
+
+--------------------------------------------------------------------------------
+LIFECYCLE-001 — State Before Action
+--------------------------------------------------------------------------------
+
+Ogni azione deve rispettare lo stato corrente dell'entità.
+
+
+--------------------------------------------------------------------------------
+LIFECYCLE-002 — Controlled Transition
+--------------------------------------------------------------------------------
+
+Una transizione deve essere autorizzata dal processo competente.
+
+
+--------------------------------------------------------------------------------
+LIFECYCLE-003 — Historical Continuity
+--------------------------------------------------------------------------------
+
+I cambiamenti devono mantenere continuità storica.
+
+
+--------------------------------------------------------------------------------
+LIFECYCLE-004 — Process Ownership
+--------------------------------------------------------------------------------
+
+Ogni transizione appartiene a un componente responsabile.
+
+
+================================================================================
+3. Learning Object Lifecycle
+================================================================================
+
+Il Learning Object rappresenta la conoscenza persistente dell'ELR.
+
+
+Ciclo principale:
+
+
+Candidate
+
+        |
+
+        v
+
+Proposed
+
+        |
+
+        v
+
+Reviewed
+
+        |
+
+        v
+
+Active
+
+        |
+
+        v
+
+Updated
+
+        |
+
+        v
+
+Retired
+
+
+================================================================================
+3.1 Candidate
+================================================================================
+
+Uno stato Candidate rappresenta una conoscenza non ancora persistente.
+
+
+Origine possibile:
+
+
+- KEP;
+
+- importazione validata;
+
+- creazione controllata.
+
+
+Un Candidate non è disponibile come conoscenza ufficiale.
+
+
+================================================================================
+3.2 Proposed
+================================================================================
+
+Una conoscenza Proposed è associata a una proposta di modifica.
+
+
+Richiede:
+
+
+- Change Proposal;
+
+- Evidence;
+
+- valutazione.
+
+
+================================================================================
+3.3 Reviewed
+================================================================================
+
+Una conoscenza Reviewed ha superato la valutazione del processo di Learning
+Review.
+
+
+Può essere:
+
+
+- approvata;
+
+- rifiutata.
+
+
+================================================================================
+3.4 Active
+================================================================================
+
+Un Learning Object Active rappresenta conoscenza ufficiale del Repository.
+
+
+È disponibile per:
+
+
+- recupero;
+
+- esercizi;
+
+- apprendimento.
+
+
+================================================================================
+3.5 Updated
+================================================================================
+
+Uno stato Updated indica una modifica approvata.
+
+
+La nuova versione diventa quella corrente.
+
+
+La versione precedente rimane nella storia.
+
+
+================================================================================
+3.6 Retired
+================================================================================
+
+Un Learning Object Retired non è più utilizzato come conoscenza attiva.
+
+
+La storia rimane conservata.
+
+
+================================================================================
+4. Change Proposal Lifecycle
+================================================================================
+
+La Change Proposal segue:
+
+
+Created
+
+        |
+
+        v
+
+Under Review
+
+        |
+
+        +-------------+
+
+        |             |
+
+        v             v
+
+ Approved       Rejected
+
+
+================================================================================
+4.1 Created
+================================================================================
+
+La KEP produce una proposta valida.
+
+
+================================================================================
+4.2 Under Review
+================================================================================
+
+La Learning Review valuta la proposta.
+
+
+================================================================================
+4.3 Approved
+================================================================================
+
+La modifica può essere applicata al Repository.
+
+
+================================================================================
+4.4 Rejected
+================================================================================
+
+La proposta viene rifiutata.
+
+
+La Evidence può essere conservata per analisi.
+
+
+================================================================================
+5. Evidence Lifecycle
+================================================================================
+
+Una Evidence segue:
+
+
+Generated
+
+        |
+
+        v
+
+Available
+
+        |
+
+        v
+
+Consumed
+
+        |
+
+        v
+
+Archived
+
+
+================================================================================
+5.1 Generated
+================================================================================
+
+L'Evidence viene prodotta da un processo.
+
+
+Esempi:
+
+
+- KEP;
+
+- Mastery Engine.
+
+
+================================================================================
+5.2 Available
+================================================================================
+
+L'Evidence è disponibile al componente responsabile.
+
+
+================================================================================
+5.3 Consumed
+================================================================================
+
+L'Evidence è stata utilizzata per una decisione o valutazione.
+
+
+================================================================================
+5.4 Archived
+================================================================================
+
+L'Evidence non è più operativa ma può essere mantenuta per tracciabilità.
+
+
+================================================================================
+6. Version Lifecycle
+================================================================================
+
+Una versione segue:
+
+
+Created
+
+        |
+
+        v
+
+Active
+
+        |
+
+        v
+
+Superseded
+
+        |
+
+        v
+
+Archived
+
+
+================================================================================
+6.1 Created
+================================================================================
+
+La versione viene generata da una modifica approvata.
+
+
+================================================================================
+6.2 Active
+================================================================================
+
+La versione rappresenta lo stato corrente dell'entità.
+
+
+================================================================================
+6.3 Superseded
+================================================================================
+
+Una nuova versione ha sostituito quella precedente.
+
+
+================================================================================
+6.4 Archived
+================================================================================
+
+La versione rimane nella storia ma non è corrente.
+
+
+================================================================================
+7. Lifecycle Ownership
+================================================================================
+
+
+KEP:
+
+produce Candidate e Change Proposal.
+
+
+Learning Review:
+
+decide approvazione.
+
+
+ELR:
+
+conserva conoscenza approvata.
+
+
+Mastery Engine:
+
+gestisce evoluzione dello stato di apprendimento.
+
+
+Versioning Model:
+
+conserva storia evolutiva.
+
+
+================================================================================
+8. Invalid Transitions
+================================================================================
+
+Non sono consentite:
+
+
+--------------------------------------------------------------------------------
+Direct Persistence
+--------------------------------------------------------------------------------
+
+Inserire un Candidate direttamente come Active.
+
+
+--------------------------------------------------------------------------------
+Silent Update
+--------------------------------------------------------------------------------
+
+Modificare un Learning Object senza transizione.
+
+
+--------------------------------------------------------------------------------
+Evidence Mutation
+--------------------------------------------------------------------------------
+
+Cambiare una Evidence già prodotta.
+
+
+--------------------------------------------------------------------------------
+Mastery Override
+--------------------------------------------------------------------------------
+
+Modificare Learning State attraverso processi non autorizzati.
+
+
+================================================================================
+9. Lifecycle and Versioning
+================================================================================
+
+Ogni modifica che altera una entità persistente deve essere compatibile con il
+Versioning Model.
+
+
+Relazione:
+
+
+Lifecycle:
+
+"Quando cambia"
+
+
+Versioning:
+
+"Come viene conservata la storia"
+
+
+================================================================================
+10. Lifecycle and Repository Integrity
+================================================================================
+
+Il Lifecycle impedisce:
+
+
+- conoscenza non approvata;
+
+- perdita della storia;
+
+- modifiche non tracciate;
+
+- separazione errata delle responsabilità.
+
+
+================================================================================
+11. Lifecycle Anti-Patterns
+================================================================================
+
+
+Non validi:
+
+
+--------------------------------------------------------------------------------
+Uncontrolled Creation
+--------------------------------------------------------------------------------
+
+Creare Learning Object senza processo.
+
+
+--------------------------------------------------------------------------------
+State Jumping
+--------------------------------------------------------------------------------
+
+Passare da Candidate ad Active senza Review.
+
+
+--------------------------------------------------------------------------------
+History Destruction
+--------------------------------------------------------------------------------
+
+Eliminare stati precedenti.
+
+
+--------------------------------------------------------------------------------
+Responsibility Mixing
+--------------------------------------------------------------------------------
+
+Un componente modifica stati appartenenti ad altri componenti.
+
+
+================================================================================
+12. Relationship with Other Specifications
+================================================================================
+
+
+KEP Specification:
+
+genera proposte.
+
+
+Learning Review Specification:
+
+gestisce approvazione.
+
+
+Versioning Model:
+
+gestisce storia.
+
+
+Persistence Model:
+
+conserva stato.
+
+
+Mastery Engine:
+
+gestisce apprendimento.
+
+
+Validation Rules:
+
+controlla correttezza.
+
+
+================================================================================
+Principi conclusivi
+================================================================================
+
+
+## LIFECYCLE-001 — Entities evolve through states
+
+Le entità ELR cambiano attraverso transizioni definite.
+
+
+## LIFECYCLE-002 — Transitions require ownership
+
+Ogni cambiamento ha un responsabile.
+
+
+## LIFECYCLE-003 — History is preserved
+
+L'evoluzione non cancella il passato.
+
+
+## LIFECYCLE-004 — Process and knowledge remain separate
+
+Il ciclo di vita governa la conoscenza senza diventare conoscenza.
+
+
+================================================================================
+Principio conclusivo
+================================================================================
+
+La ELR Lifecycle Specification completa il modello di governance del Repository.
+
+
+La KEP identifica conoscenza candidata.
+
+La Learning Review controlla le modifiche.
+
+L'ELR conserva conoscenza approvata.
+
+Il Versioning Model conserva la storia.
+
+Il Lifecycle Model definisce il percorso attraverso cui ogni entità evolve.
+
+
+================================================================================
+Fine documento
+
+English Learning Repository (ELR)
+
+ELR Lifecycle Specification
+
+Version: 1.0.0
+
+================================================================================
