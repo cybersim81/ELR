@@ -1,0 +1,472 @@
+================================================================================
+English Learning Repository (ELR)
+
+Data Model Specification
+
+Version: 1.0.0
+Status: DRAFT
+=============
+
+# Document Identity
+
+Document Name:
+
+ELR Data Model Specification
+
+Document Version:
+
+1.0.0
+
+Status:
+
+DRAFT
+
+Dependencies:
+
+* ELR Architecture Specification
+
+* ELR Domain Model Specification
+
+* ELR Taxonomy
+
+* Learning Object Specification
+
+* Anchor Specification
+
+* Learning State Specification
+
+* Evidence Model Specification
+
+================================================================================
+Scopo
+=====
+
+La ELR Data Model Specification definisce il modello strutturale dei dati
+persistenti utilizzati dall'English Learning Repository (ELR).
+
+Il Data Model rappresenta il livello attraverso cui i concetti definiti nel
+Domain Model vengono trasformati in entità persistenti.
+
+Il Data Model definisce:
+
+* entità persistenti;
+
+* relazioni tra entità;
+
+* attributi principali;
+
+* vincoli di consistenza.
+
+Il Data Model non definisce:
+
+* algoritmi di estrazione della conoscenza;
+
+* criteri didattici;
+
+* calcolo della Mastery;
+
+* logiche conversazionali.
+
+================================================================================
+Responsabilità del documento
+============================
+
+Questo documento definisce:
+
+* struttura dati del Learning Object;
+
+* struttura dati dell'Anchor;
+
+* struttura dati del Knowledge Statement;
+
+* struttura dati della Learning State;
+
+* relazioni tra entità ELR;
+
+* principi di persistenza.
+
+Questo documento NON definisce:
+
+* creazione automatica dei dati;
+
+* approvazione delle modifiche;
+
+* generazione degli esercizi;
+
+* interpretazione delle Evidence.
+
+Queste responsabilità appartengono ai componenti dedicati.
+
+================================================================================
+Principio fondamentale
+======================
+
+Il Data Model deve rappresentare conoscenza linguistica persistente senza
+confondere:
+
+conoscenza
+
+con
+
+processo che l'ha generata.
+
+Il repository conserva:
+
+* Learning Object approvati;
+
+* stato di apprendimento;
+
+* relazioni linguistiche;
+
+ma non conserva:
+
+* conversazioni;
+
+* errori grezzi;
+
+* ragionamenti temporanei della KEP.
+
+================================================================================
+
+1. Persistent Entity Model
+   ================================================================================
+
+Le principali entità persistenti dell'ELR sono:
+
+Learning Object
+
+```
+    |
+
+    | contiene
+
+    v
+```
+
+Anchor
+
+```
+    |
+
+    | descrive
+
+    v
+```
+
+Knowledge Statement
+
+Learning Object
+
+```
+    |
+
+    | possiede
+
+    v
+```
+
+Learning State
+
+Le Evidence non appartengono al repository della conoscenza.
+
+Sono gestite nel Process Layer.
+
+================================================================================
+2. Learning Object Entity
+=========================
+
+Il Learning Object rappresenta l'unità minima persistente di conoscenza
+linguistica.
+
+Un Learning Object contiene:
+
+* identificativo unico;
+
+* Anchor associato;
+
+* Knowledge Statement;
+
+* Knowledge Category;
+
+* Learning State;
+
+* metadati di gestione.
+
+Un Learning Object rappresenta una sola conoscenza atomica.
+
+================================================================================
+3. Anchor Entity
+================
+
+L'Anchor identifica l'unità linguistica a cui la conoscenza è associata.
+
+Un Anchor può rappresentare:
+
+* parola;
+
+* espressione;
+
+* collocazione;
+
+* costruzione;
+
+* formula comunicativa.
+
+Un Anchor non rappresenta:
+
+* categoria grammaticale astratta;
+
+* errore;
+
+* spiegazione metalinguistica.
+
+================================================================================
+4. Knowledge Statement Entity
+=============================
+
+Il Knowledge Statement rappresenta la conoscenza associata all'Anchor.
+
+Un Knowledge Statement deve essere:
+
+* atomico;
+
+* positivo;
+
+* riutilizzabile;
+
+* comprensibile.
+
+Un Learning Object contiene una conoscenza principale.
+
+Eventuali spiegazioni estese appartengono a livelli descrittivi separati.
+
+================================================================================
+5. Knowledge Category Entity
+============================
+
+La Knowledge Category classifica il tipo di conoscenza rappresentata.
+
+Categorie definite:
+
+* Meaning
+
+* Construction
+
+* Function
+
+* Morphology
+
+* Pronunciation
+
+* Phraseology
+
+La categoria supporta ricerca e organizzazione.
+
+Non determina automaticamente la struttura del Learning Object.
+
+================================================================================
+6. Learning State Entity
+========================
+
+Il Learning State rappresenta lo stato didattico associato a un Learning
+Object.
+
+Contiene informazioni relative a:
+
+* stato di apprendimento;
+
+* livello di consolidamento;
+
+* informazioni necessarie al Mastery Engine.
+
+Il Learning State non rappresenta conoscenza linguistica.
+
+================================================================================
+7. Entity Relationships
+=======================
+
+Relazioni principali:
+
+Learning Object
+
+1 --- 1
+
+Anchor
+
+Learning Object
+
+1 --- 1
+
+Knowledge Statement
+
+Learning Object
+
+1 --- 1
+
+Knowledge Category
+
+Learning Object
+
+1 --- 1
+
+Learning State
+
+Un Anchor può essere associato a più Learning Object quando rappresenta
+conoscenze indipendenti.
+
+Esempio:
+
+Anchor:
+
+look forward to
+
+Learning Object 1:
+
+look forward to + verb-ing
+
+Learning Object 2:
+
+look forward to = attendere con piacere
+
+================================================================================
+8. Repository Consistency Rules
+===============================
+
+Il Data Model deve garantire:
+
+---
+
+## Atomicità
+
+Ogni Learning Object rappresenta una conoscenza indipendente.
+
+---
+
+## Unicità
+
+Non devono esistere duplicati concettuali dello stesso Learning Object.
+
+---
+
+## Separazione
+
+Conoscenza, Evidence e processo devono rimanere separati.
+
+---
+
+## Persistenza controllata
+
+Solo conoscenze approvate dalla Learning Review entrano nel repository.
+
+================================================================================
+9. Data Model Boundary
+======================
+
+Flusso:
+
+Conversation
+
+```
+    |
+
+    v
+```
+
+KEP
+
+```
+    |
+
+    v
+```
+
+ELR Change Proposal
+
+```
+    |
+
+    v
+```
+
+Learning Review
+
+```
+    |
+
+    v
+```
+
+Data Model
+
+```
+    |
+
+    v
+```
+
+ELR Repository
+
+Il Data Model riceve solo dati approvati.
+
+================================================================================
+10. Versioning
+==============
+
+Le entità persistenti devono supportare evoluzione controllata.
+
+Il versioning deve consentire:
+
+* modifica delle formulazioni;
+
+* evoluzione dei Knowledge Statement;
+
+* tracciabilità delle modifiche.
+
+La storia delle modifiche non sostituisce l'identità del Learning Object.
+
+================================================================================
+Principi conclusivi
+===================
+
+## DATA-001 — Repository stores approved knowledge
+
+Il Data Model conserva solo conoscenza approvata.
+
+## DATA-002 — Knowledge and Process Separation
+
+Il Data Model non conserva il processo che ha generato la conoscenza.
+
+## DATA-003 — Learning Object is atomic persistence unit
+
+Il Learning Object è l'unità minima persistente della conoscenza.
+
+## DATA-004 — Anchor centered persistence
+
+La struttura del repository è organizzata intorno all'Anchor.
+
+================================================================================
+Principio conclusivo
+====================
+
+Il Data Model rappresenta la struttura persistente dell'ELR.
+
+Il Domain Model definisce cosa rappresenta la conoscenza.
+
+Il Data Model definisce come viene conservata.
+
+La KEP propone modifiche.
+
+La Learning Review approva.
+
+L'ELR conserva conoscenza linguistica evolutiva.
+
+================================================================================
+Fine documento
+
+English Learning Repository (ELR)
+
+Data Model Specification
+
+Version: 1.0.0
+
+================================================================================
