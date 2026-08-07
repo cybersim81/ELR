@@ -1,0 +1,509 @@
+================================================================================
+English Learning Repository (ELR)
+
+Phrasebook Specification
+
+Version: 1.0.0
+Status: DRAFT
+=============
+
+# Document Identity
+
+Document Name:
+
+Phrasebook Specification
+
+Document Version:
+
+1.0.0
+
+Status:
+
+DRAFT
+
+Dependencies:
+
+* ELR Architecture Specification
+
+* ELR Domain Model Specification
+
+* ELR Taxonomy
+
+* Anchor Specification
+
+* Learning Object Specification
+
+* Knowledge Extraction Pipeline Specification
+
+* Evidence Model Specification
+
+================================================================================
+Scopo
+=====
+
+La Phrasebook Specification definisce il modello delle unità linguistiche
+fraseologiche gestite all'interno dell'English Learning Repository (ELR).
+
+Il Phrasebook rappresenta conoscenza relativa a:
+
+* collocazioni;
+
+* espressioni convenzionali;
+
+* combinazioni lessicali;
+
+* pattern linguistici riutilizzabili;
+
+* formule comunicative.
+
+Il Phrasebook non rappresenta:
+
+* frasi casuali;
+
+* esempi isolati;
+
+* regole grammaticali astratte;
+
+* errori dell'utente.
+
+================================================================================
+Responsabilità del documento
+============================
+
+Questo documento definisce:
+
+* il concetto di Phrasebook Entry;
+
+* la relazione tra Phrasebook e Anchor;
+
+* i criteri di validità delle unità fraseologiche;
+
+* i tipi di conoscenza fraseologica;
+
+* le regole di persistenza.
+
+Questo documento NON definisce:
+
+* estrazione automatica delle frasi;
+
+* criteri KEP CREATE / MERGE / UPDATE;
+
+* esercizi;
+
+* calcolo della Mastery.
+
+Queste responsabilità appartengono ai componenti dedicati.
+
+================================================================================
+Principio fondamentale
+======================
+
+Una frase o combinazione di parole costituisce conoscenza persistente quando
+rappresenta una unità linguistica riutilizzabile.
+
+Il Phrasebook risponde alla domanda:
+
+"Quale combinazione linguistica deve essere acquisita come unità?"
+
+Non risponde alla domanda:
+
+"Quale frase è stata pronunciata in una conversazione?"
+
+================================================================================
+
+1. Phrasebook Concept
+   ================================================================================
+
+Una Phrasebook Entry rappresenta una unità linguistica composta da più elementi
+che acquisisce significato o comportamento specifico attraverso la relazione
+tra gli elementi.
+
+Esempio:
+
+Phrasebook Entry:
+
+make + mistake
+
+Knowledge Statement:
+
+Per riferirsi all'azione di commettere un errore si usa
+"make a mistake".
+
+La conoscenza non appartiene esclusivamente a:
+
+make
+
+oppure:
+
+mistake
+
+ma alla combinazione.
+
+================================================================================
+2. Relationship with Anchor
+===========================
+
+Il Phrasebook utilizza l'Anchor come riferimento linguistico.
+
+Relazione:
+
+Phrasebook Entry
+
+        |
+
+        | rappresenta
+
+        v
+
+Anchor
+
+        |
+
+        | è associato a
+
+        v
+
+Learning Object
+
+        |
+
+        | contiene
+
+        v
+
+Knowledge Statement
+
+L'Anchor rappresenta l'unità linguistica acquisibile.
+
+Il Phrasebook definisce la natura fraseologica dell'unità.
+
+================================================================================
+3. Phrasebook Entry Criteria
+============================
+
+Una Phrasebook Entry valida deve essere:
+
+---
+
+## Riutilizzabile
+
+Deve poter essere applicata in future produzioni linguistiche.
+
+Esempio:
+
+take + photo
+
+---
+
+## Convenzionale
+
+Deve rappresentare una combinazione riconosciuta nella lingua target.
+
+Esempio:
+
+heavy rain
+
+---
+
+## Non casuale
+
+Una sequenza occasionale di parole non costituisce automaticamente una Entry.
+
+Non valido:
+
+I went to London yesterday
+
+Valido:
+
+look forward to
+
+---
+
+## Linguisticamente significativa
+
+La relazione tra gli elementi deve produrre una conoscenza utile.
+
+================================================================================
+4. Phrasebook Entry Types
+=========================
+
+================================================================================
+4.1 Collocation
+===============
+
+Una collocazione rappresenta una combinazione preferenziale tra elementi
+lessicali.
+
+Esempi:
+
+make + mistake
+
+take + photo
+
+heavy rain
+
+La conoscenza riguarda la combinazione naturale.
+
+================================================================================
+4.2 Fixed Expression
+====================
+
+Una Fixed Expression rappresenta una sequenza linguistica relativamente stabile.
+
+Esempi:
+
+by the way
+
+as soon as possible
+
+La conoscenza riguarda l'uso convenzionale dell'espressione.
+
+================================================================================
+4.3 Verb Pattern
+================
+
+Un Verb Pattern rappresenta un comportamento linguistico associato a un verbo
+o locuzione verbale.
+
+Esempi:
+
+look forward to + verb-ing
+
+depend on + noun
+
+La costruzione appartiene all'unità linguistica.
+
+================================================================================
+4.4 Communicative Formula
+=========================
+
+Una Communicative Formula rappresenta una formula utilizzata in contesti
+comunicativi ricorrenti.
+
+Esempi:
+
+Could you help me?
+
+Would you mind...?
+
+La conoscenza riguarda l'utilizzo pragmatico.
+
+================================================================================
+5. Phrasebook and Grammar Boundary
+==================================
+
+Il Phrasebook non sostituisce il modello grammaticale.
+
+Una conoscenza deve essere rappresentata nel Phrasebook quando il comportamento
+linguistico dipende da una unità specifica.
+
+Esempio:
+
+Valido Phrasebook:
+
+look forward to
+
+Knowledge Statement:
+
+Dopo "look forward to" si usa il verbo in -ing.
+
+Non valido:
+
+Verb + gerund rule
+
+perché rappresenta una generalizzazione grammaticale.
+
+================================================================================
+6. Phrasebook and Lexical Knowledge Boundary
+============================================
+
+Una combinazione non deve essere scomposta artificialmente quando la relazione
+tra gli elementi costituisce la conoscenza.
+
+Esempio:
+
+make + mistake
+
+Non deve essere rappresentato come:
+
+make
+
+*
+
+mistake
+
+perché la conoscenza riguarda la combinazione.
+
+================================================================================
+7. Phrasebook Entry Creation Rules
+==================================
+
+Una Phrasebook Entry può essere creata quando:
+
+* esiste una conoscenza fraseologica stabile;
+
+* l'unità è riutilizzabile;
+
+* l'Anchor è identificabile;
+
+* il Knowledge Statement è atomico.
+
+Non deve essere creata quando:
+
+* rappresenta solo una frase specifica;
+
+* rappresenta una preferenza stilistica;
+
+* rappresenta una variazione occasionale.
+
+================================================================================
+8. Phrasebook and Error Handling
+================================
+
+Un errore non diventa Phrasebook Entry.
+
+Esempio:
+
+Errore:
+
+do a mistake
+
+Non viene creato:
+
+do + mistake
+
+La conoscenza corretta è:
+
+Anchor:
+
+make + mistake
+
+Knowledge Statement:
+
+Per riferirsi all'azione di commettere un errore si usa
+"make a mistake".
+
+================================================================================
+9. Phrasebook and KEP
+=====================
+
+La KEP può utilizzare il Phrasebook come riferimento durante:
+
+* Anchor Resolution;
+
+* Knowledge Validation;
+
+* Knowledge Equivalence Analysis.
+
+La presenza di una combinazione frequente non determina automaticamente un
+Learning Object.
+
+La conoscenza deve soddisfare i criteri ELR.
+
+================================================================================
+10. Phrasebook and Learning Object
+==================================
+
+Una Phrasebook Entry può essere associata a più Learning Object solo quando
+le conoscenze rappresentate sono indipendenti e verificabili separatamente.
+
+La molteplicità non deve essere utilizzata per separare artificialmente
+la stessa conoscenza.
+
+Esempio:
+
+Anchor:
+
+look forward to
+
+Possibili Learning Object:
+
+1.
+
+Construction:
+
+look forward to + verb-ing
+
+2.
+
+Meaning:
+
+look forward to = attendere con piacere
+
+La separazione dipende dall'indipendenza della conoscenza.
+
+================================================================================
+11. Anti-Overextraction Rules
+=============================
+
+Il Phrasebook deve evitare:
+
+* memorizzazione di ogni sequenza di parole;
+
+* trasformazione di ogni frase in conoscenza;
+
+* duplicazione di conoscenze grammaticali generali.
+
+Principio guida:
+
+Una combinazione entra nel Phrasebook solo se modifica ciò che l'utente può
+produrre correttamente in futuro.
+
+================================================================================
+Principi conclusivi
+===================
+
+---
+
+## PHRASEBOOK-001 — Phrasebook stores reusable language units
+
+Il Phrasebook rappresenta unità linguistiche riutilizzabili.
+
+---
+
+## PHRASEBOOK-002 — Phrasebook is not conversation memory
+
+Le frasi osservate nelle conversazioni non diventano automaticamente Entry.
+
+---
+
+## PHRASEBOOK-003 — Phrasebook complements Grammar
+
+Il Phrasebook rappresenta unità specifiche, non regole astratte.
+
+---
+
+## PHRASEBOOK-004 — Phrasebook preserves linguistic combinations
+
+Quando la conoscenza appartiene alla combinazione, gli elementi non devono
+essere separati artificialmente.
+
+================================================================================
+Principio conclusivo
+====================
+
+Il Phrasebook rappresenta il livello fraseologico dell'ELR.
+
+L'Anchor identifica l'unità linguistica.
+
+Il Phrasebook definisce le combinazioni linguistiche riutilizzabili.
+
+Il Learning Object conserva la conoscenza approvata.
+
+La KEP propone nuove conoscenze.
+
+Il Mastery Engine misura la padronanza.
+
+Il Phrasebook permette all'ELR di rappresentare la lingua reale oltre la
+semplice somma di vocaboli e regole.
+
+================================================================================
+Fine documento
+
+English Learning Repository (ELR)
+
+Phrasebook Specification
+
+Version: 1.0.0
+
+================================================================================

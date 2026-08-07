@@ -1,0 +1,2731 @@
+================================================================================
+English Learning Repository (ELR)
+
+Domain Model Specification
+================================================================================
+
+
+Document Identity
+================================================================================
+
+Document Name:
+
+English Learning Repository (ELR) Domain Model Specification
+
+
+Document Version:
+
+1.0.0
+
+
+Status:
+
+DRAFT
+
+
+Last Updated:
+
+YYYY-MM-DD
+
+
+Dependencies:
+
+- ELR Architecture Specification
+- ELR Architecture Decision Log
+- KEP Specification
+- Learning Interaction Language (LIL)
+
+
+================================================================================
+Purpose
+================================================================================
+
+Il presente documento definisce il modello concettuale persistente
+dell'English Learning Repository (ELR).
+
+Il Domain Model descrive le entità che costituiscono il repository,
+le loro responsabilità, le relazioni reciproche e i vincoli
+architetturali che ne governano l'evoluzione.
+
+Il documento non descrive:
+
+• il processo di estrazione della conoscenza;
+
+• gli algoritmi di aggiornamento della Mastery;
+
+• il protocollo conversazionale;
+
+• il comportamento dei componenti applicativi.
+
+Tali aspetti sono definiti nelle rispettive specifiche.
+
+
+================================================================================
+Scope
+================================================================================
+
+Il Domain Model rappresenta esclusivamente il modello persistente della
+conoscenza linguistica dell'utente.
+
+Esso descrive:
+
+• le entità persistenti;
+
+• le relazioni tra le entità;
+
+• i vincoli del repository;
+
+• il ciclo di vita concettuale dei Learning Object;
+
+• gli elementi che costituiscono lo stato persistente dell'ELR.
+
+Non appartengono al Domain Model:
+
+• Conversation Episode;
+
+• Knowledge Candidate;
+
+• ELR Change Proposal;
+
+• Trigger;
+
+• Mastery Evidence;
+
+• Change Evidence;
+
+• processi della KEP;
+
+• algoritmi del Mastery Engine.
+
+
+================================================================================
+Principi del Domain Model
+================================================================================
+
+Il Domain Model deriva dalle decisioni architetturali contenute
+nell'Architecture Decision Log.
+
+Recepisce esclusivamente i principi necessari alla definizione della struttura
+persistente del repository.
+
+In particolare descrive le conseguenze strutturali di:
+
+• Learning Object come unità persistente di conoscenza;
+
+• Stable Identity;
+
+• separazione tra conoscenza e classificazione;
+
+• separazione tra conoscenza e stato di padronanza;
+
+• persistenza della conoscenza indipendentemente dal contesto operativo.
+
+
+Il presente documento non ridefinisce i principi architetturali,
+ma descrive esclusivamente come tali principi sono rappresentati nel modello
+persistente.
+
+
+================================================================================
+Domain Overview
+================================================================================
+
+L'English Learning Repository rappresenta la conoscenza linguistica acquisita
+dall'utente come un insieme di Learning Object persistenti.
+
+Ogni Learning Object costituisce un'unità autonoma di conoscenza e rappresenta
+una singola competenza linguistica riutilizzabile.
+
+Il repository non descrive:
+
+• come la conoscenza è stata acquisita;
+
+• quando è stata appresa;
+
+• da quale conversazione proviene;
+
+• quale spiegazione l'ha generata.
+
+Il repository descrive esclusivamente ciò che l'utente deve essere in grado
+di riconoscere e riutilizzare nella lingua target.
+
+
+================================================================================
+Core Entities
+================================================================================
+
+================================================================================
+Domain Elements
+================================================================================
+
+Il modello persistente dell'ELR è composto da una entità principale e da
+elementi dipendenti che descrivono aspetti della conoscenza rappresentata.
+
+
+Primary Domain Entity:
+
+• Learning Object
+
+
+Supporting Domain Elements:
+
+• Anchor;
+
+• Knowledge Statement;
+
+• Knowledge Category;
+
+• Mastery;
+
+• Examples;
+
+• Notes.
+
+
+Gli elementi di supporto non rappresentano conoscenze autonome indipendenti,
+ma descrivono aspetti della conoscenza contenuta nel Learning Object.
+
+
+================================================================================
+Entity Relationship Overview
+================================================================================
+
+Il modello concettuale può essere rappresentato come segue.
+
+
+                    Learning Object
+                           |
+        +------------------+------------------+
+        |                  |                  |
+        v                  v                  v
+
+     Anchor      Knowledge Statement     Knowledge Category
+
+        |
+        +------------------+
+        |                  |
+        v                  v
+
+     Examples           Notes
+
+        |
+        +------------------+
+        |
+        v
+
+     Mastery
+
+
+Ogni Learning Object costituisce il punto centrale del modello.
+
+Le altre entità descrivono differenti aspetti della medesima conoscenza
+linguistica.
+
+
+================================================================================
+Repository Boundary
+================================================================================
+
+Appartengono al repository:
+
+• Learning Object;
+
+• Anchor;
+
+• Knowledge Statement;
+
+• Knowledge Category;
+
+• Mastery;
+
+• Examples;
+
+• Notes.
+
+
+Non appartengono al repository:
+
+• Conversation Episode;
+
+• Knowledge Candidate;
+
+• Trigger;
+
+• ELR Change Proposal;
+
+• Learning Review;
+
+• Change Evidence;
+
+• Mastery Evidence.
+
+
+Questi elementi appartengono ai processi operativi del sistema e non fanno
+parte dello stato persistente dell'ELR.
+
+Il repository ELR rappresenta esclusivamente conoscenza linguistica
+consolidata e validata.
+
+Gli stati intermedi prodotti dai processi di acquisizione, valutazione o
+proposta non appartengono al repository persistente.
+
+Tali stati appartengono ai processi operativi della KEP e dei componenti
+applicativi.
+
+================================================================================
+Aggregate Boundary
+================================================================================
+
+Il Learning Object costituisce l'Aggregate Root del Domain Model ELR.
+
+L'Aggregate Learning Object rappresenta il confine di consistenza della
+conoscenza linguistica persistente.
+
+Gli elementi concettualmente associati al Learning Object costituiscono parte
+del medesimo modello persistente:
+
+• Anchor;
+
+• Knowledge Statement;
+
+• Mastery;
+
+• Examples;
+
+• Notes.
+
+
+Tali elementi descrivono aspetti della stessa conoscenza linguistica e non
+rappresentano conoscenze autonome indipendenti.
+
+
+Tali elementi non rappresentano conoscenze autonome indipendenti e non possono
+evolvere separatamente dal Learning Object a cui appartengono.
+
+Qualunque modifica che preserva la stessa conoscenza atomica deve essere
+applicata attraverso l'evoluzione del Learning Object.
+
+
+================================================================================
+Aggregate Ownership
+================================================================================
+
+Il Learning Object è responsabile della coerenza delle informazioni che
+descrivono una specifica conoscenza linguistica.
+
+Il Learning Object garantisce che siano sempre rispettati:
+
+• un solo Anchor;
+
+• un solo Knowledge Statement;
+
+• una sola Knowledge Category;
+
+• uno stato di Mastery associato;
+
+• Examples e Notes coerenti con la conoscenza rappresentata.
+
+
+Le entità appartenenti all'aggregate non possiedono un ciclo di vita autonomo
+rispetto al Learning Object.
+
+
+
+
+
+
+================================================================================
+Entity Specifications
+================================================================================
+
+Le sezioni successive definiscono in dettaglio ciascuna entità del modello.
+
+Per ogni entità vengono descritti:
+
+• responsabilità;
+
+• identità;
+
+• proprietà;
+
+• relazioni;
+
+• vincoli architetturali;
+
+• ciclo di vita concettuale.
+
+================================================================================
+Learning Object
+================================================================================
+
+Il Learning Object rappresenta l'unità fondamentale del repository ELR.
+
+Ogni Learning Object descrive una singola conoscenza linguistica persistente,
+acquisita o acquisibile dall'utente, relativa ad uno specifico Anchor.
+
+Il Learning Object costituisce l'unica entità del repository che rappresenta
+direttamente una competenza linguistica.
+
+
+================================================================================
+Responsabilità
+================================================================================
+
+Il Learning Object è responsabile della rappresentazione persistente di una
+singola conoscenza linguistica.
+
+Esso non rappresenta:
+
+• una conversazione;
+
+• un episodio di apprendimento;
+
+• un errore;
+
+• una spiegazione didattica;
+
+• una sessione di esercizi.
+
+Il suo unico scopo è rappresentare una conoscenza linguistica riutilizzabile.
+
+
+================================================================================
+Identità
+================================================================================
+
+Ogni Learning Object possiede un'identità permanente.
+
+L'identità viene assegnata al momento della creazione e non cambia durante
+l'intero ciclo di vita del Learning Object.
+
+La modifica di:
+
+• Knowledge Statement;
+
+• Examples;
+
+• Notes;
+
+• Mastery;
+
+non comporta la creazione di una nuova identità.
+
+Un nuovo Learning Object viene creato esclusivamente quando emerge una nuova
+conoscenza atomica indipendente.
+
+
+================================================================================
+Composizione
+================================================================================
+
+Un Learning Object contiene le informazioni necessarie alla rappresentazione
+persistente di una conoscenza linguistica.
+
+Sono elementi fondamentali:
+
+• Anchor;
+
+• Knowledge Statement;
+
+• Knowledge Category;
+
+• stato di Mastery associato.
+
+
+Possono essere presenti elementi descrittivi complementari:
+
+• Examples;
+
+• Notes.
+
+
+================================================================================
+Rappresentazione concettuale
+================================================================================
+
+                    Learning Object
+                           |
+        +------------------+------------------+
+        |                  |                  |
+        v                  v                  v
+
+     Anchor      Knowledge Statement     Knowledge Category
+
+        |
+        +------------------+
+        |                  |
+        v                  v
+
+     Examples           Notes
+
+        |
+        v
+
+     Mastery
+
+
+Il Learning Object costituisce il punto di aggregazione logica di tutte le
+informazioni relative ad una singola conoscenza linguistica.
+
+
+================================================================================
+Vincolo di atomicità
+================================================================================
+
+Ogni Learning Object rappresenta una sola conoscenza atomica.
+
+Una conoscenza è considerata atomica quando può essere:
+
+• appresa indipendentemente;
+
+• verificata indipendentemente;
+
+• aggiornata indipendentemente;
+
+• esercitata indipendentemente.
+
+Qualunque rappresentazione contenente più conoscenze indipendenti deve essere
+suddivisa in Learning Object distinti.
+
+
+================================================================================
+Vincolo di unicità
+================================================================================
+
+Non possono esistere due Learning Object distinti che rappresentano la stessa
+conoscenza linguistica.
+
+Qualora emerga una formulazione migliore della medesima conoscenza, il Learning
+Object esistente viene evoluto senza crearne uno nuovo.
+
+La determinazione dell'equivalenza concettuale appartiene ai processi definiti
+dalla KEP.
+
+
+================================================================================
+Persistenza
+================================================================================
+
+Il Learning Object rappresenta uno stato persistente del repository ELR.
+
+Esso permane indipendentemente da:
+
+• conversazioni;
+
+• sessioni;
+
+• esercizi;
+
+• revisioni;
+
+• interazioni future.
+
+La sua esistenza non dipende dal contesto in cui è stato originariamente
+identificato.
+
+
+================================================================================
+Evoluzione
+================================================================================
+
+Un Learning Object evolve monotonicamente.
+
+L'evoluzione può comprendere:
+
+• raffinamento del Knowledge Statement;
+
+• aggiunta di nuovi Examples;
+
+• aggiunta di nuove Notes;
+
+• aggiornamento della Mastery.
+
+L'evoluzione non modifica l'identità del Learning Object.
+
+Qualunque modifica che introduca una nuova conoscenza indipendente richiede la
+creazione di un nuovo Learning Object.
+
+
+================================================================================
+Relazioni
+================================================================================
+
+Ogni Learning Object:
+
+possiede esattamente un Anchor;
+
+possiede esattamente un Knowledge Statement;
+
+appartiene ad una Knowledge Category;
+
+possiede uno stato di Mastery;
+
+può possedere zero o più Examples;
+
+può possedere zero o più Notes.
+
+
+================================================================================
+Vincoli architetturali
+================================================================================
+
+Un Learning Object deve sempre soddisfare simultaneamente i seguenti vincoli.
+
+• rappresentare una conoscenza linguistica;
+
+• essere riferito ad un solo Anchor;
+
+• contenere un solo Knowledge Statement;
+
+• rappresentare una sola conoscenza atomica;
+
+• essere espresso positivamente;
+
+• essere riutilizzabile in future produzioni linguistiche.
+
+Un Learning Object che non soddisfa anche uno solo dei vincoli precedenti non
+appartiene al modello ELR.
+
+
+================================================================================
+Persistenza ed evoluzione concettuale
+================================================================================
+
+Il Learning Object mantiene la propria identità durante tutto il proprio ciclo
+di vita.
+
+L'evoluzione del Learning Object può comportare modifiche del contenuto
+rappresentato quando la conoscenza rimane concettualmente invariata.
+
+Il Domain Model non definisce le operazioni applicative utilizzate per
+produrre tali modifiche.
+
+Le modalità operative di creazione, aggiornamento, fusione o proposta di
+modifica appartengono ai processi applicativi definiti nelle rispettive
+Specification.
+
+================================================================================
+Anchor
+================================================================================
+
+L'Anchor rappresenta l'elemento linguistico osservabile a cui è associata una
+specifica conoscenza persistente.
+
+L'Anchor costituisce il punto di riferimento attraverso cui una conoscenza
+linguistica può essere riconosciuta, recuperata e riutilizzata.
+
+Ogni Learning Object possiede esattamente un Anchor.
+
+
+================================================================================
+Responsabilità
+================================================================================
+
+L'Anchor identifica l'unità linguistica che l'utente deve essere in grado di
+riconoscere e utilizzare nella lingua target.
+
+L'Anchor non descrive:
+
+• una regola grammaticale;
+
+• una categoria metalinguistica;
+
+• una spiegazione;
+
+• un errore;
+
+• una conversazione.
+
+Il suo scopo è identificare un elemento linguistico concreto osservabile.
+
+
+================================================================================
+Ruolo nel Domain Model
+================================================================================
+
+L'Anchor rappresenta il punto di accesso semantico al Learning Object.
+
+Esso consente:
+
+• identificazione della conoscenza;
+
+• ricerca nel repository;
+
+• raggruppamento dei Learning Object;
+
+• generazione del Phrasebook;
+
+• selezione di esercizi;
+
+• associazione della Mastery.
+
+L'Anchor rappresenta quindi il riferimento comune utilizzato da tutti i
+componenti del sistema.
+
+
+================================================================================
+Relazione con il Learning Object
+================================================================================
+
+Ogni Learning Object possiede un solo Anchor.
+
+Uno stesso Anchor può essere condiviso da più Learning Object quando
+rappresentano conoscenze atomiche differenti relative allo stesso elemento
+linguistico.
+
+Esempio:
+
+Anchor
+
+tell
+
+↓
+
+Learning Object A
+
+Il passato di tell è told.
+
+↓
+
+Learning Object B
+
+Tell richiede un destinatario diretto.
+
+↓
+
+Learning Object C
+
+Tell non richiede una preposizione prima del destinatario.
+
+L'Anchor rimane unico mentre le conoscenze restano indipendenti.
+
+
+================================================================================
+Caratteristiche di un Anchor valido
+================================================================================
+
+Un Anchor valido deve essere:
+
+• appartenente alla lingua target;
+
+• osservabile;
+
+• riutilizzabile;
+
+• sufficientemente specifico;
+
+• stabile nel tempo.
+
+L'Anchor deve identificare direttamente l'elemento linguistico oggetto della
+conoscenza.
+
+
+================================================================================
+Granularità
+================================================================================
+
+La granularità dell'Anchor deve essere determinata dalla conoscenza che il
+Learning Object rappresenta.
+
+L'Anchor non deve essere:
+
+• più generico del necessario;
+
+• più specifico del necessario.
+
+L'obiettivo è ottenere la minima unità linguistica che permetta di recuperare
+la conoscenza rappresentata.
+
+
+================================================================================
+Tipologie di Anchor
+================================================================================
+
+Un Anchor può rappresentare differenti forme di elemento linguistico
+osservabile.
+
+Le tipologie concrete di Anchor appartengono al modello linguistico ELR e
+possono evolvere attraverso le specifiche dedicate.
+
+Il criterio fondamentale del Domain Model è che l'Anchor:
+
+• rappresenti un elemento linguistico osservabile;
+
+• sia stabile;
+
+• sia riutilizzabile;
+
+• non rappresenti una categoria astratta o una procedura.
+
+================================================================================
+Anchor Composition
+================================================================================
+
+Un Anchor può essere costituito da più elementi linguistici quando tali
+elementi formano una unità linguistica riutilizzabile e semanticamente stabile.
+
+Un Anchor composto è valido quando la conoscenza rappresentata dal Learning
+Object riguarda l'insieme degli elementi e non i singoli componenti isolati.
+
+
+Esempi:
+
+take + photo
+
+interested in
+
+not only ... but also ...
+
+
+La composizione dell'Anchor non deve essere utilizzata per aggregare
+conoscenze indipendenti.
+
+
+================================================================================
+Elementi che non costituiscono Anchor
+================================================================================
+
+Non costituiscono Anchor:
+
+• Present Perfect;
+
+• Past Simple;
+
+• Modal Verbs;
+
+• Conditional Sentences;
+
+• Irregular Verbs;
+
+• Vocabulary.
+
+Questi elementi rappresentano categorie metalinguistiche e non unità
+linguistiche direttamente osservabili.
+
+
+================================================================================
+Persistenza
+================================================================================
+
+L'Anchor appartiene al modello persistente del repository.
+
+Una volta associato ad un Learning Object, rimane stabile durante tutta la vita
+dell'oggetto.
+
+La modifica dell'Anchor è ammessa esclusivamente quando la KEP determina che
+l'Anchor originario era semanticamente errato.
+
+Una semplice migliore formulazione del Knowledge Statement non comporta una
+modifica dell'Anchor.
+
+
+================================================================================
+Vincoli architetturali
+================================================================================
+
+Ogni Anchor deve soddisfare simultaneamente i seguenti requisiti.
+
+• appartenere alla lingua target;
+
+• essere osservabile nella produzione linguistica;
+
+• poter essere riconosciuto indipendentemente;
+
+• poter essere riutilizzato in produzioni future;
+
+• identificare un solo elemento linguistico.
+
+Un Anchor che rappresenti categorie astratte, errori o spiegazioni
+metalinguistiche non appartiene al modello ELR.
+
+
+================================================================================
+Relazioni
+================================================================================
+
+L'Anchor è associato direttamente ai Learning Object.
+
+Attraverso i Learning Object associati, un Anchor può essere collegato a
+molteplici Knowledge Statement.
+
+L'Anchor non possiede direttamente Knowledge Statement indipendenti.
+
+L'Anchor è associato a:
+
+• uno stato di Mastery per ciascun Learning Object associato.
+
+L'Anchor non possiede direttamente:
+
+• Examples;
+
+• Notes;
+
+• Evidence;
+
+• Mastery.
+
+Tali elementi appartengono sempre al Learning Object.
+
+================================================================================
+Knowledge Statement
+================================================================================
+
+Il Knowledge Statement rappresenta la descrizione persistente della conoscenza
+linguistica associata ad un Learning Object.
+
+Esso costituisce il contenuto informativo principale del Learning Object e
+descrive ciò che l'utente deve conoscere relativamente all'Anchor
+corrispondente.
+
+Il Knowledge Statement rappresenta sempre una conoscenza positiva,
+riutilizzabile e atomica.
+
+
+================================================================================
+Responsabilità
+================================================================================
+
+Il Knowledge Statement descrive una singola conoscenza linguistica.
+
+Esso non rappresenta:
+
+• una spiegazione didattica completa;
+
+• una lezione;
+
+• un errore;
+
+• una conversazione;
+
+• una cronologia di apprendimento.
+
+Il suo scopo è rappresentare esclusivamente la conoscenza persistente che il
+repository deve conservare.
+
+
+================================================================================
+Relazione con l'Anchor
+================================================================================
+
+Ogni Knowledge Statement è associato ad un solo Anchor.
+
+L'Anchor identifica l'elemento linguistico.
+
+Il Knowledge Statement descrive la conoscenza relativa a tale elemento.
+
+La relazione tra Anchor e Knowledge Statement è inscindibile dal punto di vista
+concettuale.
+
+Un Knowledge Statement privo di Anchor non appartiene al modello ELR.
+
+
+================================================================================
+Atomicità
+================================================================================
+
+Ogni Knowledge Statement deve rappresentare una sola conoscenza linguistica.
+
+Non deve contenere:
+
+• conoscenze indipendenti;
+
+• regole multiple;
+
+• spiegazioni eterogenee;
+
+• esempi incorporati.
+
+Qualora emergano conoscenze differenti, esse devono essere rappresentate da
+Learning Object distinti.
+
+
+================================================================================
+Forma positiva
+================================================================================
+
+Il Knowledge Statement deve descrivere ciò che è corretto.
+
+Sono preferite formulazioni positive rispetto a formulazioni basate
+sull'errore.
+
+Esempio.
+
+Non:
+
+"Non usare interested on."
+
+Ma:
+
+"Per esprimere interesse verso qualcosa si usa interested in."
+
+La formulazione positiva facilita il recupero della conoscenza durante la
+produzione linguistica.
+
+
+================================================================================
+Riutilizzabilità
+================================================================================
+
+Ogni Knowledge Statement deve poter essere riutilizzato in contesti differenti.
+
+Una conoscenza valida non dipende dalla frase che l'ha originata.
+
+Non deve contenere riferimenti specifici a:
+
+• utenti;
+
+• conversazioni;
+
+• messaggi;
+
+• episodi temporanei.
+
+La conoscenza deve poter essere applicata indipendentemente dal contesto
+originario.
+
+
+================================================================================
+Persistenza
+================================================================================
+
+Il Knowledge Statement appartiene al modello persistente del repository.
+
+Può essere evoluto mediante operazioni di MERGE o UPDATE quando la conoscenza
+rimane concettualmente la stessa.
+
+L'evoluzione del Knowledge Statement non modifica l'identità del Learning
+Object.
+
+
+================================================================================
+Vincoli architetturali
+================================================================================
+
+Ogni Knowledge Statement deve soddisfare simultaneamente i seguenti requisiti.
+
+• essere riferito ad un solo Anchor;
+
+• rappresentare una sola conoscenza;
+
+• essere formulato positivamente;
+
+• essere linguisticamente corretto;
+
+• essere riutilizzabile;
+
+• essere semanticamente coerente con il relativo Anchor.
+
+Un Knowledge Statement che non soddisfi tali requisiti non appartiene al
+modello ELR.
+
+
+================================================================================
+Relazioni
+================================================================================
+
+Ogni Knowledge Statement:
+
+• appartiene ad un solo Learning Object;
+
+• descrive un solo Anchor;
+
+• appartiene implicitamente ad una Knowledge Category attraverso il Learning
+  Object.
+
+Il Knowledge Statement non possiede direttamente:
+
+• Mastery;
+
+• Examples;
+
+• Notes.
+
+Tali elementi appartengono al Learning Object che lo contiene.
+
+================================================================================
+Knowledge Category
+================================================================================
+
+La Knowledge Category rappresenta la classificazione tipologica della
+conoscenza linguistica contenuta in un Learning Object.
+
+La Category descrive la natura della conoscenza rappresentata, senza
+modificarne il significato né sostituire l'Anchor.
+
+La Knowledge Category appartiene al modello persistente dell'ELR come
+informazione classificatoria associata al Learning Object.
+
+
+================================================================================
+Responsabilità
+================================================================================
+
+La Knowledge Category è responsabile di identificare il tipo generale di
+conoscenza linguistica rappresentata.
+
+Essa consente:
+
+• classificazione dei Learning Object;
+
+• organizzazione del repository;
+
+• generazione di viste derivate;
+
+• analisi statistiche;
+
+• selezione di strategie didattiche.
+
+
+La Knowledge Category non rappresenta:
+
+• l'elemento linguistico acquisito;
+
+• la conoscenza specifica;
+
+• una regola grammaticale completa;
+
+• un errore dell'utente;
+
+• il contesto che ha generato l'apprendimento.
+
+
+================================================================================
+Relazione con il Learning Object
+================================================================================
+
+Ogni Learning Object appartiene ad una Knowledge Category.
+
+La Category descrive il dominio generale della conoscenza contenuta nel
+Learning Object.
+
+Esempio:
+
+
+Learning Object
+
+Anchor:
+
+take + photo
+
+
+Knowledge Statement:
+
+Per esprimere l'azione di scattare una fotografia si usa
+"take + photo".
+
+
+Knowledge Category:
+
+Collocation
+
+
+La Category classifica la conoscenza ma non la sostituisce.
+
+
+================================================================================
+Relazione con l'Anchor
+================================================================================
+
+La Knowledge Category non sostituisce l'Anchor.
+
+L'Anchor identifica:
+
+"Quale elemento linguistico deve essere acquisito."
+
+
+La Knowledge Category identifica:
+
+"Che tipo di conoscenza rappresenta."
+
+
+Esempio:
+
+
+Anchor:
+
+since
+
+
+Knowledge Category:
+
+Usage Pattern
+
+
+Knowledge Statement:
+
+Since si usa per indicare il momento iniziale di una durata.
+
+
+L'Anchor rimane l'elemento linguistico osservabile.
+
+
+================================================================================
+Natura tassonomica
+================================================================================
+
+La Knowledge Category costituisce una tassonomia del dominio linguistico.
+
+La tassonomia deve essere:
+
+• stabile;
+
+• estendibile;
+
+• indipendente dai processi applicativi;
+
+• sufficientemente generale.
+
+
+La Category non deve introdurre una classificazione eccessivamente
+specialistica che renda il repository dipendente da un particolare modello
+grammaticale.
+
+================================================================================
+Tassonomy Ownership
+================================================================================
+
+La Knowledge Category appartiene alla tassonomia del dominio linguistico.
+
+Essa non possiede una identità conoscitiva autonoma e non rappresenta un
+Learning Object.
+
+La Category può essere condivisa da più Learning Object esclusivamente come
+elemento classificatorio.
+
+
+La modifica di una Knowledge Category rappresenta una evoluzione della
+tassonomia e non una evoluzione della conoscenza linguistica contenuta nei
+Learning Object.
+
+
+================================================================================
+Classificazione della conoscenza
+================================================================================
+
+Le Knowledge Category appartengono al modello tassonomico ELR.
+
+Il Domain Model mantiene esclusivamente il vincolo che la Category:
+
+• classifichi la natura della conoscenza;
+
+• non sostituisca l'Anchor;
+
+• non sostituisca il Knowledge Statement;
+
+• non rappresenti una conoscenza autonoma.
+
+La definizione delle categorie disponibili appartiene alla specifica della
+tassonomia ELR.
+
+
+================================================================================
+Vincolo di indipendenza dall'Anchor
+================================================================================
+
+Una Knowledge Category non può essere utilizzata come Anchor.
+
+
+Non sono Anchor validi:
+
+
+❌ Grammar
+
+❌ Vocabulary
+
+❌ Present Perfect
+
+❌ Irregular Verbs
+
+
+Questi elementi possono eventualmente descrivere una categoria,
+ma non rappresentano un elemento linguistico direttamente acquisibile.
+
+
+================================================================================
+Persistenza
+================================================================================
+
+La Knowledge Category appartiene al modello persistente del repository.
+
+La modifica della Category di un Learning Object non implica
+necessariamente la creazione di una nuova identità.
+
+Una riclassificazione può avvenire quando:
+
+• la conoscenza rimane invariata;
+
+• cambia esclusivamente la classificazione;
+
+• la nuova categoria rappresenta meglio la natura della conoscenza.
+
+
+================================================================================
+Vincoli architetturali
+================================================================================
+
+Ogni Knowledge Category deve soddisfare i seguenti requisiti.
+
+
+• essere applicabile ad un Learning Object;
+
+• rappresentare una classificazione e non una conoscenza;
+
+• non sostituire l'Anchor;
+
+• non contenere informazioni temporanee;
+
+• non dipendere dalla conversazione che ha generato il Learning Object.
+
+
+Una categoria che rappresenta direttamente una conoscenza linguistica deve
+essere trasformata in Anchor e Knowledge Statement.
+
+
+================================================================================
+Relazioni
+================================================================================
+
+La Knowledge Category è associata a:
+
+
+• può essere riferita a uno o più Learning Object come
+elemento classificatorio condiviso.
+
+
+La Knowledge Category non possiede direttamente:
+
+
+• Anchor;
+
+• Knowledge Statement;
+
+• Examples;
+
+• Notes;
+
+• Mastery.
+
+
+Questi elementi appartengono al Learning Object.
+
+
+================================================================================
+Evoluzione
+================================================================================
+
+La tassonomia delle Knowledge Category può evolvere nel tempo.
+
+L'aggiunta, modifica o riorganizzazione delle categorie non deve alterare
+l'identità dei Learning Object esistenti.
+
+Le modifiche tassonomiche devono preservare la separazione tra:
+
+• classificazione della conoscenza;
+
+• conoscenza linguistica rappresentata.
+
+================================================================================
+Mastery
+================================================================================
+
+La Mastery rappresenta lo stato persistente di consolidamento associato ad un
+Learning Object.
+
+Nel Domain Model ELR la Mastery non costituisce una entità autonoma, ma un
+elemento dipendente appartenente all'aggregate del Learning Object.
+
+La Mastery descrive esclusivamente il livello corrente di padronanza relativo
+alla conoscenza rappresentata dal Learning Object.
+
+
+================================================================================
+Responsabilità
+================================================================================
+
+La Mastery è responsabile della rappresentazione dello stato corrente di
+consolidamento della conoscenza.
+
+Essa permette al sistema di conoscere se una specifica conoscenza linguistica
+risulta:
+
+• non ancora consolidata;
+
+• parzialmente consolidata;
+
+• consolidata.
+
+La Mastery non rappresenta:
+
+• la conoscenza linguistica;
+
+• gli eventi che hanno prodotto il cambiamento;
+
+• le evidenze utilizzate;
+
+• il metodo con cui viene calcolata.
+
+
+================================================================================
+Relazione con il Learning Object
+================================================================================
+
+Ogni Learning Object possiede esattamente uno stato di Mastery.
+
+La relazione è parte dell'aggregate Learning Object.
+
+La Mastery non può esistere senza il Learning Object proprietario.
+
+
+Esempio:
+
+
+Learning Object:
+
+Anchor:
+
+interested in
+
+
+Knowledge Statement:
+
+Per esprimere interesse verso qualcosa si usa "interested in".
+
+
+Mastery:
+
+stato corrente di consolidamento della conoscenza.
+
+
+================================================================================
+Separazione tra conoscenza e padronanza
+================================================================================
+
+Il Domain Model mantiene una separazione fondamentale:
+
+
+Learning Object:
+
+"Che cosa rappresenta la conoscenza."
+
+
+Mastery:
+
+"Quanto quella conoscenza risulta consolidata."
+
+
+La modifica della Mastery non modifica:
+
+• Anchor;
+
+• Knowledge Statement;
+
+• Knowledge Category;
+
+• identità del Learning Object.
+
+
+================================================================================
+Persistenza
+================================================================================
+
+La Mastery appartiene allo stato persistente del Learning Object.
+
+Sono persistenti:
+
+• lo stato corrente della padronanza;
+
+• la relazione con il Learning Object.
+
+
+Non appartengono alla Mastery:
+
+• evidenze individuali;
+
+• conversazioni;
+
+• esercizi svolti;
+
+• risposte dell'utente;
+
+• motivazioni degli aggiornamenti.
+
+
+Tali informazioni appartengono ai processi esterni che producono modifiche
+alla Mastery.
+
+
+================================================================================
+Relazione con processi esterni
+================================================================================
+
+I componenti applicativi possono utilizzare informazioni esterne per proporre
+aggiornamenti della Mastery.
+
+Tali informazioni non appartengono al Domain Model.
+
+
+Il Domain Model definisce esclusivamente:
+
+Input:
+
+conoscenza rappresentata dal Learning Object.
+
+
+Output persistente:
+
+stato corrente di Mastery.
+
+
+La logica attraverso cui lo stato viene aggiornato appartiene alle specifiche
+dei componenti applicativi.
+
+
+================================================================================
+Identità
+================================================================================
+
+La Mastery non possiede identità autonoma.
+
+Il suo ciclo di vita coincide con quello del Learning Object proprietario.
+
+Quando un Learning Object evolve mantenendo la propria identità, la relativa
+Mastery continua ad essere associata allo stesso oggetto.
+
+
+================================================================================
+Vincoli architetturali
+================================================================================
+
+Ogni Mastery deve:
+
+• appartenere ad un solo Learning Object;
+
+• rappresentare esclusivamente lo stato di padronanza;
+
+• non contenere evidenze operative;
+
+• non contenere algoritmi;
+
+• non contenere informazioni conversazionali.
+
+
+Una Mastery che contiene informazioni diverse dallo stato corrente di
+consolidamento viola il Domain Model.
+
+
+================================================================================
+Evoluzione
+================================================================================
+
+La Mastery può evolvere indipendentemente dal contenuto conoscitivo del
+Learning Object.
+
+Gli aggiornamenti della Mastery:
+
+• non creano nuovi Learning Object;
+
+• non modificano l'identità;
+
+• non modificano il Knowledge Statement.
+
+
+L'evoluzione della Mastery rappresenta esclusivamente una variazione dello
+stato di consolidamento della stessa conoscenza.
+
+================================================================================
+Examples
+================================================================================
+
+
+Examples rappresenta l'insieme degli esempi linguistici associati ad un
+Learning Object.
+
+Gli Examples forniscono istanze concrete attraverso cui la conoscenza
+rappresentata dal Knowledge Statement può essere osservata e compresa.
+
+Gli Examples appartengono al modello persistente dell'ELR come elemento
+descrittivo associato alla conoscenza linguistica.
+
+================================================================================
+Responsabilità
+==============
+
+Examples è responsabile della rappresentazione di esempi linguistici concreti
+relativi ad un Learning Object.
+
+Gli Examples consentono di:
+
+• rendere osservabile una conoscenza astratta;
+
+• facilitare il recupero della conoscenza durante la produzione linguistica;
+
+• fornire contesti applicativi della conoscenza rappresentata;
+
+• supportare viste derivate del repository.
+
+Examples non rappresenta:
+
+• la conoscenza stessa;
+
+• una nuova conoscenza linguistica;
+
+• una spiegazione grammaticale;
+
+• una conversazione originale;
+
+• una evidenza di apprendimento.
+
+L'esempio è un supporto alla comprensione della conoscenza, non costituisce il
+contenuto conoscitivo principale del Learning Object.
+
+================================================================================
+Relazione con il Learning Object
+================================
+
+Gli Examples appartengono ad un Learning Object specifico.
+
+Un Learning Object può possedere:
+
+• zero Examples;
+
+• uno o più Examples.
+
+Ogni Example deve essere coerente con:
+
+• l'Anchor del Learning Object;
+
+• il Knowledge Statement associato;
+
+• la Knowledge Category.
+
+Esempio:
+
+Learning Object
+
+Anchor:
+
+interested in
+
+Knowledge Statement:
+
+Per esprimere interesse verso qualcosa si usa "interested in".
+
+Examples:
+
+"I am interested in science."
+
+"She is interested in learning languages."
+
+Gli Examples mostrano l'applicazione della conoscenza ma non la modificano.
+
+================================================================================
+Natura degli Examples
+================================================================================
+
+Un Example rappresenta una manifestazione linguistica concreta della
+conoscenza descritta dal Knowledge Statement.
+
+L'Example ha funzione illustrativa e verificativa, ma non costituisce una fonte
+autonoma di conoscenza.
+
+
+Un Example deve:
+
+• essere corretto nella lingua target;
+
+• essere coerente con Anchor e Knowledge Statement;
+
+• mostrare l'applicazione della conoscenza;
+
+• essere indipendente dal contesto originario.
+
+
+Un Example non deve:
+
+• introdurre nuove regole linguistiche;
+
+• contenere spiegazioni;
+
+• rappresentare errori dell'utente;
+
+• rappresentare eventi di apprendimento.
+
+
+Quando un Example contiene una conoscenza autonoma non coperta dal Learning
+Object, tale informazione deve essere trasformata in un nuovo Learning Object.
+
+================================================================================
+Separazione tra Knowledge Statement ed Example
+==============================================
+
+Il Knowledge Statement descrive:
+
+"Che cosa deve essere conosciuto."
+
+L'Example mostra:
+
+"Come questa conoscenza può manifestarsi nella lingua reale."
+
+Un Example non può sostituire il Knowledge Statement.
+
+Un Learning Object costituito esclusivamente da Examples senza Knowledge
+Statement non appartiene al modello ELR.
+
+================================================================================
+Persistenza
+===========
+
+Gli Examples costituiscono informazioni persistenti associate al Learning
+Object.
+
+La loro persistenza è indipendente dalla conversazione o dal contesto in cui
+sono stati originariamente individuati.
+
+Non vengono conservati:
+
+• la frase originale dell'utente;
+
+• l'interazione che ha generato l'esempio;
+
+• la spiegazione associata;
+
+• l'evidenza di apprendimento.
+
+Gli Examples conservano esclusivamente la forma linguistica utile alla
+rappresentazione della conoscenza.
+
+================================================================================
+Evoluzione
+==========
+
+Gli Examples possono evolvere durante il ciclo di vita del Learning Object.
+
+L'evoluzione può comprendere:
+
+• aggiunta di nuovi esempi;
+
+• rimozione di esempi non più rappresentativi;
+
+• sostituzione di esempi meno efficaci;
+
+• miglioramento della formulazione linguistica.
+
+L'aggiunta o modifica degli Examples non modifica:
+
+• l'identità del Learning Object;
+
+• l'Anchor;
+
+• il Knowledge Statement;
+
+• la Mastery.
+
+Un cambiamento degli Examples non costituisce una nuova conoscenza linguistica.
+
+================================================================================
+Vincoli architetturali
+======================
+
+Ogni Example deve soddisfare i seguenti requisiti:
+
+• essere linguisticamente corretto;
+
+• essere coerente con il relativo Learning Object;
+
+• rappresentare la lingua target;
+
+• non introdurre conoscenze indipendenti non rappresentate dal Learning
+Statement;
+
+• non contenere informazioni temporanee o conversazionali.
+
+Un Example che introduce una nuova conoscenza autonoma deve essere analizzato
+come possibile origine di un nuovo Learning Object.
+
+================================================================================
+Relazioni
+=========
+
+Examples è associato esclusivamente a:
+
+• uno specifico Learning Object.
+
+Examples non possiede direttamente:
+
+• Anchor;
+
+• Knowledge Statement;
+
+• Knowledge Category;
+
+• Mastery.
+
+Tali elementi sono raggiungibili attraverso il Learning Object associato.
+
+================================================================================
+Notes
+================================================================================
+
+
+Notes rappresenta informazioni descrittive complementari associate ad un
+Learning Object.
+
+Le Notes forniscono contesto aggiuntivo utile alla comprensione della
+conoscenza linguistica rappresentata, senza modificare il significato del
+Knowledge Statement.
+
+Le Notes appartengono al modello persistente dell'ELR come elemento
+informativo secondario associato alla conoscenza.
+
+================================================================================
+Responsabilità
+==============
+
+Notes è responsabile della conservazione di informazioni complementari che
+facilitano l'interpretazione e l'utilizzo di un Learning Object.
+
+Le Notes possono contenere informazioni quali:
+
+• chiarimenti semantici;
+
+• precisazioni d'uso;
+
+• differenze rispetto a forme linguistiche simili;
+
+• limitazioni contestuali rilevanti;
+
+• informazioni utili alla corretta applicazione della conoscenza.
+
+Notes non rappresenta:
+
+• la conoscenza principale;
+
+• un secondo Knowledge Statement;
+
+• un esempio linguistico;
+
+• una regola indipendente;
+
+• un errore dell'utente;
+
+• una spiegazione della conversazione originale.
+
+Le Notes supportano la conoscenza rappresentata, ma non costituiscono una
+conoscenza autonoma.
+
+================================================================================
+Relazione con il Learning Object
+================================
+
+Le Notes appartengono ad un Learning Object specifico.
+
+Un Learning Object può possedere:
+
+• zero Notes;
+
+• una o più Notes.
+
+Ogni Note deve essere coerente con:
+
+• l'Anchor;
+
+• il Knowledge Statement;
+
+• la Knowledge Category.
+
+Esempio:
+
+Learning Object
+
+Anchor:
+
+say
+
+Knowledge Statement:
+
+Say introduce normalmente ciò che viene detto, senza indicare direttamente il
+destinatario.
+
+Notes:
+
+"Say" e "tell" possono essere entrambi tradotti con "dire", ma hanno strutture
+grammaticali differenti.
+
+La Note chiarisce una distinzione utile senza sostituire il Knowledge Statement.
+
+================================================================================
+Natura delle Notes
+================================================================================
+
+Una Note rappresenta informazione complementare necessaria per interpretare
+correttamente un Learning Object.
+
+La Note non rappresenta conoscenza linguistica primaria.
+
+
+Una Note può contenere:
+
+• chiarimenti;
+
+• limitazioni d'uso;
+
+• confronti con forme linguistiche vicine;
+
+• informazioni contestuali utili.
+
+
+Una Note non può:
+
+• introdurre una nuova capacità linguistica;
+
+• definire una nuova regola;
+
+• sostituire il Knowledge Statement;
+
+• contenere la descrizione completa di un'altra conoscenza.
+
+
+Quando una Note introduce una conoscenza indipendente, tale conoscenza deve
+essere modellata come nuovo Learning Object.
+
+================================================================================
+Separazione tra Knowledge Statement e Notes
+===========================================
+
+Il Knowledge Statement descrive:
+
+"Quale conoscenza linguistica deve essere acquisita."
+
+La Note descrive:
+
+"Quali informazioni aggiuntive aiutano a comprendere o applicare tale
+conoscenza."
+
+La Note non può modificare, contraddire o ampliare il Knowledge Statement fino
+a trasformarlo in una conoscenza differente.
+
+Un Learning Object deve mantenere la propria atomicità indipendentemente dal
+numero di Notes associate.
+
+================================================================================
+Persistenza
+===========
+
+Le Notes costituiscono informazioni persistenti associate al Learning Object.
+
+La loro persistenza è indipendente:
+
+• dalla conversazione che le ha originate;
+
+• dall'interazione in cui sono state prodotte;
+
+• dal processo che le ha individuate.
+
+Non vengono conservati:
+
+• ragionamenti dell'LLM;
+
+• spiegazioni temporanee;
+
+• discussioni progettuali;
+
+• contesto conversazionale originale.
+
+Le Notes conservano esclusivamente informazioni complementari utili alla
+rappresentazione stabile della conoscenza.
+
+================================================================================
+Evoluzione
+==========
+
+Le Notes possono evolvere durante il ciclo di vita del Learning Object.
+
+L'evoluzione può comprendere:
+
+• aggiunta di nuove precisazioni;
+
+• miglioramento della formulazione;
+
+• rimozione di informazioni obsolete;
+
+• riorganizzazione del contenuto descrittivo.
+
+L'evoluzione delle Notes non modifica:
+
+• l'identità del Learning Object;
+
+• l'Anchor;
+
+• il Knowledge Statement;
+
+• la Knowledge Category;
+
+• la Mastery.
+
+Una modifica delle Notes non costituisce una modifica della conoscenza
+rappresentata, salvo il caso in cui introduca una nuova conoscenza autonoma.
+
+================================================================================
+Vincoli architetturali
+======================
+
+Ogni Note deve soddisfare i seguenti requisiti:
+
+• essere associata ad un solo Learning Object;
+
+• supportare il Knowledge Statement;
+
+• non introdurre nuove conoscenze atomiche;
+
+• non rappresentare processi o eventi;
+
+• non contenere informazioni temporanee;
+
+• mantenere la separazione tra conoscenza e spiegazione.
+
+Una Note che contiene una conoscenza linguistica indipendente deve essere
+trasformata in un nuovo Learning Object.
+
+================================================================================
+Relazioni
+=========
+
+Notes è associata esclusivamente a:
+
+• uno specifico Learning Object.
+
+Notes non possiede direttamente:
+
+• Anchor;
+
+• Knowledge Statement;
+
+• Knowledge Category;
+
+• Mastery;
+
+• Examples.
+
+Tali elementi sono raggiungibili attraverso il Learning Object associato.
+
+================================================================================
+Domain Invariants
+================================================================================
+
+I Domain Invariants definiscono le condizioni che devono essere sempre vere
+all'interno del modello persistente dell'ELR.
+
+Gli invarianti rappresentano vincoli strutturali fondamentali che garantiscono
+la coerenza del repository indipendentemente dalle operazioni eseguite sul
+sistema.
+
+Qualunque operazione di creazione, aggiornamento o evoluzione del repository
+deve preservare tutti gli invarianti definiti in questa sezione.
+
+================================================================================
+Purpose
+=======
+
+Gli invarianti del Domain Model hanno lo scopo di garantire che il repository
+mantenga sempre la propria natura di archivio persistente di conoscenza
+linguistica.
+
+Essi impediscono che il modello evolva verso una rappresentazione:
+
+• conversazionale;
+
+• procedurale;
+
+• temporanea;
+
+• duplicata;
+
+• non atomica;
+
+• dipendente da processi applicativi.
+
+================================================================================
+Invariant 1 — Learning Object Atomicity
+=======================================
+
+Ogni Learning Object deve rappresentare una sola conoscenza linguistica
+atomica.
+
+Una conoscenza rappresentata da un Learning Object deve poter essere:
+
+• acquisita indipendentemente;
+
+• verificata indipendentemente;
+
+• esercitata indipendentemente;
+
+• aggiornata indipendentemente.
+
+Un Learning Object contenente più conoscenze indipendenti viola il modello
+ELR.
+
+Conseguenza:
+
+Una modifica che introduce una nuova conoscenza autonoma richiede la creazione
+di un nuovo Learning Object.
+
+================================================================================
+Invariant 2 — Learning Object Identity Stability
+================================================
+
+Ogni Learning Object possiede un'identità permanente.
+
+L'identità di un Learning Object non cambia durante la sua evoluzione.
+
+Le modifiche a:
+
+• Knowledge Statement;
+
+• Examples;
+
+• Notes;
+
+• Knowledge Category;
+
+• Mastery;
+
+non generano una nuova identità quando rappresentano un'evoluzione della stessa
+conoscenza.
+
+Una nuova identità viene creata esclusivamente quando emerge una nuova
+conoscenza linguistica indipendente.
+
+================================================================================
+Invariant 3 — Anchor Existence
+==============================
+
+Ogni Learning Object deve possedere esattamente un Anchor.
+
+Un Learning Object privo di Anchor non appartiene al modello ELR.
+
+L'Anchor deve rappresentare un elemento linguistico osservabile appartenente
+alla lingua target.
+
+Non possono essere utilizzati come Anchor:
+
+• categorie grammaticali;
+
+• concetti metalinguistici;
+
+• errori;
+
+• descrizioni astratte.
+
+================================================================================
+Invariant 4 — Anchor Uniqueness and Reuse
+=========================================
+
+Un Anchor può essere associato a più Learning Object quando rappresenta
+conoscenze differenti relative allo stesso elemento linguistico.
+
+La presenza dello stesso Anchor non implica equivalenza tra Learning Object.
+
+Ogni Learning Object mantiene la propria autonomia conoscitiva.
+
+Esempio:
+
+Anchor:
+
+tell
+
+Learning Object A:
+
+Il passato di tell è told.
+
+Learning Object B:
+
+Tell introduce normalmente il destinatario.
+
+I due Learning Object condividono l'Anchor ma rappresentano conoscenze
+distinte.
+
+================================================================================
+Invariant 5 — Knowledge Statement Atomicity
+===========================================
+
+Ogni Learning Object deve possedere un solo Knowledge Statement.
+
+Il Knowledge Statement deve:
+
+• descrivere una sola conoscenza;
+
+• essere riferito ad un solo Anchor;
+
+• essere formulato positivamente;
+
+• essere riutilizzabile.
+
+Un Knowledge Statement che contiene più conoscenze indipendenti viola il
+principio di atomicità.
+
+================================================================================
+Invariant 6 — Knowledge and Classification Separation
+=====================================================
+
+La classificazione della conoscenza deve rimanere separata dalla conoscenza
+rappresentata.
+
+La Knowledge Category non può sostituire:
+
+• l'Anchor;
+
+• il Knowledge Statement.
+
+Una categoria descrive:
+
+"Che tipo di conoscenza è rappresentata."
+
+L'Anchor identifica:
+
+"Quale elemento linguistico è acquisito."
+
+Il Knowledge Statement descrive:
+
+"Quale conoscenza relativa a tale elemento deve essere ricordata."
+
+================================================================================
+Invariant 7 — Repository Knowledge Purity
+=========================================
+
+Il repository ELR deve contenere esclusivamente conoscenza linguistica
+persistente.
+
+Non possono appartenere al modello persistente:
+
+• conversazioni;
+
+• eventi di apprendimento;
+
+• errori originali;
+
+• ragionamenti del modello;
+
+• processi decisionali;
+
+• evidenze operative;
+
+• algoritmi di aggiornamento.
+
+Il repository conserva il risultato consolidato dell'apprendimento, non il
+processo che lo ha generato.
+
+================================================================================
+ Invariant 8 — Repository First Persistence
+=================================
+
+Ogni conoscenza persistente dell'ELR deve essere rappresentata come stato
+autonomo del repository indipendentemente dal processo che l'ha generata.
+
+L'esistenza di un Learning Object non deve dipendere da:
+
+• conversazioni;
+
+• sessioni;
+
+• pipeline di estrazione;
+
+• esercizi;
+
+• componenti applicativi specifici.
+
+Il repository rappresenta la conoscenza consolidata e riutilizzabile,
+non il processo attraverso cui tale conoscenza è stata individuata.
+
+Conseguenza:
+
+Qualunque componente del sistema deve poter utilizzare un Learning Object senza
+conoscere il contesto operativo che ne ha determinato la creazione.
+
+
+================================================================================
+Invariant 9 — Learning Object Mastery State
+================================================================================
+
+Ogni Learning Object deve possedere uno stato persistente di Mastery.
+
+La Mastery:
+
+• appartiene esclusivamente al Learning Object;
+
+• rappresenta lo stato corrente di consolidamento;
+
+• non rappresenta il processo che ha prodotto lo stato.
+
+
+La Mastery non deve contenere:
+
+• evidenze;
+
+• eventi;
+
+• conversazioni;
+
+• algoritmi decisionali.
+
+
+La trasformazione delle informazioni operative in aggiornamenti di Mastery
+appartiene ai componenti applicativi esterni al Domain Model.
+================================================================================
+Invariant 10 — Derived Data Exclusion
+====================================
+
+Il repository non deve memorizzare informazioni ricostruibili
+deterministicamente dalle entità persistenti.
+
+Non costituiscono stato persistente:
+
+• ordinamenti;
+
+• raggruppamenti;
+
+• statistiche aggregate;
+
+• viste del Phrasebook;
+
+• selezioni per esercizi.
+
+Tali informazioni devono essere generate come viste derivate.
+
+================================================================================
+Invariant 11 — Knowledge Object Independence
+============================================
+
+Ogni Learning Object deve essere indipendente dal contesto che lo ha generato.
+
+La validità di un Learning Object non dipende da:
+
+• conversazione originale;
+
+• data di acquisizione;
+
+• esercizio svolto;
+
+• modalità di scoperta.
+
+La conoscenza rappresentata deve mantenere valore anche al di fuori del
+contesto originario.
+
+================================================================================
+Invariant 12 — Positive Knowledge Representation
+================================================
+
+Il contenuto persistente della conoscenza deve rappresentare ciò che è valido
+nella lingua target.
+
+Gli errori possono essere utilizzati dai processi operativi per individuare
+conoscenze mancanti.
+
+Gli errori non costituiscono contenuto persistente del Learning Object.
+
+================================================================================
+Invariant 13 — Example and Notes Containment
+============================================
+
+Examples e Notes devono rimanere elementi complementari del Learning Object.
+
+Essi non possono:
+
+• sostituire il Knowledge Statement;
+
+• introdurre conoscenze autonome;
+
+• modificare l'atomicità del Learning Object.
+
+Qualunque informazione che rappresenta una nuova conoscenza deve essere
+modellata come nuovo Learning Object.
+
+================================================================================
+Invariant 14 — Learning Object Boundary
+================================================================================
+
+Il Learning Object costituisce il confine minimo di consistenza della
+conoscenza persistente.
+
+Tutti gli elementi contenuti nell'aggregate devono descrivere la stessa
+conoscenza atomica.
+
+Nessun elemento interno al Learning Object può introdurre:
+
+• una seconda conoscenza;
+
+• un processo;
+
+• un evento;
+
+• una spiegazione autonoma.
+
+
+Qualunque informazione che supera il confine della conoscenza rappresentata
+deve essere modellata come elemento separato del dominio.
+
+================================================================================
+Invariant Enforcement
+=====================
+
+Gli invarianti costituiscono il contratto strutturale del Domain Model ELR.
+
+Ogni componente che modifica il repository deve garantire il mantenimento degli
+invarianti.
+
+La violazione di uno qualsiasi degli invarianti rende lo stato del repository
+non conforme al modello ELR.
+
+
+================================================================================
+Domain Evolution Rules
+================================================================================
+
+Le Domain Evolution Rules definiscono le regole attraverso cui il modello
+persistente dell'ELR può evolvere nel tempo mantenendo la coerenza
+architetturale del repository.
+
+Queste regole descrivono le trasformazioni ammesse sulle entità persistenti e
+i vincoli che devono essere preservati durante l'evoluzione del sistema.
+
+L'evoluzione del repository deve modificare la conoscenza rappresentata senza
+alterare i principi fondamentali del Domain Model.
+
+================================================================================
+Purpose
+=======
+
+Le regole di evoluzione hanno lo scopo di garantire che il repository possa
+crescere nel tempo attraverso:
+
+• acquisizione di nuove conoscenze;
+
+• raffinamento delle conoscenze esistenti;
+
+• miglioramento della rappresentazione linguistica;
+
+• aggiornamento dello stato di padronanza.
+
+L'evoluzione deve preservare:
+
+• identità;
+
+• atomicità;
+
+• separazione tra conoscenza e processo;
+
+• indipendenza dal contesto originario;
+
+• coerenza delle relazioni tra entità.
+
+================================================================================
+Evolution Principle 1 — Creation of New Knowledge
+=================================================
+
+Un nuovo Learning Object deve essere creato quando emerge una conoscenza
+linguistica autonoma e indipendente.
+
+La creazione di un nuovo Learning Object è richiesta quando la nuova
+informazione:
+
+• riguarda una conoscenza differente;
+
+• può essere appresa indipendentemente;
+
+• può essere verificata indipendentemente;
+
+• può essere esercitata indipendentemente.
+
+Una nuova formulazione della stessa conoscenza non richiede la creazione di un
+nuovo Learning Object.
+
+================================================================================
+Evolution Principle 2 — Knowledge Statement Evolution
+=====================================================
+
+Il Knowledge Statement può evolvere quando la conoscenza rappresentata rimane
+concettualmente invariata.
+
+Sono consentiti:
+
+• miglioramento della formulazione;
+
+• maggiore precisione descrittiva;
+
+• eliminazione di ambiguità;
+
+• chiarificazione del significato.
+
+L'evoluzione del Knowledge Statement non deve:
+
+• introdurre nuove conoscenze;
+
+• modificare l'Anchor senza necessità;
+
+• trasformare una conoscenza atomica in una conoscenza composta.
+
+================================================================================
+Evolution Principle 3 — Anchor Stability
+========================================
+
+L'Anchor deve mantenere stabilità durante l'evoluzione del Learning Object.
+
+La modifica dell'Anchor è ammessa esclusivamente quando viene verificato che
+l'Anchor originario non rappresentava correttamente l'elemento linguistico
+associato.
+
+Una modifica dell'Anchor non deve essere utilizzata per rappresentare una nuova
+conoscenza.
+
+Quando emerge una nuova conoscenza relativa allo stesso elemento linguistico,
+deve essere creato un nuovo Learning Object associato allo stesso Anchor.
+
+================================================================================
+Evolution Principle 4 — Learning Object Merge
+=============================================
+
+Il Merge tra Learning Object differenti è consentito esclusivamente quando essi
+rappresentano la medesima conoscenza linguistica atomica.
+
+La decisione di Merge deve essere basata sull'identità concettuale della
+conoscenza rappresentata e non esclusivamente sulla similarità strutturale.
+
+Il Merge richiede verifica di:
+
+• stessa identità conoscitiva;
+
+• stesso obiettivo di apprendimento;
+
+• stessa capacità linguistica riutilizzabile rappresentata;
+
+• assenza di conoscenze indipendenti aggiuntive.
+
+La condivisione dello stesso Anchor o della stessa Knowledge Category non è
+sufficiente per autorizzare un Merge.
+
+Esempio:
+
+Anchor:
+
+tell
+
+Learning Object A:
+
+Il passato di tell è told.
+
+Learning Object B:
+
+Tell introduce normalmente il destinatario.
+
+I due Learning Object non possono essere uniti perché rappresentano capacità
+linguistiche differenti relative allo stesso Anchor.
+
+Il Merge è valido solo quando due Learning Object rappresentano due
+formulazioni equivalenti della medesima conoscenza.
+
+================================================================================
+Evolution Principle 5 — Knowledge Category Evolution
+====================================================
+
+La Knowledge Category può evolvere senza modificare l'identità del Learning
+Object.
+
+Sono consentiti:
+
+• riclassificazione;
+
+• introduzione di nuove categorie;
+
+• riorganizzazione tassonomica.
+
+L'evoluzione della tassonomia non deve modificare la conoscenza rappresentata.
+
+La Category rimane sempre un elemento classificatorio e non può diventare
+sostituto del Knowledge Statement.
+
+================================================================================
+Evolution Principle 6 — Example Evolution
+=========================================
+
+Gli Examples possono essere aggiornati durante il ciclo di vita del Learning
+Object.
+
+Sono consentiti:
+
+• aggiunta di nuovi esempi;
+
+• sostituzione di esempi poco rappresentativi;
+
+• rimozione di esempi non più utili.
+
+L'evoluzione degli Examples non modifica:
+
+• identità del Learning Object;
+
+• Anchor;
+
+• Knowledge Statement;
+
+• Mastery.
+
+Un Example che introduce una nuova conoscenza deve essere trasformato in un
+nuovo Learning Object.
+
+================================================================================
+Evolution Principle 7 — Notes Evolution
+=======================================
+
+Le Notes possono essere aggiornate quando migliorano la comprensione della
+conoscenza rappresentata.
+
+Sono consentiti:
+
+• aggiunta di chiarimenti;
+
+• revisione della formulazione;
+
+• rimozione di informazioni obsolete.
+
+Le Notes non possono essere utilizzate per accumulare conoscenze linguistiche
+indipendenti.
+
+Una conoscenza autonoma individuata all'interno di una Note deve essere
+rappresentata come nuovo Learning Object.
+
+================================================================================
+Evolution Principle 8 — Mastery State Evolution
+================================================================================
+
+La Mastery può evolvere senza modificare l'identità del Learning Object.
+
+L'evoluzione della Mastery rappresenta esclusivamente una variazione dello
+stato di consolidamento della conoscenza.
+
+Gli aggiornamenti della Mastery:
+
+• non modificano il Knowledge Statement;
+
+• non modificano l'Anchor;
+
+• non creano nuovi Learning Object;
+
+• non modificano la natura della conoscenza rappresentata.
+
+
+Le regole attraverso cui la Mastery viene aggiornata appartengono ai
+componenti applicativi dedicati e non al Domain Model.
+
+================================================================================
+Evolution Principle 9 — Derived View Regeneration
+=================================================
+
+Le viste derivate devono essere rigenerate a partire dal repository persistente.
+
+Qualunque modifica al modello persistente può produrre variazioni nelle viste
+derivate, tra cui:
+
+• Phrasebook;
+
+• esercizi;
+
+• statistiche;
+
+• dashboard;
+
+• report.
+
+Le viste derivate non costituiscono stato autonomo del repository.
+
+================================================================================
+Evolution Principle 10 — Historical Independence
+================================================
+
+L'evoluzione del repository non deve richiedere la conservazione del processo
+che ha generato la modifica.
+
+Il modello persistente deve rappresentare esclusivamente lo stato corrente
+della conoscenza.
+
+Non vengono mantenuti nel Domain Model:
+
+• cronologia delle conversazioni;
+
+• passaggi intermedi della KEP;
+
+• motivazioni operative;
+
+• evidenze utilizzate per l'aggiornamento.
+
+Tali informazioni appartengono ai processi esterni al repository.
+
+================================================================================
+Evolution Validation
+====================
+
+Ogni modifica al repository deve essere validata rispetto ai principi del
+Domain Model.
+
+Una modifica è valida esclusivamente se preserva:
+
+• atomicità dei Learning Object;
+
+• stabilità dell'identità;
+
+• correttezza dell'Anchor;
+
+• separazione tra conoscenza e classificazione;
+
+• separazione tra conoscenza e padronanza;
+
+• natura persistente del repository.
+
+Qualunque trasformazione che violi tali principi non costituisce un'evoluzione
+valida dell'ELR.
+
+================================================================================
+Appendix A — Conceptual Model Summary
+====================
+
+Il modello persistente dell'ELR è centrato sul Learning Object come unità
+atomica di conoscenza linguistica.
+
+| Entità              | Responsabilità                                             | Proprietario    |
+| ------------------- | ---------------------------------------------------------- | --------------- |
+| Learning Object     | Rappresenta una conoscenza linguistica atomica persistente | Repository      |
+| Anchor              | Identifica l'elemento linguistico osservabile              | Learning Object |
+| Knowledge Statement | Descrive la conoscenza associata all'Anchor                | Learning Object |
+| Knowledge Category  | Classifica la natura della conoscenza                      | Repository      |
+| Mastery             | Rappresenta il livello di padronanza della conoscenza      | Learning Object |
+| Examples            | Fornisce manifestazioni linguistiche della conoscenza      | Learning Object |
+| Notes               | Fornisce informazioni complementari alla comprensione      | Learning Object |
+
+Relazioni fondamentali:
+
+Learning Object
+
+```
+1 ─── 1 Anchor
+
+1 ─── 1 Knowledge Statement
+
+1 ─── 1 Knowledge Category
+
+1 ─── 1 Mastery
+
+1 ─── N Examples
+
+1 ─── N Notes
+```
+
+Il Learning Object costituisce il confine principale del dominio persistente.
+
+Tutte le entità associate descrivono aspetti della stessa conoscenza e non
+possono introdurre conoscenze autonome indipendenti.
+
+
+
+================================================================================
+Fine documento
+==============
+
+
+

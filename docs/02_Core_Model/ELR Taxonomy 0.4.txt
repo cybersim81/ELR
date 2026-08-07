@@ -1,0 +1,719 @@
+================================================================================
+ELR Taxonomy
+
+Version: 0.4
+Status: revisionata rispetto a KEP 1.0.2
+================================================================================
+
+# 1. Principi generali
+
+================================================================================
+
+## 1.1 Anchor
+
+L'Anchor rappresenta l'unità linguistica osservabile a cui viene associata una
+conoscenza acquisibile.
+
+L'Anchor rappresenta sempre la conoscenza corretta che l'utente deve acquisire.
+
+L'Anchor rappresenta sempre la forma linguistica nella lingua target che
+l'utente sta imparando.
+
+Nel caso di conoscenze traduttive o lessicali, l'Anchor corrisponde al termine
+o all'espressione nella lingua target.
+
+Esempio:
+
+Utente:
+
+Come si dice "tracina" in inglese?
+
+Anchor:
+
+weever
+
+Knowledge Statement:
+
+weever → tracina
+
+
+L'Anchor non viene mai costruito partendo dall'errore.
+
+Esempi:
+
+✅ take + photo
+❌ do + photo
+
+✅ tell + person
+❌ say + person
+
+
+L'Anchor deve essere una forma riconoscibile automaticamente e direttamente
+collegata alla produzione linguistica dell'utente.
+
+-------------------------------------------------------------------------------
+
+## 1.2 Generalizzazione dell'Anchor
+
+L'Anchor deve essere espresso nella forma più generale possibile, purché
+rimanga identificabile automaticamente.
+
+La generalizzazione deve evitare la proliferazione di Learning Object quasi
+identici.
+
+Esempi:
+
+yesterday
+
+since + year
+
+since + date
+
+for + duration
+
+take + photo
+
+tell + person
+
+
+L'Anchor non deve essere generalizzato fino a diventare una categoria
+metalinguistica.
+
+Esempi non validi:
+
+❌ Present Perfect
+
+❌ Past Time Reference
+
+❌ Modal Verbs
+
+-------------------------------------------------------------------------------
+
+## 1.3 Knowledge Statement
+
+Il Knowledge Statement descrive una singola conoscenza positiva relativa ad un
+Anchor.
+
+Il KS:
+
+• non descrive l'errore;
+
+• non è formulato come divieto;
+
+• rappresenta una conoscenza riutilizzabile;
+
+• contiene la minima conoscenza sufficiente per spiegare l'uso corretto;
+
+• può rappresentare una relazione lessicale minima quando la conoscenza
+  acquisita è esclusivamente traduttiva.
+
+
+Sono preferibili formulazioni del tipo:
+
+"Per esprimere..."
+
+"Si usa..."
+
+"Per riferirsi a..."
+
+rispetto a:
+
+"Non usare..."
+
+
+Esempi:
+
+Per esprimere una durata che continua fino al presente si usa
+"for + duration".
+
+Per riferirsi a un evento concluso nel passato si usa "yesterday" con il Past
+Simple.
+
+
+Nel caso di conoscenze esclusivamente lessicali o traduttive, il Knowledge
+Statement può rappresentare una relazione minima tra forma linguistica e
+significato.
+
+Esempi:
+
+weever → tracina
+
+Assumption Day → Ferragosto
+
+
+La semplicità del Knowledge Statement non impedisce la creazione di un Learning
+Object quando la conoscenza è:
+
+• atomica;
+
+• acquisibile;
+
+• riutilizzabile.
+
+-------------------------------------------------------------------------------
+
+## 1.4 Learning Object
+
+Un Learning Object rappresenta una conoscenza persistente
+identificata da una specifica identità repository.
+
+Il contenuto conoscitivo minimo è costituito da:
+
+Anchor + Knowledge Statement.
+
+
+Un Learning Object viene creato quando emerge una conoscenza linguistica
+indipendente e riutilizzabile.
+
+La complessità della conoscenza non determina la creazione del Learning
+Object.
+
+Una conoscenza lessicale minima può costituire un Learning Object se
+rappresenta un elemento linguistico che l'utente può riutilizzare in future
+produzioni.
+
+
+Una singola correzione può generare:
+
+• nessun Learning Object;
+
+• un Learning Object;
+
+• più Learning Object.
+
+
+La decisione dipende dal numero di conoscenze indipendenti emerse, non dal
+numero di errori osservati.
+
+================================================================================
+# 2. Tipologie di Knowledge Statement
+
+================================================================================
+
+Le categorie rappresentano dimensioni della conoscenza linguistica.
+
+Non rappresentano regole grammaticali autonome.
+
+La Knowledge Category supporta la classificazione del
+Knowledge Candidate e la Repository Comparison.
+
+Non rappresenta una gerarchia normativa della lingua.
+
+-------------------------------------------------------------------------------
+
+## Meaning
+
+Domanda:
+
+Qual è il suo significato?
+
+Descrive il significato espresso dall'Anchor.
+
+Meaning comprende anche conoscenze lessicali ottenute mediante traduzione.
+
+Una richiesta esplicita di traduzione può generare un Learning Object quando
+l'elemento richiesto rappresenta una conoscenza linguistica persistente.
+
+Esempi:
+
+weever → tracina
+
+Assumption Day → Ferragosto
+
+-------------------------------------------------------------------------------
+
+## Function
+
+Domanda:
+
+Quale funzione svolge?
+
+Descrive lo scopo comunicativo o linguistico dell'Anchor.
+
+Esempi:
+
+• esprimere durata;
+
+• riferirsi a un evento concluso;
+
+• chiedere il permesso;
+
+• indicare obbligo.
+
+-------------------------------------------------------------------------------
+
+## Context
+
+Domanda:
+
+In quale situazione comunicativa si usa?
+
+Descrive la situazione d'uso.
+
+Esempi:
+
+• attirare l'attenzione;
+
+• chiedere il permesso;
+
+• rivolgersi a uno sconosciuto;
+
+• comunicazione formale o informale.
+
+
+Context non coincide con:
+
+❌ tempo grammaticale
+
+❌ luogo fisico
+
+❌ complemento richiesto
+
+-------------------------------------------------------------------------------
+
+## Construction
+
+Domanda:
+
+Come si costruisce?
+
+Descrive la configurazione linguistica richiesta dall'Anchor.
+
+Esempi:
+
+tell + person
+
+good at + noun
+
+look forward to + verb-ing
+
+
+Construction non riguarda esclusivamente i verbi.
+
+-------------------------------------------------------------------------------
+
+## Complement
+
+Domanda:
+
+Quale tipo di complemento richiede?
+
+Descrive il tipo di elemento linguistico che segue l'Anchor.
+
+Esempi:
+
+nome numerabile
+
+destinatario diretto
+
+durata
+
+nome proprio
+
+forma in -ing
+
+-------------------------------------------------------------------------------
+
+## Morphology
+
+Domanda:
+
+Qual è la forma corretta?
+
+Descrive variazioni morfologiche dell'Anchor.
+
+Esempi:
+
+gone
+
+children
+
+better
+
+taller
+
+-------------------------------------------------------------------------------
+
+## Contrastive Knowledge
+
+Il Knowledge Statement può confrontare liberamente due o più Anchor.
+
+Gli Anchor utilizzati nel confronto non diventano automaticamente parte del
+Learning Object.
+
+La conoscenza contrastiva serve a distinguere usi vicini o facilmente
+confondibili.
+
+Esempi:
+
+Tell si usa con un destinatario diretto, a differenza di say.
+
+Few si usa con nomi numerabili, a differenza di little.
+
+
+Few e little non vengono creati come nuovi Anchor se non costituiscono
+conoscenze indipendenti.
+
+
+
+================================================================================
+# 3. Anchor Resolution
+
+================================================================================
+
+La KEP deve individuare l'Anchor linguistico a cui associare
+la conoscenza riutilizzabile necessaria per future produzioni.
+
+L'Anchor non rappresenta necessariamente l'elemento che ha
+generato l'errore osservato.
+
+Non tutti gli elementi presenti nella frase costituiscono Anchor.
+
+La causa dell'errore deve essere distinta dagli elementi semplicemente presenti
+nella frase.
+
+
+Esempio:
+
+Yesterday I have gone.
+
+↓
+
+Anchor:
+
+yesterday
+
+KS:
+
+Con yesterday si usa il Past Simple.
+
+
+Esempio:
+
+I have already seen that movie yesterday.
+
+↓
+
+Anchor causale:
+
+yesterday
+
+already non genera un Learning Object autonomo.
+
+
+-------------------------------------------------------------------------------
+
+Anchor Resolution deve evitare:
+
+• creare Learning Object per ogni parola presente;
+
+• trasformare categorie grammaticali generali in Anchor;
+
+• associare automaticamente ogni errore ad una singola conoscenza.
+
+================================================================================
+# 4. Pattern parametrizzati
+
+================================================================================
+
+Gli Anchor possono contenere placeholder quando rappresentano strutture
+riutilizzabili.
+
+Esempi:
+
+since + year
+
+since + date
+
+for + duration
+
+tell + person
+
+take + photo
+
+
+I placeholder consentono di rappresentare una famiglia di casi senza creare
+Learning Object duplicati.
+
+La valutazione della necessità di creare un nuovo Learning Object o aggiornare
+un Learning Object esistente appartiene alla fase di Repository Comparison
+della KEP.
+
+================================================================================
+# 5. Trigger
+
+================================================================================
+
+Il Trigger rappresenta la scintilla che genera un possibile evento di
+apprendimento.
+
+Il Trigger non è una conoscenza e non costituisce un Learning Object.
+
+Può essere:
+
+• un errore;
+
+• un uso corretto spontaneo;
+
+• una domanda;
+
+• una richiesta esplicita di traduzione;
+
+• una richiesta di chiarimento;
+
+• una richiesta di approfondimento;
+
+• una richiesta metalinguistica.
+
+
+Il Trigger non costituisce conoscenza persistente.
+
+Una richiesta esplicita di traduzione può indicare una intenzione di
+acquisizione linguistica.
+
+La KEP deve valutare se dalla richiesta emerge una conoscenza persistente
+rappresentabile mediante un Anchor valido.
+
+
+Una richiesta di chiarimento relativa a un Learning Object già presente può
+costituire Evidence di incertezza sulla padronanza della conoscenza.
+
+Il Trigger rappresenta esclusivamente il punto di origine dell'analisi.
+
+La struttura dell'Evidence appartiene alla Evidence Model Specification.
+
+================================================================================
+# 6. Knowledge Candidate
+
+================================================================================
+
+Il Knowledge Candidate rappresenta una possibile conoscenza linguistica
+identificata durante il processo di analisi della KEP.
+
+Il Knowledge Candidate costituisce il livello intermedio tra:
+
+• evento osservato nella conversazione;
+
+• conoscenza linguistica potenzialmente persistente;
+
+• eventuale modifica del repository ELR.
+
+
+Un Knowledge Candidate non rappresenta ancora un Learning Object.
+
+
+Un Knowledge Candidate contiene una possibile rappresentazione conoscitiva
+composta da:
+
+
+-------------------------------------------------------------------------------
+
+## Candidate Payload
+
+-------------------------------------------------------------------------------
+
+Il Candidate Payload rappresenta il contenuto conoscitivo candidato.
+
+Può includere:
+
+• Anchor candidato;
+
+• Knowledge Statement candidato;
+
+• Knowledge Category candidata.
+
+
+Il Candidate Payload rappresenta la conoscenza che potrebbe essere
+successivamente persistita nell'ELR.
+
+
+-------------------------------------------------------------------------------
+
+## Candidate Context
+
+-------------------------------------------------------------------------------
+
+Il Candidate Context rappresenta gli elementi utilizzati per valutare la
+candidatura.
+
+Può includere:
+
+• Trigger origine;
+
+• produzione linguistica osservata;
+
+• contesto conversazionale necessario;
+
+• relazione tra osservazione e conoscenza candidata.
+
+
+Il Candidate Context supporta l'analisi ma non diventa parte del Learning
+Object.
+
+
+-------------------------------------------------------------------------------
+
+## Candidate Boundary
+
+-------------------------------------------------------------------------------
+
+Il Knowledge Candidate non rappresenta:
+
+
+• conoscenza approvata;
+
+• Learning Object persistente;
+
+• modifica del repository;
+
+• stato dell'utente.
+
+
+La trasformazione di un Knowledge Candidate in una modifica del repository
+avviene tramite ELR Change Proposal secondo le regole definite dalla KEP.
+
+================================================================================
+# 7. ELR Change Proposal
+
+================================================================================
+
+La ELR Change Proposal rappresenta la proposta di modifica del repository
+generata a partire da un Knowledge Candidate che ha superato la validazione KEP.
+
+
+La Change Proposal non rappresenta conoscenza linguistica.
+
+Rappresenta invece una proposta operativa relativa alla persistenza o
+all'evoluzione di un Learning Object.
+
+
+Una Change Proposal descrive una modifica atomica al repository ELR.
+
+
+Può rappresentare:
+
+
+-------------------------------------------------------------------------------
+
+## CREATE
+
+-------------------------------------------------------------------------------
+
+Introduzione di un nuovo Learning Object quando la conoscenza candidata non è
+rappresentata nel repository.
+
+
+-------------------------------------------------------------------------------
+
+## MERGE
+
+-------------------------------------------------------------------------------
+
+Integrazione di una conoscenza candidata all'interno di un Learning Object
+esistente quando la conoscenza rappresentata è equivalente.
+
+
+-------------------------------------------------------------------------------
+
+## UPDATE
+
+-------------------------------------------------------------------------------
+
+Miglioramento della rappresentazione di un Learning Object esistente senza
+modificare l'identità della conoscenza rappresentata.
+
+
+-------------------------------------------------------------------------------
+
+## SPLIT
+
+-------------------------------------------------------------------------------
+
+Suddivisione di un Learning Object esistente quando contiene più conoscenze
+indipendenti che devono essere rappresentate separatamente.
+
+
+-------------------------------------------------------------------------------
+
+## Change Proposal Boundary
+
+-------------------------------------------------------------------------------
+
+La ELR Change Proposal non rappresenta:
+
+• approvazione della modifica;
+
+• Learning Object persistente;
+
+• decisione finale sul repository.
+
+
+La decisione finale appartiene alla Learning Review.
+
+La persistenza appartiene all'ELR.
+
+================================================================================
+# 8. Evidence
+
+================================================================================
+
+La tassonomia riconosce che eventi osservabili relativi
+alla conoscenza possono essere utilizzati come Evidence
+secondo le regole definite nella Evidence Model Specification.
+
+La tassonomia non definisce:
+
+- struttura Evidence;
+- lifecycle Evidence;
+- validazione Evidence;
+- relazione Evidence → Mastery.
+
+================================================================================
+# 9. Principi aperti
+
+================================================================================
+
+Restano da definire:
+
+• criteri formali di Anchor Resolution;
+
+• relazione tra Trigger ed Evidence;
+
+• struttura dell'Evidence;
+
+• criteri per distinguere conoscenze indipendenti;
+
+• gestione dei casi limite della tassonomia.
+
+================================================================================
+# 10. Collegamento con la Roadmap
+
+================================================================================
+
+
+## Anchor Resolution
+
+Obiettivo:
+
+Definire criteri formali per l'identificazione dell'Anchor linguistico
+associato alla conoscenza candidata.
+
+
+## Evidence Integration
+
+Obiettivo:
+
+Definire la relazione tra eventi osservabili e modello Evidence secondo la
+Evidence Model Specification.
+
+
+## Repository Evolution
+
+Obiettivo:
+
+Definire il coordinamento tra Knowledge Candidate, ELR Change Proposal e
+Learning Review.
+
+================================================================================
+Fine documento
+================================================================================

@@ -1,0 +1,782 @@
+================================================================================
+English Learning Repository (ELR)
+
+Learning Object Specification
+
+Version: 1.0.0
+Status: APPROVED
+================================================================================
+
+
+Document Identity
+================================================================================
+
+Document Name:
+
+Learning Object Specification
+
+
+Document Version:
+
+1.0.0
+
+
+Status:
+
+APPROVED
+
+
+Dependencies:
+
+- ELR Architecture Specification
+
+- ELR Taxonomy
+
+- Knowledge Extraction Pipeline Specification
+
+- Evidence Model Specification
+
+- Learning Review Specification
+
+- Mastery Engine Specification
+
+- Exercise System Specification
+
+
+================================================================================
+Scopo
+================================================================================
+
+La Learning Object Specification definisce il modello dell'entità centrale
+utilizzata dall'English Learning Repository (ELR) per rappresentare conoscenza
+linguistica persistente.
+
+
+Il Learning Object rappresenta una unità atomica di conoscenza linguistica
+approvata e conservata nel repository.
+
+
+Il Learning Object non rappresenta:
+
+
+- una conversazione;
+
+- un errore;
+
+- una spiegazione temporanea;
+
+- una Evidence;
+
+- un esercizio;
+
+- una misura della padronanza.
+
+
+================================================================================
+Responsabilità del documento
+================================================================================
+
+Questo documento definisce:
+
+
+- identità del Learning Object;
+
+- struttura interna;
+
+- relazione tra componenti cognitive;
+
+- criteri di atomicità;
+
+- ciclo evolutivo;
+
+- vincoli di persistenza.
+
+
+Questo documento NON definisce:
+
+
+- estrazione della conoscenza;
+
+- approvazione delle modifiche;
+
+- calcolo della Mastery;
+
+- generazione degli esercizi.
+
+
+Queste responsabilità appartengono ai rispettivi componenti.
+
+
+================================================================================
+Principio fondamentale
+================================================================================
+
+Il Learning Object rappresenta la risposta alla domanda:
+
+
+"Quale conoscenza linguistica deve essere ricordata e riutilizzata
+dall'utente?"
+
+
+Non rappresenta:
+
+
+"Quale errore è stato commesso?"
+
+
+"Quale spiegazione è stata fornita?"
+
+
+"Quale esercizio è stato svolto?"
+
+
+================================================================================
+1. Learning Object Concept
+================================================================================
+
+Un Learning Object è una unità atomica di conoscenza linguistica persistente.
+
+
+Ogni Learning Object rappresenta:
+
+- un Anchor;
+- un Knowledge Statement associato;
+- una Knowledge Category;
+- informazioni di supporto alla rappresentazione della conoscenza.
+
+Il Learning Object deve essere:
+
+
+- identificabile;
+
+- riutilizzabile;
+
+- verificabile;
+
+- indipendente.
+
+
+================================================================================
+2. Learning Object Boundary
+================================================================================
+
+
+Il Learning Object appartiene al livello Repository.
+
+
+Relazione architetturale:
+
+
+Conversation
+
+        |
+
+        v
+
+KEP
+
+        |
+
+        v
+
+ELR Change Proposal
+
+        |
+
+        v
+
+Learning Review
+
+        |
+
+        v
+
+Learning Object
+
+
+Il Learning Object rappresenta esclusivamente la conoscenza approvata.
+
+
+================================================================================
+3. Learning Object Identity
+================================================================================
+
+Ogni Learning Object possiede una identità stabile all'interno dell'ELR.
+
+
+L'identità non dipende da:
+
+
+- formulazione del Knowledge Statement;
+
+- esempio utilizzato;
+
+- Evidence associate;
+
+- esercizi generati.
+
+
+L'identità è collegata principalmente a:
+
+
+- Anchor;
+
+- concetto linguistico rappresentato.
+
+La modifica dell'Anchor o del concetto linguistico fondamentale
+rappresenta una possibile nuova conoscenza e non una semplice evoluzione
+del Learning Object.
+
+================================================================================
+4. Learning Object Structure
+================================================================================
+
+Un Learning Object è composto da:
+
+
+-------------------------------------------------------------------------------
+Learning Object Identifier
+-------------------------------------------------------------------------------
+
+Identificativo univoco del Learning Object.
+
+
+Permette:
+
+
+- riferimento stabile;
+
+- aggiornamento evolutivo;
+
+- collegamento con Evidence;
+
+- collegamento con Exercise.
+
+
+-------------------------------------------------------------------------------
+Anchor
+-------------------------------------------------------------------------------
+
+L'Anchor rappresenta l'elemento linguistico osservabile a cui è associata la
+conoscenza.
+
+L'Anchor deve corrispondere all'unità linguistica identificata durante
+l'Anchor Resolution della KEP.
+
+Un Anchor valido deve essere:
+
+
+- nella lingua target;
+
+- osservabile;
+
+- riutilizzabile;
+
+- direttamente collegato alla produzione linguistica.
+
+
+Esempi:
+
+
+Anchor:
+
+take + photo
+
+
+Anchor:
+
+since + date
+
+
+Anchor:
+
+weever
+
+
+Non sono Anchor:
+
+
+❌ Present Perfect
+
+❌ Past Rules
+
+❌ Grammar Topic
+
+
+================================================================================
+Knowledge Statement
+================================================================================
+
+Il Knowledge Statement rappresenta la conoscenza associata all'Anchor.
+
+Il Knowledge Statement deve permettere una verifica osservabile
+attraverso produzioni linguistiche future dell'utente.
+
+
+Deve essere:
+
+
+- atomico;
+
+- positivo;
+
+- riutilizzabile;
+
+- comprensibile.
+
+
+Esempi:
+
+
+Anchor:
+
+take + photo
+
+
+Knowledge Statement:
+
+
+Per riferirsi all'azione di scattare una fotografia si usa
+"take + photo".
+
+
+-------------------------------------------------------------------------------
+
+
+Anchor:
+
+buy
+
+
+Knowledge Statement:
+
+
+Il Past Simple di "buy" è "bought".
+
+
+================================================================================
+Knowledge Category
+================================================================================
+
+La Knowledge Category classifica il tipo di conoscenza rappresentata.
+
+
+Esempi:
+
+
+Meaning
+
+
+Forma:
+
+
+weever → tracina
+
+
+-------------------------------------------------------------------------------
+
+
+Morphology
+
+
+Forma:
+
+
+buy → bought
+
+
+-------------------------------------------------------------------------------
+
+
+Construction
+
+
+Forma:
+
+
+look forward to → verbo in -ing
+
+
+-------------------------------------------------------------------------------
+
+
+Usage
+
+
+Forma:
+
+
+yesterday → uso del Past Simple
+
+
+================================================================================
+5. Atomicity Principle
+================================================================================
+
+Un Learning Object deve rappresentare una sola conoscenza indipendente.
+
+
+Una frase può generare più Learning Object.
+
+
+Esempio:
+
+
+"I have buyed a car yesterday."
+
+
+Produce:
+
+
+Learning Object 1:
+
+
+Anchor:
+
+yesterday
+
+
+Knowledge Statement:
+
+Con "yesterday" si usa il Past Simple.
+
+
+Learning Object 2:
+
+
+Anchor:
+
+buy
+
+
+Knowledge Statement:
+
+Il Past Simple di "buy" è "bought".
+
+La costruzione verbale complessa non genera automaticamente un Learning
+Object se la conoscenza necessaria è già rappresentabile attraverso un
+Anchor linguistico più specifico.
+
+
+================================================================================
+6. Positive Knowledge Representation
+================================================================================
+
+Il Learning Object rappresenta conoscenza positiva.
+
+
+Non deve contenere:
+
+
+- errori;
+
+- divieti;
+
+- descrizioni di uso scorretto.
+
+
+Esempio:
+
+
+Non valido:
+
+
+"Non usare do a mistake."
+
+
+Valido:
+
+
+"Per riferirsi all'azione di commettere un errore si usa
+'make a mistake'."
+
+
+================================================================================
+7. Learning Object Lifecycle
+================================================================================
+
+Il ciclo di vita concettuale è:
+
+
+Knowledge Candidate
+
+        |
+
+        v
+
+ELR Change Proposal
+
+        |
+
+        v
+
+Learning Review
+
+        |
+
+        v
+
+Learning Object
+
+
+Successivamente:
+
+
+Learning Object
+
+        |
+
+        v
+
+Exercise System
+
+        |
+
+        v
+
+Evidence
+
+        |
+
+        v
+
+Mastery Engine
+
+
+================================================================================
+8. Learning Object Evolution
+================================================================================
+
+Un Learning Object mantiene la propria identità durante la sua evoluzione.
+
+
+Può cambiare:
+
+
+- formulazione del Knowledge Statement;
+
+- esempi;
+
+- informazioni esplicative;
+
+- metadati.
+
+
+Non deve cambiare:
+
+
+- il concetto linguistico fondamentale.
+
+================================================================================
+8.1 Relationship with Repository Changes
+================================================================================
+
+Un Learning Object può evolvere attraverso:
+
+- MERGE;
+- UPDATE;
+- SPLIT.
+
+La creazione di un nuovo Learning Object avviene tramite CREATE.
+
+Queste operazioni sono definite dalla KEP Specification e approvate dalla Learning Review.
+
+
+================================================================================
+9. Learning Object and Evidence
+================================================================================
+
+Evidence non appartiene al Learning Object come conoscenza.
+
+L'associazione tra Evidence e Learning Object non implica che
+l'Evidence sia parte della rappresentazione persistente della conoscenza.
+
+Può essere associata al Learning Object per:
+
+
+- motivare una modifica;
+
+- valutare la padronanza;
+
+- documentare utilizzi.
+
+
+La separazione garantisce:
+
+
+Learning Object:
+
+"cosa sapere"
+
+
+Evidence:
+
+"perché lo sappiamo"
+
+
+================================================================================
+10. Learning Object and Exercise
+================================================================================
+
+Gli Exercise utilizzano Learning Object esistenti.
+
+
+Un Exercise:
+
+
+- riferisce un Learning Object target;
+
+- verifica una conoscenza;
+
+- produce Evidence.
+
+
+Un Exercise non modifica il contenuto del Learning Object.
+
+
+================================================================================
+11. Learning Object and Mastery
+================================================================================
+
+La Mastery non è parte della conoscenza rappresentata dal Learning Object.
+
+
+Il Learning Object rappresenta:
+
+
+"la conoscenza"
+
+
+La Mastery rappresenta:
+
+
+"il livello di padronanza dell'utente"
+
+
+La separazione permette:
+
+
+- più utenti;
+
+- più livelli di padronanza;
+
+- evoluzione indipendente.
+
+
+================================================================================
+12. Invalid Learning Objects
+================================================================================
+
+Non devono essere creati Learning Object per:
+
+
+-------------------------------------------------------------------------------
+Errori isolati
+-------------------------------------------------------------------------------
+
+Un errore senza conoscenza riutilizzabile non costituisce Learning Object.
+
+
+-------------------------------------------------------------------------------
+Categorie grammaticali astratte
+-------------------------------------------------------------------------------
+
+Esempio:
+
+
+❌ Present Perfect
+
+
+-------------------------------------------------------------------------------
+Preferenze stilistiche
+-------------------------------------------------------------------------------
+
+Esempio:
+
+
+❌ huge vs big quando entrambe sono corrette
+
+
+-------------------------------------------------------------------------------
+Spiegazioni temporanee
+-------------------------------------------------------------------------------
+
+Una spiegazione conversazionale non diventa automaticamente conoscenza.
+
+-------------------------------------------------------------------------------
+Conoscenze esclusivamente contestuali
+-------------------------------------------------------------------------------
+
+Esempio:
+
+"Per questa email usa questa frase."
+
+
+
+================================================================================
+13. Learning Object Quality Criteria
+================================================================================
+
+Un Learning Object valido deve essere:
+
+
+-------------------------------------------------------------------------------
+Atomico
+-------------------------------------------------------------------------------
+
+Rappresenta una sola conoscenza.
+
+
+-------------------------------------------------------------------------------
+Riutilizzabile
+-------------------------------------------------------------------------------
+
+Può migliorare produzioni future.
+
+
+-------------------------------------------------------------------------------
+Osservabile
+-------------------------------------------------------------------------------
+
+È collegato a un Anchor identificabile.
+
+
+-------------------------------------------------------------------------------
+Persistente
+-------------------------------------------------------------------------------
+
+Mantiene valore anche fuori dal contesto originale.
+
+
+================================================================================
+Principio conclusivo
+================================================================================
+
+Il Learning Object è l'unità fondamentale di conoscenza dell'ELR.
+
+
+La KEP identifica conoscenze candidate.
+
+
+La Learning Review controlla l'evoluzione del repository.
+
+
+L'ELR conserva conoscenza approvata.
+
+
+Gli Exercise utilizzano Learning Object per creare pratica.
+
+
+Il Mastery Engine misura la padronanza della conoscenza.
+
+
+================================================================================
+Fine documento
+
+English Learning Repository (ELR)
+
+Learning Object Specification
+
+Version: 1.0.0
+
+================================================================================

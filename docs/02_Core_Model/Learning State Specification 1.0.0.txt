@@ -1,0 +1,536 @@
+================================================================================
+English Learning Repository (ELR)
+
+Learning State Specification
+
+Version: 1.0.0
+Status: DRAFT
+=============
+
+# Document Identity
+
+Document Name:
+
+Learning State Specification
+
+Document Version:
+
+1.0.0
+
+Status:
+
+DRAFT
+
+Dependencies:
+
+* ELR Architecture Specification
+
+* ELR Domain Model Specification
+
+* ELR Taxonomy
+
+* Learning Object Specification
+
+* Mastery Engine Specification
+
+* Learning Review Specification
+
+================================================================================
+Scopo
+=====
+
+La Learning State Specification definisce il modello dello stato di
+apprendimento associato ai Learning Object all'interno dell'English Learning
+Repository (ELR).
+
+Il Learning State rappresenta la condizione corrente di una conoscenza
+linguistica rispetto al percorso di apprendimento dell'utente.
+
+Il Learning State non rappresenta:
+
+* la conoscenza linguistica;
+
+* il contenuto del Learning Object;
+
+* l'algoritmo di calcolo della Mastery;
+
+* la cronologia completa delle interazioni.
+
+La conoscenza è rappresentata attraverso:
+
+* Learning Object;
+
+* Anchor;
+
+* Knowledge Statement;
+
+* Knowledge Category.
+
+Lo stato di apprendimento rappresenta invece la relazione dinamica tra
+utente e conoscenza.
+
+================================================================================
+Responsabilità del documento
+============================
+
+Questo documento definisce:
+
+* il concetto di Learning State;
+
+* la relazione tra Learning State e Learning Object;
+
+* gli stati concettuali supportati;
+
+* le transizioni possibili;
+
+* i principi di aggiornamento.
+
+Questo documento NON definisce:
+
+* algoritmo di Mastery;
+
+* scheduling degli esercizi;
+
+* selezione automatica degli esercizi;
+
+* produzione di Evidence;
+
+* estrazione della conoscenza.
+
+Queste responsabilità appartengono ai componenti dedicati.
+
+================================================================================
+Principio fondamentale
+======================
+
+Un Learning Object rappresenta:
+
+"Quale conoscenza linguistica deve essere acquisita."
+
+Un Learning State rappresenta:
+
+"Qual è la condizione corrente di acquisizione di quella conoscenza."
+
+La conoscenza rimane stabile.
+
+Lo stato può evolvere.
+
+================================================================================
+
+1. Learning State Concept
+   ================================================================================
+
+Il Learning State è una proprietà dinamica della relazione:
+
+User
+
+```
+    |
+
+    v
+```
+
+Learning Object
+
+```
+    |
+
+    v
+```
+
+Learning State
+
+Lo stesso Learning Object può avere stati differenti per utenti differenti.
+
+Il Learning State non modifica l'identità del Learning Object.
+
+================================================================================
+2. Learning State Boundary
+==========================
+
+Il Learning State appartiene al modello di apprendimento dell'utente.
+
+Relazione:
+
+ELR Repository
+
+```
+    |
+
+    | contiene
+
+    v
+```
+
+Learning Object
+
+User Learning Model
+
+```
+    |
+
+    | associa
+
+    v
+```
+
+Learning State
+
+Mastery Engine
+
+```
+    |
+
+    | interpreta Evidence
+
+    v
+```
+
+Aggiornamento Learning State
+
+================================================================================
+3. Learning State Properties
+============================
+
+Un Learning State può contenere:
+
+---
+
+## Learning Object Reference
+
+Riferimento al Learning Object a cui lo stato appartiene.
+
+---
+
+## Current State
+
+Stato corrente della conoscenza.
+
+---
+
+## Mastery Reference
+
+Riferimento alla misura di padronanza associata.
+
+Il valore numerico e il calcolo appartengono al Mastery Engine.
+
+---
+
+## Evidence History Reference
+
+Riferimento alle Evidence utilizzate per aggiornare lo stato.
+
+La Evidence non costituisce parte della conoscenza.
+
+================================================================================
+4. Learning State Model
+=======================
+
+Il modello ELR definisce i seguenti stati concettuali:
+
+---
+
+## Unknown
+
+La conoscenza non è ancora stata identificata come parte del percorso
+dell'utente.
+
+Non esiste evidenza sufficiente di acquisizione.
+
+---
+
+## Introduced
+
+La conoscenza è stata presentata o resa disponibile all'utente.
+
+Non implica acquisizione.
+
+---
+
+## Practicing
+
+L'utente sta interagendo con esercizi o attività relative alla conoscenza.
+
+Non implica padronanza.
+
+---
+
+## Developing
+
+Sono presenti segnali di utilizzo o apprendimento della conoscenza.
+
+La conoscenza è in fase di consolidamento.
+
+---
+
+## Established
+
+La conoscenza mostra evidenza sufficiente di utilizzo stabile.
+
+Non significa conoscenza permanente.
+
+---
+
+## Needs Review
+
+La conoscenza richiede nuovo consolidamento.
+
+Può derivare da:
+
+* mancato utilizzo;
+
+* errori osservati;
+
+* decadimento della Mastery.
+
+================================================================================
+5. Learning State Transition
+============================
+
+Le transizioni di stato sono determinate dai processi ELR.
+
+Esempio concettuale:
+
+Unknown
+
+```
+    |
+
+    v
+```
+
+Introduced
+
+```
+    |
+
+    v
+```
+
+Practicing
+
+```
+    |
+
+    v
+```
+
+Developing
+
+```
+    |
+
+    v
+```
+
+Established
+
+Una conoscenza può successivamente passare a:
+
+Established
+
+```
+    |
+
+    v
+```
+
+Needs Review
+
+================================================================================
+6. Relationship with Mastery
+============================
+
+Learning State e Mastery sono concetti correlati ma distinti.
+
+Mastery rappresenta:
+
+"Quanto è consolidata la conoscenza."
+
+Learning State rappresenta:
+
+"La condizione del percorso di apprendimento."
+
+Esempio:
+
+Un Learning Object può avere:
+
+State:
+
+Practicing
+
+Mastery:
+
+bassa
+
+oppure:
+
+State:
+
+Established
+
+Mastery:
+
+alta
+
+La relazione precisa è gestita dal Mastery Engine.
+
+================================================================================
+7. Relationship with Evidence
+=============================
+
+Il Learning State può essere aggiornato sulla base di Evidence.
+
+Esempi:
+
+Uso corretto:
+
+può supportare una transizione verso stati più consolidati.
+
+Errore relativo a conoscenza esistente:
+
+può supportare una transizione verso Needs Review.
+
+Richiesta di chiarimento:
+
+può fornire evidenza di incertezza.
+
+La Evidence non determina automaticamente una transizione.
+
+================================================================================
+8. Learning State and Learning Object Lifecycle
+===============================================
+
+La creazione di un Learning Object non implica automaticamente la padronanza.
+
+Esempio:
+
+CREATE Learning Object:
+
+Anchor:
+
+make + mistake
+
+Learning State iniziale:
+
+Introduced
+
+Successivamente:
+
+Esercizi completati:
+
+Practicing
+
+Uso corretto ripetuto:
+
+Developing
+
+Uso stabile:
+
+Established
+
+================================================================================
+9. Separation of Responsibilities
+=================================
+
+Learning State mantiene separati:
+
+---
+
+## Knowledge Definition
+
+Responsabilità:
+
+Learning Object Specification.
+
+---
+
+## Knowledge Extraction
+
+Responsabilità:
+
+KEP.
+
+---
+
+## Knowledge Evaluation
+
+Responsabilità:
+
+Learning Review.
+
+---
+
+## Mastery Calculation
+
+Responsabilità:
+
+Mastery Engine.
+
+---
+
+## Learning State Evolution
+
+Responsabilità:
+
+User Learning Model.
+
+================================================================================
+10. Principles
+==============
+
+---
+
+## LS-001 — State is not Knowledge
+
+Lo stato di apprendimento non modifica il contenuto della conoscenza.
+
+---
+
+## LS-002 — State is User Specific
+
+Lo stesso Learning Object può avere Learning State differenti per utenti
+differenti.
+
+---
+
+## LS-003 — State is Evidence Driven
+
+Le transizioni di stato devono essere supportate da osservazioni o processi
+validi.
+
+---
+
+## LS-004 — State Evolution is Separate from Mastery Calculation
+
+Il cambiamento dello stato non coincide con il calcolo della Mastery.
+
+================================================================================
+Principio conclusivo
+====================
+
+Il Learning Object rappresenta la conoscenza.
+
+La Evidence rappresenta ciò che è stato osservato.
+
+La Mastery rappresenta il livello di consolidamento.
+
+Il Learning State rappresenta la condizione evolutiva della relazione tra
+utente e conoscenza.
+
+L'ELR conserva conoscenza.
+
+Il Mastery Engine interpreta evidenze di padronanza.
+
+Il Learning State rappresenta il percorso di acquisizione.
+
+================================================================================
+Fine documento
+
+English Learning Repository (ELR)
+
+Learning State Specification
+
+Version: 1.0.0
+
+================================================================================
