@@ -1,0 +1,370 @@
+================================================================================
+English Learning Repository (ELR)
+
+ELR API Implementation Specification
+
+Version: 0.1.0
+Status: DRAFT
+=============
+
+# Document Identity
+
+Document Name:
+
+ELR API Implementation Specification
+
+Document Version:
+
+0.1.0
+
+Status:
+
+DRAFT
+
+Dependencies:
+
+* ELR API Specification
+* ELR Core Domain Implementation Specification
+* ELR Persistence Implementation Specification
+* ELR Lifecycle Specification
+* ELR Security and Access Model Specification
+* ELR Implementation Architecture Specification
+
+================================================================================
+Scopo
+=====
+
+La ELR API Implementation Specification definisce il primo livello API
+implementativo dell'English Learning Repository.
+
+Le API espongono capacità applicative senza esporre direttamente:
+
+* database;
+* entità interne;
+* dettagli infrastrutturali.
+
+================================================================================
+API Principles
+==============
+
+API-IMPLEMENTATION-001 — Domain Protection
+
+Le API non modificano direttamente il dominio.
+
+API-IMPLEMENTATION-002 — Explicit Operations
+
+Ogni operazione rappresenta un caso d'uso esplicito.
+
+API-IMPLEMENTATION-003 — Lifecycle Compliance
+
+Ogni modifica deve rispettare il Lifecycle Model.
+
+API-IMPLEMENTATION-004 — Traceable Actions
+
+Ogni modifica deve produrre audit.
+
+================================================================================
+API Architecture
+================
+
+Client
+
+|
+
+v
+
+API Layer
+
+|
+
+v
+
+Application Layer
+
+|
+
+v
+
+Domain Layer
+
+|
+
+v
+
+Repository
+
+================================================================================
+Base Configuration
+==================
+
+Protocol:
+
+HTTP REST
+
+Framework:
+
+FastAPI
+
+Format:
+
+JSON
+
+Version:
+
+/api/v1
+
+================================================================================
+Learning Object API
+===================
+
+================================================================================
+POST /api/v1/learning-objects
+=============================
+
+Scopo:
+
+Creare un nuovo Learning Object Candidate.
+
+Request:
+
+{
+"anchor_id": "uuid",
+"statement": "text",
+"category_id": "uuid"
+}
+
+Response:
+
+{
+"id": "uuid",
+"state": "Candidate"
+}
+
+Regole:
+
+* crea solo Candidate;
+* non rende la conoscenza attiva;
+* genera AuditRecord.
+
+================================================================================
+GET /api/v1/learning-objects/{id}
+=================================
+
+Scopo:
+
+Recuperare un Learning Object.
+
+Response:
+
+{
+"id": "uuid",
+"state": "Active",
+"version": 1
+}
+
+================================================================================
+POST /api/v1/learning-objects/{id}/submit
+=========================================
+
+Scopo:
+
+Inviare un Learning Object alla revisione.
+
+Effetti:
+
+Candidate
+
+```
+    |
+
+    v
+```
+
+Proposed
+
+================================================================================
+POST /api/v1/learning-objects/{id}/approve
+==========================================
+
+Scopo:
+
+Approvare un Learning Object.
+
+Effetti:
+
+Reviewed
+
+```
+    |
+
+    v
+```
+
+Active
+
+Vincoli:
+
+* solo Learning Review;
+* genera nuova versione;
+* genera audit.
+
+================================================================================
+POST /api/v1/learning-objects/{id}/reject
+=========================================
+
+Scopo:
+
+Rifiutare una proposta.
+
+Effetti:
+
+Reviewed
+
+```
+    |
+
+    v
+```
+
+Rejected
+
+================================================================================
+GET /api/v1/learning-objects/{id}/history
+=========================================
+
+Scopo:
+
+Recuperare la storia versioni.
+
+Response:
+
+{
+"versions": [
+{
+"number":1,
+"status":"Active"
+}
+]
+}
+
+================================================================================
+Category API
+============
+
+GET /api/v1/categories
+
+Scopo:
+
+Recuperare tassonomia disponibile.
+
+================================================================================
+Health API
+==========
+
+GET /api/v1/health
+
+Scopo:
+
+Verificare disponibilità servizio.
+
+Response:
+
+{
+"status":"ok"
+}
+
+================================================================================
+Security Boundary
+=================
+
+Le API devono applicare:
+
+* autenticazione futura;
+* autorizzazione ruolo;
+* audit delle operazioni.
+
+Ruoli iniziali:
+
+System
+
+Learning Review
+
+KEP
+
+User
+
+================================================================================
+Error Model
+===========
+
+Gli errori devono essere espliciti.
+
+Esempi:
+
+INVALID_STATE_TRANSITION
+
+ENTITY_NOT_FOUND
+
+VALIDATION_ERROR
+
+UNAUTHORIZED_OPERATION
+
+================================================================================
+Transaction Boundary
+====================
+
+Ogni chiamata che modifica conoscenza deve:
+
+1. validare richiesta;
+
+2. eseguire caso d'uso;
+
+3. applicare regole dominio;
+
+4. aggiornare persistenza;
+
+5. generare audit.
+
+================================================================================
+Excluded Scope
+==============
+
+Non incluso:
+
+* autenticazione reale;
+
+* API Mastery;
+
+* API Exercise;
+
+* API KEP completa;
+
+* GraphQL.
+
+================================================================================
+Prossimo Incremento
+===================
+
+Il prossimo documento previsto:
+
+ELR Application Service Implementation Specification
+
+che definirà il livello applicativo tra API e dominio.
+
+================================================================================
+Principio conclusivo
+====================
+
+Le API ELR espongono capacità del sistema senza compromettere il modello
+cognitivo e il controllo della conoscenza.
+
+================================================================================
+Fine documento
+
+English Learning Repository (ELR)
+
+ELR API Implementation Specification
+
+Version: 0.1.0
+
+================================================================================
