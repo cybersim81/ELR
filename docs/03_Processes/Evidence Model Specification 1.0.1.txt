@@ -1,0 +1,822 @@
+================================================================================
+English Learning Repository (ELR)
+
+Evidence Model Specification
+
+Version: 1.0.1
+Status: DRAFT
+================================================================================
+
+
+Document Identity
+================================================================================
+
+Document Name:
+
+Evidence Model Specification
+
+
+Document Version:
+
+1.0.1
+
+
+Status:
+
+DRAFT
+
+
+Dependencies:
+
+- ELR Architecture Specification
+
+- ELR Architecture Decision Log
+
+- Knowledge Extraction Pipeline Specification
+
+- Mastery Engine Specification
+
+- Learning Review Specification
+
+- Learning Object Model Specification
+
+
+================================================================================
+Scopo
+================================================================================
+
+La Evidence Model Specification definisce il modello comune delle Evidence
+utilizzate all'interno dell'ecosistema ELR.
+
+
+L'Evidence Model descrive gli elementi che collegano:
+
+- un evento osservato;
+
+- un'analisi effettuata;
+
+- una decisione o valutazione proposta.
+
+
+L'Evidence Model non rappresenta conoscenza linguistica persistente.
+
+
+L'Evidence Model non appartiene al Repository ELR.
+
+
+La conoscenza persistente è rappresentata esclusivamente attraverso:
+
+- Learning Object;
+
+- Anchor;
+
+- Knowledge Statement;
+
+- Knowledge Category;
+
+- Learning State;
+
+- Mastery.
+
+
+================================================================================
+Responsabilità del documento
+================================================================================
+
+Questo documento è responsabile della definizione di:
+
+
+- concetto generale di Evidence;
+
+- tipi di Evidence;
+
+- struttura concettuale;
+
+- relazione tra Evidence e processi ELR;
+
+- criteri di validità delle Evidence.
+
+
+Questo documento NON definisce:
+
+
+- algoritmi KEP;
+
+- criteri CREATE / MERGE / UPDATE;
+
+- calcolo della Mastery;
+
+- procedure di Learning Review.
+
+
+Queste responsabilità appartengono ai rispettivi componenti.
+
+
+================================================================================
+Principio fondamentale
+================================================================================
+
+Una Evidence risponde alla domanda:
+
+
+"Quale osservazione giustifica una proposta, una decisione o una valutazione?"
+
+
+Una Evidence non risponde alla domanda:
+
+
+"Quale conoscenza linguistica deve essere memorizzata?"
+
+
+La conoscenza e l'evidenza devono rimanere concettualmente separate.
+
+
+================================================================================
+1. Evidence Concept
+================================================================================
+
+Una Evidence rappresenta una osservazione strutturata associata a un processo
+ELR.
+
+
+Una Evidence può contenere:
+
+
+Observation
+
+L'evento osservato che origina l'Evidence.
+
+
+Context
+
+Gli elementi necessari per interpretare correttamente l'osservazione.
+
+
+Interpretation
+
+L'analisi effettuata dal processo che produce l'Evidence.
+
+
+ELR Relationship
+
+Il collegamento con il processo ELR che utilizza l'Evidence.
+
+
+Observation e Interpretation devono rimanere concettualmente separati.
+
+L'osservazione rappresenta ciò che è avvenuto.
+
+L'interpretazione rappresenta il significato attribuito dal processo.
+
+
+Una Evidence non modifica autonomamente il sistema.
+
+
+Una Evidence può supportare:
+
+- una proposta di cambiamento;
+
+- una valutazione della padronanza;
+
+- una decisione umana o automatica prevista dal sistema.
+
+================================================================================
+Evidence is not Candidate Context
+================================================================================
+
+Candidate Context appartiene al processo KEP e supporta la valutazione di un
+Knowledge Candidate.
+
+Evidence appartiene al modello comune ELR e rappresenta un elemento di
+giustificazione o valutazione prodotto durante un processo.
+
+Candidate Context non diventa automaticamente Evidence.
+
+Evidence non rappresenta il contenuto cognitivo del Knowledge Candidate.
+
+
+================================================================================
+2. Evidence Boundary
+================================================================================
+
+L'Evidence Model appartiene al livello Process / Component Model.
+
+
+Relazione architetturale:
+
+
+Interaction Layer
+
+        |
+
+        v
+
+Process Layer
+
+        |
+
+        v
+
+Evidence Model
+
+        |
+
+        +----------------+
+
+        |                |
+
+        v                v
+
+Change Process     Mastery Process
+
+
+================================================================================
+3. Evidence Lifecycle
+================================================================================
+
+Il ciclo di vita concettuale di una Evidence è:
+
+
+Evento osservato
+
+        |
+
+        v
+
+Generazione Evidence
+
+        |
+
+        v
+
+Analisi / Valutazione
+
+        |
+
+        v
+
+Utilizzo nel processo ELR
+
+        |
+
+        v
+
+Conclusione del ciclo operativo
+
+
+Una Evidence non diventa automaticamente conoscenza persistente.
+
+================================================================================
+3.1 Evidence Ownership
+================================================================================
+
+Ogni Evidence deve avere un processo produttore identificabile.
+
+
+Esempi:
+
+
+KEP
+
+Produce:
+
+- Change Evidence.
+
+
+Mastery Engine / Learning Interaction Process
+
+Produce:
+
+- Mastery Evidence.
+
+
+Learning Review
+
+Non produce Evidence.
+
+Utilizza Evidence per la valutazione.
+
+
+Il componente che produce una Evidence è responsabile della sua correttezza
+formale, mentre il componente che la utilizza è responsabile della sua
+interpretazione nel proprio processo.
+
+
+================================================================================
+4. Evidence Types
+================================================================================
+
+Il modello ELR definisce due categorie principali di Evidence:
+
+
+1.
+
+Change Evidence
+
+
+2.
+
+Mastery Evidence
+
+
+Le due categorie hanno scopi differenti e non devono essere confuse.
+
+
+================================================================================
+5. Change Evidence
+================================================================================
+
+
+5.1 Purpose
+================================================================================
+
+La Change Evidence giustifica una modifica proposta al repository ELR.
+
+
+È associata a:
+
+
+- CREATE;
+
+- MERGE;
+
+- UPDATE.
+
+
+La Change Evidence risponde alla domanda:
+
+
+"Perché questa modifica del repository è stata proposta?"
+
+
+================================================================================
+5.2 Relationship with Change Proposal
+================================================================================
+
+La Change Evidence è collegata alla:
+
+ELR Change Proposal
+
+
+La Change Proposal contiene la modifica proposta.
+
+
+La Change Evidence contiene gli elementi che motivano tale proposta.
+
+
+Separazione:
+
+
+Change Proposal:
+
+"Cosa cambiare"
+
+
+Change Evidence:
+
+"Perché cambiarlo"
+
+
+================================================================================
+5.3 Change Evidence Content
+================================================================================
+
+Una Change Evidence può contenere:
+
+
+- riferimento al Trigger;
+
+- riferimento temporaneo alla Conversation Episode;
+
+- produzione linguistica osservata;
+
+- contesto linguistico rilevante;
+
+- analisi effettuata;
+
+- Anchor identificato;
+
+- Knowledge Candidate associato;
+
+- motivazione della classificazione CREATE / MERGE / UPDATE.
+
+
+Il contenuto preciso dipende dalla KEP Specification.
+
+================================================================================
+5.3.1 Evidence Reference
+================================================================================
+
+Un Evidence Reference rappresenta il collegamento tra una Evidence e
+l'osservazione che ha contribuito alla sua produzione.
+
+L'Evidence Reference non rappresenta conoscenza linguistica.
+
+Non costituisce:
+
+- Learning Object;
+
+- Knowledge Statement;
+
+- memoria conversazionale.
+
+
+Lo scopo dell'Evidence Reference è consentire la ricostruzione del contesto
+osservato durante processi di:
+
+- Learning Review;
+
+- analisi della proposta;
+
+- valutazione della Mastery.
+
+
+================================================================================
+Struttura concettuale di Evidence Reference
+================================================================================
+
+Un Evidence Reference può contenere:
+
+
+- identificativo della Conversation Episode;
+
+- riferimento al messaggio osservato;
+
+- riferimento al segmento linguistico rilevante;
+
+- riferimento al Trigger associato;
+
+- ruolo dell'osservazione rispetto all'Evidence.
+
+
+Il formato tecnico degli identificativi non appartiene al presente documento.
+
+
+================================================================================
+Evidence Reference Boundary
+================================================================================
+
+Un Evidence Reference non rende persistente la Conversation Episode.
+
+La rimozione dell'evento originale non modifica il significato della conoscenza
+eventualmente approvata nell'ELR.
+
+
+Un Evidence Reference rappresenta esclusivamente un collegamento verso una
+fonte osservativa.
+
+================================================================================
+5.4 Change Evidence Boundary
+================================================================================
+
+La Change Evidence non diventa:
+
+
+- Learning Object;
+
+- Knowledge Statement;
+
+- parte del contenuto persistente dell'ELR.
+
+
+Un errore osservato può essere presente nella Change Evidence senza diventare
+conoscenza.
+
+
+Esempio:
+
+
+Osservazione:
+
+"I did a photo"
+
+
+Change Evidence:
+
+Uso osservato non compatibile con la costruzione target.
+
+
+Conoscenza proposta:
+
+
+Anchor:
+
+take + photo
+
+
+Knowledge Statement:
+
+Per riferirsi all'azione di scattare una fotografia si usa
+"take + photo".
+
+
+================================================================================
+6. Mastery Evidence
+================================================================================
+
+
+6.1 Purpose
+================================================================================
+
+La Mastery Evidence rappresenta elementi osservabili relativi alla padronanza
+dell'utente rispetto a una conoscenza già rappresentata.
+
+
+La Mastery Evidence risponde alla domanda:
+
+
+"Quale evidenza abbiamo sul rapporto dell'utente con una conoscenza esistente?"
+
+================================================================================
+6.1.1 Mastery Evidence Boundary
+================================================================================
+
+La Mastery Evidence non rappresenta nuova conoscenza linguistica.
+
+Se una osservazione evidenzia una conoscenza non ancora presente nell'ELR,
+l'evento deve essere valutato dalla KEP come possibile Knowledge Candidate.
+
+La Mastery Evidence può riferirsi esclusivamente a Learning Object esistenti.
+
+
+================================================================================
+6.2 Relationship with Mastery
+================================================================================
+
+La Mastery Evidence alimenta il processo di gestione della Mastery.
+
+
+La Mastery Evidence NON determina:
+
+
+- valore numerico della Mastery;
+
+- algoritmo di aggiornamento;
+
+- frequenza di ripasso;
+
+- scheduling.
+
+
+Queste responsabilità appartengono al:
+
+Mastery Engine.
+
+
+================================================================================
+6.3 Mastery Evidence Examples
+================================================================================
+
+Una Mastery Evidence può derivare da:
+
+
+- uso corretto;
+
+- errore relativo a conoscenza esistente;
+
+- richiesta di chiarimento;
+
+- difficoltà osservata;
+
+- consolidamento dimostrato.
+
+
+L'interpretazione dell'evidenza appartiene al Mastery Engine.
+
+================================================================================
+6.3.1 Mastery Evidence Boundary Decision
+================================================================================
+
+Quando una osservazione linguistica evidenzia una difficoltà, il sistema deve
+distinguere:
+
+
+Knowledge Gap
+
+La conoscenza necessaria non è rappresentata nell'ELR.
+
+Risultato:
+
+valutazione KEP come possibile Knowledge Candidate.
+
+
+Mastery Gap
+
+La conoscenza è già rappresentata nell'ELR ma l'utente mostra difficoltà
+nell'applicazione.
+
+Risultato:
+
+produzione o utilizzo di Mastery Evidence.
+
+
+La distinzione non dipende dall'esistenza dell'errore, ma dalla presenza o
+assenza della conoscenza nel repository.
+
+
+================================================================================
+7. Separation between Change Evidence and Mastery Evidence
+================================================================================
+
+Change Evidence e Mastery Evidence possono derivare dalla stessa Conversation
+Episode.
+
+
+Tuttavia rappresentano fenomeni diversi.
+
+
+Esempio:
+
+
+Utente:
+
+I have lived here since five years.
+
+
+Possibile Change Evidence:
+
+
+Conoscenza candidata:
+
+for + duration
+
+
+Possibile Mastery Evidence:
+
+
+Difficoltà nell'applicazione della distinzione
+for / since.
+
+
+Le due Evidence devono rimanere separate.
+
+
+================================================================================
+8. Evidence Quality Criteria
+================================================================================
+
+Una Evidence valida deve essere:
+
+
+--------------------------------------------------------------------------------
+Rilevante
+--------------------------------------------------------------------------------
+
+Deve essere collegata al processo che la utilizza.
+
+
+--------------------------------------------------------------------------------
+Tracciabile
+--------------------------------------------------------------------------------
+
+Deve essere possibile identificare la sua origine.
+
+
+--------------------------------------------------------------------------------
+Specificamente interpretata
+--------------------------------------------------------------------------------
+
+Deve essere separata dall'interpretazione finale.
+
+
+--------------------------------------------------------------------------------
+Non trasformativa
+--------------------------------------------------------------------------------
+
+Non deve modificare direttamente il repository.
+
+================================================================================
+8.1 Evidence Independence
+================================================================================
+
+Una Evidence deve rappresentare un singolo scopo operativo.
+
+Una Evidence non deve combinare:
+
+- motivazione di modifica repository;
+
+- valutazione della padronanza;
+
+- contenuto della conoscenza.
+
+Se una Conversation Episode produce fenomeni diversi possono essere generate
+Evidence separate.
+
+Una singola Conversation Episode può generare più Evidence quando produce
+osservazioni con scopi operativi differenti.
+
+In particolare:
+
+- una osservazione può supportare una Change Evidence;
+
+- una osservazione può supportare una Mastery Evidence;
+
+- osservazioni diverse possono generare Evidence separate.
+
+La condivisione della fonte osservativa non implica equivalenza delle Evidence.
+
+
+================================================================================
+9. Evidence and Human Review
+================================================================================
+
+La Evidence supporta la Learning Review fornendo il contesto necessario alla
+valutazione.
+
+
+La Evidence non sostituisce il giudizio umano.
+
+
+La Learning Review decide:
+
+
+- accettazione;
+
+- rifiuto;
+
+- modifica;
+
+
+della Change Proposal.
+
+
+================================================================================
+10. Evidence and ELR Architecture
+================================================================================
+
+Relazione finale:
+
+
+ELR Repository
+
+        |
+
+        | contiene
+
+        v
+
+Learning Object
+
+
+Process Layer
+
+        |
+
+        | produce
+
+        v
+
+Evidence
+
+
+Component Layer
+
+        |
+
+        | interpreta
+
+        v
+
+KEP / Mastery Engine / Learning Review
+
+
+================================================================================
+Principio conclusivo
+================================================================================
+
+L'Evidence Model garantisce la separazione tra:
+
+
+conoscenza conservata
+
+e
+
+processo che giustifica o valuta tale conoscenza.
+
+
+L'ELR conserva conoscenza.
+
+
+La Evidence conserva motivazioni e osservazioni operative.
+
+
+La Mastery Engine interpreta le evidenze di padronanza.
+
+
+La KEP produce evidenze relative alle proposte.
+
+
+La Learning Review utilizza evidenze per mantenere il controllo
+sull'evoluzione del repository.
+
+
+================================================================================
+Fine documento
+
+English Learning Repository (ELR)
+
+Evidence Model Specification
+
+Version: 1.0.1
+
+================================================================================
