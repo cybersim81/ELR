@@ -1,0 +1,326 @@
+================================================================================
+English Learning Repository (ELR)
+
+ELR Security Implementation Specification
+
+Version: 0.1.0
+Status: DRAFT
+=============
+
+# Document Identity
+
+Document Name:
+
+ELR Security Implementation Specification
+
+Document Version:
+
+0.1.0
+
+Status:
+
+DRAFT
+
+Dependencies:
+
+* ELR Security and Access Model Specification
+* ELR API Implementation Specification
+* ELR Application Service Implementation Specification
+* ELR Event Implementation Specification
+* ELR Implementation Architecture Specification
+
+================================================================================
+Scopo
+=====
+
+La ELR Security Implementation Specification definisce il primo modello
+implementativo di sicurezza dell'English Learning Repository.
+
+La sicurezza ELR protegge:
+
+* accesso alle funzionalità;
+* modifica della conoscenza;
+* operazioni di lifecycle;
+* tracciabilità degli attori.
+
+================================================================================
+Security Principles
+===================
+
+SECURITY-IMPLEMENTATION-001 — Least Privilege
+
+Ogni componente riceve solo i permessi necessari.
+
+SECURITY-IMPLEMENTATION-002 — Explicit Authorization
+
+Ogni operazione sensibile richiede autorizzazione esplicita.
+
+SECURITY-IMPLEMENTATION-003 — Auditability
+
+Ogni modifica alla conoscenza deve essere attribuibile.
+
+SECURITY-IMPLEMENTATION-004 — Domain Protection
+
+La sicurezza non modifica le regole cognitive del dominio.
+
+================================================================================
+Security Architecture
+=====================
+
+Client
+
+|
+
+v
+
+Authentication Layer
+
+|
+
+v
+
+Authorization Layer
+
+|
+
+v
+
+API Layer
+
+|
+
+v
+
+Application Services
+
+|
+
+v
+
+Domain
+
+================================================================================
+Identity Model
+==============
+
+Ogni richiesta autenticata contiene un:
+
+Identity Context
+
+Struttura:
+
+{
+
+```
+"actor_id": "uuid",
+
+"actor_type": "string",
+
+"roles": []
+```
+
+}
+
+================================================================================
+Actor Types
+===========
+
+System
+
+Componente software interno.
+
+Human Reviewer
+
+Persona autorizzata alla revisione.
+
+Knowledge Producer
+
+Componente che propone nuova conoscenza.
+
+User
+
+Utilizzatore del sistema.
+
+================================================================================
+Role Model
+==========
+
+Ruoli iniziali:
+
+SYSTEM_ADMIN
+
+Permessi:
+
+* configurazione sistema;
+* gestione tecnica.
+
+KNOWLEDGE_REVIEWER
+
+Permessi:
+
+* revisione conoscenza;
+* approvazione;
+* rifiuto.
+
+KNOWLEDGE_PRODUCER
+
+Permessi:
+
+* creazione Candidate;
+* proposta modifica.
+
+READ_ONLY_USER
+
+Permessi:
+
+* consultazione conoscenza.
+
+================================================================================
+Authorization Rules
+===================
+
+Create Candidate:
+
+Richiede:
+
+KNOWLEDGE_PRODUCER
+
+Submit Review:
+
+Richiede:
+
+KNOWLEDGE_PRODUCER
+
+Approve:
+
+Richiede:
+
+KNOWLEDGE_REVIEWER
+
+Reject:
+
+Richiede:
+
+KNOWLEDGE_REVIEWER
+
+Retrieve:
+
+Richiede:
+
+READ access
+
+================================================================================
+Security Boundary API
+=====================
+
+Ogni endpoint protetto deve:
+
+1. autenticare l'identità;
+
+2. verificare il ruolo;
+
+3. creare Identity Context;
+
+4. passare il contesto all'Application Layer.
+
+================================================================================
+Audit Integration
+=================
+
+Ogni operazione autorizzata deve produrre:
+
+AuditRecord
+
+contenente:
+
+* actor_id;
+* operation;
+* entity;
+* timestamp;
+* result.
+
+================================================================================
+Initial Authentication Strategy
+===============================
+
+La prima implementazione lascia astratto il provider.
+
+Interface:
+
+AuthenticationProvider
+
+Possibili implementazioni future:
+
+* OAuth2;
+* OpenID Connect;
+* Identity Provider aziendale.
+
+================================================================================
+Security Errors
+===============
+
+Errori standard:
+
+UNAUTHENTICATED
+
+Manca identità valida.
+
+UNAUTHORIZED
+
+Identità senza permessi.
+
+FORBIDDEN_OPERATION
+
+Operazione non consentita dal dominio.
+
+================================================================================
+Security Testing
+================
+
+Test richiesti:
+
+* accesso senza identità;
+* ruolo insufficiente;
+* operazione autorizzata;
+* audit generato.
+
+================================================================================
+Excluded Scope
+==============
+
+Non incluso:
+
+* gestione password;
+* MFA;
+* provider esterno;
+* gestione utenti completa;
+* policy enterprise.
+
+================================================================================
+Prossimo Incremento
+===================
+
+Il prossimo documento previsto:
+
+ELR Core Repository Implementation Plan 0.1.0
+
+che consoliderà tutti gli artefatti creati e definirà l'ordine operativo di
+sviluppo.
+
+================================================================================
+Principio conclusivo
+====================
+
+La sicurezza ELR protegge il processo di evoluzione della conoscenza senza
+interferire con il significato del dominio.
+
+================================================================================
+Fine documento
+
+English Learning Repository (ELR)
+
+ELR Security Implementation Specification
+
+Version: 0.1.0
+
+================================================================================
