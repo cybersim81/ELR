@@ -210,9 +210,18 @@ Stato corrente della conoscenza.
 
 ## Mastery Reference
 
-Riferimento alla misura di padronanza associata.
+Riferimento alla Mastery associata al rapporto tra User e Learning Object.
 
-Il valore numerico e il calcolo appartengono al Mastery Engine.
+La Mastery Reference non costituisce il Mastery State completo.
+
+Il Mastery State rappresenta il modello della padronanza dell'utente
+rispetto al Learning Object.
+
+Il Learning State può utilizzare informazioni derivate dal Mastery State
+per descrivere l'evoluzione della condizione di apprendimento.
+
+Il valore numerico, la rappresentazione quantitativa e il calcolo della
+Mastery appartengono al Mastery Engine.
 
 ---
 
