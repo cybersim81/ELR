@@ -170,6 +170,30 @@ Current safe implementation foundation:
 
 Next implementation work should follow resolution of the OPEN items above.
 
+15. Mastery State specification
+
+Status: OPEN
+
+The Mastery Engine Specification 1.0.0 defines Mastery State as the current
+state of the relationship between a User and a Learning Object.
+
+The specification states that the precise Mastery State model is defined
+separately.
+
+No separate Mastery State specification has been located in the repository.
+
+The current Domain Python implementation does not represent Mastery State.
+
+The Persistence Mapping Specification 0.1.0 excludes mastery state from
+Core Repository v0.1 persistence.
+
+Decision required:
+- locate or establish the authoritative Mastery State specification;
+- define its Domain ownership and structure;
+- determine its persistence boundary;
+- reconcile the Mastery State model with the Learning State model and
+  Mastery Engine Specification before implementation.
+
 Audit principle
 
 Where Domain and Persistence structures differ structurally, the Persistence Layer may translate between them. Where they differ semantically, the discrepancy must be resolved through an explicit architectural decision rather than hidden inside persistence code.
