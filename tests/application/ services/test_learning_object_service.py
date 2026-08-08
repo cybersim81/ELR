@@ -1,4 +1,3 @@
-```python
 from uuid import uuid4
 
 from app.application.services.learning_object_service import (
@@ -209,4 +208,3 @@ def test_operations_create_audit_records():
         "LearningObjectReviewed",
         "LearningObjectApproved",
     ]
-```
