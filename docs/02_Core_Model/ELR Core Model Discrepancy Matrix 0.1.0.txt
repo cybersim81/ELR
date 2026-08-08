@@ -5,8 +5,9 @@ Scope: Core Model, Domain Model, Learning State, Mastery, Persistence
 Purpose: Track discrepancies between approved/draft ELR specifications and the current implementation.
 
 ================================================================
+
 1. LearningObject lifecycle state vs Learning State
-================================================================
+   ================================================================
 
 Status: RESOLVED
 
@@ -17,13 +18,13 @@ Learning Object.
 
 Current lifecycle states:
 
-- Candidate
-- Proposed
-- Reviewed
-- Active
-- Updated
-- Retired
-- Rejected
+* Candidate
+* Proposed
+* Reviewed
+* Active
+* Updated
+* Retired
+* Rejected
 
 Learning State is a separate concept representing the current learning
 condition of a User with respect to a Learning Object.
@@ -37,23 +38,23 @@ Learning State must not be added as an attribute of LearningObject.
 The two concepts belong to different semantic boundaries:
 
 LearningObject.state
-    = lifecycle of the knowledge object
+= lifecycle of the knowledge object
 
 Learning State
-    = learning condition of a User in relation to the knowledge object
+= learning condition of a User in relation to the knowledge object
 
 Evidence:
 
-- Learning Object Specification 1.0.0
-- Learning State Specification 1.0.0
-- Current LearningObject domain implementation
-
+* Learning Object Specification 1.0.0
+* Learning State Specification 1.0.0
+* Current LearningObject domain implementation
 
 ================================================================
+
 2. Learning State vs Mastery State
-================================================================
+   ================================================================
 
-Status: RESOLVED / DOCUMENTATION FOLLOW-UP
+Status: RESOLVED
 
 Finding:
 
@@ -71,35 +72,47 @@ The concepts must not be merged.
 
 Learning State:
 
-- Unknown
-- Introduced
-- Practicing
-- Developing
-- Established
-- Needs Review
+* Unknown
+* Introduced
+* Practicing
+* Developing
+* Established
+* Needs Review
 
-Mastery State is produced/managed through the Mastery Engine boundary and
-must not be represented by LearningObject.state.
+Mastery State represents the state of the user's mastery with respect to
+a Learning Object.
 
-Required documentation action:
+The relationship between the concepts is:
 
-The relationship between Learning State and Mastery State must be made
-explicit in the corresponding specifications.
+Learning State
+= learner's current learning-process condition
 
+Mastery State
+= learner's current mastery state
+
+The Learning State Specification explicitly distinguishes the Mastery
+Reference from the complete Mastery State.
+
+The Mastery Reference does not constitute the Mastery State itself.
+
+Evidence:
+
+* Learning State Specification 1.0.0
+* Mastery State Specification 1.0.0
+* Mastery Engine Specification 1.0.0
 
 ================================================================
-3. Mastery ownership
-================================================================
 
-Status: OPEN / DEFERRED
+3. Learning Object vs Mastery
+   ================================================================
+
+Status: RESOLVED
 
 Finding:
 
-The Domain Model documentation references Mastery as a supporting
-concept associated with the Learning Object.
+The Learning Object represents knowledge.
 
-The Learning Object Specification explicitly separates knowledge from
-the learner's mastery of that knowledge.
+Mastery represents the user's mastery of that knowledge.
 
 The Mastery Engine Specification defines Mastery as a relationship
 between a User and a Learning Object.
@@ -112,10 +125,10 @@ LearningObject.
 The semantic relationship is:
 
 User
-  |
-  +---- Learning Object
-           |
-           +---- Mastery State
+|
++---- Learning Object
+|
++---- Mastery State
 
 The Learning Object represents the knowledge.
 
@@ -123,27 +136,48 @@ The Mastery State represents the user's mastery of that knowledge.
 
 The Mastery Engine is responsible for producing/updating Mastery State.
 
-No Mastery attribute must currently be added to LearningObject merely
-because Mastery appears as a supporting concept in the high-level
-Domain Model documentation.
+No Mastery attribute must be added to LearningObject merely because
+Mastery appears as a supporting concept in high-level Domain
+documentation.
 
+Evidence:
+
+* Learning Object Specification 1.0.0
+* Mastery Engine Specification 1.0.0
+* Mastery State Specification 1.0.0
 
 ================================================================
-4. Mastery State specification
-================================================================
 
-Status: OPEN / DEFERRED
+4. Mastery State Domain Contract
+   ================================================================
+
+Status: DOCUMENTATION BASELINE ESTABLISHED / IMPLEMENTATION DEFERRED
 
 Finding:
 
 Mastery Engine Specification 1.0.0 defines Mastery State as the current
 state of the relationship between a User and a Learning Object.
 
-The same specification states that the precise Mastery State model is
-defined separately.
+The precise Mastery State model was intentionally delegated to a separate
+specification.
 
-A separate Mastery State Specification has not been found in the
-repository.
+Decision:
+
+The Mastery State Specification 1.0.0 now establishes the architectural
+baseline for Mastery State.
+
+The specification defines:
+
+* its semantic role;
+* its relationship to User;
+* its relationship to Learning Object;
+* its relationship to Learning State;
+* its relationship to Mastery Evidence;
+* its relationship to the Mastery Engine;
+* its current persistence boundary.
+
+The specification does not require immediate Python or persistence
+implementation.
 
 Current implementation:
 
@@ -151,49 +185,33 @@ The Domain Python model does not contain a Mastery State representation.
 
 Persistence:
 
-The Persistence Mapping Specification 0.1.0 excludes mastery state from
+The Persistence Mapping Specification 0.1.0 excludes Mastery State from
 Core Repository v0.1 persistence.
 
 Decision:
 
-Mastery State is an acknowledged architectural concept, but its detailed
-Domain contract is not yet defined.
+Mastery State remains architecturally defined but implementation-deferred.
 
 Do not implement:
 
-- MasteryState domain entity
-- MasteryState value object
-- MasteryState SQLAlchemy model
-- mastery persistence tables
+* MasteryState domain entity;
+* MasteryState value object;
+* MasteryState SQLAlchemy model;
+* Mastery persistence tables;
 
-until the Mastery State contract has been formally defined.
-
-Required documentation action:
-
-Create a formal Mastery State specification defining at minimum:
-
-- ownership;
-- relationship to User;
-- relationship to Learning Object;
-- semantic role;
-- relationship to Learning State;
-- relationship to Mastery Engine;
-- persistence boundary.
-
-The specification must not invent implementation details that have not
-yet been architecturally decided.
-
+until an explicit implementation decision is approved.
 
 ================================================================
-5. Mastery Evidence boundary
-================================================================
+
+5. Mastery Evidence vs Mastery State
+   ================================================================
 
 Status: RESOLVED
 
 Finding:
 
 Mastery Evidence is used by the Mastery Engine as input for mastery
-calculation/evolution.
+calculation and evolution.
 
 Mastery Evidence is not itself the Mastery State.
 
@@ -202,27 +220,91 @@ Decision:
 The conceptual processing boundary is:
 
 Learning Activity / Evidence
-        |
-        v
+|
+v
 Mastery Evidence
-        |
-        v
+|
+v
 Mastery Engine
-        |
-        v
+|
+v
 Mastery State
 
-Mastery Evidence must not be treated as a property of LearningObject.
+Mastery Evidence represents observable evidence.
+
+Mastery Engine interprets the evidence and determines mastery updates.
+
+Mastery State represents the current state of mastery.
+
+Evidence history must not be treated as the Mastery State itself.
 
 Mastery Evidence must not be introduced into the LearningObject domain
-entity merely to support future Mastery Engine implementation.
+entity merely to support Mastery Engine implementation.
 
+Evidence history belongs to the Evidence Model and its historical
+persistence boundary.
+
+Evidence:
+
+* Evidence Model Specification 1.0.1
+* Mastery Engine Specification 1.0.0
+* Mastery State Specification 1.0.0
 
 ================================================================
-6. LearningObject Domain model vs current Python implementation
+
+6. Knowledge vs Learning State vs Mastery State
+   ================================================================
+
+Status: RESOLVED
+
+Finding:
+
+The Evidence Model and related documentation previously used terminology
+that could be interpreted as treating Mastery as knowledge.
+
+Decision:
+
+The architectural distinction is:
+
+Knowledge
+|
++-- Learning Object
++-- Anchor
++-- Knowledge Statement
++-- Knowledge Category
+
+User Learning Context
+|
++-- Learning State
++-- Mastery State
+
+Process Evidence
+|
++-- Mastery Evidence
+|
+v
+Mastery Engine
+|
+v
+Mastery State
+
+Learning State and Mastery State do not constitute persistent knowledge.
+
+Mastery State represents the learner's mastery of existing knowledge.
+
+Evidence:
+
+* Evidence Model Specification 1.0.1
+* Learning Object Specification 1.0.0
+* Learning State Specification 1.0.0
+* Mastery State Specification 1.0.0
+
 ================================================================
 
-Status: OPEN
+7. LearningObject implementation vs documented Domain Model
+   ================================================================
+
+Status: OPEN / DEFERRED
 
 Finding:
 
@@ -233,14 +315,14 @@ Mastery-related concepts.
 
 The current Python LearningObject implementation contains:
 
-- anchor_id
-- statement
-- category_id
-- id
-- state
-- version
-- created_at
-- updated_at
+* anchor_id
+* statement
+* category_id
+* id
+* state
+* version
+* created_at
+* updated_at
 
 Decision:
 
@@ -252,12 +334,15 @@ Missing documented concepts must not be added automatically.
 Each missing concept requires an explicit architectural decision before
 implementation.
 
+No implementation should infer additional Domain attributes solely from
+high-level documentation.
 
 ================================================================
-7. LearningObject statement vs KnowledgeStatement
-================================================================
 
-Status: OPEN
+8. LearningObject.statement vs KnowledgeStatement persistence
+   ================================================================
+
+Status: OPEN / DEFERRED
 
 Finding:
 
@@ -278,45 +363,53 @@ statement contract with a KnowledgeStatement relationship.
 
 Until the Domain Model is explicitly revised:
 
-- LearningObject.statement remains authoritative for the current Domain
-implementation;
-- KnowledgeStatement may exist as a separate persistence structure;
-- no implicit LearningObject -> KnowledgeStatement domain relationship
+* LearningObject.statement remains authoritative for the current Domain
+  implementation;
+* KnowledgeStatement may exist as a separate persistence structure;
+* no implicit LearningObject -> KnowledgeStatement domain relationship
   may be introduced.
 
-Required documentation action:
+Required architectural decision:
 
 Clarify the intended future relationship between LearningObject.statement
 and KnowledgeStatement.
 
-
-================================================================
-8. Persistence scope vs Mastery
 ================================================================
 
-Status: OPEN / DEFERRED
+9. Mastery persistence boundary
+   ================================================================
+
+Status: RESOLVED FOR CORE REPOSITORY v0.1 / DEFERRED FOR FUTURE REPOSITORIES
 
 Finding:
 
-The Persistence Mapping Specification 0.1.0 explicitly excludes mastery
-state from Core Repository v0.1 persistence.
+The Persistence Mapping Specification 0.1.0 explicitly excludes Mastery
+State from Core Repository v0.1 persistence.
 
-At the same time, the broader ELR architecture recognizes Mastery State
-as an architectural concept.
+The broader ELR architecture recognizes Mastery State as an architectural
+concept.
 
 Decision:
 
-Core Repository v0.1 persistence must not introduce mastery persistence
-until the Mastery State Domain contract has been formally defined and
-its persistence boundary approved.
+Core Repository v0.1 persistence must not introduce Mastery persistence.
 
-This is a deferred persistence decision, not a rejection of the Mastery
+This is a persistence boundary decision, not a rejection of the Mastery
 concept.
 
+Future persistence of Mastery requires:
+
+* an approved Mastery Domain contract;
+* an explicit persistence boundary;
+* an approved Data Model relationship;
+* an explicit implementation decision.
+
+Until those decisions are made, no Mastery persistence model or table
+should be introduced.
 
 ================================================================
-9. Domain/Persistence separation
-================================================================
+
+10. ORM isolation
+    ================================================================
 
 Status: RESOLVED
 
@@ -328,10 +421,10 @@ Decision:
 
 Domain entities:
 
-- must not inherit from SQLAlchemy declarative classes;
-- must not import SQLAlchemy;
-- must not depend on database sessions;
-- must not contain ORM metadata.
+* must not inherit from SQLAlchemy declarative classes;
+* must not import SQLAlchemy;
+* must not depend on database sessions;
+* must not contain ORM metadata.
 
 Persistence models belong under:
 
@@ -339,10 +432,10 @@ app/persistence/
 
 The current AnchorModel implementation follows this boundary.
 
+================================================================
 
-================================================================
-10. Persistence identity
-================================================================
+11. Domain identity vs persistence identity
+    ================================================================
 
 Status: RESOLVED
 
@@ -360,10 +453,10 @@ database-generated identity.
 Database surrogate identifiers may only be introduced when they do not
 replace or alter the Domain identity contract.
 
+================================================================
 
-================================================================
-11. Persistence timestamp semantics
-================================================================
+12. Timestamp preservation
+    ================================================================
 
 Status: RESOLVED
 
@@ -375,17 +468,17 @@ Decision:
 
 Persistence must preserve:
 
-- created_at
-- updated_at
-- historical creation timestamps where applicable
+* created_at
+* updated_at
+* historical creation timestamps where applicable
 
 Database persistence must not silently convert domain timestamps into
 local time.
 
+================================================================
 
-================================================================
-12. Historical version preservation
-================================================================
+13. Version history preservation
+    ================================================================
 
 Status: RESOLVED
 
@@ -401,12 +494,12 @@ current LearningObject state.
 Ordinary LearningObject updates must not overwrite historical Version
 records.
 
-
-================================================================
-13. Audit record preservation
 ================================================================
 
-Status: RESOLVED
+14. Audit history preservation
+    ================================================================
+
+Status: RESOLVED / IMPLEMENTATION CONSTRAINT
 
 Finding:
 
@@ -417,21 +510,21 @@ Decision:
 Updating an entity must not silently overwrite or erase existing audit
 records.
 
-
-================================================================
-14. Persistence relationship constraints
 ================================================================
 
-Status: RESOLVED / IMPLEMENTATION CONSTRAINT
+15. Approved persistence relationships
+    ================================================================
+
+Status: OPEN / IMPLEMENTATION CONSTRAINT
 
 Finding:
 
 The Persistence Mapping Specification defines approved relationships
 including:
 
-- learning_objects.anchor_id -> anchors.id
-- learning_objects.category_id -> knowledge_categories.id
-- knowledge_categories.parent_id -> knowledge_categories.id
+* learning_objects.anchor_id -> anchors.id
+* learning_objects.category_id -> knowledge_categories.id
+* knowledge_categories.parent_id -> knowledge_categories.id
 
 Decision:
 
@@ -441,12 +534,12 @@ Additional relationships involving KnowledgeStatement, Version,
 AuditRecord, or Mastery must not be invented without explicit support
 from the approved Domain/Data Model.
 
-
-================================================================
-15. Documentation precedence
 ================================================================
 
-Status: OPEN
+16. Documentation authority and status
+    ================================================================
+
+Status: OPEN / ACTION REQUIRED
 
 Finding:
 
@@ -470,83 +563,85 @@ Before implementing a disputed concept:
 No implementation decision should be used to silently resolve an
 architectural documentation conflict.
 
+This rule remains an active architectural constraint.
 
 ================================================================
-16. Mastery State documentation gap
-================================================================
 
-Status: OPEN / ACTION REQUIRED
+17. Mastery State implementation
+    ================================================================
+
+Status: DEFERRED
 
 Finding:
 
-Mastery Engine Specification 1.0.0 refers to a separate detailed
-Mastery State model.
-
-No separate Mastery State Specification is currently present in the
-repository.
+Mastery State is now formally documented but is not yet represented in
+the current Domain Python implementation.
 
 Decision:
 
-This is a documentation gap.
+Do not implement MasteryState until the Domain implementation scope has
+been explicitly approved.
 
-The gap must be resolved before implementing Mastery State in Python.
+In particular:
 
-Required action:
-
-Create:
-
-docs/02_Core_Model/Mastery State Specification 1.0.0.txt
-
-The specification should establish the minimum architectural contract
-without prematurely defining implementation details.
-
-The specification must clarify:
-
-- what Mastery State represents;
-- whose state it is;
-- its relationship to User;
-- its relationship to Learning Object;
-- its relationship to Learning State;
-- its relationship to Mastery Evidence;
-- its relationship to the Mastery Engine;
-- whether it is an Entity, Value Object, or another Domain construct;
-- identity requirements, if any;
-- persistence requirements, if any;
-- versioning/history requirements, if any.
-
-Until this specification exists and is approved, Mastery State remains
-architecturally recognized but implementation-deferred.
-
-
-================================================================
-CURRENT IMPLEMENTATION RULE
-================================================================
-
-Until the open discrepancies above are resolved:
-
-1. Do not add MasteryState to LearningObject.
-2. Do not reinterpret LearningObject.state as Learning State or Mastery.
-3. Do not add mastery persistence models.
-4. Do not create implicit LearningObject -> KnowledgeStatement domain
-   relationships.
-5. Do not resolve documentation conflicts through implementation.
-6. Prefer explicit architectural decisions over inferred behavior.
+1. do not add MasteryState to LearningObject;
+2. do not reinterpret LearningObject.state as Learning State or Mastery;
+3. do not create Mastery persistence models;
+4. do not create implicit LearningObject -> KnowledgeStatement domain
+   relationships;
+5. do not infer additional Domain attributes from documentation alone.
 
 The current persistence implementation may continue for concepts whose
 Domain and Persistence contracts are already sufficiently defined.
 
-
-================================================================
-NEXT DOCUMENTATION ACTION
 ================================================================
 
-Create the formal Mastery State Specification.
+18. Remaining architectural work
+    ================================================================
 
-After that specification is drafted:
+The following work remains before implementing Mastery in the Domain
+Layer:
 
-1. compare it with Learning State Specification 1.0.0;
-2. compare it with Mastery Engine Specification 1.0.0;
-3. compare it with Learning Object Specification 1.0.0;
-4. compare it with Domain Model Specification 1.0.0;
-5. update this matrix;
-6. only then determine the required Domain implementation.
+1. determine the authoritative Domain representation of User;
+2. determine the exact Domain construct representing Mastery State;
+3. define identity semantics, if required;
+4. define lifecycle/update semantics;
+5. define the relationship between Mastery State and Mastery Evidence;
+6. define the boundary between Mastery State and Learning State in the
+   executable Domain Model;
+7. determine whether and when Mastery becomes part of a future persistence
+   model;
+8. update this matrix after each approved architectural decision.
+
+No implementation should precede these decisions.
+
+================================================================
+
+# Current Architectural Position
+
+The current architecture establishes the following separation:
+
+Learning Object
+= persistent knowledge
+
+LearningObject.state
+= editorial/domain lifecycle
+
+Learning State
+= learner's current learning-process condition
+
+Mastery Evidence
+= observable evidence concerning mastery
+
+Mastery Engine
+= interpretation and processing of Mastery Evidence
+
+Mastery State
+= current mastery state of User with respect to Learning Object
+
+Core Repository v0.1 Persistence
+= knowledge and historical repository structures explicitly approved by
+the Persistence Mapping Specification
+
+Mastery State is therefore architecturally recognized, formally
+documented, and intentionally implementation-deferred.
