@@ -402,20 +402,23 @@ Mastery State
 Il Mastery State rappresenta lo stato corrente della relazione tra utente e
 Learning Object.
 
+Il Mastery State può includere informazioni relative a:
 
-Il Mastery State può includere:
+• livello o stato di padronanza;
+• informazioni temporali necessarie a rappresentare lo stato corrente;
+• stato di revisione, quando definito dal Mastery State Model.
 
+Il Mastery State non costituisce lo storico delle Mastery Evidence.
 
-• livello di padronanza;
+La Mastery Evidence rappresenta l'evidenza osservazionale utilizzata dal
+Mastery Engine per valutare l'evoluzione della Mastery.
 
-• storico delle Evidence;
+La cronologia delle Evidence appartiene al modello di Evidence e alla relativa
+persistenza storica.
 
-• informazioni temporali;
+Il modello preciso del Mastery State è definito nella:
 
-• stato di revisione.
-
-
-Il modello preciso dello stato è definito separatamente.
+Mastery State Specification.
 
 
 ================================================================================
