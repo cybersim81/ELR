@@ -339,10 +339,10 @@ high-level documentation.
 
 ================================================================
 
-8. LearningObject.statement vs KnowledgeStatement
+8. LearningObject Domain representation vs Knowledge Statement
    ================================================================
 
-Status: OPEN / ARCHITECTURAL ALIGNMENT REQUIRED
+Status: OPEN / DOMAIN REPRESENTATION ALIGNMENT REQUIRED
 
 Finding:
 
@@ -352,37 +352,75 @@ The approved architecture defines a Learning Object conceptually as:
 Anchor + Knowledge Statement
 ```
 
-ADR-008 explicitly states that Knowledge Statement is the principal
+ADR-008 explicitly states that the Knowledge Statement is the principal
 knowledge content of a Learning Object and that every Learning Object
 must be traceable to both an Anchor and a Knowledge Statement.
 
-The current Domain implementation instead represents the knowledge
-content as:
+The Learning Object Specification 1.0.0 further defines the Knowledge
+Statement as the knowledge associated with the Anchor.
+
+The specification establishes semantic requirements for a Knowledge
+Statement. It must be:
+
+* atomic;
+* positive;
+* reusable;
+* understandable;
+* observable/verifiable through future user productions.
+
+The specification also establishes that:
+
+* a Learning Object represents one independent knowledge;
+* a single source statement may generate multiple Learning Objects;
+* each resulting Learning Object has its own Anchor and Knowledge
+  Statement;
+* a new Knowledge Statement may represent an update of an existing
+  Learning Object when the underlying atomic knowledge remains the same.
+
+Current Domain implementation:
 
 ```
-LearningObject.statement: str
+LearningObject
+    ├── anchor_id
+    ├── statement: str
+    ├── category_id
+    └── ...
 ```
 
-The Persistence Model already contains KnowledgeStatement as an
-independent persistent structure.
+The current `statement: str` therefore appears to represent the semantic
+content of the approved Knowledge Statement concept.
 
-This indicates that the current Domain implementation is a simplified
-representation of an approved architectural concept rather than evidence
-that KnowledgeStatement and LearningObject.statement are independent
-concepts.
+However, the current Domain model does not explicitly name or model the
+Knowledge Statement concept.
 
-ADR-009 further establishes that a Knowledge Statement may update an
-existing Learning Object when it preserves the same atomic knowledge,
-Anchor and Knowledge Category. A new atomic knowledge requires a new
-Learning Object.
+Important constraint:
+
+Review of Learning Object Specification 1.0.0 found no explicit
+definition establishing Knowledge Statement as:
+
+* an independent Entity;
+* a Value Object;
+* an object with its own UUID;
+* an object with an independent lifecycle;
+* an object with independent versioning.
+
+Therefore the specification does not currently justify introducing an
+autonomous `KnowledgeStatement` Domain Entity.
+
+Persistence:
+
+The Persistence Model contains a `KnowledgeStatement` persistence
+structure.
+
+The existence of this persistence structure must not be used to infer
+that `KnowledgeStatement` is an autonomous Domain Entity.
+
+The Domain representation must be determined from the Domain/approved
+specifications, and the Persistence Model must follow that decision.
 
 Decision:
 
-LearningObject.statement must not be duplicated by introducing an
-additional independent KnowledgeStatement domain attribute without first
-defining the intended Domain representation.
-
-The authoritative semantic model is:
+The authoritative semantic model remains:
 
 ```
 LearningObject
@@ -390,25 +428,36 @@ LearningObject
     +-- Anchor
     |
     +-- Knowledge Statement
+    |
+    +-- Knowledge Category
 ```
 
-The current statement: str field must therefore be treated as a
-temporary/simplified Domain representation pending explicit alignment
-with the Learning Object Specification.
+The current `statement: str` field may therefore be treated as a
+simplified representation of the Knowledge Statement concept.
+
+No autonomous `KnowledgeStatement` Domain Entity should be introduced
+until an explicit architectural decision establishes:
+
+* its identity;
+* its lifecycle;
+* its ownership;
+* its independent versioning semantics;
+* its Domain type.
 
 Required action:
 
-Review Learning Object Specification 1.0.0 to determine the formal Domain
-representation of Knowledge Statement and its relationship to
-LearningObject.
+Review the broader Domain Model and Learning Object Specification before
+changing the current Domain representation.
 
-Only after that decision:
+The next Domain-level decision is whether the Knowledge Statement should
+remain a primitive/string representation or become an explicitly named
+Domain construct, such as a Value Object.
 
-* revise the Domain model if required;
-* revise the Persistence mapping if required;
-* preserve ADR-008 and ADR-009 semantics;
-* avoid maintaining two independent sources for the same knowledge
-  content.
+Any such change must preserve the semantics established by ADR-008 and
+ADR-009.
+
+The Persistence Mapping must not be changed solely on the basis of the
+current persistence model.
 
 Evidence:
 
