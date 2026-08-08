@@ -1,4 +1,3 @@
-```python
 from app.domain.entities.audit_record import AuditRecord
 from app.domain.entities.learning_object import LearningObject
 from app.domain.entities.version import Version
@@ -82,4 +81,3 @@ class InMemoryAuditRepository:
             for audit in self.items
             if audit.entity_id == entity_id
         ]
-```
