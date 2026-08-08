@@ -1,0 +1,442 @@
+ELR Architectural Work State — Handoff
+Version: 1.0.0
+Status: Active Working State
+
+================================================================
+
+1. PURPOSE
+   ================================================================
+
+This document is the continuity checkpoint for the current ELR
+architectural audit.
+
+A new working session must read this document together with:
+
+* ELR Core Model Discrepancy Matrix
+* ELR Domain Model Specification 1.0.0
+* Learning Object Specification 1.0.0
+* Learning State Specification 1.0.0
+* Mastery Engine Specification 1.0.0
+* Mastery State Specification 1.0.0
+* Evidence Model Specification 1.0.1
+* Persistence Mapping Specification 0.1.0
+* ELR Architecture Specification 1.1.0
+* ELR Architecture Decision Log 1.0.0
+* ELR Architecture Consistency Matrix 1.1.0
+
+Do not reconstruct architectural decisions from conversational memory
+when the repository documents provide the authoritative state.
+
+================================================================
+2. CURRENT WORKING PRINCIPLE
+============================
+
+The repository documentation is the source of truth for architectural
+decisions.
+
+Implementation must not be used to silently resolve discrepancies
+between specifications.
+
+When documents conflict:
+
+1. identify the relevant specifications;
+2. identify status and version;
+3. compare their explicit definitions;
+4. update documentation through an explicit architectural decision;
+5. only then modify Domain or Persistence implementation.
+
+================================================================
+3. DOCUMENTS ALREADY REVIEWED / UPDATED
+=======================================
+
+The following documentation has already been reviewed and updated during
+the current architectural audit:
+
+* Learning State Specification 1.0.0
+* Mastery Engine Specification 1.0.0
+* Mastery State Specification 1.0.0
+* Evidence Model Specification 1.0.1
+* ELR Core Model Discrepancy Matrix
+
+The discrepancy matrix currently exists in the repository and its latest
+contents must be treated as the current baseline.
+
+================================================================
+4. ESTABLISHED ARCHITECTURAL DECISIONS
+======================================
+
+LearningObject.state:
+
+Represents the editorial/domain lifecycle of the Learning Object.
+
+It does not represent:
+
+* Learning State;
+* Mastery;
+* Mastery State.
+
+Learning State:
+
+Represents the user's current learning-process condition with respect to
+a Learning Object.
+
+Learning State and Mastery State are distinct concepts.
+
+Mastery State:
+
+Represents the user's current mastery state with respect to a Learning
+Object.
+
+Mastery Evidence:
+
+Represents observable evidence used by the Mastery Engine to evaluate
+and update Mastery State.
+
+Mastery Engine:
+
+Interprets Mastery Evidence and produces Mastery State updates.
+
+Knowledge:
+
+The persistent knowledge model is centered on:
+
+* Learning Object;
+* Anchor;
+* Knowledge Statement;
+* Knowledge Category.
+
+Knowledge Statement:
+
+Represents the principal knowledge content of a Learning Object.
+
+The approved architecture conceptually represents a Learning Object as:
+
+```
+Anchor + Knowledge Statement
+```
+
+A Learning Object represents one independent atomic knowledge.
+
+A single source statement may produce multiple Learning Objects.
+
+A new Knowledge Statement may update an existing Learning Object when
+the underlying atomic knowledge remains the same.
+
+Knowledge Statement is NOT currently established as an autonomous
+Domain Entity with:
+
+* independent UUID;
+* independent lifecycle;
+* independent versioning;
+* independent ownership.
+
+Therefore no autonomous KnowledgeStatement Domain Entity should be
+introduced without an explicit architectural decision.
+
+================================================================
+5. CURRENT KNOWLEDGE STATEMENT DOMAIN QUESTION
+==============================================
+
+The current Python LearningObject contains:
+
+```
+statement: str
+```
+
+The semantic role of this field appears to correspond to the documented
+Knowledge Statement concept.
+
+However, the Domain implementation does not explicitly name the concept
+as Knowledge Statement.
+
+The current open question is NOT whether Knowledge Statement exists
+architecturally. It clearly does.
+
+The open question is its executable Domain representation:
+
+* primitive/string representation;
+* explicitly named Value Object;
+* another approved Domain construct.
+
+Do not introduce an autonomous KnowledgeStatement Entity merely because
+the Persistence Model contains a KnowledgeStatement persistence
+structure.
+
+The Persistence Model must follow the approved Domain decision.
+
+================================================================
+6. CURRENT MASTERY QUESTION
+===========================
+
+Mastery State is already formally specified.
+
+Do NOT create another Mastery State Specification.
+
+The current architecture established by the Mastery Engine and Mastery
+State documentation treats Mastery State as the user's mastery state
+with respect to a Learning Object.
+
+However, the ELR Domain Model Specification 1.0.0 still contains wording
+that states:
+
+```
+Every Learning Object possesses exactly one Mastery.
+```
+
+It further describes Mastery as:
+
+* a dependent element of the LearningObject aggregate;
+* non-autonomous;
+* persistent with the Learning Object.
+
+This creates a documentation discrepancy with the User-specific Mastery
+State model defined by the Mastery Engine / Mastery State documentation.
+
+This discrepancy must be reconciled in documentation.
+
+Do NOT resolve it through Python implementation.
+
+Do NOT add Mastery to LearningObject.
+
+Do NOT create Mastery persistence models.
+
+Do NOT infer a final cardinality from the current SQLAlchemy model.
+
+================================================================
+7. CURRENT DISCREPANCY MATRIX BASELINE
+======================================
+
+The current matrix contains 18 numbered sections.
+
+Important current states include:
+
+1. LearningObject lifecycle vs Learning State
+   RESOLVED
+
+2. Learning State vs Mastery State
+   RESOLVED
+
+3. Learning Object vs Mastery
+   Currently marked RESOLVED, BUT THIS MUST BE RECHECKED because the
+   Domain Model Specification still contains the conflicting
+   LearningObject-owned Mastery definition.
+
+4. Mastery State Domain Contract
+   Documentation baseline established / implementation deferred
+
+5. Mastery Evidence vs Mastery State
+   RESOLVED
+
+6. Knowledge vs Learning State vs Mastery State
+   RESOLVED
+
+7. LearningObject implementation vs documented Domain Model
+   OPEN / DEFERRED
+
+8. LearningObject Domain representation vs Knowledge Statement
+   OPEN / Domain representation alignment required
+
+9. Mastery persistence boundary
+   RESOLVED for Core Repository v0.1 / deferred for future repositories
+
+10. ORM isolation
+    RESOLVED
+
+11. Domain identity vs persistence identity
+    RESOLVED
+
+12. Timestamp preservation
+    RESOLVED
+
+13. Version history preservation
+    RESOLVED
+
+14. Audit history preservation
+    RESOLVED / implementation constraint
+
+15. Approved persistence relationships
+    OPEN / implementation constraint
+
+16. Documentation authority and status
+    OPEN / action required
+
+17. Mastery State implementation
+    DEFERRED
+
+18. Remaining architectural work
+    Active
+
+================================================================
+8. IMMEDIATE NEXT ACTION
+========================
+
+Before changing implementation:
+
+A. Read the existing Mastery State Specification 1.0.0.
+
+B. Compare it directly with the Mastery-related sections of:
+
+* ELR Domain Model Specification 1.0.0
+* Mastery Engine Specification 1.0.0
+* Learning State Specification 1.0.0
+* Evidence Model Specification 1.0.1
+
+C. Determine whether the Domain Model Specification is outdated or
+whether the documents intentionally describe different concepts.
+
+D. Update the Discrepancy Matrix to record the actual documentation
+conflict.
+
+E. Update the authoritative documentation through an explicit decision.
+
+F. Only after documentation reconciliation, determine the required Domain
+implementation.
+
+The same discipline applies to Knowledge Statement representation.
+
+================================================================
+9. IMPLEMENTATION CONSTRAINTS
+=============================
+
+Until the relevant architectural decisions are closed:
+
+DO NOT:
+
+* add MasteryState to LearningObject;
+* reinterpret LearningObject.state as Learning State;
+* reinterpret LearningObject.state as Mastery;
+* create Mastery persistence tables;
+* create autonomous KnowledgeStatement Domain Entity;
+* create implicit LearningObject -> KnowledgeStatement domain relationships;
+* modify persistence solely because a persistence structure already exists;
+* infer Domain semantics from ORM models;
+* resolve documentation conflicts by implementation.
+
+Existing persistence implementation may continue for concepts whose Domain
+and Persistence contracts are already sufficiently defined.
+
+================================================================
+10. CURRENT DOMAIN MODEL DIRECTION
+==================================
+
+Current conceptual model:
+
+```
+LearningObject
+|
++-- Anchor
+|
++-- Knowledge Statement
+|
++-- Knowledge Category
+|
++-- Examples / Notes / other approved supporting concepts
+```
+
+User learning context:
+
+```
+User
+|
++-- Learning State
+|
++-- Mastery State
+         |
+         +-- Learning Object
+```
+
+Evidence processing:
+
+```
+Learning Activity / Evidence
+          |
+          v
+   Mastery Evidence
+          |
+          v
+   Mastery Engine
+          |
+          v
+    Mastery State
+```
+
+This model is the current working interpretation, subject to explicit
+reconciliation of the remaining Domain Model documentation conflict.
+
+================================================================
+11. GIT / REPOSITORY CONTINUITY
+===============================
+
+The working process uses the repository as persistent architectural
+memory.
+
+Before continuing in a new session:
+
+```
+git status
+git log --oneline -5
+```
+
+The Codespace was synchronized with the repository before the latest
+audit work.
+
+The working tree was confirmed clean at the latest synchronization point.
+
+Do not assume uncommitted local changes exist unless git status confirms
+them.
+
+================================================================
+12. HOW TO RESUME IN A NEW CHAT
+===============================
+
+The first action in a new session should be:
+
+1. Read this handoff.
+2. Read the current ELR Core Model Discrepancy Matrix.
+3. Read the existing Mastery State Specification.
+4. Read the relevant Mastery sections of the Domain Model Specification
+   and Mastery Engine Specification.
+5. Continue from section 6 of this handoff.
+
+Do not recreate documents that are already present.
+
+Do not ask the user to repeat decisions already recorded in the
+repository.
+
+The immediate objective is documentation reconciliation, not
+implementation.
+
+================================================================
+13. LAST KNOWN POSITION
+=======================
+
+The architectural audit has reached the point where the main remaining
+issue is not lack of specifications but consistency between specifications.
+
+The most important unresolved discrepancy is:
+
+```
+Domain Model Specification:
+    LearningObject owns exactly one Mastery
+```
+
+versus:
+
+```
+Mastery Engine / Mastery State model:
+    Mastery State represents User mastery of a Learning Object
+```
+
+This must be resolved explicitly in documentation before implementation.
+
+The second major open issue is:
+
+```
+Knowledge Statement exists as an explicit architectural concept,
+but its executable Domain representation remains to be decided.
+```
+
+No implementation change should be made until these documentation
+questions are reconciled.
+
+END OF HANDOFF
