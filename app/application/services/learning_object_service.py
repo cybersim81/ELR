@@ -1,4 +1,3 @@
-```python
 from uuid import UUID
 
 from app.domain.entities.audit_record import AuditRecord
@@ -226,4 +225,3 @@ class LearningObjectService:
             )
 
         return learning_object
-```
