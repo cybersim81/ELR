@@ -1,0 +1,127 @@
+ELR Human-AI Collaboration Rules 1.0.0
+
+Status: ACTIVE
+Version: 1.0.0
+Scope: Human-AI collaboration during ELR design and implementation
+
+1. Purpose
+
+This document defines the operational rules governing collaboration between the human project owner and the AI assistant during the design, documentation, implementation, testing, and maintenance of the ELR project.
+
+These rules complement the ELR architectural and implementation specifications. They do not define ELR domain behavior.
+
+2. Repository Modification Rule
+
+The AI assistant must not create, modify, rename, or delete files directly in the ELR repository unless the human collaborator explicitly requests the operation.
+
+The assistant may inspect repository contents, analyze files, propose changes, and prepare complete file contents without modifying the repository.
+
+An explicit request to modify the repository is required before performing the corresponding repository operation.
+
+3. Document Output Rule
+
+Whenever a new document is created, the AI assistant must provide the complete document content in a copyable block.
+
+The copyable block must contain the complete document, not an excerpt or partial representation.
+
+The human collaborator may then:
+
+* save the document locally;
+* review its content;
+* modify it if necessary;
+* place it in the appropriate repository location;
+* explicitly authorize the assistant to create or update the repository file.
+
+4. Existing Document Modification
+
+When an existing document is modified, the assistant must clearly identify:
+
+* the document being modified;
+* the reason for the modification;
+* the relevant changes;
+* the complete resulting document when the modification constitutes a new document revision that must be saved.
+
+When appropriate, the assistant should provide the complete resulting document in a copyable block.
+
+5. Local Copy and Repository State
+
+The human collaborator maintains a local working copy of project documents and source code.
+
+The GitHub repository is the version-controlled project repository.
+
+The assistant must distinguish clearly between:
+
+* a proposed change;
+* a change saved in the local working copy;
+* a change committed to Git;
+* a change pushed to GitHub.
+
+The assistant must never imply that a change has been published to GitHub unless the corresponding repository operation has actually been performed and verified.
+
+6. Implementation Workflow
+
+Changes should normally follow this sequence:
+
+1. Review the relevant project documentation.
+
+2. Define and explain the proposed change.
+
+3. Provide complete new or modified document content in a copyable block when applicable.
+
+4. Implement or apply the change locally.
+
+5. Run the relevant tests.
+
+6. Review the resulting Git diff and repository status.
+
+7. Commit the change.
+
+8. Push to GitHub when explicitly requested or when the agreed workflow requires it.
+
+9. Verify the resulting repository state.
+
+10. Testing Discipline
+
+Existing passing tests must be preserved whenever reasonably possible.
+
+When a change affects executable code, the relevant test suite must be executed before considering the implementation increment complete.
+
+Test failures must be investigated rather than ignored or bypassed.
+
+8. Architectural Consistency
+
+Implementation decisions must remain consistent with the current ELR documentation.
+
+When implementation requirements conflict with existing documentation, the conflict must be identified explicitly before changing either the documentation or the implementation.
+
+The assistant must not silently redefine architectural decisions through code.
+
+9. Context Management
+
+The assistant should monitor the accumulated conversational context and notify the human collaborator when the conversation has become sufficiently large or complex that opening a new chat would reduce context debt.
+
+Before recommending a new chat, the assistant should identify the relevant project state that must be preserved and, when useful, recommend recording it in the repository.
+
+10. Change Authorization
+
+The human collaborator remains responsible for authorizing repository changes.
+
+The assistant may recommend changes and prepare their complete contents, but repository publication remains subject to explicit authorization.
+
+11. Principle of Traceability
+
+Important project decisions should remain traceable through the combination of:
+
+* project documentation;
+* source code;
+* tests;
+* Git history;
+* repository state.
+
+The conversational history must not be treated as the sole authoritative source of project decisions.
+
+12. Revision
+
+This document may be revised when the collaboration workflow evolves.
+
+Changes to these rules should themselves be documented and versioned.
