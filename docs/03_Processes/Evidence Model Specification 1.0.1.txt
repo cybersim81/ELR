@@ -67,16 +67,17 @@ L'Evidence Model non appartiene al Repository ELR.
 La conoscenza persistente è rappresentata esclusivamente attraverso:
 
 - Learning Object;
-
 - Anchor;
-
 - Knowledge Statement;
+- Knowledge Category.
 
-- Knowledge Category;
+Lo stato dell'apprendimento e della padronanza dell'utente è rappresentato
+separatamente attraverso:
 
 - Learning State;
+- Mastery State.
 
-- Mastery.
+Learning State e Mastery State non costituiscono conoscenza persistente.
 
 
 ================================================================================
