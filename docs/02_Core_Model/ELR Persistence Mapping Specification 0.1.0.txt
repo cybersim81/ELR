@@ -1,0 +1,401 @@
+ELR Persistence Mapping Specification 0.1.0
+
+Status: DRAFT
+Version: 0.1.0
+Scope: Mapping between ELR Domain Entities and the Persistence Model
+
+1. Purpose
+
+This document defines the mapping between the ELR Domain Model and the Persistence Model for Core Repository v0.1.
+
+Its purpose is to establish a stable boundary between:
+
+* domain entities;
+* persistence representations;
+* relational database structures.
+
+This specification does not define SQLAlchemy implementation details, database connection management, migrations, or repository implementation code.
+
+Those concerns belong to the Persistence Implementation Specification.
+
+2. Architectural Principle
+
+The Domain Layer remains independent of persistence technology.
+
+Domain entities must not:
+
+* import SQLAlchemy;
+* import database-specific libraries;
+* contain ORM configuration;
+* depend on database sessions;
+* contain SQL queries;
+* contain migration logic.
+
+The Persistence Layer is responsible for translating between domain entities and persistent representations.
+
+The mapping must preserve domain identity, state, version information, timestamps, and required relationships.
+
+3. Persistence Scope
+
+Core Repository v0.1 persists the following approved knowledge structures:
+
+* Learning Object;
+* Anchor;
+* Knowledge Statement;
+* Knowledge Category;
+* Version;
+* Audit Record.
+
+The Persistence Layer does not persist:
+
+* extraction candidates;
+* conversations;
+* temporary processing state;
+* unapproved change proposals;
+* transient events;
+* user interaction history;
+* mastery state;
+* evidence storage beyond the structures explicitly defined by the Core Repository schema.
+
+4. Domain-to-Persistence Mapping
+
+The following primary mappings are defined:
+
+## Domain Entity                  Persistence Structure
+
+LearningObject                 learning_objects
+Anchor                         anchors
+KnowledgeStatement             knowledge_statements
+KnowledgeCategory              knowledge_categories
+Version                        versions
+AuditRecord                    audit_records
+
+Each persistent structure must preserve the stable identity of its corresponding domain entity where such identity exists.
+
+5. Learning Object Mapping
+
+The LearningObject domain entity is mapped to the learning_objects persistence structure.
+
+Required domain attributes:
+
+* id
+* anchor_id
+* statement
+* category_id
+* state
+* version
+* created_at
+* updated_at
+
+The persistence representation must preserve the UUID identity of the Learning Object.
+
+The state value must preserve the domain enumeration semantics:
+
+* Candidate
+* Proposed
+* Reviewed
+* Active
+* Updated
+* Retired
+* Rejected
+
+The version number is part of the persistent state of the Learning Object but does not replace historical Version records.
+
+The Learning Object identity remains stable across ordinary version evolution.
+
+6. Anchor Mapping
+
+The Anchor domain entity is mapped to the anchors persistence structure.
+
+Required attributes:
+
+* id
+* content
+* type
+* created_at
+
+The Anchor UUID is the persistent identity.
+
+Anchor content must not be silently transformed in a way that changes its semantic value.
+
+The Persistence Layer must preserve the domain invariant that an Anchor cannot have empty content.
+
+7. Knowledge Statement Mapping
+
+The KnowledgeStatement domain entity is mapped to the knowledge_statements persistence structure.
+
+Required attributes:
+
+* id
+* text
+* language
+* created_at
+
+The Knowledge Statement has an independent UUID identity.
+
+The Persistence Layer must preserve the domain invariant that statement text cannot be empty.
+
+8. Learning Object and Knowledge Statement Relationship
+
+The current Domain implementation contains a statement field directly on LearningObject.
+
+The Persistence Model also defines KnowledgeStatement as an independent persistent entity.
+
+Until the Domain Model explicitly changes the LearningObject structure, the Persistence Layer must not silently replace the existing domain contract.
+
+Therefore:
+
+* the current LearningObject domain contract remains authoritative for the first implementation;
+* KnowledgeStatement persistence must remain available as a distinct persistent structure;
+* no implicit domain-level relationship between LearningObject and KnowledgeStatement may be introduced without an explicit Domain Model revision;
+* any database relationship between the two must be justified by the approved Data Model before implementation.
+
+This prevents the Persistence Layer from redefining the Domain Model.
+
+9. Knowledge Category Mapping
+
+The KnowledgeCategory domain entity is mapped to the knowledge_categories persistence structure.
+
+Required attributes:
+
+* id
+* name
+* parent_id
+
+The parent_id field represents the optional hierarchical relationship between categories.
+
+When parent_id is not null, it must reference an existing KnowledgeCategory.
+
+The persistence representation must preserve category identity and hierarchy.
+
+10. Version Mapping
+
+The Version domain entity is mapped to the versions persistence structure.
+
+Required attributes:
+
+* id
+* entity_id
+* number
+* snapshot
+* created_at
+
+A Version represents an immutable historical snapshot.
+
+Version records must not be overwritten after creation.
+
+The entity_id identifies the entity whose historical state is represented.
+
+The number identifies the version sequence for that entity.
+
+The snapshot contains the historical representation required to reconstruct the state associated with that version.
+
+The Persistence Layer must preserve historical versions independently of the current Learning Object representation.
+
+11. Audit Record Mapping
+
+The AuditRecord domain entity is mapped to the audit_records persistence structure.
+
+The persistence representation must preserve:
+
+* audit identity;
+* affected entity identity;
+* action/event type;
+* timestamp;
+* relevant audit metadata defined by the AuditRecord domain model.
+
+Audit records are append-oriented historical records.
+
+Existing audit records must not be silently overwritten as a consequence of updating the associated entity.
+
+12. Identity Rules
+
+UUIDs are the primary identity mechanism for Core Repository domain entities.
+
+Persistence must preserve domain-generated identities when an entity is saved.
+
+The Persistence Layer must not generate a different identity for an already identified domain entity.
+
+Database-generated surrogate identifiers may only be introduced when they do not replace or alter the domain identity contract.
+
+13. Timestamp Rules
+
+Domain timestamps are represented as timezone-aware UTC timestamps.
+
+The Persistence Layer must preserve:
+
+* created_at;
+* updated_at;
+* historical creation timestamps for immutable records.
+
+Database timestamps must not silently convert domain timestamps into local time.
+
+14. State and Enumeration Rules
+
+Persistence representations of domain enumerations must preserve their semantic values.
+
+The Persistence Layer may use:
+
+* database enum types;
+* constrained textual values;
+* another implementation-specific representation;
+
+provided that the mapping is lossless and reversible.
+
+The database representation must not introduce states that do not exist in the Domain Model.
+
+15. Foreign Key Rules
+
+The Persistence Layer must enforce referential integrity for relationships represented by the approved Data Model.
+
+At minimum:
+
+* learning_objects.anchor_id references anchors.id;
+* learning_objects.category_id references knowledge_categories.id;
+* knowledge_categories.parent_id references knowledge_categories.id where applicable.
+
+Additional foreign keys involving KnowledgeStatement, Version, or AuditRecord must only be introduced when supported by the approved Data Model and Domain Model.
+
+16. Deletion Rules
+
+Persistence operations must respect the semantic role of each entity.
+
+Deletion must not be used to erase historical knowledge or version history.
+
+In particular:
+
+* immutable Version records must not be deleted as part of ordinary Learning Object updates;
+* Audit Records must not be deleted as a side effect of ordinary entity changes;
+* deletion of referenced entities must respect referential integrity;
+* domain-level retirement must not automatically imply physical database deletion.
+
+Where an entity is retired, its persistent identity and historical information remain available.
+
+17. Versioning Boundary
+
+The Domain Layer determines when a Learning Object changes version.
+
+The Persistence Layer is responsible for preserving the previous state when a new version is persisted.
+
+Therefore:
+
+Domain Layer
+determines semantic state transition
+↓
+Application Layer
+coordinates the operation
+↓
+Persistence Layer
+stores current state and historical version
+↓
+Database
+preserves current and historical records
+
+The Persistence Layer must not invent domain version transitions.
+
+18. Mapping Direction
+
+The Persistence Layer must support two directions of translation:
+
+Domain → Persistence
+
+Used when:
+
+* creating entities;
+* updating entities;
+* recording versions;
+* recording audit information.
+
+Persistence → Domain
+
+Used when:
+
+* retrieving entities;
+* reconstructing domain objects;
+* retrieving historical versions.
+
+The resulting domain object must satisfy the same invariants as an object created directly through the Domain Layer.
+
+19. ORM Isolation
+
+SQLAlchemy models are persistence representations and are not domain entities.
+
+SQLAlchemy declarative classes must remain inside the Persistence Layer.
+
+Domain entities must not inherit from SQLAlchemy declarative base classes.
+
+ORM-specific metadata must not leak into Domain code.
+
+20. Repository Boundary
+
+Concrete persistence repositories implement the existing Domain repository interfaces.
+
+The following Domain contracts are authoritative:
+
+* LearningObjectRepository
+* AnchorRepository
+* CategoryRepository
+* VersionRepository
+* AuditRepository
+
+Concrete persistence repositories must implement these interfaces without changing their public Domain contracts.
+
+The Persistence Layer may introduce additional internal methods required for implementation, but those methods must not alter the Domain repository interfaces unless an explicit Domain Model revision is approved.
+
+21. Transaction Boundary
+
+Transaction management belongs to the Persistence/Application boundary.
+
+Individual repository methods must not silently redefine application-level transaction semantics.
+
+Operations requiring multiple repository changes must be capable of executing atomically under a common transaction.
+
+The exact Unit of Work implementation is defined separately.
+
+22. Migration Boundary
+
+Database schema evolution is managed through migrations.
+
+The Persistence Mapping Specification defines the conceptual mapping only.
+
+It does not define:
+
+* Alembic configuration;
+* migration filenames;
+* migration execution commands;
+* deployment procedures.
+
+These concerns belong to the Persistence Implementation Specification.
+
+23. Initial Implementation Constraint
+
+The first SQLAlchemy implementation must reflect the Domain Model and approved Data Model as they exist at implementation time.
+
+The Persistence Layer must not be used to compensate for unresolved Domain Model decisions.
+
+If a required persistence relationship cannot be mapped without changing the Domain Model, implementation must stop at that boundary and the architectural discrepancy must be documented.
+
+24. Consistency Principle
+
+The Persistence Layer is an adapter.
+
+It must preserve the meaning of the Domain Model rather than redefine it.
+
+Where the Domain Model and Persistence Model differ structurally, the adapter is responsible for translation.
+
+Where they differ semantically, the discrepancy must be resolved through an explicit architectural decision rather than hidden inside persistence code.
+
+25. Future Revision
+
+This specification is version 0.1.0 and is intended to support Core Repository v0.1.
+
+Future revisions may refine:
+
+* KnowledgeStatement relationships;
+* evidence persistence;
+* richer version graphs;
+* audit metadata;
+* additional repository operations;
+* transaction and Unit of Work semantics.
+
+Such changes must be explicitly versioned and must remain compatible with the broader ELR architecture.
