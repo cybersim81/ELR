@@ -1,0 +1,175 @@
+ELR Core Model Discrepancy Matrix 0.1.0
+
+Status: WORKING DOCUMENT
+Version: 0.1.0
+Scope: Alignment audit between ELR Domain Model, Persistence Model, and Core Model documentation
+
+Purpose
+
+This document records discrepancies, ambiguities, and alignment decisions identified during the Core Model audit. It is a working document and is not itself a normative specification.
+
+Status values
+
+OPEN      Discrepancy or decision remains unresolved.
+DECIDED   An architectural decision has been made but implementation/documentation may still need updating.
+RESOLVED  The discrepancy has been reflected consistently in the relevant model and documentation.
+DEFERRED  The issue is intentionally postponed.
+
+1. LearningObject lifecycle state
+
+Status: DECIDED
+
+The LearningObject `state` field represents the lifecycle state of the content entity.
+
+Current lifecycle values:
+- Candidate
+- Proposed
+- Reviewed
+- Active
+- Updated
+- Retired
+- Rejected
+
+This state must not be interpreted as user mastery or user learning state.
+
+2. Learning State
+
+Status: OPEN
+
+Learning State is a user-specific relationship/state associated with a learner and a Learning Object. It is conceptually distinct from the LearningObject lifecycle state.
+
+The current Domain Python implementation does not yet represent this concept explicitly.
+
+Decision required:
+- define the Domain representation and ownership of Learning State;
+- determine whether it belongs to Core Repository persistence in the current scope;
+- ensure it is not conflated with LearningObject.state.
+
+3. Mastery
+
+Status: OPEN
+
+Mastery is a learner/knowledge-related concept and must not be represented as the lifecycle `state` of LearningObject.
+
+The current Domain Python implementation does not yet represent Mastery explicitly.
+
+The Persistence Mapping Specification currently excludes mastery state from Core Repository v0.1 persistence.
+
+Decision required:
+- confirm whether Mastery is intentionally outside Core Repository v0.1 persistence;
+- reconcile that boundary with the broader Domain/Core Model documentation;
+- define the appropriate Domain ownership if Mastery is implemented later.
+
+4. KnowledgeStatement relationship
+
+Status: OPEN
+
+KnowledgeStatement exists as an independent Domain entity with its own UUID, text, language, and creation timestamp.
+
+LearningObject currently contains `statement: str` directly.
+
+The Persistence Layer must not invent a relationship between LearningObject and KnowledgeStatement that is not defined by the Domain Model.
+
+Decision required:
+- retain the current dual representation temporarily;
+- or explicitly revise the Domain Model to reference KnowledgeStatement.
+
+5. Version entity relationship
+
+Status: OPEN
+
+Version is an immutable historical snapshot with `entity_id`, `number`, `snapshot`, and `created_at`.
+
+The current Domain contract uses a generic `entity_id`.
+
+The Persistence Layer must not assume that `versions.entity_id` is a foreign key specifically to `learning_objects.id` unless an approved model decision establishes that relationship.
+
+Decision required:
+- define the intended referential model for Version.
+
+6. AuditRecord actor
+
+Status: OPEN
+
+AuditRecord contains `actor` in the Domain Model in addition to entity identity, event type, timestamp, and metadata.
+
+The Persistence Mapping Specification describes audit identity, affected entity identity, action/event type, timestamp, and metadata but does not explicitly name `actor`.
+
+Decision required:
+- update the Persistence Mapping Specification to explicitly preserve `actor`.
+
+7. Repository contracts
+
+Status: RESOLVED
+
+The following Domain repository interfaces exist and are aligned with the Persistence Mapping Specification:
+- LearningObjectRepository
+- AnchorRepository
+- CategoryRepository
+- VersionRepository
+- AuditRepository
+
+No architectural discrepancy identified in their existence or current high-level role.
+
+8. LearningObjectRepository deletion
+
+Status: OPEN
+
+LearningObjectRepository exposes `delete`.
+
+The Persistence Mapping Specification states that retirement must not automatically imply physical deletion and that historical knowledge must not be erased.
+
+Decision required:
+- define the semantic meaning and allowed use of repository deletion;
+- ensure implementation cannot silently violate retirement/history rules.
+
+9. Anchor
+
+Status: RESOLVED
+
+Anchor Domain entity and Persistence Mapping are aligned for identity, content, type, timestamp, and non-empty content invariant.
+
+10. KnowledgeCategory
+
+Status: RESOLVED
+
+KnowledgeCategory Domain entity and Persistence Mapping are aligned for identity, name, and optional hierarchical `parent_id` relationship.
+
+11. Identity
+
+Status: RESOLVED
+
+Core Repository domain entities use UUID-based domain identity. Persistence must preserve existing domain-generated identities.
+
+12. Timestamps
+
+Status: RESOLVED
+
+Domain timestamps are timezone-aware UTC timestamps. Persistence must preserve their semantic value and must not silently convert them to local time.
+
+13. Data Model specification
+
+Status: OPEN
+
+A separate authoritative relational Data Model specification has not been located in the repository during this audit.
+
+Decision required:
+- determine whether the Persistence Mapping Specification is currently the authoritative source for the conceptual persistence structure;
+- or establish/version a separate Data Model specification before adding further foreign-key relationships.
+
+14. Implementation boundary
+
+Status: OPEN
+
+Do not add further SQLAlchemy models for unresolved relationships until the relevant Domain/Data Model decisions are settled.
+
+Current safe implementation foundation:
+- Base
+- AnchorModel
+- Anchor persistence tests
+
+Next implementation work should follow resolution of the OPEN items above.
+
+Audit principle
+
+Where Domain and Persistence structures differ structurally, the Persistence Layer may translate between them. Where they differ semantically, the discrepancy must be resolved through an explicit architectural decision rather than hidden inside persistence code.
