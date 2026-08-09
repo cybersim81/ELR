@@ -712,7 +712,6 @@ Knowledge Statement persistence representation.
 Any future introduction of a dedicated Value Object or other Domain
 construct must be explicitly approved before the Persistence Mapping is
 changed.
-========
 
 ================================================================
 
