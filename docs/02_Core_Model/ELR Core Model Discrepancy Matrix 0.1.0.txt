@@ -101,6 +101,7 @@ Evidence:
 * Mastery State Specification 1.0.0
 * Mastery Engine Specification 1.0.0
 
+
 ================================================================================
 3. Learning Object vs Mastery
 =============================
@@ -768,36 +769,38 @@ The current persistence implementation may continue for concepts whose
 Domain and Persistence contracts are already sufficiently defined.
 
 ================================================================
-
 18. Remaining architectural work
     ================================================================
+
+The semantic and architectural definition of Mastery State has been
+resolved at the documentation level.
 
 The following work remains before implementing Mastery in the Domain
 Layer:
 
-1. determine the authoritative Domain representation of User;
-2. determine the exact Domain construct representing Mastery State;
-3. define identity semantics, if required;
-4. define lifecycle/update semantics;
-5. define the relationship between Mastery State and Mastery Evidence;
-6. define the boundary between Mastery State and Learning State in the
+1. explicitly approve the Domain implementation scope for Mastery State;
+2. determine the implementation representation of Mastery State in the
    executable Domain Model;
-7. determine whether and when Mastery becomes part of a future persistence
-   model;
-8. update this matrix after each approved architectural decision.
+3. define implementation-specific identity semantics, if required;
+4. define the implementation boundary between Mastery State and Learning
+   State in the executable Domain Model;
+5. determine whether and when Mastery State becomes part of a future
+   persistence model;
+6. update this matrix after each approved architectural decision.
 
 The following work remains before revising the LearningObject Domain
 Model:
 
-9. review Learning Object Specification 1.0.0;
-10. determine the formal Domain representation of Knowledge Statement;
-11. determine whether the current statement: str field is a temporary
-    representation, a value object boundary, or another approved Domain
-    construct;
-12. align Persistence Mapping with that decision;
-13. update this matrix after the decision.
+7. review Learning Object Specification 1.0.0;
+8. determine the formal Domain representation of Knowledge Statement;
+9. determine whether the current statement: str field is a temporary
+   representation, a value object boundary, or another approved Domain
+   construct;
+10. align Persistence Mapping with that decision;
+11. update this matrix after the decision.
 
 No implementation should precede these decisions.
+
 
 ================================================================
 
