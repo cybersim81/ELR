@@ -106,45 +106,103 @@ Evidence:
 3. Learning Object vs Mastery
    ================================================================
 
-Status: RESOLVED
+Status: OPEN / DOCUMENTATION RECONCILIATION REQUIRED
 
 Finding:
 
-The Learning Object represents knowledge.
+The Learning Object represents persistent linguistic knowledge.
 
 Mastery represents the user's mastery of that knowledge.
 
-The Mastery Engine Specification defines Mastery as a relationship
+The Mastery Engine Specification 1.0.0 defines Mastery as a relationship
 between a User and a Learning Object.
+
+The Mastery State Specification 1.0.0 defines Mastery State as the current
+state of a User's mastery with respect to a Learning Object.
+
+The Learning Object Specification 1.0.0 explicitly separates the Learning
+Object from the user's mastery of the represented knowledge.
+
+The Evidence Model Specification 1.0.1 further establishes that Mastery
+Evidence concerns the User's relationship with existing knowledge and that
+Mastery State is separate from persistent linguistic knowledge.
+
+However, the current ELR Domain Model Specification 1.0.0 still describes
+Mastery as a supporting domain element of the LearningObject aggregate and
+states that a LearningObject possesses exactly one Mastery.
+
+This creates a documentation-level conflict between the Domain Model and
+the specialized Mastery / Learning State specifications and the approved
+architecture.
 
 Decision:
 
-Mastery must not be interpreted as an editorial property of
-LearningObject.
-
-The semantic relationship is:
+The authoritative architectural interpretation is:
 
 User
 |
 +---- Learning Object
-|
-+---- Mastery State
+        |
+        +---- Mastery State
 
 The Learning Object represents the knowledge.
 
-The Mastery State represents the user's mastery of that knowledge.
+Mastery State represents the current mastery state of a specific User with
+respect to that Learning Object.
 
-The Mastery Engine is responsible for producing/updating Mastery State.
+Mastery is therefore not an intrinsic or editorial property of the
+Learning Object and must not be modeled as an element owned by the
+LearningObject aggregate.
 
-No Mastery attribute must be added to LearningObject merely because
-Mastery appears as a supporting concept in high-level Domain
-documentation.
+The Mastery Engine is responsible for the process semantics governing
+Mastery evaluation and Mastery State evolution.
+
+The Domain Model Specification must be reconciled with this interpretation.
+
+Required documentation correction:
+
+The next revision of the Domain Model Specification must:
+
+1. remove the statement that LearningObject possesses exactly one Mastery;
+
+2. remove Mastery from the LearningObject aggregate boundary as an owned
+   supporting element;
+
+3. distinguish explicitly between:
+   - Learning Object / persistent knowledge;
+   - Learning State / User-specific learning-process state;
+   - Mastery State / User-specific mastery state;
+
+4. refer to Mastery State according to the semantics established by the
+   Mastery State Specification and Mastery Engine Specification rather than
+   defining an independent LearningObject-owned Mastery concept.
+
+Implementation boundary:
+
+This discrepancy is currently a documentation reconciliation issue.
+
+No Python Domain Model modification is authorized by this entry.
+
+No persistence modification is authorized by this entry.
+
+The current implementation must not be changed merely to resolve this
+documentation conflict.
+
+Implementation changes may be evaluated only after the Domain Model
+Specification has been formally reconciled and reviewed against the
+Architecture Specification and Architecture Consistency Matrix.
 
 Evidence:
 
 * Learning Object Specification 1.0.0
+* Learning State Specification 1.0.0
 * Mastery Engine Specification 1.0.0
 * Mastery State Specification 1.0.0
+* Evidence Model Specification 1.0.1
+* ELR Architecture Specification 1.1.0
+* ELR Architecture Decision Log 1.0.0
+* ELR Architecture Consistency Matrix 1.1.0
+* ELR Domain Model Specification 1.0.0
 
 ================================================================
 
