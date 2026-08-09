@@ -1,3 +1,873 @@
+================================================================================
+English Learning Repository (ELR)
+
+Architecture Decision Log (ADR Log)
+================================================================================
+
+Document Identity
+================================================================================
+
+Document Name:
+English Learning Repository (ELR) Architecture Decision Log
+
+Document Version:
+1.0.0
+
+Status:
+APPROVED
+
+Last Updated:
+2026-08-01
+
+Dependencies:
+
+- ELR Architecture Specification
+
+- ELR Design Protocol
+
+================================================================================
+Purpose
+================================================================================
+
+Questo documento raccoglie tutte le Architecture Decision Record (ADR)
+approvate durante la progettazione dell'English Learning Repository (ELR).
+
+Ogni ADR rappresenta una decisione architetturale stabile che modifica il
+modello concettuale del sistema, introduce un principio permanente oppure
+stabilisce una regola architetturale destinata a guidare l'evoluzione del
+progetto.
+
+L'Architecture Decision Log costituisce la sorgente autorevole delle decisioni
+architetturali dell'ELR.
+
+================================================================================
+Scope
+================================================================================
+
+Questo documento descrive esclusivamente le decisioni architetturali.
+
+Non descrive:
+
+• il modello operativo della Knowledge Extraction Pipeline;
+
+• il protocollo di interazione (Learning Interaction Language);
+
+• gli algoritmi di aggiornamento della Mastery;
+
+• i dettagli implementativi.
+
+Tali aspetti sono definiti nei rispettivi documenti specialistici.
+
+================================================================================
+Organization
+================================================================================
+
+Le Architecture Decision Record sono organizzate per area tematica.
+
+La numerazione degli ADR rimane stabile nel tempo per preservare la continuità
+documentale e consentire riferimenti persistenti da altri documenti
+architetturali.
+
+================================================================================
+1. Documentation
+================================================================================
+
+-------------------------------------------------------------------------------
+ADR-000 — Document Artifact Continuity
+-------------------------------------------------------------------------------
+
+Decision
+
+La documentazione progettuale dell'ELR costituisce un insieme di artefatti
+persistenti necessari alla continuità tra sessioni di progettazione.
+
+Ogni documento ufficiale ELR deve poter essere trasferito, archiviato e
+riutilizzato come fonte progettuale autonoma.
+
+La produzione dei documenti deve mantenere separati:
+
+• discussione progettuale temporanea;
+
+• analisi intermedia;
+
+• contenuto documentale ufficiale.
+
+Quando viene creato o aggiornato un documento appartenente alla documentazione
+ELR, il contenuto ufficiale deve essere fornito in forma integralmente
+copiabile e separata dal materiale conversazionale.
+
+La definizione di nuovi documenti, modifiche architetturali e artefatti
+progettuali richiede una distinzione esplicita tra proposta e documento
+approvato.
+
+La documentazione ELR rappresenta quindi una sorgente persistente della
+conoscenza progettuale, separata dal processo conversazionale che la genera.
+
+================================================================================
+ADR-000.1 — Documentation Architecture
+================================================================================
+
+Status:
+
+APPROVED
+
+
+Decision
+
+L'architettura dell'English Learning Repository è descritta da un corpus di
+documenti specializzati organizzati secondo la ELR Documentation Architecture.
+
+Ogni documento possiede responsabilità chiaramente delimitate e contribuisce
+alla descrizione complessiva del sistema senza duplicare definizioni già
+presenti in altri documenti.
+
+La classificazione dei documenti, la loro organizzazione e le rispettive
+responsabilità sono definite nella ELR Documentation Architecture.
+
+Motivazione
+
+Separare l'architettura documentale dal contenuto tecnico delle specifiche
+consente l'evoluzione indipendente dei documenti, preservando la coerenza
+dell'intero corpus documentale.
+
+-------------------------------------------------------------------------------
+ADR-000.2 — Complete Document Revision
+-------------------------------------------------------------------------------
+
+Decision
+
+I documenti progettuali dell'ELR sono artefatti versionati e autonomi.
+
+La continuità progettuale deve essere garantita attraverso la persistenza di
+documenti completi e revisionati, non attraverso la cronologia delle
+conversazioni.
+
+Quando un capitolo di un documento viene concluso e validato, la nuova versione
+del documento deve essere prodotta integralmente.
+
+Le modifiche parziali o gli estratti di capitolo non costituiscono versioni
+ufficiali persistenti.
+
+Motivazione
+
+Il progetto ELR deve poter essere ripreso in sessioni successive senza
+dipendere dal contesto conversazionale precedente.
+
+Un documento completo consente di ricostruire:
+
+• decisioni architetturali;
+
+• principi progettuali;
+
+• tassonomie;
+
+• specifiche operative.
+
+La conversazione rappresenta esclusivamente il processo attraverso cui
+emergono le decisioni, mentre il documento completo rappresenta l'artefatto
+persistente.
+
+Conseguenze
+
+Durante la progettazione:
+
+• le discussioni intermedie non sono considerate documentazione ufficiale;
+
+• ogni capitolo concluso viene integrato nel documento completo;
+
+• la versione completa revisionata è il riferimento per le sessioni
+  successive;
+
+• gli aggiornamenti vengono trasferiti sostituendo integralmente la versione
+  precedente del documento.
+
+-------------------------------------------------------------------------------
+ADR-000.3 — Document Identity Metadata
+-------------------------------------------------------------------------------
+
+Decision
+
+Ogni documento ufficiale ELR deve contenere un'identità documentale esplicita.
+
+L'identità documentale deve includere almeno:
+
+• nome del documento;
+
+• versione del documento;
+
+• stato del documento;
+
+• data di aggiornamento;
+
+• dipendenze documentali.
+
+Motivazione
+
+La crescita del numero di artefatti ELR richiede che ogni documento possa
+essere identificato, interpretato e ricostruito autonomamente.
+
+L'identità documentale consente di mantenere relazioni chiare tra artefatti
+diversi senza dipendere dal contesto conversazionale.
+
+Conseguenze
+
+Ogni documento registrato nell'ELR Document Artifact Registry deve mantenere
+un'intestazione identificativa coerente.
+
+================================================================================
+ADR-000.4 — Single Document Ownership
+================================================================================
+
+Status:
+
+APPROVED
+
+
+Decision
+
+Ogni concetto architetturale dell'English Learning Repository deve possedere
+un unico documento proprietario.
+
+Gli altri documenti possono fare riferimento al concetto quando necessario,
+ma non devono ridefinirne completamente significato, responsabilità o
+comportamento.
+
+La proprietà documentale costituisce il principio fondamentale di
+organizzazione dell'intero corpus ELR.
+
+Motivazione
+
+L'assegnazione di un unico documento proprietario elimina duplicazioni,
+riduce il rischio di incoerenze e rende ogni modifica localizzata nel punto
+corretto della documentazione.
+
+Questo principio garantisce la presenza di una Single Source of Truth per ogni
+concetto architetturale.
+
+================================================================================
+2. Repository Architecture
+================================================================================
+
+
+-------------------------------------------------------------------------------
+ADR-001 — Atomic Learning Objects
+-------------------------------------------------------------------------------
+
+Decision
+
+Il repository ELR è composto esclusivamente da Learning Object atomici.
+
+Ogni Learning Object rappresenta una singola conoscenza linguistica
+indipendente, acquisibile, aggiornabile e verificabile indipendentemente dalle
+altre.
+
+Un Learning Object non rappresenta:
+
+• una conversazione;
+
+• un errore;
+
+• una sessione di apprendimento;
+
+• un insieme arbitrario di informazioni correlate.
+
+Il criterio di atomicità riguarda la conoscenza rappresentata, non la quantità
+di testo necessaria per descriverla.
+
+Motivazione
+
+Il repository deve conservare conoscenza riutilizzabile e non eventi o
+materiale didattico aggregato.
+
+Una rappresentazione atomica consente:
+
+• aggiornamento indipendente;
+
+• verifica indipendente;
+
+• selezione mirata durante il ripasso;
+
+• generazione di viste derivate flessibili.
+
+Conseguenze
+
+Ogni processo che produce aggiornamenti all'ELR deve determinare il numero di
+conoscenze indipendenti emerse prima della creazione dei Learning Object.
+
+Una singola interazione può generare:
+
+• nessun Learning Object;
+
+• un Learning Object;
+
+• più Learning Object.
+
+
+-------------------------------------------------------------------------------
+ADR-002 — Repository First
+-------------------------------------------------------------------------------
+
+Decision
+
+L'ELR rappresenta la sorgente persistente della conoscenza linguistica
+dell'utente.
+
+Tutte le altre rappresentazioni del sistema sono viste derivate generate a
+partire dai dati persistiti nel repository.
+
+Sono considerate viste derivate:
+
+• Phrasebook;
+
+• esercizi;
+
+• statistiche;
+
+• dashboard;
+
+• report;
+
+• sistemi di revisione.
+
+Motivazione
+
+Il sistema deve mantenere una singola fonte autorevole della conoscenza
+acquisita.
+
+Memorizzare rappresentazioni derivate introduce rischio di:
+
+• duplicazione;
+
+• inconsistenza;
+
+• sincronizzazione tra sistemi diversi.
+
+Conseguenze
+
+Qualsiasi informazione ottenibile mediante trasformazione deterministica del
+repository non deve essere memorizzata separatamente.
+
+Ogni funzionalità futura deve utilizzare l'ELR come sorgente primaria.
+
+
+-------------------------------------------------------------------------------
+ADR-003 — Derivation Before Storage
+-------------------------------------------------------------------------------
+
+Decision
+
+Qualsiasi informazione ottenibile mediante trasformazioni deterministiche dei
+dati persistiti non deve essere memorizzata.
+
+Le informazioni derivate devono essere ricostruite dinamicamente quando
+necessario.
+
+Motivazione
+
+La persistenza di informazioni derivate duplica conoscenza già disponibile e
+introduce possibili divergenze tra rappresentazioni equivalenti.
+
+Il repository deve conservare esclusivamente informazioni che non possono
+essere ricostruite in modo affidabile.
+
+Conseguenze
+
+Esempi di informazioni derivate:
+
+• ordinamento dei Learning Object;
+
+• raggruppamenti per Anchor;
+
+• statistiche aggregate;
+
+• viste del Phrasebook;
+
+• selezioni per esercizio.
+
+Tali informazioni non costituiscono stato persistente dell'ELR.
+
+
+-------------------------------------------------------------------------------
+ADR-004 — Stable Identity
+-------------------------------------------------------------------------------
+
+Decision
+
+Ogni Learning Object possiede un'identità permanente.
+
+L'identità del Learning Object non cambia durante la sua evoluzione.
+
+Gli aggiornamenti del Knowledge Statement non generano una nuova identità
+quando rappresentano un'evoluzione della stessa conoscenza.
+
+Motivazione
+
+Un Learning Object deve poter essere tracciato durante tutto il proprio ciclo
+di vita.
+
+La stabilità dell'identità consente:
+
+• evoluzione progressiva;
+
+• mantenimento della continuità storica;
+
+• aggiornamento della Mastery associata;
+
+• collegamento con evidenze precedenti.
+
+Conseguenze
+
+La modifica del contenuto conoscitivo non implica automaticamente la creazione
+di un nuovo Learning Object.
+
+Un nuovo Learning Object viene creato solamente quando emerge una conoscenza
+autonoma e indipendente.
+
+
+-------------------------------------------------------------------------------
+ADR-005 — Knowledge Repository
+-------------------------------------------------------------------------------
+
+Decision
+
+L'ELR rappresenta esclusivamente conoscenza linguistica persistente.
+
+Non vengono memorizzati:
+
+• cronologia delle conversazioni;
+
+• ragionamenti dell'LLM;
+
+• processo di apprendimento;
+
+• stati intermedi;
+
+• decisioni temporanee della KEP.
+
+Il repository conserva il risultato consolidato dei processi di apprendimento,
+non i processi che lo hanno generato.
+
+Motivazione
+
+La separazione tra conoscenza e processo evita che il repository diventi un
+archivio conversazionale o una registrazione del comportamento del sistema.
+
+L'obiettivo dell'ELR è rappresentare ciò che l'utente conosce, non come tale
+conoscenza è stata scoperta.
+
+Conseguenze
+
+La Conversation Episode, i Knowledge Candidate e le Change Proposal appartengono
+ai processi di elaborazione e non al modello persistente dell'ELR.
+
+Il repository conserva solamente gli elementi necessari a rappresentare la
+conoscenza acquisita.
+
+
+-------------------------------------------------------------------------------
+ADR-006 — Human Approval
+-------------------------------------------------------------------------------
+
+Decision
+
+Ogni modifica proposta al repository richiede l'approvazione esplicita
+dell'utente mediante il processo di Learning Review.
+
+Il repository non viene mai aggiornato automaticamente sulla base della sola
+estrazione della conoscenza.
+
+Motivazione
+
+La conoscenza estratta dalla conversazione rappresenta una proposta di
+aggiornamento, non una modifica automaticamente valida.
+
+L'utente mantiene il controllo finale sulla conoscenza persistente contenuta
+nell'ELR.
+
+Conseguenze
+
+La KEP produce una ELR Change Proposal.
+
+La Learning Review verifica e autorizza gli aggiornamenti.
+
+L'ELR mantiene esclusivamente modifiche approvate.
+
+================================================================================
+3. Knowledge Model Architecture
+================================================================================
+
+
+-------------------------------------------------------------------------------
+ADR-007 — Anchor-centric Knowledge
+-------------------------------------------------------------------------------
+
+Decision
+
+Ogni Learning Object è associato ad un Anchor.
+
+L'Anchor rappresenta l'unità linguistica osservabile alla quale viene collegata
+una conoscenza acquisibile.
+
+L'Anchor rappresenta:
+
+• una forma linguistica nella lingua target;
+
+• un elemento riconoscibile nella produzione linguistica;
+
+• il riferimento osservabile della conoscenza rappresentata dal Learning Object.
+
+L'Anchor non rappresenta:
+
+• l'errore dell'utente;
+
+• una categoria grammaticale astratta;
+
+• una spiegazione metalinguistica generale.
+
+La definizione strutturale e operativa dell'Anchor è delegata alla
+Anchor Specification.
+
+
+Motivazione
+
+Il modello deve rappresentare conoscenze linguistiche riutilizzabili e non
+semplicemente errori osservati.
+
+L'Anchor fornisce un riferimento stabile che collega la conoscenza acquisita
+alla produzione linguistica dell'utente.
+
+
+Conseguenze
+
+I processi ELR devono utilizzare l'Anchor come riferimento della conoscenza
+rappresentata.
+
+Le regole operative di identificazione, normalizzazione ed equivalenza
+appartengono ai documenti specialistici dedicati.
+
+-------------------------------------------------------------------------------
+ADR-008 — Knowledge Statement First
+-------------------------------------------------------------------------------
+
+Decision
+
+Il Knowledge Statement costituisce il contenuto conoscitivo principale del
+Learning Object.
+
+Concettualmente un Learning Object rappresenta:
+
+    Anchor + Knowledge Statement
+
+Il Knowledge Statement descrive una conoscenza linguistica atomica associata
+ad un Anchor.
+
+La definizione della struttura del Knowledge Statement e delle sue regole di
+formulazione appartiene alla Learning Object Specification.
+
+
+Motivazione
+
+Il valore del Learning Object risiede nella conoscenza linguistica acquisita,
+non nell'errore o nel contesto che ha generato la scoperta.
+
+La separazione tra Anchor e Knowledge Statement consente di distinguere:
+
+• quale elemento linguistico viene acquisito;
+
+• quale conoscenza relativa a tale elemento deve essere rappresentata.
+
+
+Conseguenze
+
+Un Learning Object deve sempre essere riconducibile ad un Anchor e ad un
+Knowledge Statement.
+
+Le regole operative di generazione e validazione appartengono ai documenti
+specialistici dedicati.
+
+
+-------------------------------------------------------------------------------
+ADR-009 — Monotonic Knowledge Evolution
+-------------------------------------------------------------------------------
+
+Decision
+
+Un Learning Object rappresenta una singola conoscenza atomica relativa ad un
+Anchor.
+
+La sua identità rimane invariata durante tutta la sua esistenza.
+
+Un Knowledge Statement costituisce un aggiornamento del Learning Object
+esistente esclusivamente quando:
+
+• si riferisce allo stesso Anchor;
+
+• appartiene alla stessa Knowledge Category;
+
+• preserva la medesima conoscenza atomica;
+
+• la arricchisce, precisa oppure migliora la formulazione.
+
+Se il nuovo Knowledge Statement introduce una nuova conoscenza atomica deve
+essere creato un nuovo Learning Object.
+
+Motivazione
+
+La conoscenza linguistica dell'utente evolve nel tempo.
+
+Il modello deve permettere miglioramenti progressivi senza creare duplicati
+quando la conoscenza rimane concettualmente la stessa.
+
+Allo stesso tempo deve evitare che conoscenze diverse vengano fuse
+artificialmente.
+
+Conseguenze
+
+Il Merge di Learning Object richiede verifica dell'identità concettuale della
+conoscenza.
+
+La crescita del repository avviene mediante evoluzione controllata, non
+mediante accumulo indiscriminato.
+
+
+-------------------------------------------------------------------------------
+ADR-010 — Reusable Knowledge
+-------------------------------------------------------------------------------
+
+Decision
+
+Il criterio per la creazione di un Learning Object non è il numero di errori
+osservabili, ma il numero di conoscenze linguistiche indipendenti acquisite.
+
+Una singola correzione può generare:
+
+• nessun Learning Object;
+
+• un Learning Object;
+
+• più Learning Object.
+
+La generazione dipende dalle conoscenze riutilizzabili emerse.
+
+Motivazione
+
+Un errore non rappresenta necessariamente una lacuna conoscitiva stabile.
+
+La stessa manifestazione errata può derivare da:
+
+• distrazione;
+
+• esitazione;
+
+• mancanza temporanea di attenzione;
+
+• assenza di conoscenza.
+
+Il repository deve conservare solamente conoscenze che l'utente può riutilizzare
+in future produzioni linguistiche.
+
+Conseguenze
+
+La KEP deve distinguere:
+
+• difetto di comprensione;
+
+• errore occasionale.
+
+La quantità di Learning Object generati non dipende direttamente dalla quantità
+di errori rilevati.
+
+
+-------------------------------------------------------------------------------
+ADR-011 — Positive Knowledge Representation
+-------------------------------------------------------------------------------
+
+Decision
+
+Il Knowledge Statement deve descrivere ciò che è valido.
+
+Sono preferite formulazioni positive rispetto a formulazioni basate sul
+divieto o sull'errore.
+
+Esempio:
+
+Non:
+
+"Non usare X con Y"
+
+Ma:
+
+"X si usa con Y"
+
+Motivazione
+
+La conoscenza acquisita deve rappresentare un comportamento linguistico
+riutilizzabile.
+
+Una formulazione positiva favorisce:
+
+• comprensione;
+
+• recupero durante la produzione;
+
+• riutilizzo in contesti futuri.
+
+Conseguenze
+
+Gli errori possono essere utilizzati come Trigger o Evidence durante i processi
+di estrazione, ma non costituiscono il contenuto del Knowledge Statement.
+
+
+-------------------------------------------------------------------------------
+ADR-012 — Lexical Knowledge
+-------------------------------------------------------------------------------
+
+Decision
+
+L'ELR rappresenta qualsiasi conoscenza linguistica persistente e riutilizzabile.
+
+Una conoscenza lessicale atomica può costituire un Learning Object anche quando
+non riguarda una costruzione grammaticale complessa.
+
+Nei casi di conoscenza traduttiva, il Knowledge Statement può rappresentare una
+relazione lessicale minima tra forma linguistica e significato.
+
+Esempi:
+
+weever → tracina
+
+Assumption Day → Ferragosto
+
+make + mistake
+
+take + photo
+
+Motivazione
+
+La conoscenza linguistica dell'utente comprende sia conoscenze grammaticali sia
+conoscenze lessicali.
+
+Escludere le conoscenze lessicali ridurrebbe artificialmente il dominio
+rappresentabile dall'ELR.
+
+Conseguenze
+
+Richieste esplicite di traduzione possono generare Learning Object quando
+identificano una conoscenza linguistica persistente e riutilizzabile.
+
+La semplicità del Knowledge Statement non impedisce la creazione di un Learning
+Object quando la conoscenza è:
+
+• atomica;
+
+• acquisibile;
+
+• riutilizzabile.
+
+================================================================================
+4. Learning Assessment Architecture
+================================================================================
+
+
+-------------------------------------------------------------------------------
+ADR-013 — Mastery Representation
+-------------------------------------------------------------------------------
+
+Decision
+
+La padronanza dell'utente relativa ad un Learning Object è rappresentata da
+un Mastery State User-specific.
+
+Un Mastery State rappresenta lo stato corrente della padronanza di uno
+specifico User rispetto ad uno specifico Learning Object.
+
+Il Mastery State non costituisce una proprietà intrinseca del Learning Object
+e non appartiene all'aggregate boundary del Learning Object.
+
+Non viene introdotto un parametro separato di Confidence all'interno del
+modello di stato della padronanza.
+
+La Mastery State costituisce la rappresentazione autorevole dello stato
+corrente di padronanza dell'utente rispetto alla conoscenza rappresentata dal
+Learning Object.
+
+Motivazione
+
+Il sistema necessita di una rappresentazione autorevole dello stato di
+padronanza relativo ad uno specifico User e ad uno specifico Learning Object.
+
+La separazione tra conoscenza e stato User-specific evita di incorporare nel
+Learning Object informazioni che dipendono dall'utente.
+
+Elementi come:
+
+• affidabilità della valutazione;
+• qualità dell'evidenza;
+• certezza del modello;
+• frequenza di successo;
+
+non costituiscono automaticamente stati distinti della conoscenza persistente.
+
+La loro interpretazione e il loro eventuale utilizzo nel processo di
+valutazione appartengono alle specifiche specialistiche del Mastery Engine e
+del modello Evidence.
+
+Conseguenze
+
+Il Learning Object rappresenta esclusivamente la conoscenza linguistica
+persistente.
+
+Il Mastery State rappresenta lo stato User-specific relativo a tale
+conoscenza.
+
+Lo stesso Learning Object può essere associato a Mastery State differenti per
+User differenti.
+
+Il Mastery Engine è responsabile dell'interpretazione delle Mastery Evidence
+e dell'evoluzione del Mastery State secondo la propria politica di
+aggiornamento.
+
+Il Domain Model e il Learning Object non devono introdurre una proprietà di
+Mastery appartenente al Learning Object.
+
+I dettagli relativi al calcolo, all'evoluzione e alla persistenza del Mastery
+State sono definiti dalle rispettive specifiche specialistiche.
+
+
+-------------------------------------------------------------------------------
+ADR-014 — Conversation Episode Boundary
+-------------------------------------------------------------------------------
+
+Decision
+
+La Conversation Episode appartiene esclusivamente alla Knowledge Extraction
+Pipeline e non al modello persistente dell'ELR.
+
+La Conversation Episode rappresenta un'unità temporanea utilizzata dai
+processi di estrazione per analizzare eventi conversazionali e individuare
+possibili conoscenze linguistiche.
+
+
+Motivazione
+
+La conversazione rappresenta un processo di acquisizione e analisi, non
+conoscenza linguistica consolidata.
+
+Persistire la Conversation Episode nel repository violerebbe la separazione tra:
+
+• processo di apprendimento;
+
+• conoscenza linguistica persistente.
+
+
+Conseguenze
+
+La Conversation Episode non costituisce entità persistente dell'ELR.
+
+Le modalità di utilizzo della Conversation Episode appartengono alla
+KEP Specification.
+
+
 -------------------------------------------------------------------------------
 ADR-015 — Mastery Evidence and Mastery Engine Separation
 -------------------------------------------------------------------------------
@@ -47,3 +917,174 @@ Mastery Engine Specification.
 
 Il Mastery State non diventa una proprietà del Learning Object a seguito
 dell'aggiornamento.
+
+-------------------------------------------------------------------------------
+ADR-016 — Evidence Model Separation
+-------------------------------------------------------------------------------
+
+Status:
+
+APPROVED
+
+
+Decision
+
+Evidence rappresenta un'informazione di supporto prodotta dai processi ELR.
+
+Evidence non costituisce conoscenza persistente del repository.
+
+Il modello Evidence è separato dal modello della conoscenza rappresentata dai
+Learning Object.
+
+
+Motivazione
+
+Il sistema deve distinguere tra:
+
+• conoscenza acquisita dall'utente;
+
+• informazioni che supportano modifiche o valutazioni;
+
+• processi che producono tali informazioni.
+
+Integrare Evidence direttamente nel modello della conoscenza creerebbe una
+commistione tra stato conoscitivo e processo di valutazione.
+
+
+Conseguenze
+
+La definizione del modello Evidence appartiene alla
+Evidence Model Specification.
+
+Le modalità di produzione delle Evidence appartengono ai processi che le
+generano.
+
+La classificazione tra Change Evidence e Mastery Evidence appartiene alla Evidence Model Specification.
+
+-------------------------------------------------------------------------------
+ADR-017 — Specification Ownership
+-------------------------------------------------------------------------------
+
+Status:
+
+APPROVED
+
+
+Decision
+
+Ogni componente architetturale operativo deve possedere un documento
+specialistico proprietario.
+
+La Architecture Specification descrive il ruolo architetturale dei componenti.
+
+Le Specification dedicate descrivono comportamento, regole operative e
+dettagli interni.
+
+
+Motivazione
+
+La separazione tra architettura e specifiche operative evita duplicazioni e
+consente l'evoluzione indipendente dei singoli componenti.
+
+
+Conseguenze
+
+I componenti ELR devono essere definiti nel documento proprietario
+corrispondente.
+
+La Architecture Specification rimane il punto di ingresso architetturale.
+
+Gli ADR descrivono le motivazioni delle decisioni, non sostituiscono le
+Specification.
+
+-------------------------------------------------------------------------------
+ADR-018 — Knowledge Candidate Boundary
+-------------------------------------------------------------------------------
+
+Decision
+
+Il Knowledge Candidate rappresenta una possibile conoscenza linguistica
+identificata durante l'elaborazione della Knowledge Extraction Pipeline.
+
+Il Knowledge Candidate appartiene esclusivamente al processo di analisi.
+
+Non costituisce:
+
+• Learning Object;
+
+• conoscenza persistente;
+
+• modifica del repository;
+
+• stato dell'utente.
+
+Motivazione
+
+Separare il Knowledge Candidate dal repository consente di distinguere
+l'identificazione della conoscenza dalla sua eventuale persistenza.
+
+Conseguenze
+
+Il Knowledge Candidate viene utilizzato dalla Repository Comparison per
+produrre una eventuale ELR Change Proposal.
+
+-------------------------------------------------------------------------------
+ADR-019 — Repository Comparison Separation
+-------------------------------------------------------------------------------
+
+Decision
+
+La Repository Comparison costituisce una fase distinta della Knowledge
+Extraction Pipeline.
+
+Il suo compito consiste nel confrontare un Knowledge Candidate con il contenuto
+persistente dell'ELR.
+
+La Repository Comparison non modifica direttamente il repository.
+
+Motivazione
+
+Separare il confronto dalla persistenza consente di mantenere indipendenti:
+
+• identificazione della conoscenza;
+
+• confronto con il repository;
+
+• proposta di modifica;
+
+• approvazione umana.
+
+Conseguenze
+
+La Repository Comparison produce esclusivamente una ELR Change Proposal.
+
+-------------------------------------------------------------------------------
+ADR-020 — ELR Change Proposal Separation
+-------------------------------------------------------------------------------
+
+Decision
+
+La ELR Change Proposal rappresenta esclusivamente una proposta di modifica del
+repository.
+
+Non rappresenta:
+
+• Learning Object;
+
+• conoscenza persistente;
+
+• decisione finale.
+
+Motivazione
+
+Separare la proposta dalla persistenza mantiene indipendenti il processo di analisi, la decisione umana e la modifica effettiva del repository.
+
+Conseguenze
+
+Ogni modifica dell'ELR richiede una Learning Review successiva.
+
+
+
+================================================================================
+Fine documento
+================================================================================
