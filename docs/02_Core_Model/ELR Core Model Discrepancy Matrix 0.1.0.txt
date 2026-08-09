@@ -415,6 +415,7 @@ No implementation should infer additional Domain attributes solely from
 high-level documentation.
 
 ================================================================
+
 8.  LearningObject Domain representation vs Knowledge Statement
   ================================================================
 
