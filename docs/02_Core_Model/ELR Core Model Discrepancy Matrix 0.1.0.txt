@@ -101,163 +101,126 @@ Evidence:
 * Mastery State Specification 1.0.0
 * Mastery Engine Specification 1.0.0
 
-================================================================
-
 ================================================================================
 3. Learning Object vs Mastery
-================================================================================
+=============================
 
-Status: OPEN / DOCUMENTATION RECONCILIATION REQUIRED
+Status: RESOLVED
 
-Finding:
+Resolution:
 
-The Learning Object represents persistent linguistic knowledge.
+The documentation conflict concerning the ownership and semantic nature of
+Mastery has been resolved.
 
-Mastery State represents the current mastery state of a specific User with
-respect to a specific Learning Object.
-
-The Mastery Engine Specification 1.0.0 defines Mastery as a User-specific
-relationship with knowledge represented by a Learning Object.
-
-The Mastery State Specification 1.0.0 defines Mastery State as the current
-state of a User's mastery with respect to a Learning Object.
-
-The Learning Object Specification 1.0.0 explicitly separates the Learning
-Object from the user's mastery of the represented knowledge.
-
-The Evidence Model Specification 1.0.1 further separates Mastery State from
-persistent linguistic knowledge and defines Mastery Evidence as evidence
-concerning the User's mastery of an existing Learning Object.
-
-The ELR Architecture Specification 1.1.0 and the ELR Architecture
-Consistency Matrix 1.1.0 establish that Mastery is managed separately from
-the Learning Object and that the Mastery Engine owns the semantic definition
-of Mastery.
-
-However, the current ELR Domain Model Specification 1.0.0 still defines
-Mastery as a supporting domain element of the LearningObject aggregate.
-
-It also states that:
-
-• the Learning Object possesses exactly one state of Mastery;
-• Mastery belongs to the LearningObject aggregate;
-• Mastery belongs to the persistent state of the Learning Object;
-• the lifecycle of Mastery coincides with the lifecycle of the Learning
-  Object.
-
-These statements are inconsistent with the User-specific Mastery State model.
-
---------------------------------------------------------------------------------
-Authoritative Interpretation
---------------------------------------------------------------------------------
-
-The authoritative architectural interpretation is:
+The reconciled model is:
 
 Learning Object
-    = persistent linguistic knowledge
+= persistent linguistic knowledge
 
-User
-    |
-    +---- Learning State
-    |
-    +---- Mastery State
-              |
-              +---- with respect to Learning Object
+Mastery State
+= current mastery state of a specific User
+with respect to a specific Learning Object
 
-The Learning Object represents the knowledge being learned.
+Mastery State is not an intrinsic property of the Learning Object and does
+not belong to the LearningObject aggregate boundary.
 
-Mastery State represents the current mastery state of one User with respect
-to that knowledge.
+The Mastery Engine is responsible for interpreting Mastery Evidence and
+evolving the Mastery State according to the Mastery Engine and Mastery State
+Specifications.
 
-Mastery State is therefore not an intrinsic property of the Learning Object
-and is not owned by the LearningObject aggregate.
+Resolution Actions Completed:
 
-The Mastery Engine owns the process semantics governing mastery evaluation
-and Mastery State evolution.
+1. ELR Domain Model Specification
 
---------------------------------------------------------------------------------
-Required Documentation Reconciliation
---------------------------------------------------------------------------------
+   The Domain Model has been reconciled so that:
 
-The next revision of the ELR Domain Model Specification must:
+   • Mastery State is User-specific;
+   • Mastery State is not owned by the Learning Object;
+   • Mastery State is outside the LearningObject aggregate boundary;
+   • Learning Object represents persistent linguistic knowledge;
+   • Mastery State represents the user's mastery of that knowledge.
 
-1. Remove Mastery from the list of supporting domain elements belonging to
-   the Learning Object model.
+2. Mastery State / Mastery Engine
 
-2. Remove Mastery from the LearningObject aggregate boundary.
-
-3. Remove the statement that a Learning Object possesses exactly one
+   The Mastery State Specification and Mastery Engine Specification remain
+   the authoritative definitions of the semantic nature and evolution of
    Mastery State.
 
-4. Remove statements defining Mastery as persistent state owned by the
-   Learning Object.
+3. Architecture Decision Log
 
-5. Remove statements making the lifecycle of Mastery coincide with the
-   lifecycle of the Learning Object.
+   ADR-013 has been reconciled to define Mastery as a User-specific
+   Mastery State relative to a specific Learning Object.
 
-6. Remove Mastery from the direct relationship lists of Anchor, Knowledge
-   Statement, and Knowledge Category where Mastery is currently described
-   as belonging to the Learning Object.
+   ADR-015 has been reconciled so that the Mastery Engine updates the
+   Mastery State of the specific User with respect to the specific Learning
+   Object, without making Mastery State a property of the Learning Object.
 
-7. Revise the conceptual separation between knowledge and mastery so that:
-      Learning Object = what knowledge is represented;
-      Mastery State = how that knowledge is mastered by a specific User.
+4. Architecture Specification
 
-8. Revise the Mastery section so that it does not redefine Mastery as a
-   LearningObject-owned domain element.
+   ELR Architecture Specification 1.1.0 has been reconciled under:
 
-9. Ensure that the Domain Model does not define the Mastery evaluation
-   process, update algorithm, or evidence-processing logic.
+   "Mastery State as User-Specific Learning State"
 
-10. Defer persistence-specific decisions concerning Mastery State to the
-    appropriate persistence and process specifications.
+   The Architecture Specification now explicitly separates:
 
---------------------------------------------------------------------------------
-Implementation Boundary
---------------------------------------------------------------------------------
+   • Learning Object = knowledge;
+   • Mastery State = User-specific mastery state.
 
-This discrepancy is a documentation reconciliation issue.
+5. Evidence Model
 
-No Python Domain Model modification is authorized by this entry.
+   Mastery Evidence remains evidence consumed by the Mastery Engine and does
+   not become part of the Learning Object or Mastery State.
 
-No persistence modification is authorized by this entry.
+6. Persistence Boundary
 
-The existing implementation must not be changed solely to resolve this
-documentation discrepancy.
+   No persistence implementation has been changed as part of this
+   reconciliation.
 
-Implementation changes may be evaluated only after the Domain Model
-Specification has been formally reconciled and reviewed against the
-Architecture Specification, Architecture Decision Log, and Architecture
-Consistency Matrix.
+   Persistence decisions concerning Mastery State remain governed by the
+   Persistence Mapping Specification and the applicable Mastery
+   specifications.
 
---------------------------------------------------------------------------------
-Resolution Condition
---------------------------------------------------------------------------------
+Authoritative Interpretation:
 
-This discrepancy may be marked RESOLVED only after:
+The authoritative conceptual relationship is:
 
-1. the Domain Model Specification has been revised;
-2. all LearningObject-owned Mastery definitions have been removed or
-   corrected;
-3. the revised Domain Model has been checked against the Mastery Engine,
-   Mastery State, Learning State, Learning Object, and Evidence Model
-   specifications;
-4. the Architecture Consistency Matrix has been verified against the
-   revised Domain Model.
+User
+|
++---- Mastery State ----> Learning Object
 
---------------------------------------------------------------------------------
-Sources
---------------------------------------------------------------------------------
+The Learning Object may therefore be associated with different Mastery
+States for different Users.
 
-• ELR Domain Model Specification 1.0.0
-• Learning Object Specification 1.0.0
-• Learning State Specification 1.0.0
-• Mastery Engine Specification 1.0.0
-• Mastery State Specification 1.0.0
-• Evidence Model Specification 1.0.1
-• ELR Architecture Specification 1.1.0
-• ELR Architecture Decision Log 1.0.0
-• ELR Architecture Consistency Matrix 1.1.0
+The Learning Object itself does not possess a Mastery State.
+
+Validation:
+
+The reconciled model has been checked against:
+
+• ELR Domain Model Specification 1.0.0 (reconciled content);
+• Learning Object Specification 1.0.0;
+• Learning State Specification 1.0.0;
+• Mastery Engine Specification 1.0.0;
+• Mastery State Specification 1.0.0;
+• Evidence Model Specification 1.0.1;
+• Persistence Mapping Specification 0.1.0;
+• ELR Architecture Specification 1.1.0;
+• ELR Architecture Decision Log 1.0.0;
+• ELR Architecture Consistency Matrix 1.1.0.
+
+Implementation Boundary:
+
+No Python implementation or persistence implementation change is implied by
+this documentation reconciliation.
+
+The reconciliation is considered complete at the documentation level.
+Implementation changes, if any, require a separate architectural and
+implementation review.
+
+Resolution Date:
+
+# 2026-08-09
+
 
 ================================================================
 
