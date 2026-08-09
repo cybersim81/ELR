@@ -713,12 +713,9 @@ Any future introduction of a dedicated Value Object or other Domain
 construct must be explicitly approved before the Persistence Mapping is
 changed.
 
-
 ================================================================
 
-================================================================
-
-16. # Documentation authority and status
+16. Documentation authority and status
     ================================================================
 
 
