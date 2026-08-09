@@ -158,152 +158,79 @@ Core Entities
 Domain Elements
 ================================================================================
 
-Il modello persistente dell'ELR è composto da una entità principale e da
-elementi dipendenti che descrivono aspetti della conoscenza rappresentata.
+Il Domain Model ELR rappresenta esclusivamente la conoscenza linguistica
+persistente contenuta nel repository.
 
+Il principale elemento del modello è il Learning Object.
 
-Primary Domain Entity:
-
-• Learning Object
-
-
-Supporting Domain Elements:
+Il Learning Object è composto concettualmente da:
 
 • Anchor;
-
 • Knowledge Statement;
-
 • Knowledge Category;
-
-• Mastery;
-
 • Examples;
-
 • Notes.
 
+Questi elementi costituiscono la rappresentazione persistente della
+conoscenza linguistica.
 
-Gli elementi di supporto non rappresentano conoscenze autonome indipendenti,
-ma descrivono aspetti della conoscenza contenuta nel Learning Object.
+Lo stato di apprendimento e lo stato di padronanza dell'utente non
+costituiscono elementi posseduti dal Learning Object.
 
-
-================================================================================
-Entity Relationship Overview
-================================================================================
-
-Il modello concettuale può essere rappresentato come segue.
-
-
-                    Learning Object
-                           |
-        +------------------+------------------+
-        |                  |                  |
-        v                  v                  v
-
-     Anchor      Knowledge Statement     Knowledge Category
-
-        |
-        +------------------+
-        |                  |
-        v                  v
-
-     Examples           Notes
-
-        |
-        +------------------+
-        |
-        v
-
-     Mastery
-
-
-Ogni Learning Object costituisce il punto centrale del modello.
-
-Le altre entità descrivono differenti aspetti della medesima conoscenza
-linguistica.
-
-
-================================================================================
-Repository Boundary
-================================================================================
-
-Appartengono al repository:
-
-• Learning Object;
-
-• Anchor;
-
-• Knowledge Statement;
-
-• Knowledge Category;
-
-• Mastery;
-
-• Examples;
-
-• Notes.
-
-
-Non appartengono al repository:
-
-• Conversation Episode;
-
-• Knowledge Candidate;
-
-• Trigger;
-
-• ELR Change Proposal;
-
-• Learning Review;
-
-• Change Evidence;
-
-• Mastery Evidence.
-
-
-Questi elementi appartengono ai processi operativi del sistema e non fanno
-parte dello stato persistente dell'ELR.
-
-Il repository ELR rappresenta esclusivamente conoscenza linguistica
-consolidata e validata.
-
-Gli stati intermedi prodotti dai processi di acquisizione, valutazione o
-proposta non appartengono al repository persistente.
-
-Tali stati appartengono ai processi operativi della KEP e dei componenti
-applicativi.
 
 ================================================================================
 Aggregate Boundary
 ================================================================================
 
-Il Learning Object costituisce l'Aggregate Root del Domain Model ELR.
+Il Learning Object costituisce l'aggregate root della rappresentazione
+persistente della conoscenza linguistica.
 
-L'Aggregate Learning Object rappresenta il confine di consistenza della
-conoscenza linguistica persistente.
-
-Gli elementi concettualmente associati al Learning Object costituiscono parte
-del medesimo modello persistente:
+L'aggregate Learning Object comprende esclusivamente gli elementi necessari
+alla rappresentazione coerente della conoscenza:
 
 • Anchor;
-
 • Knowledge Statement;
-
-• Mastery;
-
+• Knowledge Category;
 • Examples;
-
 • Notes.
 
+Learning State e Mastery State non appartengono all'aggregate boundary del
+Learning Object.
 
-Tali elementi descrivono aspetti della stessa conoscenza linguistica e non
-rappresentano conoscenze autonome indipendenti.
+Mastery State rappresenta lo stato corrente della padronanza di uno specifico
+User rispetto a uno specifico Learning Object.
+
+La semantica e l'evoluzione del Mastery State sono definite dalla Mastery
+Engine Specification e dalla Mastery State Specification.
 
 
-Tali elementi non rappresentano conoscenze autonome indipendenti e non possono
-evolvere separatamente dal Learning Object a cui appartengono.
+================================================================================
+Separation of Knowledge and User State
+================================================================================
 
-Qualunque modifica che preserva la stessa conoscenza atomica deve essere
-applicata attraverso l'evoluzione del Learning Object.
+Il Domain Model mantiene una separazione fondamentale tra:
+
+Learning Object:
+
+"Che cosa rappresenta la conoscenza."
+
+Learning State:
+
+"Qual è lo stato di apprendimento di uno specifico User rispetto al
+Learning Object."
+
+Mastery State:
+
+"Qual è lo stato di padronanza di uno specifico User rispetto al
+Learning Object."
+
+Il Learning Object non possiede né Learning State né Mastery State.
+
+La presenza di un Learning Object nel repository non implica l'esistenza di
+uno specifico stato di apprendimento o di padronanza per un User.
+
+
+================================================================================
 
 
 ================================================================================
