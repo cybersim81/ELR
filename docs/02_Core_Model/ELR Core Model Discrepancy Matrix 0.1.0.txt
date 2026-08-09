@@ -713,36 +713,99 @@ Any future introduction of a dedicated Value Object or other Domain
 construct must be explicitly approved before the Persistence Mapping is
 changed.
 
+
 ================================================================
 
-16. Documentation authority and status
+================================================================
+
+16. # Documentation authority and status
     ================================================================
 
-Status: OPEN / ACTION REQUIRED
+
+Status: RESOLVED / DOCUMENTATION GOVERNANCE CONSTRAINT
 
 Finding:
 
-The repository contains documents with different statuses, including
-APPROVED and DRAFT specifications.
+The ELR documentation architecture defines a single-source-of-truth
+principle for architectural concepts.
 
-Some discrepancies arise because high-level Domain documentation,
-specialized specifications, and Persistence documentation do not always
-express the same level of detail.
+Each architectural concept must have an authoritative owning document.
+Other documents may reference that concept but must not silently redefine
+it.
+
+The Architecture Decision Log is authoritative for approved architectural
+decisions.
+
+The Architecture Specification represents the architectural state derived
+from approved decisions.
+
+Specialized specifications describe their respective domains and must
+remain consistent with the approved architectural decisions.
+
+The Design Protocol defines the required decision workflow and requires
+approval before a proposed architectural decision is consolidated.
+
+A change that modifies the conceptual model, introduces a stable
+architectural principle, or changes an established architectural rule must
+be promoted to an Architecture Decision Record.
+
+Therefore, implementation must not be used to resolve an architectural or
+documentary conflict implicitly.
 
 Decision:
 
-Before implementing a disputed concept:
+When conflicting representations are discovered, the following order must
+be followed:
 
-1. identify the authoritative specification;
-2. identify its status and version;
-3. reconcile conflicting specifications;
-4. update the documentation where required;
-5. only then modify the Domain or Persistence implementation.
+1. identify the concept in conflict;
+2. identify its authoritative owning document;
+3. verify the document status and version;
+4. determine whether an approved architectural decision governs the
+   concept;
+5. reconcile dependent documents with the authoritative decision;
+6. obtain approval for any new architectural decision when required;
+7. update the affected documentation;
+8. only then modify or introduce implementation.
 
-No implementation decision should be used to silently resolve an
-architectural documentation conflict.
+Implementation consequence:
 
-This rule remains an active architectural constraint.
+Implementation must follow the approved and reconciled documentation.
+
+An implementation detail must not acquire architectural authority merely
+because it already exists in code.
+
+A conflict between implementation and approved Domain or Architecture
+documentation must be resolved by reconciling the implementation with the
+authoritative documentation, unless a new approved architectural decision
+changes that documentation.
+
+Governance consequence:
+
+DRAFT, APPROVED, and STABLE statuses must be respected when evaluating
+document authority.
+
+A draft specification must not silently override an approved architectural
+decision.
+
+An implementation must not silently override either.
+
+Resolution:
+
+The discrepancy is resolved by the existing documentation governance
+defined by:
+
+* ELR Documentation Architecture;
+* ELR Architecture Specification;
+* ELR Architecture Decision Log;
+* ELR Design Protocol.
+
+No additional architectural mechanism is required for the current
+documentation authority model.
+
+Future changes to the authority hierarchy or decision workflow require an
+explicit approved architectural decision.
+
+
 
 ================================================================
 
