@@ -638,31 +638,81 @@ Updating an entity must not silently overwrite or erase existing audit
 records.
 
 ================================================================
-
-15. Approved persistence relationships
+15. Persistence relationships for Knowledge Statement
     ================================================================
 
-Status: OPEN / IMPLEMENTATION CONSTRAINT
+Status: RESOLVED / IMPLEMENTATION CONSTRAINT
 
 Finding:
 
-The Persistence Mapping Specification defines approved relationships
-including:
+The approved Domain Model represents Knowledge Statement as an internal
+value of LearningObject:
 
-* learning_objects.anchor_id -> anchors.id
-* learning_objects.category_id -> knowledge_categories.id
-* knowledge_categories.parent_id -> knowledge_categories.id
+```
+LearningObject
+    └── statement: str
+```
+
+Knowledge Statement therefore has no independent Domain identity,
+lifecycle, or repository contract.
+
+The Persistence Mapping Specification has been reconciled with this
+decision.
+
+Knowledge Statement is persisted as part of the LearningObject
+persistence representation.
+
+No independent KnowledgeStatement persistence entity is required.
+
+No independent KnowledgeStatement persistence identity is required.
+
+No LearningObject → KnowledgeStatement foreign key is required.
+
+No KnowledgeStatementRepository is required.
 
 Decision:
 
-These relationships may be implemented in persistence.
+Persistence relationships must follow the approved Domain representation.
 
-Additional relationships involving KnowledgeStatement, Version,
-AuditRecord, or Mastery must not be invented without explicit support
-from the approved Domain/Data Model.
+The LearningObject persistence representation owns the persisted Knowledge
+Statement value.
 
-This remains dependent on the resolution of the Learning Object /
-Knowledge Statement alignment described in section 8.
+The following relationships remain authoritative:
+
+* learning_objects.anchor_id references anchors.id;
+* learning_objects.category_id references knowledge_categories.id;
+* knowledge_categories.parent_id references knowledge_categories.id where
+  applicable.
+
+No additional persistence relationship involving Knowledge Statement may
+be introduced without a new approved Domain Model decision.
+
+Implementation consequence:
+
+The Persistence Layer must not recreate the previous autonomous
+KnowledgeStatement entity model.
+
+Any implementation that introduces an independent KnowledgeStatement
+table, identifier, repository, or foreign key solely to represent the
+Knowledge Statement is not aligned with the approved Domain Model.
+
+Resolution:
+
+The discrepancy is resolved by:
+
+1. establishing Knowledge Statement as an internal LearningObject value
+   through #8;
+2. reconciling the Persistence Mapping Specification §§7–8;
+3. confirming the Foreign Key Rules in §15;
+4. confirming the Repository Boundary in §20.
+
+No further architectural decision is required for the current
+Knowledge Statement persistence representation.
+
+Any future introduction of a dedicated Value Object or other Domain
+construct must be explicitly approved before the Persistence Mapping is
+changed.
+========
 
 ================================================================
 
