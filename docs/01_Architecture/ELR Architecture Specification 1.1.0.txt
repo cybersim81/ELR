@@ -204,12 +204,25 @@ Review.
 
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
-Mastery as Learning Object State
+Mastery State as User-Specific Learning State
 -------------------------------------------------------------------------------
 
-La padronanza relativa a ciascun Learning Object è rappresentata dalla Mastery.
+La padronanza relativa a un Learning Object è rappresentata da un
+Mastery State specifico per User.
 
-La Mastery non appartiene al contenuto conoscitivo del Learning Object.
+Il Mastery State rappresenta lo stato corrente della padronanza di uno
+specifico User rispetto a uno specifico Learning Object.
+
+Il Mastery State non appartiene al contenuto conoscitivo del Learning Object
+e non costituisce una proprietà dell'aggregate LearningObject.
+
+La responsabilità semantica e operativa del Mastery State appartiene al
+Mastery Engine e alla Mastery State Specification.
+
+Il Learning Object rappresenta la conoscenza.
+
+Il Mastery State rappresenta lo stato di padronanza dell'utente rispetto a
+quella conoscenza.
 
 
 ================================================================================
