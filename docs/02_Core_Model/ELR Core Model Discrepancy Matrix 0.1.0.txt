@@ -418,28 +418,61 @@ high-level documentation.
 8.  LearningObject Domain representation vs Knowledge Statement
   ================================================================
 
-Status: OPEN / DOMAIN REPRESENTATION DECISION REQUIRED
+Status: OPEN / DOCUMENTATION CONFLICT / ARCHITECTURAL DECISION REQUIRED
 
 Finding:
 
-The architectural and persistence documentation consistently defines
-Knowledge Statement as an element of the Learning Object aggregate.
+The approved Core Domain documentation defines Knowledge Statement as an
+element of the LearningObject aggregate.
 
 Knowledge Statement:
 
 • belongs to the LearningObject aggregate;
 • represents the cognitive content of the Learning Object;
-• has no independently defined identity;
-• has no independent lifecycle;
-• is not an autonomous Domain Entity;
-• is persisted as part of the persistent Learning Object model.
+• has no independently defined identity in the approved Domain Model;
+• has no independently defined lifecycle;
+• is not established as an autonomous Domain Entity by the approved
+Domain specifications.
 
-The remaining discrepancy concerns only the concrete Domain representation
-of Knowledge Statement.
+However, the current DRAFT implementation documentation introduces a
+different representation.
 
-The current Domain Model defines Knowledge Statement conceptually, but does
-not yet establish whether its executable representation should remain a
-primitive value representation or become an explicit Domain construct.
+The ELR Core Domain Implementation Specification 0.1.0 defines:
+
+```
+Entity: KnowledgeStatement
+```
+
+with an explicit:
+
+```
+id: Identificativo
+```
+
+The ELR Persistence Implementation Specification 0.1.0 likewise defines a
+dedicated knowledge_statements persistence structure with:
+
+```
+id: UUID primary key
+```
+
+and:
+
+```
+learning_object_id: UUID foreign key
+```
+
+Architectural discrepancy:
+
+The approved Core Domain documentation and the DRAFT implementation
+documentation therefore do not currently express the same Domain
+representation of Knowledge Statement.
+
+The DRAFT implementation specifications must not be treated as overriding
+the approved Core Domain model.
+
+The existence of an implementation-level identity for Knowledge Statement
+does not by itself establish an autonomous Domain identity.
 
 Decision required:
 
@@ -448,37 +481,41 @@ Knowledge Statement.
 
 The decision must explicitly establish whether Knowledge Statement is:
 
-1. represented directly as a primitive/string value within LearningObject;
+1. represented as an internal value/primitive representation within
+   LearningObject;
 2. represented as an explicit Value Object within LearningObject; or
-3. represented by another explicitly approved Domain construct.
+3. represented as an autonomous Domain Entity with independent identity.
 
-No autonomous Entity representation should be introduced unless a separate
-architectural decision establishes independent identity, lifecycle, or
-ownership semantics.
+If option 3 is selected, the approved Domain Model and the relevant
+architectural specifications must be explicitly revised and approved
+before implementation.
 
 Constraints:
 
-The decision must preserve the following established architectural rules:
+The current approved architectural baseline remains:
 
 • Learning Object remains the aggregate root;
-• Knowledge Statement remains inside the LearningObject aggregate;
-• Knowledge Statement does not acquire an independent lifecycle;
-• Knowledge Statement does not acquire an independent identity unless
-explicitly approved;
-• persistence representation must remain consistent with the approved
-Domain representation;
-• no implementation should precede the architectural decision.
+• Knowledge Statement remains conceptually associated with the
+LearningObject aggregate;
+• no independent Domain identity is currently approved for Knowledge
+Statement;
+• no independent lifecycle is currently approved for Knowledge Statement;
+• DRAFT implementation specifications cannot override approved Domain
+specifications;
+• persistence identity must not be interpreted as Domain identity without
+an explicit architectural decision.
 
 Required follow-up:
 
-1. approve the concrete Domain representation of Knowledge Statement;
-2. update the Domain Model Specification accordingly;
-3. verify consistency with Learning Object Specification;
-4. verify consistency with ELR Persistence Model Specification;
-5. update the Persistence Mapping documentation if required;
+1. decide the authoritative Domain representation of Knowledge Statement;
+2. reconcile the DRAFT Core Domain Implementation Specification;
+3. reconcile the DRAFT Persistence Implementation Specification;
+4. update the approved Domain Model if the decision requires a different
+   Domain construct;
+5. update persistence mapping and implementation specifications if required;
 6. update this matrix after the decision.
 
-No implementation should precede this decision.
+No Python or persistence implementation should precede this decision.
 
 
 ================================================================
