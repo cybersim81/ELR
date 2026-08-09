@@ -1205,9 +1205,7 @@ La Knowledge Category non possiede direttamente:
 
 • Examples;
 
-• Notes;
-
-• Mastery.
+• Notes.
 
 
 Questi elementi appartengono al Learning Object.
@@ -1229,75 +1227,53 @@ Le modifiche tassonomiche devono preservare la separazione tra:
 • conoscenza linguistica rappresentata.
 
 ================================================================================
-Mastery
+Mastery State
 ================================================================================
 
-La Mastery rappresenta lo stato persistente di consolidamento associato ad un
-Learning Object.
+Mastery State rappresenta lo stato corrente della padronanza di uno specifico
+User rispetto ad uno specifico Learning Object.
 
-Nel Domain Model ELR la Mastery non costituisce una entità autonoma, ma un
-elemento dipendente appartenente all'aggregate del Learning Object.
+Il Mastery State non costituisce un elemento del Learning Object e non
+appartiene all'aggregate boundary del Learning Object.
 
-La Mastery descrive esclusivamente il livello corrente di padronanza relativo
-alla conoscenza rappresentata dal Learning Object.
+Il Learning Object rappresenta la conoscenza linguistica persistente.
+
+Il Mastery State rappresenta invece lo stato User-specific relativo a tale
+conoscenza.
 
 
 ================================================================================
 Responsabilità
 ================================================================================
 
-La Mastery è responsabile della rappresentazione dello stato corrente di
-consolidamento della conoscenza.
+Mastery State rappresenta esclusivamente lo stato corrente della padronanza
+della conoscenza rappresentata dal Learning Object.
 
-Essa permette al sistema di conoscere se una specifica conoscenza linguistica
-risulta:
-
-• non ancora consolidata;
-
-• parzialmente consolidata;
-
-• consolidata.
-
-La Mastery non rappresenta:
+Non rappresenta:
 
 • la conoscenza linguistica;
-
 • gli eventi che hanno prodotto il cambiamento;
-
 • le evidenze utilizzate;
-
-• il metodo con cui viene calcolata.
+• l'algoritmo di calcolo della mastery;
+• la conversazione che ha originato l'evidenza.
 
 
 ================================================================================
 Relazione con il Learning Object
 ================================================================================
 
-Ogni Learning Object possiede esattamente uno stato di Mastery.
+Un Mastery State è riferito ad uno specifico Learning Object.
 
-La relazione è parte dell'aggregate Learning Object.
+La relazione è User-specific:
 
-La Mastery non può esistere senza il Learning Object proprietario.
+User
+    |
+    +---- Mastery State ----> Learning Object
 
+Lo stesso Learning Object può quindi essere associato a Mastery State
+differenti per User differenti.
 
-Esempio:
-
-
-Learning Object:
-
-Anchor:
-
-interested in
-
-
-Knowledge Statement:
-
-Per esprimere interesse verso qualcosa si usa "interested in".
-
-
-Mastery:
-
-stato corrente di consolidamento della conoscenza.
+Il Learning Object non possiede direttamente tali Mastery State.
 
 
 ================================================================================
@@ -1306,135 +1282,74 @@ Separazione tra conoscenza e padronanza
 
 Il Domain Model mantiene una separazione fondamentale:
 
-
 Learning Object:
 
 "Che cosa rappresenta la conoscenza."
 
+Mastery State:
 
-Mastery:
+"Qual è lo stato di padronanza di uno specifico User rispetto a quella
+conoscenza."
 
-"Quanto quella conoscenza risulta consolidata."
-
-
-La modifica della Mastery non modifica:
+Una modifica del Mastery State non modifica:
 
 • Anchor;
-
 • Knowledge Statement;
-
 • Knowledge Category;
-
 • identità del Learning Object.
 
 
 ================================================================================
-Persistenza
+Relazione con i processi applicativi
 ================================================================================
 
-La Mastery appartiene allo stato persistente del Learning Object.
+Il Domain Model non definisce il processo attraverso cui il Mastery State
+viene calcolato o aggiornato.
 
-Sono persistenti:
+La valutazione della mastery, l'interpretazione delle evidenze e l'evoluzione
+del Mastery State appartengono alle responsabilità definite dalla Mastery
+Engine Specification e dalla Mastery State Specification.
 
-• lo stato corrente della padronanza;
-
-• la relazione con il Learning Object.
-
-
-Non appartengono alla Mastery:
-
-• evidenze individuali;
-
-• conversazioni;
-
-• esercizi svolti;
-
-• risposte dell'utente;
-
-• motivazioni degli aggiornamenti.
-
-
-Tali informazioni appartengono ai processi esterni che producono modifiche
-alla Mastery.
-
-
-================================================================================
-Relazione con processi esterni
-================================================================================
-
-I componenti applicativi possono utilizzare informazioni esterne per proporre
-aggiornamenti della Mastery.
-
-Tali informazioni non appartengono al Domain Model.
-
-
-Il Domain Model definisce esclusivamente:
-
-Input:
-
-conoscenza rappresentata dal Learning Object.
-
-
-Output persistente:
-
-stato corrente di Mastery.
-
-
-La logica attraverso cui lo stato viene aggiornato appartiene alle specifiche
-dei componenti applicativi.
-
-
-================================================================================
-Identità
-================================================================================
-
-La Mastery non possiede identità autonoma.
-
-Il suo ciclo di vita coincide con quello del Learning Object proprietario.
-
-Quando un Learning Object evolve mantenendo la propria identità, la relativa
-Mastery continua ad essere associata allo stesso oggetto.
+Le evidenze utilizzate nel processo appartengono al modello Evidence e non
+costituiscono componenti del Mastery State.
 
 
 ================================================================================
 Vincoli architetturali
 ================================================================================
 
-Ogni Mastery deve:
+Ogni Mastery State deve:
 
-• appartenere ad un solo Learning Object;
-
+• riferirsi ad uno specifico User;
+• riferirsi ad uno specifico Learning Object;
 • rappresentare esclusivamente lo stato di padronanza;
-
 • non contenere evidenze operative;
-
 • non contenere algoritmi;
-
 • non contenere informazioni conversazionali.
 
-
-Una Mastery che contiene informazioni diverse dallo stato corrente di
-consolidamento viola il Domain Model.
+Il Domain Model non definisce ulteriori dettagli sul calcolo, sulla
+persistenza o sull'evoluzione del Mastery State.
 
 
 ================================================================================
 Evoluzione
 ================================================================================
 
-La Mastery può evolvere indipendentemente dal contenuto conoscitivo del
+Il Mastery State può evolvere indipendentemente dal contenuto conoscitivo del
 Learning Object.
 
-Gli aggiornamenti della Mastery:
+L'evoluzione del Mastery State:
 
-• non creano nuovi Learning Object;
+• non crea un nuovo Learning Object;
+• non modifica l'identità del Learning Object;
+• non modifica il Knowledge Statement;
+• non modifica l'Anchor.
 
-• non modificano l'identità;
+L'evoluzione del Mastery State rappresenta una variazione dello stato di
+padronanza dell'utente rispetto alla stessa conoscenza.
 
-• non modificano il Knowledge Statement.
 
-
-L'evoluzione della Mastery rappresenta esclusivamente una variazione dello
-stato di consolidamento della stessa conoscenza.
+================================================================================
 
 ================================================================================
 Examples
@@ -1620,9 +1535,7 @@ L'aggiunta o modifica degli Examples non modifica:
 
 • l'Anchor;
 
-• il Knowledge Statement;
-
-• la Mastery.
+• il Knowledge Statement.
 
 Un cambiamento degli Examples non costituisce una nuova conoscenza linguistica.
 
