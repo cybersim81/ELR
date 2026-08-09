@@ -122,35 +122,98 @@ The Persistence Layer must preserve the domain invariant that an Anchor cannot h
 
 7. Knowledge Statement Mapping
 
-The KnowledgeStatement domain entity is mapped to the knowledge_statements persistence structure.
+Knowledge Statement is not mapped as an independent persistence entity.
 
-Required attributes:
+The current approved Domain representation is:
 
-* id
-* text
-* language
-* created_at
+```
+LearningObject
+    └── statement: str
+```
 
-The Knowledge Statement has an independent UUID identity.
+The Knowledge Statement value is therefore persisted as part of the
+LearningObject persistence representation.
 
-The Persistence Layer must preserve the domain invariant that statement text cannot be empty.
+The LearningObject persistence structure must contain the statement value
+required to reconstruct the corresponding Domain object.
+
+Required representation:
+
+* statement
+
+The persistence representation must preserve the semantic value of the
+Knowledge Statement without introducing an independent persistence
+identity.
+
+No independent:
+
+* knowledge_statements persistence structure;
+* KnowledgeStatement persistence identity;
+* KnowledgeStatement UUID;
+* KnowledgeStatement foreign key
+
+is required by the current Domain Model.
 
 8. Learning Object and Knowledge Statement Relationship
 
-The current Domain implementation contains a statement field directly on LearningObject.
+The Knowledge Statement is an internal value of LearningObject.
 
-The Persistence Model also defines KnowledgeStatement as an independent persistent entity.
+The relationship is therefore structural rather than an independent
+persistence relationship.
 
-Until the Domain Model explicitly changes the LearningObject structure, the Persistence Layer must not silently replace the existing domain contract.
+The current Domain contract is:
+
+```
+LearningObject
+    └── statement: str
+```
+
+Persistence must preserve this structure when translating between Domain
+and Persistence representations.
 
 Therefore:
 
-* the current LearningObject domain contract remains authoritative for the first implementation;
-* KnowledgeStatement persistence must remain available as a distinct persistent structure;
-* no implicit domain-level relationship between LearningObject and KnowledgeStatement may be introduced without an explicit Domain Model revision;
-* any database relationship between the two must be justified by the approved Data Model before implementation.
+* LearningObject remains the persistence boundary for Knowledge Statement;
+* statement is persisted as part of the LearningObject representation;
+* no independent KnowledgeStatement persistence identity is introduced;
+* no LearningObject → KnowledgeStatement foreign key is introduced;
+* no separate repository for KnowledgeStatement is required;
+* no autonomous KnowledgeStatement lifecycle is persisted.
 
-This prevents the Persistence Layer from redefining the Domain Model.
+The Persistence Layer must not introduce an independent identity or
+relationship for Knowledge Statement that does not exist in the approved
+Domain Model.
+
+Any previous persistence design based on an independent KnowledgeStatement
+entity must be reconciled with this mapping before implementation.
+
+The Persistence Layer must preserve the Domain contract in both directions:
+
+Domain → Persistence
+
+```
+LearningObject.statement
+    ↓
+LearningObject persistence representation
+```
+
+Persistence → Domain
+
+```
+LearningObject persistence representation
+    ↓
+LearningObject.statement
+```
+
+A future decision may introduce a dedicated Value Object if additional
+Domain invariants, semantics, or behavior require an explicit boundary.
+
+Such a change must be explicitly approved and the Persistence Mapping must
+be revised accordingly.
+
+Until such a decision is approved, the current LearningObject-centric
+mapping remains authoritative.
+
 
 9. Knowledge Category Mapping
 
