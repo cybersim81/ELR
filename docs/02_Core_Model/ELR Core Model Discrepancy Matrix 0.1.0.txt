@@ -415,135 +415,71 @@ No implementation should infer additional Domain attributes solely from
 high-level documentation.
 
 ================================================================
+8.  LearningObject Domain representation vs Knowledge Statement
+  ================================================================
 
-8. LearningObject Domain representation vs Knowledge Statement
-   ================================================================
-
-Status: OPEN / DOMAIN REPRESENTATION ALIGNMENT REQUIRED
+Status: OPEN / DOMAIN REPRESENTATION DECISION REQUIRED
 
 Finding:
 
-The approved architecture defines a Learning Object conceptually as:
+The architectural and persistence documentation consistently defines
+Knowledge Statement as an element of the Learning Object aggregate.
 
-```
-Anchor + Knowledge Statement
-```
+Knowledge Statement:
 
-ADR-008 explicitly states that the Knowledge Statement is the principal
-knowledge content of a Learning Object and that every Learning Object
-must be traceable to both an Anchor and a Knowledge Statement.
+• belongs to the LearningObject aggregate;
+• represents the cognitive content of the Learning Object;
+• has no independently defined identity;
+• has no independent lifecycle;
+• is not an autonomous Domain Entity;
+• is persisted as part of the persistent Learning Object model.
 
-The Learning Object Specification 1.0.0 further defines the Knowledge
-Statement as the knowledge associated with the Anchor.
+The remaining discrepancy concerns only the concrete Domain representation
+of Knowledge Statement.
 
-The specification establishes semantic requirements for a Knowledge
-Statement. It must be:
+The current Domain Model defines Knowledge Statement conceptually, but does
+not yet establish whether its executable representation should remain a
+primitive value representation or become an explicit Domain construct.
 
-* atomic;
-* positive;
-* reusable;
-* understandable;
-* observable/verifiable through future user productions.
+Decision required:
 
-The specification also establishes that:
+Determine the authoritative executable Domain representation of
+Knowledge Statement.
 
-* a Learning Object represents one independent knowledge;
-* a single source statement may generate multiple Learning Objects;
-* each resulting Learning Object has its own Anchor and Knowledge
-  Statement;
-* a new Knowledge Statement may represent an update of an existing
-  Learning Object when the underlying atomic knowledge remains the same.
+The decision must explicitly establish whether Knowledge Statement is:
 
-Current Domain implementation:
+1. represented directly as a primitive/string value within LearningObject;
+2. represented as an explicit Value Object within LearningObject; or
+3. represented by another explicitly approved Domain construct.
 
-```
-LearningObject
-    ├── anchor_id
-    ├── statement: str
-    ├── category_id
-    └── ...
-```
+No autonomous Entity representation should be introduced unless a separate
+architectural decision establishes independent identity, lifecycle, or
+ownership semantics.
 
-The current `statement: str` therefore appears to represent the semantic
-content of the approved Knowledge Statement concept.
+Constraints:
 
-However, the current Domain model does not explicitly name or model the
-Knowledge Statement concept.
+The decision must preserve the following established architectural rules:
 
-Important constraint:
+• Learning Object remains the aggregate root;
+• Knowledge Statement remains inside the LearningObject aggregate;
+• Knowledge Statement does not acquire an independent lifecycle;
+• Knowledge Statement does not acquire an independent identity unless
+explicitly approved;
+• persistence representation must remain consistent with the approved
+Domain representation;
+• no implementation should precede the architectural decision.
 
-Review of Learning Object Specification 1.0.0 found no explicit
-definition establishing Knowledge Statement as:
+Required follow-up:
 
-* an independent Entity;
-* a Value Object;
-* an object with its own UUID;
-* an object with an independent lifecycle;
-* an object with independent versioning.
+1. approve the concrete Domain representation of Knowledge Statement;
+2. update the Domain Model Specification accordingly;
+3. verify consistency with Learning Object Specification;
+4. verify consistency with ELR Persistence Model Specification;
+5. update the Persistence Mapping documentation if required;
+6. update this matrix after the decision.
 
-Therefore the specification does not currently justify introducing an
-autonomous `KnowledgeStatement` Domain Entity.
+No implementation should precede this decision.
 
-Persistence:
-
-The Persistence Model contains a `KnowledgeStatement` persistence
-structure.
-
-The existence of this persistence structure must not be used to infer
-that `KnowledgeStatement` is an autonomous Domain Entity.
-
-The Domain representation must be determined from the Domain/approved
-specifications, and the Persistence Model must follow that decision.
-
-Decision:
-
-The authoritative semantic model remains:
-
-```
-LearningObject
-    |
-    +-- Anchor
-    |
-    +-- Knowledge Statement
-    |
-    +-- Knowledge Category
-```
-
-The current `statement: str` field may therefore be treated as a
-simplified representation of the Knowledge Statement concept.
-
-No autonomous `KnowledgeStatement` Domain Entity should be introduced
-until an explicit architectural decision establishes:
-
-* its identity;
-* its lifecycle;
-* its ownership;
-* its independent versioning semantics;
-* its Domain type.
-
-Required action:
-
-Review the broader Domain Model and Learning Object Specification before
-changing the current Domain representation.
-
-The next Domain-level decision is whether the Knowledge Statement should
-remain a primitive/string representation or become an explicitly named
-Domain construct, such as a Value Object.
-
-Any such change must preserve the semantics established by ADR-008 and
-ADR-009.
-
-The Persistence Mapping must not be changed solely on the basis of the
-current persistence model.
-
-Evidence:
-
-* ELR Architecture Specification 1.1.0
-* ELR Architecture Decision Log 1.0.0
-* ELR Architecture Consistency Matrix 1.1.0
-* Learning Object Specification 1.0.0
-* Current LearningObject implementation
-* Persistence Mapping Specification 0.1.0
 
 ================================================================
 
