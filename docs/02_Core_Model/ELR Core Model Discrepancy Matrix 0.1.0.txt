@@ -379,18 +379,18 @@ Evidence:
 ================================================================
 
 7. LearningObject implementation vs documented Domain Model
-   ================================================================
+    ================================================================
 
-Status: OPEN / DEFERRED
+Status: RESOLVED / IMPLEMENTATION FOLLOW-UP REQUIRED
 
 Finding:
 
-The approved/domain documentation describes the Learning Object as the
-central knowledge object and references supporting structures including
-Anchor, Knowledge Statement, Knowledge Category, Examples, Notes and
-Mastery-related concepts.
+The approved Domain documentation describes the Learning Object as the
+central knowledge object and includes supporting structures including
+Anchor, Knowledge Statement, Knowledge Category, Examples and Notes.
 
-The current Python LearningObject implementation contains:
+The current Python LearningObject implementation previously represented only
+a subset of the documented Domain Model:
 
 * anchor_id
 * statement
@@ -403,19 +403,90 @@ The current Python LearningObject implementation contains:
 
 Decision:
 
-The current implementation may represent only the subset of the Domain
-Model that has been explicitly implemented and verified.
+Examples and Notes are confirmed as Domain concepts belonging to the
+LearningObject.
 
-Missing documented concepts must not be added automatically.
+They are represented as Value Objects.
 
-Each missing concept requires an explicit architectural decision before
-implementation.
+Example:
 
-No implementation should infer additional Domain attributes solely from
-high-level documentation.
+```
+content: str
+```
+
+Note:
+
+```
+content: str
+```
+
+Both Value Objects are immutable.
+
+The collections of Examples and Notes have set semantics:
+
+* relative order is not semantically significant;
+* semantically equivalent duplicate values do not constitute distinct
+  Domain occurrences;
+* no positional or index-based meaning is defined.
+
+The executable Domain representation is therefore:
+
+```
+examples: set[Example]
+notes: set[Note]
+```
+
+Persistence:
+
+Examples and Notes form part of the persistent representation of the
+LearningObject.
+
+They do not possess:
+
+* independent Domain identity;
+* independent persistence identity;
+* independent persistence entity status;
+* independent repository contracts.
+
+No autonomous Example or Note persistence entity, repository, or persistence
+relationship is required by the approved Domain decision.
+
+The concrete persistence representation must remain part of the
+LearningObject persistence representation and must not introduce autonomous
+Example or Note persistence structures without a new approved architectural
+decision.
+
+Implementation Boundary:
+
+The architectural and Domain decisions concerning Examples and Notes are
+resolved.
+
+The current Python implementation must subsequently be reconciled with the
+approved Domain representation.
+
+The Persistence Mapping and Persistence Implementation must subsequently be
+reconciled with the approved persistence boundary.
+
+No implementation change is implied by this resolution alone.
+
+Any implementation change must be performed only after the corresponding
+documentation has been updated and verified.
+
+Resolution:
+
+The discrepancy is resolved at the architectural/documentation level by
+establishing the approved Domain and persistence semantics for Examples and
+Notes.
+
+The remaining work is implementation reconciliation.
+
+No further architectural decision is required for the current Examples and
+Notes scope.
+
 
 ================================================================
-8. # Knowledge Statement Domain representation
+
+8. Knowledge Statement Domain representation
     ================================================================
 
 Status: RESOLVED / DOMAIN REPRESENTATION ESTABLISHED
