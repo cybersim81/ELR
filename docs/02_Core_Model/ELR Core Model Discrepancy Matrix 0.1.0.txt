@@ -906,7 +906,7 @@ Domain and Persistence contracts are already sufficiently defined.
 
 ================================================================
 
-18. # Remaining architectural work
+18. Remaining architectural work
 
 Status: RESOLVED
 
@@ -1240,3 +1240,55 @@ explicitly approved Domain representation.
 No Mastery State implementation, persistence model, ORM mapping, or
 repository is implied by this resolution.
 
+18.8 — Mastery State: Internal Structure
+
+Decision:
+
+The Mastery State has an explicit conceptual internal structure:
+
+MasteryState
+├── mastery_value
+├── updated_at
+└── source_evidence: Set<EvidenceReference>
+
+Where:
+
+- `mastery_value` represents the current mastery value and is modeled as a
+  Value Object of the Domain Model. The concrete scale, numerical domain,
+  thresholds, formulas, and scoring algorithm are outside the scope of this
+  decision.
+
+- `updated_at` represents the point in time at which the current Mastery State
+  was updated.
+
+- `source_evidence` is a set of references to the Mastery Evidence that the
+  Mastery Engine considers causally or evaluatively relevant to the
+  determination of the current Mastery State.
+
+`source_evidence` does not represent the complete Evidence History. It is only
+the subset of observations considered relevant to the current state. Multiple
+Evidence references may therefore belong to the same Mastery State when its
+determination depends on recurrence, repetition, or combination of observations.
+
+The Mastery State does not contain:
+
+- the complete Evidence History;
+- a persistence identity as a semantic Domain property;
+- technical versioning as a necessary Domain property;
+- a Learning Object revision identifier;
+- a `confidence` property.
+
+Persistence identity and technical versioning, if required, belong to the
+corresponding persistence or infrastructure model.
+
+The revision of the Learning Object against which a Mastery Evidence was
+produced belongs to the context of that Evidence. It is not an intrinsic
+property of the Mastery State.
+
+The Mastery State therefore represents the current mastery condition, while
+the Evidence Model and Mastery Engine retain responsibility for the
+observational and historical context used to determine that condition.
+
+Status:
+
+APPROVED
