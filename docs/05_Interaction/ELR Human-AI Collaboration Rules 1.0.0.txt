@@ -120,7 +120,42 @@ Important project decisions should remain traceable through the combination of:
 
 The conversational history must not be treated as the sole authoritative source of project decisions.
 
-12. Revision
+12. Repository as Architectural Source of Truth
+
+The repository constitutes the persistent source of truth for the
+architectural state of the project.
+
+Conversation memory, including any contextual memory available to the AI,
+must not be used to reconstruct, assume, or restore architectural decisions
+when those decisions can be verified in the repository documentation.
+
+The conversation constitutes the operational context for the reasoning and
+decision-making process, but it does not constitute the authoritative
+architectural decision record.
+
+When a divergence exists between conversation memory and the contents of the
+repository, the divergence must be treated as a discrepancy to be verified.
+
+The AI must not resolve such a divergence through memory, inference, or
+assumption.
+
+Instead, it must:
+
+1. retrieve the relevant documents from the repository;
+
+2. verify their version and status;
+
+3. identify the authoritative document or decision;
+
+4. explicitly report any conflict;
+
+5. proceed only on the basis of the verified documented state.
+
+The repository therefore constitutes the persistent architectural memory of
+the project, while the conversation constitutes the temporary workspace for
+the reasoning process.
+
+13. Revision
 
 This document may be revised when the collaboration workflow evolves.
 
