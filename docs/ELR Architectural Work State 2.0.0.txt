@@ -262,10 +262,14 @@ The latest audit established the following working states:
    RESOLVED
 
 3. Learning Object vs Mastery
-   Must remain governed by the current authoritative documentation and
-   Matrix status; any remaining wording conflict in the Domain Model
-   Specification must be resolved explicitly before Mastery
-   implementation.
+   RESOLVED / implementation of Mastery remains deferred
+
+   The current Mastery specifications define Mastery State as user-specific
+   state with respect to a Learning Object.
+
+   No MasteryState implementation or persistence model is authorized until
+   the remaining Mastery Domain decisions recorded in #17 and #18 are
+   explicitly approved.
 
 4. Mastery State Domain Contract
    Documentation baseline established / implementation deferred
