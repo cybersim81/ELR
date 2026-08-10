@@ -302,22 +302,72 @@ Non vengono introdotti in questa specifica:
 9. Mastery State Structure
 ================================================================================
 
-La struttura interna completa del Mastery State è ancora soggetta a
-definizione.
+La struttura concettuale approvata del Mastery State è:
 
-Questa specifica non introduce prematuramente una struttura Entity o Value
-Object.
 
-Gli aspetti seguenti richiedono una futura decisione architetturale:
+MasteryState
+├── mastery_value
+├── updated_at
+└── source_evidence: Set<EvidenceReference>
 
-- identity;
-- persistence identity;
-- temporal semantics;
-- historical representation;
-- versioning;
-- evidence references;
-- numerical mastery representation;
-- revision state.
+
+`mastery_value` rappresenta il valore corrente della padronanza ed è
+rappresentato come un Value Object del Domain Model.
+
+Il Value Object incapsula il valore e le relative invarianti.
+
+La scala concreta, il dominio numerico o qualitativo, le soglie, le formule
+e l'algoritmo di scoring non sono definiti da questa specifica. Essi
+appartengono alle regole e alle responsabilità del Mastery Engine.
+
+`updated_at` rappresenta il momento in cui il Mastery State corrente è stato
+aggiornato.
+
+`source_evidence` rappresenta un set di riferimenti alle Mastery Evidence che
+il Mastery Engine considera causalmente o valutativamente rilevanti per la
+determinazione del Mastery State corrente.
+
+`source_evidence` non rappresenta la storia completa delle Evidence.
+
+Rappresenta esclusivamente il sottoinsieme di osservazioni considerate
+rilevanti per lo stato corrente.
+
+Il set può quindi contenere più riferimenti alle Evidence quando la
+determinazione dello stato corrente dipende dalla ricorrenza, dalla
+ripetizione o dalla combinazione di più osservazioni.
+
+La Evidence History completa rimane parte del modello delle Evidence e dei
+processi che la utilizzano.
+
+Il Mastery State non contiene una persistence identity come proprietà
+semantica del Domain Model.
+
+Eventuali identity introdotte per esigenze di persistenza appartengono
+esclusivamente al Persistence Model e non modificano l'identità semantica del
+Mastery State.
+
+Il Mastery State non include una proprietà di versioning tecnico come parte
+necessaria del proprio significato di dominio.
+
+Eventuali informazioni di versione introdotte per persistenza, concorrenza,
+sincronizzazione, caching o altri requisiti tecnici appartengono al relativo
+modello tecnico.
+
+Il Mastery State non include una proprietà relativa alla revisione del
+Learning Object.
+
+La revisione del Learning Object rispetto alla quale una Mastery Evidence è
+stata prodotta appartiene al contesto della Evidence.
+
+Il Mastery Engine può utilizzare tale informazione nell'interpretazione delle
+Evidence e nella determinazione del Mastery State corrente.
+
+Non è attualmente definita una proprietà `confidence` come componente del
+Mastery State.
+
+Il Mastery State rappresenta quindi la condizione corrente della padronanza e
+non costituisce la registrazione storica delle osservazioni che hanno
+contribuito alla sua evoluzione.
 
 
 ================================================================================
