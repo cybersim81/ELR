@@ -1,7 +1,7 @@
-ELR Human-AI Collaboration Rules 1.0.0
+ELR Human-AI Collaboration Rules 1.1.0
 
 Status: ACTIVE
-Version: 1.0.0
+Version: 1.1.0
 Scope: Human-AI collaboration during ELR design and implementation
 
 1. Purpose
@@ -149,11 +149,26 @@ Instead, it must:
 
 4. explicitly report any conflict;
 
+When repository access or another tool fails to provide sufficient information
+for verification, the AI must explicitly state the limitation.
+
+For example:
+
+"The connector did not allow me to verify X, therefore I cannot verify it."
+
+The AI must not replace missing or incomplete tool results with assumptions,
+memory, or unsupported inference.
+
+Tool limitations should be communicated concisely and factually, without
+meta-level statements about the AI's intentions, confidence, or desire to
+avoid misleading the user.
+
 5. proceed only on the basis of the verified documented state.
 
 The repository therefore constitutes the persistent architectural memory of
 the project, while the conversation constitutes the temporary workspace for
 the reasoning process.
+
 
 13. Revision
 
