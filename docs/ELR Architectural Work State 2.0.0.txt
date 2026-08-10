@@ -372,9 +372,7 @@ discrepancy.
 
 ================================================================
 
-10.
-
-# IMPLEMENTATION CONSTRAINTS
+10. # IMPLEMENTATION CONSTRAINTS
 
 Until the remaining Mastery decisions are closed:
 
@@ -398,9 +396,7 @@ Persistence contracts are already sufficiently defined.
 
 ================================================================
 
-11.
-
-# CURRENT DOMAIN MODEL DIRECTION
+11. # CURRENT DOMAIN MODEL DIRECTION
 
 Current conceptual knowledge model:
 
@@ -454,9 +450,7 @@ remaining Mastery Domain decisions are explicitly approved.
 
 ================================================================
 
-12.
-
-# RESUMPTION PROTOCOL
+12. # RESUMPTION PROTOCOL
 
 The first action in a new working session should be:
 
@@ -484,9 +478,7 @@ architectural approval.
 
 ================================================================
 
-13.
-
-# GIT / REPOSITORY CONTINUITY
+13. # GIT / REPOSITORY CONTINUITY
 
 The working process uses the repository as persistent architectural
 memory.
@@ -506,9 +498,7 @@ conversation.
 
 ================================================================
 
-14.
-
-# LAST KNOWN POSITION
+14. # LAST KNOWN POSITION
 
 The architectural audit has completed the current Knowledge Statement
 reconciliation and the associated Persistence Mapping alignment.
