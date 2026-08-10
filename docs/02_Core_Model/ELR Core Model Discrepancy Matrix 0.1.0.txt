@@ -835,26 +835,12 @@ Domain and Persistence contracts are already sufficiently defined.
 
 ================================================================
 
-18. Remaining architectural work
-    ================================================================
+18. # Remaining architectural work
 
-Status: ACTIVE — Mastery work remaining
+Status: RESOLVED
 
-The following work remains before implementing Mastery in the Domain
-Layer:
-
-1. explicitly approve the Domain implementation scope for Mastery State;
-2. determine the implementation representation of Mastery State in the
-   executable Domain Model;
-3. define implementation-specific identity semantics, if required;
-4. define lifecycle and update semantics for the executable Domain Model;
-5. define the implementation boundary between Mastery State and Learning
-   State;
-6. define the implementation relationship between Mastery State and
-   Mastery Evidence;
-7. determine whether and when Mastery State becomes part of a future
-   persistence model;
-8. update this matrix after each approved architectural decision.
+The remaining architectural work on Mastery State has been completed
+through decisions 18.1–18.7.
 
 18.1 Mastery State Domain Scope
 
@@ -891,9 +877,6 @@ The scope decision does not define:
 * Evidence references;
 * persistence representation.
 
-These aspects remain subject to the subsequent decisions listed in
-#18.2–#18.7.
-
 Architectural basis:
 
 * ADR-013 — Mastery Representation;
@@ -902,25 +885,287 @@ Architectural basis:
 * Learning State Specification 1.0.0;
 * ELR Domain Model Specification 1.0.0.
 
-Implementation consequence:
-
-This decision does not authorize implementation of MasteryState.
-
-In particular:
-
-* MasteryState must not be added to LearningObject;
-* no MasteryState persistence model may be introduced;
-* no persistence relationship may be inferred;
-* no identity semantics may be inferred;
-* no additional Domain attributes may be introduced beyond a later
-  explicitly approved representation.
-
 Resolution:
 
 The Domain scope of Mastery State is approved.
 
-The next architectural step is #18.2 — definition of the representation of
-Mastery State in the executable Domain Model.
+18.2 Mastery State Domain Representation
 
-No implementation change is implied by this resolution.
+Status: RESOLVED
+
+Decision:
+
+Mastery State is represented in the Domain Model as a distinct Domain
+concept separate from LearningObject.
+
+The representation is semantically associated with:
+
+* a specific User; and
+* a specific Learning Object.
+
+These associations are conceptual Domain references at this stage.
+
+The decision does not define the concrete executable representation of
+those references, their identifier types, or any persistence mapping.
+
+In particular, this decision does not authorize:
+
+* adding MasteryState to LearningObject;
+* introducing a concrete MasteryState class with unspecified attributes;
+* introducing persistence identifiers;
+* introducing ORM relationships;
+* introducing persistence tables or constraints.
+
+Resolution:
+
+The Domain representation boundary of Mastery State is approved.
+
+18.3 Mastery State Identity Semantics
+
+Status: RESOLVED
+
+Decision:
+
+Mastery State does not possess an autonomous Domain identity.
+
+Its Domain identity semantics are determined by the combination of:
+
+* User; and
+* Learning Object.
+
+Conceptually:
+
+```
+(User, LearningObject) → Mastery State
+```
+
+This is a Domain identity semantic and does not constitute a persistence
+key or database constraint.
+
+The decision does not authorize:
+
+* MasteryState.id;
+* a surrogate identifier;
+* a persistence primary key;
+* a UNIQUE constraint;
+* ORM identity configuration;
+* any concrete persistence representation.
+
+Resolution:
+
+The autonomous identity of Mastery State is not part of the Domain Model.
+The User + Learning Object context determines the identity semantics of
+the Mastery State.
+
+18.4 Mastery State Lifecycle and Update Semantics
+
+Status: RESOLVED
+
+Decision:
+
+Mastery State represents the current condition of mastery and does not
+have an autonomous lifecycle state.
+
+Its evolution is the responsibility of the Mastery Engine.
+
+The approved semantics are:
+
+* Mastery State has no autonomous lifecycle enum or lifecycle state;
+* Mastery State represents the current mastery condition;
+* Mastery Engine is responsible for producing changes to Mastery State;
+* Mastery Evidence provides input to the Mastery Engine;
+* Mastery State does not contain the decision logic governing its own
+  evolution;
+* changes to Mastery State do not modify Learning State or LearningObject.
+
+Conceptually:
+
+```
+Mastery Evidence
+       |
+       v
+Mastery Engine
+       |
+       v
+current Mastery State
+```
+
+The decision does not define:
+
+* the algorithm used by the Mastery Engine;
+* numerical or qualitative mastery representation;
+* whether updates replace or version a previous state;
+* temporal semantics;
+* timestamps;
+* history;
+* versioning;
+* idempotency;
+* handling of retroactive evidence;
+* persistence update semantics.
+
+Resolution:
+
+Mastery State has no autonomous lifecycle. Its evolution is owned by the
+Mastery Engine, while Mastery State represents the resulting current
+condition of mastery.
+
+18.5 Mastery State and Learning State Boundary
+
+Status: RESOLVED
+
+Decision:
+
+Learning State and Mastery State are distinct Domain concepts.
+
+The approved Domain boundary is:
+
+```
+User
+ |
+ +-- Learning State ------> Learning Object
+ |
+ +-- Mastery State --------> Learning Object
+```
+
+Learning State may maintain a conceptual reference to Mastery State for
+navigation or contextual purposes.
+
+Such a reference does not constitute ownership, embedding, or lifecycle
+authority.
+
+The approved semantics are:
+
+* Learning State does not contain Mastery State;
+* Mastery State does not contain Learning State;
+* Learning State may refer conceptually to Mastery State;
+* Learning State does not govern the lifecycle or evolution of Mastery State;
+* changes to Learning State do not automatically change Mastery State;
+* changes to Mastery State do not automatically change Learning State.
+
+The decision does not define:
+
+* the concrete representation of the Mastery Reference;
+* identifier type;
+* reference cardinality;
+* synchronization semantics;
+* caching;
+* persistence mapping.
+
+Resolution:
+
+The Domain boundary between Learning State and Mastery State is approved.
+
+18.6 Mastery State and Mastery Evidence Relationship
+
+Status: RESOLVED
+
+Decision:
+
+Mastery Evidence and Mastery State are distinct Domain concepts.
+
+Mastery Evidence constitutes input to the Mastery Engine. The Mastery Engine
+interprets and processes Mastery Evidence and is responsible for determining
+changes to Mastery State.
+
+Conceptually:
+
+```
+Mastery Evidence
+       |
+       v
+Mastery Engine
+       |
+       v
+Mastery State
+```
+
+The approved semantics are:
+
+* Mastery Evidence represents evidence relevant to mastery;
+* Mastery Evidence is input to the Mastery Engine;
+* Mastery Engine is responsible for evolving Mastery State;
+* Mastery State represents the current mastery condition;
+* Mastery State does not automatically contain the collection of Evidence
+  that produced it;
+* Mastery Evidence does not contain a copy of Mastery State;
+* the existence of Evidence does not necessarily imply a change in
+  Mastery State;
+* the causal relationship is Evidence → Engine → State.
+
+The decision does not define:
+
+* persistence of Evidence;
+* references from Mastery State to Evidence;
+* audit/history representation;
+* Evidence ordering;
+* deduplication;
+* idempotency;
+* handling of retroactive Evidence;
+* the Mastery calculation algorithm.
+
+Resolution:
+
+The Domain relationship between Mastery Evidence and Mastery State is
+approved.
+
+18.7 Future Mastery State Persistence
+
+Status: RESOLVED
+
+Decision:
+
+Mastery State is outside the persistence scope of the Core Repository v0.1.
+
+No Mastery State persistence representation is authorized at this stage.
+
+In particular:
+
+* no mastery_states table is introduced;
+* no persistence entity is introduced;
+* no foreign keys are introduced;
+* no Mastery State repository is introduced;
+* no persistence key is defined;
+* no ORM mapping is introduced;
+* no persistence cardinality is defined.
+
+A future persistence representation of Mastery State requires an explicit
+architectural decision.
+
+Such a future decision must define, at minimum:
+
+* persistence scope;
+* identity mapping;
+* cardinality;
+* temporal and history semantics;
+* update/version semantics;
+* relationship with Mastery Evidence;
+* repository and ownership boundary.
+
+Resolution:
+
+Mastery State is not persisted in Core Repository v0.1.
+
+Future Mastery State persistence remains outside the current architecture
+baseline and requires a separate explicit architectural decision.
+
+Overall Resolution:
+
+The Mastery State architectural work tracked by discrepancy #18 is
+resolved.
+
+The approved architecture now defines:
+
+* Mastery State Domain scope;
+* Domain representation boundary;
+* identity semantics;
+* lifecycle and update responsibility;
+* boundary with Learning State;
+* relationship with Mastery Evidence;
+* persistence exclusion for Core Repository v0.1.
+
+These resolutions do not authorize implementation changes beyond the
+explicitly approved Domain representation.
+
+No Mastery State implementation, persistence model, ORM mapping, or
+repository is implied by this resolution.
 
