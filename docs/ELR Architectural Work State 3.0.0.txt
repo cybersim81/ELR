@@ -25,6 +25,9 @@ A new working session must read this document together with:
 * ELR Documentation Architecture
 * ELR Design Protocol 1.0.0
 
+Repository:
+https://github.com/cybersim81/ELR
+
 Do not reconstruct architectural decisions from conversational memory
 when the repository documents provide the authoritative state.
 
