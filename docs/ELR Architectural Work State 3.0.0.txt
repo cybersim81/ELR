@@ -1,5 +1,5 @@
 ELR Architectural Work State — Handoff
-Version: 2.0.0
+Version: 3.0.0
 Status: Active Working State
 
 ================================================================
@@ -69,12 +69,23 @@ A persistence structure must not be used to infer a Domain concept.
 The Design Protocol must be followed when a new architectural decision
 is required.
 
+The working cycle is:
+
+discrepancy
+→ specification review
+→ architectural reasoning
+→ explicit decision
+→ approval
+→ documentation update
+→ repository verification
+→ next discrepancy
+
 ================================================================
 
 3. # DOCUMENTS ALREADY REVIEWED / UPDATED
 
 The following documentation has been reviewed during the current
-architectural audit and subsequent reconciliation work:
+architectural audit and reconciliation work:
 
 * Learning State Specification 1.0.0
 * Mastery Engine Specification 1.0.0
@@ -157,22 +168,12 @@ the underlying atomic knowledge remains the same.
 
 Knowledge Statement is not an autonomous Domain Entity.
 
-It does not currently have:
-
-* an independent UUID;
-* an independent lifecycle;
-* independent versioning;
-* independent ownership.
-
 The current executable Domain representation is:
 
 ```
 LearningObject
     statement: str
 ```
-
-The field `statement` is the current Domain representation of the
-Knowledge Statement concept.
 
 No autonomous KnowledgeStatement Domain Entity should be introduced
 without a new explicit architectural decision.
@@ -181,8 +182,7 @@ without a new explicit architectural decision.
 
 5. # KNOWLEDGE STATEMENT STATUS
 
-The Knowledge Statement discrepancy previously tracked by the Matrix
-has been resolved.
+The Knowledge Statement discrepancy has been resolved.
 
 The approved current representation is:
 
@@ -196,10 +196,6 @@ LearningObject.
 
 The current architecture does not require a separate Value Object or
 Entity for Knowledge Statement.
-
-A future architectural decision may change this representation, but
-such a change must be explicit and must update the affected
-documentation before implementation.
 
 The Persistence Mapping has been aligned with the current Domain
 representation.
@@ -216,113 +212,108 @@ Mastery State is formally specified by:
 * Mastery State Specification 1.0.0;
 * Mastery Engine Specification 1.0.0.
 
-These documents define Mastery State as the user's mastery state with
-respect to a Learning Object.
+The Mastery State Specification has now been updated to define the
+approved conceptual internal structure of Mastery State.
 
-The current Mastery specifications remain DRAFT and deliberately defer
-the complete executable Domain contract.
+The approved structure is:
 
-The Mastery State Specification explicitly leaves implementation details
-such as the following to future architectural decisions:
+```
+MasteryState
+├── mastery_value
+├── updated_at
+└── source_evidence: Set<EvidenceReference>
+```
 
-* Domain identity;
-* persistence identity;
-* temporal semantics;
-* historical representation;
-* versioning;
-* evidence references;
-* numerical representation;
-* revision state.
+`mastery_value`:
 
-Therefore:
+Represents the current mastery value and is modeled as a Value Object
+of the Domain Model.
 
-Do NOT create another Mastery State Specification.
+The concrete scale, numerical domain, thresholds, formulas, and scoring
+algorithm remain outside the scope of this structural decision and
+belong to the Mastery Engine.
 
-Do NOT add MasteryState to LearningObject.
+`updated_at`:
 
-Do NOT create Mastery persistence tables.
+Represents the point in time at which the current Mastery State was
+updated.
 
-Do NOT infer final Mastery cardinality from the existing SQLAlchemy
-model.
+`source_evidence`:
 
-Do NOT treat the current implementation as authoritative for Mastery.
+Represents a set of references to Mastery Evidence that the Mastery
+Engine considers causally or evaluatively relevant to the determination
+of the current Mastery State.
+
+`source_evidence` is not the complete Evidence History.
+
+It represents only the subset of observations considered relevant to
+the current state.
+
+Multiple Evidence references may therefore belong to the same Mastery
+State when recurrence, repetition, or combination of observations is
+relevant to its determination.
+
+The Mastery State does not contain:
+
+* the complete Evidence History;
+* a persistence identity as a semantic Domain property;
+* technical versioning as a necessary Domain property;
+* a Learning Object revision identifier;
+* a `confidence` property.
+
+Persistence identity and technical versioning, if required, belong to
+the corresponding persistence, infrastructure, or technical model.
+
+The revision of the Learning Object against which a Mastery Evidence
+was produced belongs to the context of that Evidence, not to the
+intrinsic structure of Mastery State.
+
+The Mastery State therefore represents the current mastery condition,
+while the Evidence Model and Mastery Engine retain responsibility for
+the observational and historical context used to determine that
+condition.
+
+IMPORTANT:
+
+The above conceptual structure is approved, but this does not yet mean
+that a concrete executable MasteryState Domain implementation or
+Mastery persistence model is authorized.
+
+Those implementation decisions remain subject to the remaining Mastery
+work tracked in the Discrepancy Matrix.
 
 ================================================================
 
 7. # CURRENT DISCREPANCY MATRIX BASELINE
 
+The Discrepancy Matrix remains the authoritative audit baseline.
+
 The current matrix contains 18 numbered sections.
 
-The latest audit established the following working states:
+The previously resolved discrepancies remain recorded as resolved.
 
-1. LearningObject lifecycle vs Learning State
-   RESOLVED
+Section #18 contains the remaining Mastery architectural work.
 
-2. Learning State vs Mastery State
-   RESOLVED
+Within #18:
 
-3. Learning Object vs Mastery
-   RESOLVED / implementation of Mastery remains deferred
+* #18.7 Mastery State implementation remains an implementation-level
+  decision to be addressed only after the relevant Domain contract has
+  been sufficiently consolidated.
 
-   The current Mastery specifications define Mastery State as user-specific
-   state with respect to a Learning Object.
+* #18.8 Mastery State internal structure is APPROVED.
 
-   No MasteryState implementation or persistence model is authorized until
-   the remaining Mastery Domain decisions recorded in #17 and #18 are
-   explicitly approved.
+The approved #18.8 structure is:
 
-4. Mastery State Domain Contract
-   Documentation baseline established / implementation deferred
+```
+MasteryState
+├── mastery_value
+├── updated_at
+└── source_evidence: Set<EvidenceReference>
+```
 
-5. Mastery Evidence vs Mastery State
-   RESOLVED
-
-6. Knowledge vs Learning State vs Mastery State
-   RESOLVED
-
-7. LearningObject implementation vs documented Domain Model
-   OPEN / DEFERRED
-
-8. LearningObject Domain representation vs Knowledge Statement
-   RESOLVED
-
-9. Mastery persistence boundary
-   RESOLVED for the current Core Repository scope / deferred for future
-   repositories
-
-10. ORM isolation
-    RESOLVED
-
-11. Domain identity vs persistence identity
-    RESOLVED
-
-12. Timestamp preservation
-    RESOLVED
-
-13. Version history preservation
-    RESOLVED
-
-14. Audit history preservation
-    RESOLVED / implementation constraint
-
-15. Approved persistence relationships
-    RESOLVED / implementation constraint
-
-16. Documentation authority and status
-    RESOLVED / documentation governance constraint
-
-17. Mastery State implementation
-    DEFERRED
-
-18. Remaining architectural work
-    ACTIVE / Mastery work remaining
-
-The Discrepancy Matrix itself must remain in the repository.
-
-Resolved discrepancies must remain recorded as resolved.
-
-Deferred work must remain recorded until the relevant architectural
-decision is explicitly approved.
+The next work must therefore NOT reopen the already approved decisions
+of #18.8 unless a new contradiction is found in the repository
+documentation.
 
 ================================================================
 
@@ -330,23 +321,22 @@ decision is explicitly approved.
 
 The remaining architectural work is concentrated on Mastery.
 
-The current Mastery work is:
+The next working session must:
 
-1. explicitly approve the Domain implementation scope for Mastery State;
-2. determine the implementation representation of Mastery State in the
-   executable Domain Model;
-3. define implementation-specific identity semantics, if required;
-4. define lifecycle and update semantics for the executable Domain Model;
-5. define the implementation boundary between Mastery State and Learning
-   State;
-6. define the implementation relationship between Mastery State and
-   Mastery Evidence;
-7. determine whether and when Mastery State becomes part of a future
-   persistence model;
-8. update the Discrepancy Matrix after each approved architectural
-   decision.
+1. inspect the current Discrepancy Matrix;
+2. identify the next unresolved Mastery discrepancy after #18.8;
+3. verify the relevant specifications before proposing a decision;
+4. explicitly distinguish Domain semantics from persistence or
+   infrastructure concerns;
+5. propose one focused architectural decision;
+6. obtain explicit approval before treating the decision as final;
+7. produce a copyable documentation block;
+8. update the relevant repository document;
+9. verify the repository update;
+10. only then proceed to the next discrepancy.
 
-No implementation should precede these decisions.
+No implementation should precede the decisions required by the
+Discrepancy Matrix.
 
 ================================================================
 
@@ -388,7 +378,7 @@ DO NOT:
 * create autonomous Mastery persistence models;
 * introduce Mastery persistence relationships not explicitly approved;
 * create autonomous KnowledgeStatement Domain Entity;
-* create implicit LearningObject -> KnowledgeStatement domain
+* create implicit LearningObject → KnowledgeStatement domain
   relationships;
 * modify persistence solely because a persistence structure already
   exists;
@@ -422,7 +412,7 @@ Current executable Knowledge Statement representation:
 LearningObject.statement: str
 ```
 
-User learning context:
+Current user learning context:
 
 ```
 User
@@ -449,8 +439,17 @@ Learning Activity / Evidence
     Mastery State
 ```
 
-The Mastery representation remains intentionally incomplete until the
-remaining Mastery Domain decisions are explicitly approved.
+Approved conceptual Mastery State structure:
+
+```
+MasteryState
+├── mastery_value
+├── updated_at
+└── source_evidence: Set<EvidenceReference>
+```
+
+The executable Domain and Persistence representation of Mastery State
+remains intentionally deferred.
 
 ================================================================
 
@@ -464,7 +463,7 @@ The first action in a new working session should be:
 4. read the relevant Mastery sections of the Domain Model Specification;
 5. read the Mastery Engine Specification;
 6. verify the current documentation status and versions;
-7. continue from the remaining Mastery work identified in §8.
+7. identify the next unresolved Mastery discrepancy after #18.8.
 
 Do not recreate documents that are already present.
 
@@ -474,8 +473,11 @@ repository.
 Do not infer decisions from conversational history when the repository
 contains the relevant authoritative documentation.
 
-The immediate objective is to complete the remaining Mastery Domain
-decisions.
+Do not reopen #18.8 unless the repository reveals an actual
+contradiction.
+
+The immediate objective is to continue closing the remaining Mastery
+Domain decisions in the Discrepancy Matrix.
 
 Implementation follows documentation reconciliation and explicit
 architectural approval.
@@ -487,15 +489,15 @@ architectural approval.
 The working process uses the repository as persistent architectural
 memory.
 
-Before continuing in a new session:
+Before continuing in a new session, verify repository state rather than
+inferring it from conversation.
+
+Where local repository access is available, inspect:
 
 ```
 git status
 git log --oneline -5
 ```
-
-Do not assume uncommitted local changes exist unless `git status`
-confirms them.
 
 The working tree state must always be verified rather than inferred from
 conversation.
@@ -504,42 +506,36 @@ conversation.
 
 14. # LAST KNOWN POSITION
 
-The architectural audit has completed the current Knowledge Statement
-reconciliation and the associated Persistence Mapping alignment.
+The current architectural work has completed the Knowledge Statement
+reconciliation and has subsequently consolidated the conceptual internal
+structure of Mastery State.
 
-The following areas have been explicitly reconciled:
+The following areas are explicitly reconciled:
 
 * Knowledge Statement Domain representation;
 * Persistence Mapping relationship for the current representation;
 * documentation authority and status governance;
-* discrepancy tracking for the completed work.
+* discrepancy tracking for the completed work;
+* Mastery State conceptual internal structure.
 
-The current Knowledge Statement representation is:
-
-```
-LearningObject.statement: str
-```
-
-The remaining major architectural work concerns Mastery State.
-
-Mastery State must not yet be implemented as a concrete Domain or
-Persistence model.
-
-The next design activity is:
+The latest approved Mastery State decision is #18.8:
 
 ```
-Mastery State
-    |
-    +-- Domain implementation scope
-    +-- Domain representation
-    +-- identity semantics
-    +-- lifecycle/update semantics
-    +-- Learning State boundary
-    +-- Mastery Evidence boundary
-    +-- future persistence boundary
+MasteryState
+├── mastery_value
+├── updated_at
+└── source_evidence: Set<EvidenceReference>
 ```
 
-The Discrepancy Matrix remains the authoritative audit record for the
-status of these items.
+#18.8 is APPROVED and has been recorded in:
+
+* ELR Core Model Discrepancy Matrix;
+* Mastery State Specification 1.0.0.
+
+The next working activity is to inspect the remaining open items in
+section #18 and continue from the first unresolved item after #18.8.
+
+The next session must not assume that the remaining items have been
+resolved merely because #18.8 has been approved.
 
 END OF HANDOFF
