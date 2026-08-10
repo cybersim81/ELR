@@ -834,11 +834,10 @@ The current persistence implementation may continue for concepts whose
 Domain and Persistence contracts are already sufficiently defined.
 
 ================================================================
+
 18. Remaining architectural work
     ================================================================
 
-The semantic and architectural definition of Mastery State has been
-resolved at the documentation level.
 
 The following work remains before implementing Mastery in the Domain
 Layer:
@@ -847,24 +846,33 @@ Layer:
 2. determine the implementation representation of Mastery State in the
    executable Domain Model;
 3. define implementation-specific identity semantics, if required;
-4. define the implementation boundary between Mastery State and Learning
-   State in the executable Domain Model;
-5. determine whether and when Mastery State becomes part of a future
+4. define lifecycle and update semantics for the executable Domain Model;
+5. define the implementation boundary between Mastery State and Learning
+   State;
+6. define the implementation relationship between Mastery State and
+   Mastery Evidence;
+7. determine whether and when Mastery State becomes part of a future
    persistence model;
-6. update this matrix after each approved architectural decision.
+8. update this matrix after each approved architectural decision.
 
-The following work remains before revising the LearningObject Domain
-Model:
+The Knowledge Statement discrepancy has been resolved.
 
-7. review Learning Object Specification 1.0.0;
-8. determine the formal Domain representation of Knowledge Statement;
-9. determine whether the current statement: str field is a temporary
-   representation, a value object boundary, or another approved Domain
-   construct;
-10. align Persistence Mapping with that decision;
-11. update this matrix after the decision.
+The current approved Domain representation is:
 
-No implementation should precede these decisions.
+```
+LearningObject
+    └── statement: str
+```
+
+The Persistence Mapping has been aligned with this representation.
+
+No further architectural work is currently required for the
+Knowledge Statement representation.
+
+No implementation should precede the remaining Mastery decisions listed
+above.
+======
+
 
 
 ================================================================
