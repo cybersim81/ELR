@@ -248,6 +248,7 @@ I principi precedenti sono definiti attraverso le seguenti decisioni:
 
 - ADR-013 — Mastery Representation
 
+- ADR-021 — Learning Activity Layer
 
 ================================================================================
 Domain Model
@@ -291,6 +292,26 @@ Esempi:
 
 Questi oggetti appartengono ai processi di evoluzione, valutazione e gestione
 del repository.
+
+================================================================================
+Exercise System
+================================================================================
+
+L'Exercise System appartiene al Process Layer e costituisce il sistema
+operativo responsabile della realizzazione delle Learning Activity attraverso
+la generazione, presentazione e valutazione degli Exercise.
+
+L'Exercise System riceve una Learning Activity e la traduce in una concreta
+interazione didattica.
+
+Il sistema produce Evidence a partire dalle interazioni dell'utente.
+
+L'Exercise System non modifica direttamente il repository ELR e non determina
+direttamente il Mastery State.
+
+La definizione operativa dell'Exercise System è mantenuta nella
+Exercise System Specification.
+
 
 ================================================================================
 Learning Object
