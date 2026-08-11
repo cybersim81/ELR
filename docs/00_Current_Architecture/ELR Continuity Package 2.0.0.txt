@@ -1,0 +1,355 @@
+# English Learning Repository (ELR)
+
+## Continuity Package
+
+**Version:** 2.0.0
+**Status:** ACTIVE
+**Document Type:** Governance and Continuity Document
+
+---
+
+## 1. Purpose
+
+Il Continuity Package permette di ripristinare l'ambiente di lavoro ELR in una nuova sessione senza dipendere dal contesto conversazionale precedente.
+
+Il Continuity Package:
+
+* definisce lo stato corrente del progetto;
+* identifica il punto corrente della Roadmap;
+* identifica il corpus documentale autorevole;
+* definisce le regole di continuità;
+* registra i vincoli operativi rilevanti;
+* indica la procedura di ripresa.
+
+Il Continuity Package **non sostituisce** Architecture Specification, ADR, Matrix, Roadmap o Specification specialistiche.
+
+Non deve duplicare integralmente le decisioni contenute nei documenti proprietari.
+
+Il repository è la fonte di verità.
+
+---
+
+## 2. Source of Truth
+
+Lo stato architetturale effettivo deve essere determinato dai documenti presenti nel repository.
+
+In caso di divergenza tra:
+
+* memoria conversazionale;
+* Continuity Package;
+* Handoff;
+* implementazione;
+* documentazione proprietaria;
+
+la verifica deve essere effettuata sul repository e sui documenti proprietari.
+
+Il Continuity Package non può modificare retroattivamente una decisione architetturale approvata.
+
+---
+
+## 3. Architectural Authority
+
+Le autorità documentali sono:
+
+### ELR Architecture Specification
+
+Definisce:
+
+* modello architetturale;
+* componenti;
+* responsabilità;
+* confini;
+* relazioni tra sistemi.
+
+### ELR Architecture Decision Log
+
+Definisce:
+
+* decisioni architetturali;
+* motivazioni;
+* conseguenze;
+* evoluzione delle decisioni.
+
+### ELR Architecture Consistency Matrix
+
+Definisce:
+
+* ownership documentale;
+* distribuzione delle responsabilità;
+* coerenza tra documenti.
+
+### Specialist Specifications
+
+Definiscono il comportamento e la struttura dei singoli componenti secondo la relativa ownership.
+
+Nessun documento di continuità deve sostituire tali documenti.
+
+---
+
+## 4. Current Roadmap Position
+
+Le seguenti fasi sono completate a livello architetturale:
+
+* Fase 0 — Fondazioni Architetturali
+* Fase 1 — ELR Knowledge Model
+* Fase 2 — Knowledge Extraction Architecture
+* Fase 3 — Evidence Architecture
+* Fase 4 — Mastery Architecture
+* Fase 5 — Human Learning Control
+
+### Current Phase
+
+**Fase 6 — Derived Learning Systems**
+
+Obiettivo corrente:
+
+verificare e definire l'architettura dei sistemi derivati costruiti sopra l'ELR.
+
+La Fase 6 comprende:
+
+* Phrasebook Specification;
+* Exercise System Specification;
+* Adaptive Review Specification, come futura estensione.
+
+La Fase 7 — Interaction Layer — rimane successiva.
+
+---
+
+## 5. Completed Architectural Baseline
+
+Le seguenti aree sono considerate consolidate a livello architetturale:
+
+* Architecture Specification;
+* Architecture Decision Log;
+* Architecture Consistency Matrix;
+* Knowledge Model;
+* Knowledge Extraction boundaries;
+* Evidence Model;
+* Learning Review;
+* Mastery State;
+* Mastery Engine;
+* Human Learning Control.
+
+Le decisioni APPROVED non devono essere riaperte senza una contraddizione documentale reale.
+
+In particolare, le decisioni relative a Mastery State già approvate devono essere recuperate dalla relativa Specification e dagli ADR, non ricostruite dalla memoria conversazionale.
+
+---
+
+## 6. Domain / Process / Persistence Boundary
+
+Durante il lavoro:
+
+* il Domain Model non deve essere inferito dal Persistence Model;
+* il Persistence Model non acquisisce autorità semantica per il solo fatto di esistere;
+* i processi non devono essere introdotti come entità del Domain Model senza decisione esplicita;
+* le Evidence operative appartengono ai relativi processi e modelli proprietari;
+* una implementazione esistente non costituisce automaticamente una decisione architetturale.
+
+Ogni nuova responsabilità deve essere assegnata al documento proprietario appropriato.
+
+---
+
+## 7. Decision Workflow
+
+Il processo di lavoro è:
+
+**verifica → problema/discrepanza → analisi documentale → proposta focalizzata → approvazione esplicita → blocco copiabile → aggiornamento repository → verifica → prossimo punto**
+
+Una decisione non è considerata definitiva prima dell'approvazione esplicita.
+
+Una modifica documentale non è considerata applicata prima della verifica del repository.
+
+Non devono essere introdotte simultaneamente più decisioni indipendenti senza una ragione esplicita.
+
+---
+
+## 8. Repository Verification Rule
+
+Prima di qualsiasi decisione:
+
+1. individuare i documenti rilevanti;
+2. recuperarne lo stato effettivo dal repository;
+3. verificare versione e status;
+4. confrontare le definizioni pertinenti;
+5. identificare eventuali contraddizioni.
+
+Dopo ogni aggiornamento:
+
+1. verificare il file nel repository;
+2. verificare la sezione modificata;
+3. verificare i boundary adiacenti;
+4. solo dopo procedere.
+
+La conversazione non costituisce prova dell'avvenuto aggiornamento del repository.
+
+---
+
+## 9. GitHub Integration Constraint
+
+La connessione GitHub è stata verificata nel corso del lavoro.
+
+### Read
+
+**Disponibile.**
+
+Il connettore può recuperare e verificare file presenti nel repository.
+
+### Write
+
+**Non disponibile nel contesto operativo corrente.**
+
+Le richieste di scrittura diretta al repository hanno restituito:
+
+**HTTP 403 — Forbidden**
+
+Pertanto una richiesta di scrittura non deve essere considerata riuscita sulla sola base della risposta dello strumento.
+
+### Procedura operativa conseguente
+
+Quando la scrittura diretta restituisce `403`:
+
+1. non dichiarare il documento aggiornato;
+2. produrre il blocco copiabile esatto;
+3. l'utente applica la modifica al repository;
+4. recuperare nuovamente il documento;
+5. verificare il contenuto aggiornato;
+6. solo allora considerare la modifica effettivamente applicata.
+
+Il `403` è un vincolo operativo dell'integrazione, non una decisione architetturale ELR.
+
+---
+
+## 10. Continuity Documents
+
+Il sistema di continuità utilizza tre artefatti distinti.
+
+### Continuity Package
+
+Funzione:
+
+**stato persistente e regole di continuità del progetto.**
+
+Non deve duplicare le Specification.
+
+### Architectural Work State — Handoff
+
+Funzione:
+
+**checkpoint operativo sintetico dell'ultimo punto raggiunto.**
+
+Deve indicare:
+
+* ultima fase completata;
+* fase corrente;
+* ultimo stato verificato;
+* prossima azione;
+* vincoli operativi rilevanti.
+
+### Initial Prompt
+
+Funzione:
+
+**definire il comportamento operativo richiesto all'AI.**
+
+Non deve essere utilizzato come fonte primaria dello stato architetturale.
+
+Il punto di ripresa deve essere determinato dal repository, Continuity Package e Roadmap.
+
+---
+
+## 11. Rules for New Sessions
+
+Una nuova sessione deve:
+
+1. leggere il Continuity Package;
+2. leggere la Roadmap;
+3. leggere Architecture Specification, Decision Log e Consistency Matrix;
+4. leggere l'Handoff corrente;
+5. identificare la fase corrente;
+6. recuperare solo i documenti specialistici direttamente rilevanti;
+7. verificare lo stato effettivo del repository;
+8. iniziare il lavoro dalla prossima attività autorizzata.
+
+Non deve:
+
+* ricostruire decisioni dalla memoria;
+* riaprire automaticamente decisioni APPROVED;
+* creare documenti duplicati;
+* assumere che un documento sia aggiornato senza verifica;
+* assumere che una modifica GitHub sia riuscita dopo un errore `403`.
+
+---
+
+## 12. Current Next Action
+
+La prossima attività autorizzata è:
+
+**Fase 6 — Derived Learning Systems**
+
+Prima di proporre una nuova Specification o una modifica architetturale:
+
+1. verificare quali artefatti Phrasebook, Exercise System e Adaptive Review esistono già;
+2. verificare il loro status;
+3. verificare la Consistency Matrix;
+4. verificare eventuali ADR pertinenti;
+5. verificare eventuali implementazioni solo come evidenza tecnica, non come autorità architetturale;
+6. identificare eventuali responsabilità già assegnate;
+7. proporre una sola decisione focalizzata alla volta.
+
+---
+
+## 13. Corpus Integrity
+
+Un documento appartiene al corpus ELR quando:
+
+* è presente nel repository ed è riconosciuto dal relativo sistema di ownership;
+* oppure è esplicitamente previsto come documento futuro dalla Roadmap.
+
+La presenza di un concetto durante l'analisi non implica automaticamente la necessità di creare una nuova Specification.
+
+Prima di creare un nuovo documento occorre verificare:
+
+1. se la responsabilità appartiene a un documento esistente;
+2. se la Consistency Matrix assegna già tale responsabilità;
+3. se la creazione modifica l'architettura;
+4. se è necessaria una decisione ADR;
+5. se è necessario aggiornare la Roadmap.
+
+---
+
+## 14. Continuity Principle
+
+L'ELR deve essere documentariamente autoportante.
+
+La continuità non deve dipendere dalla conversazione precedente.
+
+La continuità è garantita da:
+
+* documenti proprietari;
+* decisioni registrate;
+* ownership esplicita;
+* Roadmap;
+* Continuity Package;
+* Handoff;
+* procedure di verifica del repository.
+
+La memoria conversazionale può facilitare il lavoro, ma non costituisce autorità architetturale.
+
+---
+
+## 15. End State
+
+Il Continuity Package deve rimanere uno strumento di orientamento e governance.
+
+Non deve diventare una seconda Architecture Specification.
+
+Quando il contenuto di questo documento diverge da una Specification, ADR, Matrix o Roadmap verificata nel repository, la divergenza deve essere segnalata e risolta attraverso il normale processo documentale.
+
+---
+
+**Fine documento**
+
+English Learning Repository (ELR)
+Continuity Package
+Version 2.0.0
