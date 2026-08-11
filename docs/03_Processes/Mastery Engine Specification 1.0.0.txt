@@ -36,7 +36,7 @@ Dependencies:
 
 - Evidence Model Specification
 
-- Learning Object Model Specification
+- Learning Object Specification
 
 - Learning Review Specification
 
