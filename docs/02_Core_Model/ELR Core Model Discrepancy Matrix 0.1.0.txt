@@ -582,32 +582,67 @@ No autonomous KnowledgeStatement Entity should be implemented.
 9. Mastery persistence boundary
    ================================================================
 
-Status: RESOLVED FOR CORE REPOSITORY v0.1 / DEFERRED FOR FUTURE REPOSITORIES
+Status:
 
-Finding:
-
-The Persistence Mapping Specification 0.1.0 explicitly excludes Mastery
-State from Core Repository v0.1 persistence.
-
-The broader ELR architecture recognizes Mastery State as an architectural
-concept.
+APPROVED
 
 Decision:
 
-Core Repository v0.1 persistence must not introduce Mastery persistence.
+MasteryState is an approved Domain Model object, but Mastery State persistence
+is outside the persistence boundary of the Core Repository v0.1.
 
-This is a persistence boundary decision, not a rejection of the Mastery
-concept.
+The Core Repository v0.1 must not introduce persistence for MasteryState.
 
-Future persistence of Mastery requires:
+This is a persistence boundary decision.
 
-* an approved Mastery Domain contract;
-* an explicit persistence boundary;
-* an approved Data Model relationship;
-* an explicit implementation decision.
+It does not invalidate or defer the approved Mastery State Domain Model.
 
-Until those decisions are made, no Mastery persistence model or table
-should be introduced.
+The current architectural separation is therefore:
+
+Domain Model
+    │
+    └── MasteryState
+            ↓
+        APPROVED
+
+
+Core Repository v0.1
+    │
+    └── MasteryState persistence
+            ↓
+        OUT OF SCOPE
+
+The exclusion of MasteryState from Core Repository v0.1 does not prohibit
+Mastery State persistence in a future repository or persistence context.
+
+Any future Mastery State persistence requires a separate architectural
+decision defining, at minimum:
+
+the applicable persistence boundary;
+the relationship between Mastery State and the persisted Learning Object;
+the persistence representation;
+the repository responsibilities;
+any required identity or lifecycle rules.
+
+The Domain Model must not be reshaped merely to conform to a future
+persistence representation.
+
+The Persistence Model must not infer Mastery State semantics from an ORM
+implementation.
+
+Until a future persistence decision is explicitly approved:
+
+no MasteryState persistence model is introduced into Core Repository v0.1;
+no MasteryState database table is introduced into Core Repository v0.1;
+no MasteryState ORM mapping is treated as an approved architectural
+representation;
+no persistence relationship is added solely because MasteryState exists in
+the Domain Model.
+
+This decision resolves the Core Repository v0.1 persistence boundary for
+MasteryState.
+
+Future Mastery State persistence remains a separate architectural concern.
 
 ================================================================
 
