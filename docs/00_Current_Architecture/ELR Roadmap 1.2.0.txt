@@ -427,8 +427,10 @@ Modifiche di consistenza già consolidate:
 
 * Learning Object Specification utilizzato con il nome corretto;
 * Mastery State Specification riconosciuta come documento proprietario;
-* CREATE / MERGE / UPDATE / SPLIT allineato alla KEP;
-* ownership della Knowledge Category allineata alla ELR Taxonomy.
+* CREATE / MERGE / UPDATE allineato alla KEP;
+* ownership della Knowledge Category allineata alla ELR Taxonomy;
+* Learning Activity allineata all'Architecture Decision Log come registro
+  della decisione architetturale.
 
 Attività rimanenti:
 
