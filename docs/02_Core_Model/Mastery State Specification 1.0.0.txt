@@ -1,543 +1,347 @@
-================================================================================
-English Learning Repository (ELR)
-
 Mastery State Specification
 
-Version: 1.0.0
-Status: DRAFT
-================================================================================
-
-
-Document Identity
-================================================================================
-
-Document Name:
-
-Mastery State Specification
-
-
-Document Version:
-
+Version:
 1.0.0
 
-
 Status:
+APPROVED
 
-DRAFT
-
+Scope:
+Definition of the Mastery State Domain Model
 
 Dependencies:
 
-- ELR Architecture Specification
-- ELR Domain Model Specification
-- Learning Object Specification
-- Learning State Specification
-- Mastery Engine Specification
-- Evidence Model Specification
-
+* ELR Architecture Specification
+* ELR Architecture Decision Log
+* Evidence Model Specification
+* Mastery Engine Specification
 
 ================================================================================
-Scopo
-================================================================================
 
-La Mastery State Specification definisce il concetto di Mastery State
-all'interno dell'English Learning Repository (ELR).
+1. Purpose
+   ================================================================================
 
-Il Mastery State rappresenta lo stato corrente della padronanza di un utente
-rispetto a un Learning Object.
+This specification defines the Domain Model representation of the Mastery State.
 
-La conoscenza è rappresentata dal Learning Object.
+The Mastery State represents the current mastery of a specific User with
+respect to a specific Learning Object.
 
-La padronanza rappresenta invece la relazione dinamica tra:
+The Mastery State is User-specific and Learning Object-specific.
 
-User
+The Mastery State is not an intrinsic property of the Learning Object and does
+not belong to the Learning Object aggregate boundary.
 
-e
+This specification defines the conceptual structure and semantic
+responsibilities of the Mastery State.
 
-Learning Object.
+It does not define:
 
-
-================================================================================
-Responsabilità del documento
-================================================================================
-
-Questo documento definisce:
-
-- il concetto di Mastery State;
-- il confine semantico del Mastery State;
-- la relazione tra User e Learning Object;
-- la relazione tra Mastery State e Learning State;
-- la relazione tra Mastery State e Mastery Evidence;
-- la responsabilità del Mastery Engine;
-- i confini rispetto al Learning Object.
-
-Questo documento NON definisce:
-
-- l'algoritmo di calcolo della Mastery;
-- formule numeriche di scoring;
-- soglie di Mastery;
-- scheduling;
-- selezione automatica delle attività;
-- formato dettagliato delle Evidence;
-- schema relazionale del database;
-- implementazione SQLAlchemy;
-- API;
-- dettagli del Mastery Engine.
-
-Queste responsabilità appartengono alle specifiche dedicate.
-
+* mastery evaluation algorithms;
+* evidence generation;
+* evidence classification;
+* mastery update policies;
+* persistence implementation;
+* ORM mappings;
+* database structures.
 
 ================================================================================
-1. Mastery State Concept
-================================================================================
+2. Architectural Position
+=========================
 
-Il Mastery State rappresenta la condizione corrente della padronanza di un
-utente rispetto a uno specifico Learning Object.
+The Mastery State belongs to the Learning Assessment domain.
 
-La relazione fondamentale è:
+Its architectural responsibility is to represent the authoritative current
+state of mastery resulting from the interpretation of relevant Mastery
+Evidence.
 
-User
+The Mastery Engine is responsible for interpreting Mastery Evidence and
+updating the Mastery State.
 
-        |
+Evidence production and Evidence interpretation are therefore separate
+responsibilities.
 
-        v
-
-Learning Object
-
-        |
-
-        v
-
-Mastery State
-
-
-Il Mastery State non rappresenta la conoscenza stessa.
-
-La conoscenza è rappresentata dal Learning Object.
-
-Il Mastery State rappresenta invece la condizione della padronanza
-dell'utente rispetto a quella conoscenza.
-
+The Mastery State does not determine its own evolution.
 
 ================================================================================
-2. Ownership Boundary
-================================================================================
+3. Mastery State Structure
+==========================
 
-Il Mastery State appartiene al modello di apprendimento dell'utente.
+The approved Domain Model structure of MasteryState is:
 
-Non è una proprietà editoriale del Learning Object.
-
-Il Learning Object può essere condiviso da più utenti.
-
-Ogni utente può avere un Mastery State differente rispetto allo stesso
-Learning Object.
-
-Pertanto:
-
-Learning Object
-
-    = conoscenza condivisa
-
-
-Mastery State
-
-    = stato della padronanza di uno specifico utente rispetto a quella
-      conoscenza.
-
-
-================================================================================
-3. Learning Object Boundary
-================================================================================
-
-Il Learning Object rappresenta il contenuto conoscitivo approvato dal
-repository.
-
-Il Learning Object può possedere un proprio lifecycle state.
-
-Il lifecycle state del Learning Object non rappresenta la Mastery
-dell'utente.
-
-Pertanto:
-
-LearningObject.state
-
-rappresenta il lifecycle del contenuto.
-
-
-Mastery State
-
-rappresenta la padronanza dell'utente.
-
-
-I due concetti non devono essere rappresentati attraverso lo stesso stato.
-
-
-================================================================================
-4. Relationship with Learning State
-================================================================================
-
-Learning State e Mastery State sono concetti distinti ma correlati.
-
-Learning State rappresenta la condizione corrente di acquisizione della
-conoscenza nel percorso di apprendimento dell'utente.
-
-Mastery State rappresenta la condizione corrente della padronanza
-dell'utente rispetto alla conoscenza.
-
-Pertanto:
-
-Learning State
-
-    = condizione del percorso di apprendimento
-
-
-Mastery State
-
-    = condizione della padronanza
-
-
-Il Learning State può utilizzare una Mastery Reference.
-
-Il valore numerico e il calcolo della Mastery appartengono al Mastery Engine.
-
-Learning State e Mastery State non devono essere trattati come sinonimi.
-
-
-================================================================================
-5. Relationship with Mastery Evidence
-================================================================================
-
-Mastery Evidence rappresenta l'evidenza utilizzata dal Mastery Engine per
-giustificare un cambiamento della Mastery.
-
-Il flusso concettuale è:
-
-Learning Activity / Observation
-
-        |
-
-        v
-
-Mastery Evidence
-
-        |
-
-        v
-
-Mastery Engine
-
-        |
-
-        v
-
-Mastery State
-
-
-Il Mastery State non è una copia delle Evidence.
-
-Le Evidence costituiscono input storico o osservazionale.
-
-Il Mastery State rappresenta invece lo stato corrente risultante dal
-processo di valutazione.
-
-
-================================================================================
-6. Mastery Engine Boundary
-================================================================================
-
-Il Mastery Engine è responsabile della gestione dell'evoluzione del
-Mastery State.
-
-Il Mastery Engine:
-
-- riceve Mastery Evidence;
-- associa le Evidence ai Learning Object appropriati;
-- valuta l'evoluzione della Mastery;
-- aggiorna il Mastery State.
-
-Il Mastery Engine non modifica il contenuto del Learning Object per
-rappresentare la Mastery dell'utente.
-
-
-================================================================================
-7. User Association
-================================================================================
-
-Ogni Mastery State deve essere interpretabile nel contesto di:
-
-- un User;
-- un Learning Object.
-
-Il Mastery State non modifica l'identità del Learning Object.
-
-Il Mastery State non modifica il contenuto del Learning Object.
-
-Il Mastery State non modifica il lifecycle state del Learning Object.
-
-
-================================================================================
-8. Mastery Value
-================================================================================
-
-Il valore quantitativo o qualitativo della Mastery non è definito da questa
-specifica.
-
-Questa specifica stabilisce esclusivamente che una Mastery può essere
-rappresentata attraverso un riferimento o uno stato di padronanza associato
-alla relazione User ↔ Learning Object.
-
-Il valore numerico, quando previsto, deve essere definito dalla specifica
-del Mastery Engine.
-
-Non vengono introdotti in questa specifica:
-
-- range numerici;
-- scale;
-- soglie;
-- formule;
-- algoritmi.
-
-
-================================================================================
-9. Mastery State Structure
-================================================================================
-
-La struttura concettuale approvata del Mastery State è:
-
-
+```
 MasteryState
 ├── mastery_value
 ├── updated_at
-└── source_evidence: Set<EvidenceReference>
+└── source_evidence: Set
+```
 
+These are the complete semantic components of the Mastery State.
 
-`mastery_value` rappresenta il valore corrente della padronanza ed è
-rappresentato come un Value Object del Domain Model.
+No additional semantic state property is introduced by this specification.
 
-Il Value Object incapsula il valore e le relative invarianti.
+================================================================================
+4. mastery_value
+================
 
-La scala concreta, il dominio numerico o qualitativo, le soglie, le formule
-e l'algoritmo di scoring non sono definiti da questa specifica. Essi
-appartengono alle regole e alle responsabilità del Mastery Engine.
+mastery_value represents the current mastery level of the User with respect to
+the Learning Object.
 
-`updated_at` rappresenta il momento in cui il Mastery State corrente è stato
-aggiornato.
+mastery_value is a Value Object.
 
-`source_evidence` rappresenta un set di riferimenti alle Mastery Evidence che
-il Mastery Engine considera causalmente o valutativamente rilevanti per la
-determinazione del Mastery State corrente.
+Its internal representation and allowed value space are defined by the
+Mastery Value domain definition.
 
-`source_evidence` non rappresenta la storia completa delle Evidence.
+The Mastery State contains the current mastery value produced by the Mastery
+Engine.
 
-Rappresenta esclusivamente il sottoinsieme di osservazioni considerate
-rilevanti per lo stato corrente.
+The Mastery State does not contain the algorithm used to calculate or update
+mastery_value.
 
-Il set può quindi contenere più riferimenti alle Evidence quando la
-determinazione dello stato corrente dipende dalla ricorrenza, dalla
-ripetizione o dalla combinazione di più osservazioni.
+================================================================================
+5. updated_at
+=============
 
-La Evidence History completa rimane parte del modello delle Evidence e dei
-processi che la utilizzano.
+updated_at represents the timestamp associated with the current Mastery State.
 
-Il Mastery State non contiene una persistence identity come proprietà
-semantica del Domain Model.
+updated_at belongs to the Mastery State because it describes when the current
+state was established or last updated.
 
-Eventuali identity introdotte per esigenze di persistenza appartengono
-esclusivamente al Persistence Model e non modificano l'identità semantica del
+updated_at is part of the semantic state representation.
+
+It is not a persistence-specific metadata field.
+
+================================================================================
+6. source_evidence
+==================
+
+source_evidence is a Set of Evidence relevant to the determination of the
+current Mastery State.
+
+The set identifies the Evidence that supports the current state represented by
+the Mastery State.
+
+source_evidence is not the complete historical record of Evidence associated
+with the User and Learning Object.
+
+Evidence History belongs to the Evidence Model and the processes responsible
+for producing and managing Evidence.
+
+The Mastery State therefore contains only the Evidence references required to
+identify the sources relevant to the current state.
+
+================================================================================
+7. Evidence Boundary
+====================
+
+Evidence and Mastery State have distinct architectural responsibilities.
+
+Evidence represents information produced by an observable learning event or
+assessment process.
+
+The Mastery State represents the resulting current state of mastery.
+
+The Mastery Engine interprets Evidence and determines the resulting Mastery
+State.
+
+Therefore:
+
+```
+Evidence
+    ↓
+Mastery Engine
+    ↓
+Mastery State
+```
+
+Evidence does not directly modify the Mastery State.
+
+The Evidence Model remains responsible for defining the semantics and
+classification of Evidence.
+
+================================================================================
+8. Learning Object Version Boundary
+===================================
+
+The revision or version of a Learning Object is not a property of the
 Mastery State.
 
-Il Mastery State non include una proprietà di versioning tecnico come parte
-necessaria del proprio significato di dominio.
+Learning Object revision belongs to the context of the Evidence from which
+the relevant observation or assessment originated.
 
-Eventuali informazioni di versione introdotte per persistenza, concorrenza,
-sincronizzazione, caching o altri requisiti tecnici appartengono al relativo
-modello tecnico.
+The Mastery State therefore does not contain:
 
-Il Mastery State non include una proprietà relativa alla revisione del
-Learning Object.
+* Learning Object revision;
+* Learning Object version;
+* a snapshot of the Learning Object;
+* a persistence version identifier.
 
-La revisione del Learning Object rispetto alla quale una Mastery Evidence è
-stata prodotta appartiene al contesto della Evidence.
+================================================================================
+9. Confidence Boundary
+======================
 
-Il Mastery Engine può utilizzare tale informazione nell'interpretazione delle
-Evidence e nella determinazione del Mastery State corrente.
+The Mastery State does not contain a separate confidence property.
 
-Non è attualmente definita una proprietà `confidence` come componente del
+No `confidence` field is introduced as an independent component of the
 Mastery State.
 
-Il Mastery State rappresenta quindi la condizione corrente della padronanza e
-non costituisce la registrazione storica delle osservazioni che hanno
-contribuito alla sua evoluzione.
-
+Questions concerning reliability, quality, or interpretation of Evidence
+belong to the Evidence Model and Mastery Engine responsibilities rather than
+constituting an additional semantic state variable of MasteryState.
 
 ================================================================================
 10. Persistence Boundary
-================================================================================
+========================
 
-La Mastery State Specification definisce il significato del Mastery State,
-non il suo schema di persistenza.
+Persistence identity and technical versioning are not semantic properties of
+the Mastery State Domain Model.
 
-Il Core Repository v0.1 non introduce una struttura di persistenza per il
+The Domain Model must therefore not introduce persistence-specific fields
+merely to support database identity, ORM mapping, or technical versioning.
+
+Persistence concerns belong to the Persistence Model and Persistence Layer.
+
+The Persistence Layer must not redefine the semantic structure of the
 Mastery State.
 
-La persistenza futura del Mastery State richiederà una decisione
-architetturale esplicita.
+================================================================================
+11. Historical Evidence Boundary
+================================
 
-Fino a tale decisione:
+The Mastery State is a representation of current state, not a historical
+Evidence archive.
 
-- non deve essere introdotta una tabella mastery;
-- non deve essere introdotto un modello SQLAlchemy MasteryState;
-- non deve essere aggiunta una relazione ORM al LearningObject;
-- non deve essere modificata la Persistence Mapping Specification 0.1.0
-  per inventare una persistenza non ancora approvata.
+The following distinction is therefore normative:
 
+```
+Evidence History
+    ↓
+Evidence Model / Process responsibilities
+
+Current Mastery State
+    ↓
+MasteryState
+```
+
+source_evidence identifies the Evidence relevant to the current state.
+
+It does not represent the complete chronological history of all Evidence.
 
 ================================================================================
-11. Domain Boundary
-================================================================================
+12. Domain Invariants
+=====================
 
-La Mastery State Specification riconosce Mastery State come concetto del
-modello di apprendimento dell'utente.
+A Mastery State:
 
-Il Domain Model Python non deve introdurre una rappresentazione concreta
-del Mastery State fino a quando il contratto dettagliato non sarà
-formalmente approvato.
+* is associated with one specific User;
+* is associated with one specific Learning Object;
+* contains one current mastery_value;
+* contains the timestamp of the current state;
+* identifies the Evidence relevant to the current state;
+* does not contain the complete Evidence History;
+* does not contain Learning Object revision information as a Mastery State
+  property;
+* does not contain persistence identity or technical versioning as semantic
+  properties;
+* does not contain an independent confidence property.
 
-In particolare, il Mastery State non deve essere aggiunto come semplice
-attributo di LearningObject.
-
-Non è corretto rappresentare:
-
-mastery_state
-
-come proprietà intrinseca del LearningObject.
-
-Il contesto corretto è:
-
-User
-
-    |
-
-    +---- Learning Object
-
-              |
-
-              +---- Mastery State
-
+The Mastery State must remain independent of persistence technology.
 
 ================================================================================
-12. Separation from Learning Object Lifecycle
-================================================================================
+13. Responsibility Boundary
+===========================
 
-Il lifecycle del Learning Object e il Mastery State possono evolvere
-indipendentemente.
+The responsibilities are divided as follows:
 
-Esempio concettuale:
+Domain Model
 
-Learning Object:
+Defines:
 
-Active
+* the MasteryState structure;
+* the semantic meaning of its components;
+* its domain invariants.
 
+Evidence Model
 
-User A:
+Defines:
 
-Mastery State = stato di padronanza iniziale
+* Evidence semantics;
+* Evidence classification;
+* Evidence references;
+* Evidence History responsibilities.
 
+Mastery Engine
 
-User B:
+Defines:
 
-Mastery State = stato di padronanza avanzato
+* Evidence interpretation;
+* mastery evaluation;
+* mastery update policy;
+* transitions of the Mastery State.
 
+Persistence Model
 
-Lo stesso Learning Object può quindi avere Mastery State differenti per
-utenti differenti senza modificare il proprio lifecycle state.
+Defines:
 
+* persistence representation;
+* mapping;
+* storage concerns;
+* technical identity and versioning mechanisms where required.
 
-================================================================================
-13. Separation from Evidence History
-================================================================================
-
-Il Mastery State rappresenta lo stato corrente.
-
-La cronologia delle Evidence rappresenta la storia osservazionale che può
-aver contribuito all'evoluzione della Mastery.
-
-Questi concetti non devono essere confusi.
-
-La conservazione completa della cronologia delle Evidence appartiene al
-modello di Evidence e ai processi che la utilizzano.
-
-Il Mastery State non deve essere utilizzato come sostituto della Evidence
-History.
-
+No layer may silently transfer responsibilities belonging to another layer.
 
 ================================================================================
-14. Future Definition Boundary
-================================================================================
+14. Architectural Consistency
+=============================
 
-Una futura revisione della presente specifica potrà definire:
+This specification formalizes the approved architectural decision recorded as
+#18.8 in the ELR Core Model Discrepancy Matrix.
 
-- struttura concreta del Mastery State;
-- tipo Domain;
-- identity;
-- temporal semantics;
-- versioning;
-- persistence requirements;
-- relationship with Evidence History;
-- relationship with Learning State;
-- Mastery representation;
-- integrazione con il Mastery Engine.
+The approved Mastery State structure is:
 
+```
+MasteryState
+├── mastery_value
+├── updated_at
+└── source_evidence: Set
+```
 
-================================================================================
-15. Architectural Consistency Rules
-================================================================================
+The following decisions are therefore normative:
 
-Le seguenti regole sono normative:
-
-1. Mastery State non rappresenta la conoscenza.
-
-2. Mastery State rappresenta la padronanza di un User rispetto a un
-   Learning Object.
-
-3. Mastery State non è LearningObject.state.
-
-4. Mastery State non è Learning State.
-
-5. Mastery State non è Mastery Evidence.
-
-6. Il Mastery Engine è responsabile dell'evoluzione della Mastery.
-
-7. Il Learning Object non deve contenere lo stato di padronanza di uno
-   specifico User come proprietà editoriale.
-
-8. La persistenza del Mastery State non appartiene al Core Repository v0.1
-   fino a quando non viene esplicitamente approvata.
-
-9. Il Domain Model non deve anticipare il contratto dettagliato del
-   Mastery State attraverso una struttura arbitraria.
-
-10. Le future implementazioni devono derivare da una specifica approvata e
-    non da assunzioni implicite.
-
+* mastery_value is a Value Object;
+* updated_at belongs to the Mastery State;
+* source_evidence is the set of Evidence relevant to the determination of
+  the current state;
+* source_evidence is not the complete Evidence History;
+* Learning Object revision belongs to the Evidence context, not to the
+  Mastery State;
+* persistence identity and technical versioning are not semantic properties
+  of the Domain Model;
+* no separate confidence property is introduced.
 
 ================================================================================
-16. Status and Future Revision
+15. Implementation Boundary
+===========================
+
+This specification defines the Domain Model only.
+
+It does not authorize or define a concrete persistence implementation.
+
+Implementation of the Mastery State remains subject to the architectural
+boundaries defined by the Mastery Engine, Evidence Model, and Persistence
+specifications.
+
+Any implementation must preserve the approved Domain Model structure and must
+not introduce persistence-driven semantic properties into MasteryState.
+
 ================================================================================
+16. Status
+==========
 
-Questa specifica è versione 1.0.0 e ha status DRAFT.
+The Mastery State internal structure defined by this specification is
+APPROVED.
 
-Il suo scopo iniziale è chiudere il gap concettuale relativo al Mastery
-State senza introdurre prematuramente decisioni implementative.
+The specification formalizes the architectural decision recorded as #18.8 in
+the ELR Core Model Discrepancy Matrix.
 
-Prima di una futura approvazione devono essere verificati:
-
-- coerenza con Learning State Specification;
-- coerenza con Learning Object Specification;
-- coerenza con ELR Domain Model Specification;
-- coerenza con Mastery Engine Specification;
-- coerenza con Evidence Model Specification;
-- coerenza con Persistence Mapping Specification.
-
-Una futura versione APPROVED dovrà essere utilizzata come riferimento per
-qualsiasi implementazione Domain o Persistence del Mastery State.
+No unresolved conceptual decision concerning the internal structure of the
+Mastery State is introduced by this specification.
