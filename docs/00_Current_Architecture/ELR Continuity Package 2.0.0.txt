@@ -254,7 +254,17 @@ Deve indicare:
 * prossima azione;
 * vincoli operativi rilevanti.
 
-### Initial Prompt
+### ELR Session Prompt
+
+**Path:**
+
+`docs/00_Current_Architecture/ELR Session Prompt 1.0.0.txt`
+
+Funzione:
+
+**definire il comportamento operativo richiesto alla sessione.**
+
+Non deve essere utilizzato come fonte primaria dello stato architetturale.
 
 Funzione:
 
