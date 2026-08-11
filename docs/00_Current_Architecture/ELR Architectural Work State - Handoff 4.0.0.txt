@@ -36,70 +36,83 @@ The following architectural phases are completed:
 * Fase 3 — Evidence Architecture
 * Fase 4 — Mastery Architecture
 * Fase 5 — Human Learning Control
+* Fase 6 — Learning Activity and Exercise Systems
 
 ### Current phase
 
-**Fase 6 — Derived Learning Systems**
+**Fase 7 — Document Consistency Consolidation**
 
 ### Next phase
 
-**Fase 7 — Interaction Layer**
+**Fase 8 — Derived Learning Systems**
 
 ---
 
 ## 3. CURRENT WORKING STATE
 
-The architectural baseline through Human Learning Control has been
-consolidated and verified in the repository.
+The architectural consolidation work through Learning Activity and Exercise
+Systems has been completed and verified in the repository.
 
-The next work concerns systems derived from the established ELR
-architecture.
+The following boundaries have been reconciled:
 
-The current Phase 6 scope identified by the Roadmap includes:
+* Learning Object → Learning Activity → Exercise System → Evidence;
+* Evidence → Mastery Evidence → Mastery Engine → Mastery State;
+* Conversation Episode → Knowledge Extraction Pipeline → ELR Change Proposal
+  → Learning Review → ELR;
+* Knowledge Category → ELR Taxonomy.
 
-* Phrasebook;
-* Exercise System;
-* Adaptive Review as a future extension.
+The Architecture Consistency Matrix has been reconciled with the current
+document ownership.
 
-No Phase 6 architectural decision is assumed to have been made until the
-relevant repository documents have been inspected.
+The Roadmap has been updated to version 1.2.0.
+
+The remaining work is documentary consistency verification and does not
+constitute a new architectural design phase.
 
 ---
 
 ## 4. LAST VERIFIED POSITION
 
-The previous architectural work completed the reconciliation of the
-Mastery architecture and subsequently completed the Human Learning
-Control phase.
+The following points were verified during the previous architectural work:
 
-The relevant approved decisions remain authoritative in their owning
-documents.
+* `Learning Object Specification` is the authoritative document name;
+* `Mastery State Specification` is an explicit Domain Model owner;
+* `Knowledge Category` is owned by the ELR Taxonomy;
+* KEP operations are `CREATE / MERGE / UPDATE`;
+* `SPLIT` is not currently an operation defined by the KEP Specification;
+* Learning Activity architectural decisions are registered in the
+  Architecture Decision Log;
+* no separate `ADR-021` document is assumed;
+* the Architecture Consistency Matrix is aligned with these ownerships;
+* the Roadmap 1.2.0 reflects the same state.
 
-They must not be reconstructed from this Handoff or from conversational
-memory.
-
-If a previous decision appears to conflict with the current repository
-state, the conflict must be verified against the authoritative document
-before any change is proposed.
+These points must be verified from the repository if questioned; they must
+not be reconstructed from conversational memory.
 
 ---
 
 ## 5. CURRENT TASK
 
-The next session must begin by verifying the current state of Phase 6.
+The next session must begin with the final repository-wide document
+consistency check defined by Fase 7 of the Roadmap 1.2.0.
 
-The first task is to inspect the repository for:
+The first task is to inspect:
 
-1. Phrasebook-related Specifications;
-2. Exercise System Specifications;
-3. Adaptive Review Specifications or planned documents;
-4. relevant ADRs;
-5. relevant entries in the Architecture Consistency Matrix;
-6. relevant implementation evidence;
-7. current Roadmap status.
+1. all relevant `Dependencies` sections;
+2. referenced document names;
+3. referenced document paths;
+4. declared document versions;
+5. cross-references between Specifications;
+6. ownership references;
+7. references to obsolete document names or versions;
+8. references to non-existent documents;
+9. semantic duplication that remains after the architectural consolidation.
 
-The purpose is to determine what already exists before proposing any new
-architecture.
+The purpose is to identify actual repository inconsistencies before proposing
+any further modification.
+
+No new architecture should be introduced unless the consistency check reveals
+a genuine architectural contradiction.
 
 ---
 
@@ -107,9 +120,9 @@ architecture.
 
 Use the following process:
 
-**verification → focused problem or architectural gap → document analysis
-→ one focused proposal → explicit approval → copyable documentation block
-→ repository update → repository verification → next point**
+**repository verification → focused discrepancy → document analysis →
+one focused proposal → explicit approval → copyable documentation block →
+repository update → repository verification → next point**
 
 Do not treat a proposal as an approved decision.
 
@@ -129,13 +142,14 @@ The following rules remain in force:
   documented contradiction;
 * implementation does not acquire architectural authority merely because
   it exists;
-* Domain semantics must not be inferred from ORM or persistence
-  structures;
+* Domain semantics must not be inferred from ORM or persistence structures;
 * each architectural responsibility must have an identifiable owning
   document;
 * new architectural decisions require explicit approval;
 * specifications must remain consistent with approved architectural
-  decisions.
+  decisions;
+* document continuity artifacts must not become alternative sources of
+  architectural authority.
 
 For detailed rules, use the ELR Continuity Package and the authoritative
 repository documents.
@@ -180,11 +194,12 @@ A new session should:
 
 1. read this Handoff;
 2. read the ELR Continuity Package;
-3. read the current Roadmap;
+3. read the current Roadmap 1.2.0;
 4. verify the repository state;
-5. identify the current Phase 6 artifacts;
-6. inspect only the documents directly relevant to the next decision;
-7. continue from the verified repository state.
+5. verify the Architecture Consistency Matrix;
+6. identify the remaining Fase 7 consistency checks;
+7. inspect only the documents directly relevant to the first discrepancy;
+8. continue from the verified repository state.
 
 Do not ask the user to reconstruct previously documented architectural
 decisions.
@@ -198,8 +213,7 @@ repository.
 
 This document is a checkpoint, not a historical transcript.
 
-When a new architectural phase is completed, this Handoff should be
-updated so that:
+When Fase 7 is completed, this Handoff should be updated so that:
 
 * the completed phase is recorded;
 * the current phase is identified;
