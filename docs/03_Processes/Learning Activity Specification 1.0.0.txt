@@ -4,7 +4,7 @@ English Learning Repository (ELR)
 Learning Activity Specification
 
 Version: 1.0.0
-Status: DRAFT
+Status: APPROVED
 ================================================================================
 
 
@@ -23,12 +23,16 @@ Document Version:
 
 Status:
 
-DRAFT
+APPROVED
 
 
 Dependencies:
 
 - ELR Architecture Specification
+
+- ELR Architecture Decision Log
+
+- ELR Architecture Consistency Matrix
 
 - ELR Taxonomy
 
@@ -67,7 +71,11 @@ La Learning Activity non rappresenta:
 
 • esercizio specifico;
 
-• stato di Mastery.
+• stato di Mastery;
+
+• Evidence;
+
+• protocollo di interazione.
 
 
 ================================================================================
@@ -139,6 +147,13 @@ Learning Activity
 Exercise System
 
 
+La Learning Activity è un process object e non costituisce una nuova unità di
+conoscenza persistente del repository.
+
+La Learning Activity non modifica direttamente il Learning Object né il
+Mastery State.
+
+
 ================================================================================
 Responsabilità
 ================================================================================
@@ -152,7 +167,9 @@ La Learning Activity Specification definisce:
 
 • criteri generali di selezione;
 
-• obiettivo didattico dell'attività.
+• obiettivo didattico dell'attività;
+
+• relazione architetturale con Mastery State ed Exercise System.
 
 
 ================================================================================
@@ -170,7 +187,9 @@ La Learning Activity non definisce:
 
 • feedback linguistico dettagliato;
 
-• algoritmi di Mastery.
+• algoritmi di Mastery;
+
+• scheduling adattivo autonomo.
 
 
 Queste responsabilità appartengono a:
@@ -183,29 +202,38 @@ generazione e gestione degli esercizi
 
 Mastery Engine:
 
-valutazione della padronanza
+valutazione e aggiornamento della padronanza
+
+
+Adaptive Review (futura estensione):
+
+selezione e scheduling adattivo delle Learning Activity
 
 
 ================================================================================
 Learning Activity Concept
 ================================================================================
 
-Una Learning Activity rappresenta una proposta strutturata di interazione
-didattica associata a uno o più Learning Object.
+Una Learning Activity rappresenta una proposta strutturata di intervento
+didattico associata a uno o più Learning Object.
 
 
-Una Learning Activity contiene:
+Una Learning Activity contiene concettualmente:
 
 
 • obiettivo di apprendimento;
 
-• conoscenza target;
+• riferimento alla conoscenza target;
 
 • livello di intervento;
 
 • relazione con Mastery;
 
 • tipo di attività richiesto.
+
+
+Questi elementi sono derivati o riferiti a partire dalle fonti autorevoli e
+non costituiscono una seconda fonte persistente della conoscenza.
 
 
 ================================================================================
@@ -262,6 +290,10 @@ La scelta di una Learning Activity può dipendere da:
 • difficoltà osservate;
 
 • necessità di consolidamento.
+
+
+La Learning Activity utilizza questi segnali per definire l'intervento, ma non
+modifica direttamente il Mastery State.
 
 
 Esempio:
@@ -398,6 +430,10 @@ Può essere generata sulla base di:
 • Evidence precedente.
 
 
+La selezione e lo scheduling adattivi di Review Activity rimangono una
+responsabilità futura di Adaptive Review.
+
+
 ================================================================================
 Activity Selection
 ================================================================================
@@ -462,24 +498,24 @@ User Interaction
 Evidence Generation
 
 
+La valutazione della risposta e la produzione dell'Evidence sono effettuate
+secondo le responsabilità definite dall'Exercise System e dall'Evidence Model.
+
+
 ================================================================================
 Evidence Generation
 ================================================================================
 
-Una Learning Activity può produrre nuovi eventi osservabili.
+Una Learning Activity può portare a nuovi eventi osservabili attraverso la
+realizzazione dell'attività e l'interazione dell'utente.
 
 
-Questi eventi possono diventare:
+Questi eventi possono contribuire alla produzione di Evidence secondo il
+modello Evidence e i processi proprietari che lo utilizzano.
 
 
-• Mastery Evidence;
-
-• nuove Conversation Episode;
-
-• input per processi successivi.
-
-
-L'attività non produce direttamente conoscenza.
+La Learning Activity non produce direttamente Evidence come modello
+proprietario e non produce direttamente conoscenza.
 
 
 ================================================================================
@@ -507,7 +543,7 @@ Learning State Layer
 Mastery
 
 
-Interaction Layer
+Learning Activity Layer
 
         |
 
@@ -525,6 +561,15 @@ Exercise Layer
 Exercise Instance
 
 
+Interaction Layer
+
+        |
+
+        v
+
+User Interaction / LIL
+
+
 ================================================================================
 Anti-corruption Rules
 ================================================================================
@@ -532,13 +577,17 @@ Anti-corruption Rules
 Una Learning Activity non deve:
 
 
-• contenere conoscenza non presente nell'ELR;
+• contenere conoscenza autorevole non presente nell'ELR;
 
 • modificare Learning Object;
 
 • trasformare un esercizio in conoscenza;
 
-• sostituire il Mastery Engine.
+• sostituire il Mastery Engine;
+
+• diventare una fonte persistente autonoma di Evidence;
+
+• incorporare il protocollo di interazione come propria responsabilità.
 
 
 ================================================================================
@@ -559,6 +608,17 @@ La Learning Activity determina quale tipo di intervento è appropriato.
 
 
 L'Exercise System realizza concretamente l'interazione.
+
+
+Adaptive Review, quando sarà progettato, potrà selezionare e schedulare le
+Learning Activity senza sostituirle.
+
+
+================================================================================
+Riferimento architetturale
+================================================================================
+
+ADR-021 — Learning Activity Layer
 
 
 ================================================================================
