@@ -354,8 +354,12 @@ Fase 4 — Mastery Architecture
 
 Stato:
 
-Da iniziare.
+Completata.
 
+La fase è considerata completata a livello architetturale.
+
+Eventuali implementazioni, test o raffinamenti operativi successivi non
+costituiscono una riapertura della fase architetturale.
 
 Obiettivo:
 
