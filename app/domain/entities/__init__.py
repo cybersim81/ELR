@@ -9,6 +9,9 @@ from .knowledge_category import KnowledgeCategory
 from .version import Version
 from .audit_record import AuditRecord
 
+from .example import Example
+from .note import Note
+
 
 __all__ = [
     "Anchor",
@@ -18,4 +21,6 @@ __all__ = [
     "KnowledgeCategory",
     "Version",
     "AuditRecord",
+    "Example",
+    "Note",
 ]
