@@ -4,7 +4,7 @@ English Learning Repository (ELR)
 Mastery Engine Specification
 
 Version: 1.0.0
-Status: DRAFT
+Status: APPROVED
 ================================================================================
 
 
@@ -23,7 +23,7 @@ Document Version:
 
 Status:
 
-DRAFT
+APPROVED
 
 
 Dependencies:
