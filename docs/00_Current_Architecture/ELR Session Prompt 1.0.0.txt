@@ -1,0 +1,340 @@
+# ELR Session Prompt
+
+**Version:** 1.0.0
+**Status:** ACTIVE
+**Document Type:** Session Bootstrap and Working Protocol
+
+---
+
+## 1. PURPOSE
+
+Questo documento definisce il protocollo operativo da utilizzare per una
+nuova sessione di lavoro sul repository ELR.
+
+Il Prompt non costituisce una fonte autonoma di verità architetturale.
+
+Il suo scopo è:
+
+* inizializzare la sessione;
+* indicare come recuperare il contesto corrente;
+* definire il metodo di lavoro;
+* impedire che decisioni architetturali vengano ricostruite dalla
+  memoria conversazionale;
+* definire le regole di verifica del repository.
+
+---
+
+## 2. REPOSITORY
+
+Repository:
+
+`https://github.com/cybersim81/ELR`
+
+Il repository è la fonte di verità per lo stato architetturale ELR.
+
+Non ricostruire decisioni dalla memoria della conversazione precedente
+quando tali decisioni possono essere verificate nel repository.
+
+---
+
+## 3. SESSION BOOTSTRAP
+
+All'inizio di una nuova sessione:
+
+### Step 1 — Leggi questo documento
+
+`docs/00_Current_Architecture/ELR Session Prompt 1.0.0.txt`
+
+### Step 2 — Leggi il Continuity Package
+
+`docs/00_Current_Architecture/ELR Continuity Package 2.0.0.txt`
+
+Il Continuity Package definisce:
+
+* lo stato persistente della continuità;
+* la posizione corrente nella Roadmap;
+* le regole di continuità;
+* il corpus documentale rilevante;
+* i vincoli operativi.
+
+### Step 3 — Leggi l'Handoff
+
+`docs/00_Current_Architecture/ELR Architectural Work State - Handoff 4.0.0.txt`
+
+L'Handoff definisce:
+
+* l'ultimo checkpoint operativo;
+* la fase corrente;
+* l'ultima posizione verificata;
+* la prossima azione autorizzata.
+
+### Step 4 — Leggi la Roadmap
+
+`docs/00_Current_Architecture/ELR Roadmap 1.1.0.txt`
+
+La Roadmap determina la posizione corrente del lavoro e le attività
+successive autorizzate.
+
+### Step 5 — Verifica il repository
+
+Non assumere che i documenti di continuità siano aggiornati solo perché
+la conversazione precedente lo suggerisce.
+
+Verifica sempre il contenuto effettivo dei documenti nel repository.
+
+### Step 6 — Recupera i documenti specialistici rilevanti
+
+Leggi solamente le Specification, ADR, Matrix e altri documenti
+direttamente pertinenti al lavoro corrente.
+
+Non ricreare documenti già presenti.
+
+---
+
+## 4. SOURCE OF TRUTH
+
+Il repository è la fonte di verità.
+
+In caso di divergenza tra:
+
+* memoria conversazionale;
+* Prompt;
+* Continuity Package;
+* Handoff;
+* implementazione;
+* documentazione;
+
+la divergenza deve essere verificata.
+
+Non risolvere una divergenza mediante memoria o supposizioni.
+
+Per risolverla:
+
+1. identifica i documenti coinvolti;
+2. verifica status e versione;
+3. identifica il documento proprietario del concetto;
+4. verifica eventuali ADR applicabili;
+5. verifica la Consistency Matrix;
+6. applica il processo di decisione architetturale.
+
+---
+
+## 5. ARCHITECTURAL WORKING RULES
+
+Durante il lavoro:
+
+* non inferire il Domain Model dal Persistence Model;
+* non inferire decisioni architetturali dall'implementazione ORM;
+* non attribuire autorità architetturale a una struttura solo perché
+  esiste nel codice;
+* non introdurre nuove responsabilità senza verificarne l'ownership;
+* non creare Specification duplicate;
+* non riaprire decisioni APPROVED senza una contraddizione documentale
+  reale;
+* distinguere Domain Model, Process Model, Evidence Model, Mastery Engine
+  e Persistence Model;
+* verificare status e versioni dei documenti prima di proporre modifiche.
+
+L'implementazione esistente costituisce evidenza tecnica, non
+automaticamente autorità architetturale.
+
+---
+
+## 6. DOCUMENT AUTHORITY
+
+Quando emerge un conflitto documentale:
+
+1. identifica le specifiche coinvolte;
+2. verifica status e versione;
+3. confronta le definizioni esplicite;
+4. identifica il documento proprietario;
+5. verifica eventuali decisioni ADR;
+6. verifica la Consistency Matrix;
+7. proponi una riconciliazione solo dopo questa verifica.
+
+Una bozza non può silenziosamente sovrascrivere una decisione APPROVED.
+
+Una struttura di persistence non può essere utilizzata per dedurre un
+concetto del Domain Model.
+
+Una implementazione non può risolvere silenziosamente una discrepanza
+documentale.
+
+---
+
+## 7. DECISION WORKFLOW
+
+Mantieni sempre il seguente ciclo:
+
+**discrepanza/problema → verifica documentale → proposta → approvazione →
+blocco copiabile → aggiornamento repository → verifica → prossimo punto**
+
+### Regole
+
+* proponi una sola decisione focalizzata alla volta;
+* attendi approvazione esplicita;
+* non considerare una proposta definitiva prima dell'approvazione;
+* dopo l'approvazione produci il blocco copiabile;
+* indica il documento e la sezione da modificare;
+* dopo l'aggiornamento verifica il repository;
+* verifica anche i boundary immediatamente adiacenti;
+* solo dopo procedi al punto successivo.
+
+---
+
+## 8. REPOSITORY WRITE CONSTRAINT
+
+L'integrazione GitHub è attualmente verificata come segue:
+
+**READ → AVAILABLE**
+
+**WRITE → UNAVAILABLE**
+
+I tentativi di scrittura diretta hanno restituito:
+
+**HTTP 403 — Forbidden**
+
+Pertanto:
+
+* non dichiarare mai una modifica come applicata sulla sola base di un
+  tentativo di scrittura;
+* se una scrittura diretta restituisce `403`, considera la scrittura non
+  applicata;
+* produci il blocco copiabile;
+* l'utente applica manualmente la modifica;
+* recupera nuovamente il file dal repository;
+* verifica il contenuto aggiornato;
+* considera la modifica effettivamente applicata solo dopo verifica READ.
+
+Il `403` è un vincolo operativo dell'integrazione e non una decisione
+architetturale ELR.
+
+---
+
+## 9. CURRENT PHASE
+
+Non assumere una fase corrente hardcoded in questo Prompt.
+
+La fase corrente deve essere determinata verificando:
+
+1. Roadmap;
+2. Continuity Package;
+3. Handoff;
+4. repository state.
+
+Quando una fase viene completata, questo Prompt non deve essere
+modificato soltanto per aggiornare il numero della fase.
+
+Il nuovo punto di ripresa deve essere determinato dai documenti correnti
+del repository.
+
+---
+
+## 10. CURRENT WORK
+
+Dopo il bootstrap:
+
+1. identifica la fase corrente;
+2. identifica il prossimo lavoro autorizzato;
+3. verifica quali artefatti esistono già;
+4. identifica i documenti proprietari;
+5. verifica eventuali discrepanze;
+6. leggi i documenti direttamente rilevanti;
+7. proponi il primo passo concreto.
+
+Non inventare lavoro già completato.
+
+Non assumere che un'attività sia aperta solo perché lo era in una
+precedente sessione.
+
+---
+
+## 11. APPROVED DECISIONS
+
+Le decisioni APPROVED devono essere recuperate dai relativi documenti
+autoritativi.
+
+Non utilizzare questo Prompt come archivio sostitutivo delle decisioni.
+
+Non riaprire una decisione APPROVED salvo che emerga una contraddizione
+documentale reale nel repository.
+
+Se emerge una contraddizione:
+
+**contraddizione → verifica → identificazione dell'autorità → proposta di
+riconciliazione → approvazione**
+
+---
+
+## 12. SESSION COMPLETION
+
+Un'attività documentale è considerata completata solamente quando:
+
+* la decisione è stata approvata;
+* il blocco documentale è stato prodotto;
+* il repository è stato aggiornato;
+* il contenuto aggiornato è stato verificato;
+* eventuali documenti di continuità interessati sono stati riallineati.
+
+Una modifica non verificata nel repository non deve essere dichiarata
+completata.
+
+---
+
+## 13. CONTINUITY MODEL
+
+La continuità ELR utilizza tre artefatti distinti:
+
+### Session Prompt
+
+Definisce:
+
+**come deve lavorare la sessione.**
+
+Path:
+
+`docs/00_Current_Architecture/ELR Session Prompt 1.0.0.txt`
+
+### Continuity Package
+
+Definisce:
+
+**lo stato persistente e le regole di continuità.**
+
+Path:
+
+`docs/00_Current_Architecture/ELR Continuity Package 2.0.0.txt`
+
+### Architectural Work State — Handoff
+
+Definisce:
+
+**l'ultimo checkpoint operativo.**
+
+Path:
+
+`docs/00_Current_Architecture/ELR Architectural Work State - Handoff 4.0.0.txt`
+
+Questi documenti hanno responsabilità diverse e non devono duplicarsi.
+
+---
+
+## 14. START COMMAND
+
+Dopo aver completato il bootstrap:
+
+**verifica il repository, identifica la fase corrente e individua il
+prossimo lavoro autorizzato.**
+
+Non ricostruire il contesto dalla memoria conversazionale.
+
+Non assumere che il lavoro precedente sia ancora aperto.
+
+Non riaprire decisioni APPROVED senza una contraddizione documentale
+reale.
+
+Procedi secondo il Decision Workflow definito in questo documento.
+
+---
+
+**END OF ELR SESSION PROMPT**
