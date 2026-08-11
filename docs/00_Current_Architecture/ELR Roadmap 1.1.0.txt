@@ -448,14 +448,28 @@ Da definire.
 
 Obiettivo:
 
-Costruire sistemi derivati basati sull'ELR come unica sorgente.
+Costruire sistemi e processi derivati basati sull'ELR come unica sorgente,
+separando la selezione dell'intervento didattico dalla sua realizzazione.
 
 
-Comprende:
+Learning Activity Specification
+
+Responsabilità:
+
+- collegamento tra Learning Object, Mastery State e azione didattica;
+
+- definizione dell'intento e della struttura dell'intervento didattico;
+
+- selezione dell'attività in base ai segnali didattici autorizzati;
+
+- separazione tra attività didattica ed esercizio concreto.
+
+
+La Learning Activity non costituisce conoscenza persistente, Mastery State,
+Exercise Instance, Evidence o protocollo di interazione.
 
 
 Phrasebook Specification
-
 
 Responsabilità:
 
@@ -468,26 +482,28 @@ Responsabilità:
 
 Exercise System Specification
 
-
 Responsabilità:
 
 - generazione esercizi;
 
-- interazioni;
+- realizzazione delle Learning Activity attraverso esercizi e interazioni;
 
-- produzione Mastery Evidence;
+- produzione di risultati valutativi e Mastery Evidence secondo il modello
+  Evidence.
 
 
 Adaptive Review Specification (futura estensione)
 
+Responsabilità previste:
 
-Responsabilità:
+- selezione e scheduling delle Learning Activity;
 
-- selezione contenuti;
+- revisione basata su Mastery State, Evidence, tempo e altri segnali
+  autorizzati.
 
-- scheduling;
 
-- revisione.
+Adaptive Review non sostituisce la Learning Activity: costituisce una futura
+policy/processo di selezione e scheduling che potrà proporre Learning Activity.
 
 
 ================================================================================
@@ -517,7 +533,10 @@ Responsabilità:
 
 - shortcut;
 
-- interazioni didattiche strutturate.
+- interazioni didattiche strutturate;
+
+- realizzazione delle interazioni attraverso le Learning Activity e i sistemi
+  che le realizzano.
 
 
 Estensioni future:
@@ -576,15 +595,20 @@ Learning Review Specification
 
 8.
 
-ELR Stress Test Log
+Learning Activity Specification
 
 
 9.
 
-ELR Roadmap
+ELR Stress Test Log
 
 
 10.
+
+ELR Roadmap
+
+
+11.
 
 Learning Interaction Language Specification
 
