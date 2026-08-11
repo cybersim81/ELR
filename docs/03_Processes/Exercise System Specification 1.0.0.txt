@@ -523,12 +523,12 @@ Exercise System e Mastery Engine hanno responsabilità separate.
 
 Exercise System produce:
 
-
 - risposta;
 
 - risultato;
 
-- Evidence.
+- osservazioni dell'interazione utilizzabili dai processi proprietari
+  per la produzione di Evidence.
 
 
 Mastery Engine interpreta:
