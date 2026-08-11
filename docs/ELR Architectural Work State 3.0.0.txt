@@ -215,8 +215,8 @@ Mastery State is formally specified by:
 * Mastery State Specification 1.0.0;
 * Mastery Engine Specification 1.0.0.
 
-The Mastery State Specification has now been updated to define the
-approved conceptual internal structure of Mastery State.
+The Mastery State Specification defines the approved conceptual internal
+structure of Mastery State.
 
 The approved structure is:
 
@@ -238,23 +238,14 @@ belong to the Mastery Engine.
 
 `updated_at`:
 
-Represents the point in time at which the current Mastery State was
-updated.
+Represents the point in time associated with the current Mastery State.
 
 `source_evidence`:
 
-Represents a set of references to Mastery Evidence that the Mastery
-Engine considers causally or evaluatively relevant to the determination
+Represents a set of Evidence references relevant to the determination
 of the current Mastery State.
 
 `source_evidence` is not the complete Evidence History.
-
-It represents only the subset of observations considered relevant to
-the current state.
-
-Multiple Evidence references may therefore belong to the same Mastery
-State when recurrence, repetition, or combination of observations is
-relevant to its determination.
 
 The Mastery State does not contain:
 
@@ -276,14 +267,32 @@ while the Evidence Model and Mastery Engine retain responsibility for
 the observational and historical context used to determine that
 condition.
 
-IMPORTANT:
+The internal structure defined above is APPROVED.
 
-The above conceptual structure is approved, but this does not yet mean
-that a concrete executable MasteryState Domain implementation or
-Mastery persistence model is authorized.
+In addition, the Mastery State implementation boundary has been approved
+as a separate architectural decision:
 
-Those implementation decisions remain subject to the remaining Mastery
-work tracked in the Discrepancy Matrix.
+* MasteryState has an autonomous executable representation within the
+  Domain Model;
+* MasteryState is a distinct Domain Model object;
+* MasteryState is not part of the Learning Object aggregate.
+
+This implementation-boundary decision does not define:
+
+* persistence;
+* ORM mapping;
+* database schema;
+* repository implementation;
+* persistence identity;
+* technical versioning;
+* Mastery Engine algorithms;
+* Evidence generation;
+* Evidence History storage;
+* application-layer APIs.
+
+These concerns require separate decisions where applicable.
+
+================================================================
 
 ================================================================
 
@@ -295,15 +304,17 @@ The current matrix contains 18 numbered sections.
 
 The previously resolved discrepancies remain recorded as resolved.
 
-Section #18 contains the remaining Mastery architectural work.
+Section #18 has been resolved.
 
-Within #18:
+The following Mastery decisions are currently approved:
 
-* #18.7 Mastery State implementation remains an implementation-level
-  decision to be addressed only after the relevant Domain contract has
-  been sufficiently consolidated.
+* #17 Mastery State implementation — APPROVED;
+* #18.8 Mastery State internal structure — APPROVED.
 
-* #18.8 Mastery State internal structure is APPROVED.
+#17 establishes the autonomous executable Domain Model boundary of
+MasteryState.
+
+#18.8 establishes the approved internal semantic structure of MasteryState.
 
 The approved #18.8 structure is:
 
@@ -314,20 +325,29 @@ MasteryState
 └── source_evidence: Set<EvidenceReference>
 ```
 
-The next work must therefore NOT reopen the already approved decisions
-of #18.8 unless a new contradiction is found in the repository
-documentation.
+The implementation decision of #17 does not reopen or modify the semantic
+decisions approved by #18.8.
+
+No remaining discrepancy within section #18 is currently open.
+
 
 ================================================================
 
 8. # CURRENT REMAINING WORK
 
-The remaining architectural work is concentrated on Mastery.
+The Mastery architectural work tracked by discrepancy #18 is resolved.
 
-The next working session must:
+The next working session must not invent or assume a new Mastery
+discrepancy after #18.8.
+
+Before beginning new architectural work, the AI must inspect the current
+Discrepancy Matrix and identify the first genuinely unresolved or
+deferred item in the current repository state.
+
+The working procedure remains:
 
 1. inspect the current Discrepancy Matrix;
-2. identify the next unresolved Mastery discrepancy after #18.8;
+2. identify the first unresolved or deferred item;
 3. verify the relevant specifications before proposing a decision;
 4. explicitly distinguish Domain semantics from persistence or
    infrastructure concerns;
@@ -335,10 +355,10 @@ The next working session must:
 6. obtain explicit approval before treating the decision as final;
 7. produce a copyable documentation block;
 8. update the relevant repository document;
-9. verify the repository update;
+9. verify the complete updated section and its adjacent boundaries;
 10. only then proceed to the next discrepancy.
 
-No implementation should precede the decisions required by the
+No implementation should precede decisions required by the
 Discrepancy Matrix.
 
 ================================================================
@@ -462,11 +482,12 @@ The first action in a new working session should be:
 
 1. read this handoff;
 2. read the current ELR Core Model Discrepancy Matrix;
-3. read the current Mastery State Specification;
+3. verify the current Mastery State Specification;
 4. read the relevant Mastery sections of the Domain Model Specification;
 5. read the Mastery Engine Specification;
 6. verify the current documentation status and versions;
-7. identify the next unresolved Mastery discrepancy after #18.8.
+7. identify the first genuinely unresolved or deferred discrepancy in
+   the current repository state.
 
 Do not recreate documents that are already present.
 
@@ -479,11 +500,15 @@ contains the relevant authoritative documentation.
 Do not reopen #18.8 unless the repository reveals an actual
 contradiction.
 
-The immediate objective is to continue closing the remaining Mastery
-Domain decisions in the Discrepancy Matrix.
+Do not assume that a previously identified deferred item remains open
+without verifying its current status in the repository.
 
-Implementation follows documentation reconciliation and explicit
-architectural approval.
+If the current Discrepancy Matrix contains no subsequent unresolved or
+deferred item, do not invent one.
+
+Repository state is authoritative over the continuity assumptions
+contained in this handoff.
+
 
 ================================================================
 
@@ -510,8 +535,8 @@ conversation.
 14. # LAST KNOWN POSITION
 
 The current architectural work has completed the Knowledge Statement
-reconciliation and has subsequently consolidated the conceptual internal
-structure of Mastery State.
+reconciliation and has subsequently consolidated the Mastery State
+architecture.
 
 The following areas are explicitly reconciled:
 
@@ -519,9 +544,22 @@ The following areas are explicitly reconciled:
 * Persistence Mapping relationship for the current representation;
 * documentation authority and status governance;
 * discrepancy tracking for the completed work;
-* Mastery State conceptual internal structure.
+* Mastery State conceptual internal structure;
+* Mastery State autonomous executable Domain Model boundary.
 
-The latest approved Mastery State decision is #18.8:
+The approved Mastery State decisions are:
+
+#17 — Mastery State implementation:
+
+```
+MasteryState
+    ↓
+autonomous executable Domain Model object
+    ↓
+separate from LearningObject
+```
+
+#18.8 — Mastery State internal structure:
 
 ```
 MasteryState
@@ -530,15 +568,17 @@ MasteryState
 └── source_evidence: Set<EvidenceReference>
 ```
 
-#18.8 is APPROVED and has been recorded in:
+#17 and #18.8 are APPROVED.
 
-* ELR Core Model Discrepancy Matrix;
-* Mastery State Specification 1.0.0.
+Section #18 of the Discrepancy Matrix is resolved.
 
-The next working activity is to inspect the remaining open items in
-section #18 and continue from the first unresolved item after #18.8.
+There is currently no additional open item within #18 after #18.8.
 
-The next session must not assume that the remaining items have been
-resolved merely because #18.8 has been approved.
+The next working session must inspect the current repository state and
+identify the first genuinely unresolved or deferred discrepancy before
+proposing further architectural work.
+
+The next session must not assume that an item remains open merely because
+an earlier version of this handoff identified it as remaining work.
 
 END OF HANDOFF
