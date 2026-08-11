@@ -275,16 +275,29 @@ e Roadmap.
 
 ## 11. Rules for New Sessions
 
-Una nuova sessione deve:
+### Una nuova sessione deve:
 
-1. leggere il Continuity Package;
-2. leggere la Roadmap;
-3. leggere Architecture Specification, Decision Log e Consistency Matrix;
-4. leggere l'Handoff corrente;
-5. identificare la fase corrente;
-6. recuperare solo i documenti specialistici direttamente rilevanti;
-7. verificare lo stato effettivo del repository;
-8. iniziare il lavoro dalla prossima attività autorizzata.
+1. leggere `ELR Session Prompt 1.0.0.txt`;
+2. leggere `ELR Continuity Package 2.0.0.txt`;
+3. leggere `ELR Roadmap 1.1.0.txt`;
+4. leggere `ELR Architectural Work State - Handoff 4.0.0.txt`;
+5. leggere `ELR Architecture Specification`, `ELR Architecture Decision Log`
+   e `ELR Architecture Consistency Matrix`;
+6. verificare lo stato effettivo dei documenti nel repository;
+7. identificare la fase corrente dalla Roadmap e dal relativo stato verificato;
+8. identificare il prossimo lavoro autorizzato;
+9. leggere soltanto i documenti specialistici direttamente rilevanti per
+   quel lavoro;
+10. non ricostruire decisioni dalla memoria della conversazione precedente;
+11. non riaprire decisioni APPROVED senza una contraddizione documentale
+    reale;
+12. non assumere che un'attività rimanga aperta soltanto perché lo era in
+    una precedente sessione;
+13. mantenere il workflow:
+
+**verifica → problema/discrepanza → analisi → proposta → approvazione →
+blocco copiabile → aggiornamento repository → verifica → prossimo punto.**
+
 
 Non deve:
 
