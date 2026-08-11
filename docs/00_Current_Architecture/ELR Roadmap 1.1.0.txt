@@ -356,10 +356,6 @@ Stato:
 
 Completata.
 
-La fase è considerata completata a livello architetturale.
-
-Eventuali implementazioni, test o raffinamenti operativi successivi non
-costituiscono una riapertura della fase architetturale.
 
 Obiettivo:
 
@@ -388,6 +384,11 @@ La Architecture Specification mantiene:
 
 
 Mastery = stato persistente della padronanza.
+
+La fase è considerata completata a livello architetturale.
+
+Eventuali implementazioni, test o raffinamenti operativi successivi non
+costituiscono una riapertura della fase architetturale.
 
 
 ================================================================================
