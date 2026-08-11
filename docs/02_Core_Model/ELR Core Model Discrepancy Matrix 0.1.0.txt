@@ -880,29 +880,198 @@ explicit approved architectural decision.
 17. Mastery State implementation
     ================================================================
 
-Status: DEFERRED
+================================================================================
+#17 — Mastery State implementation
+==================================
 
-Finding:
+Status:
 
-Mastery State is now formally documented but is not yet represented in
-the current Domain Python implementation.
+APPROVED
 
 Decision:
 
-Do not implement MasteryState until the Domain implementation scope has
-been explicitly approved.
+The approved Mastery State Domain Model must have an autonomous executable
+representation within the ELR Domain Model.
 
-In particular:
+The executable Mastery State representation is a distinct Domain Model object
+and is not part of the Learning Object aggregate.
 
-1. do not add MasteryState to LearningObject;
-2. do not reinterpret LearningObject.state as Learning State or Mastery;
-3. do not create Mastery persistence models;
-4. do not create implicit LearningObject -> KnowledgeStatement domain
-   relationships;
-5. do not infer additional Domain attributes from documentation alone.
+This preserves the architectural separation between:
 
-The current persistence implementation may continue for concepts whose
-Domain and Persistence contracts are already sufficiently defined.
+Learning Object:
+
+represents persistent linguistic knowledge.
+
+Mastery State:
+
+represents the current mastery of a specific User with respect to a specific
+Learning Object.
+
+================================================================================
+Implementation Boundary
+=======================
+
+The implementation of Mastery State must preserve the approved Domain Model
+structure defined in the Mastery State Specification.
+
+The executable representation therefore corresponds to:
+
+```text id="q7f4nx"
+MasteryState
+├── mastery_value
+├── updated_at
+└── source_evidence: Set
+```
+
+Mastery State must remain a distinct Domain Model object.
+
+It must not be embedded into or merged with the Learning Object merely because
+the Learning Object is already represented as a persistent domain object.
+
+================================================================================
+Architectural Separation
+========================
+
+The executable Domain Model maintains the following separation:
+
+Learning Object
+    │
+    └── represents persistent linguistic knowledge
+
+
+Mastery State
+    │
+    └── represents current User-specific mastery
+
+
+Mastery Evidence
+    │
+    └── provides evidence relevant to mastery determination
+
+
+Mastery Engine
+    │
+    └── interprets Mastery Evidence and updates Mastery State
+
+
+The Mastery State therefore remains outside the Learning Object aggregate
+boundary.
+
+The Mastery Engine remains responsible for the evolution of the Mastery
+State.
+
+================================================================================
+Implementation Scope
+====================
+
+This decision authorizes only the introduction of Mastery State as an
+autonomous executable Domain Model object.
+
+This decision does not define:
+
+• persistence;
+
+• ORM mapping;
+
+• database schema;
+
+• repository implementation;
+
+• persistence identity;
+
+• technical versioning;
+
+• Mastery Engine algorithms;
+
+• Evidence generation;
+
+• Evidence History storage;
+
+• application-layer APIs;
+
+• scheduling or learning activity logic.
+
+================================================================================
+Persistence Boundary
+====================
+
+The executable Mastery State representation must not introduce
+persistence-driven semantic properties into the Domain Model.
+
+Persistence concerns remain separate from the semantic representation of
+Mastery State.
+
+Any persistence mapping or storage mechanism requires separate architectural
+validation.
+
+================================================================================
+Mastery Engine Boundary
+=======================
+
+The executable Mastery State representation does not define the Mastery Engine
+algorithm.
+
+The Mastery Engine remains responsible for interpreting Mastery Evidence and
+determining updates to the Mastery State.
+
+The implementation of Mastery State must therefore remain independent of the
+specific algorithm used by the Mastery Engine.
+
+================================================================================
+Evidence Boundary
+=================
+
+The executable Mastery State representation preserves the approved distinction
+between current state and Evidence History.
+
+`source_evidence` represents the Evidence relevant to the determination of the
+current state.
+
+It does not represent the complete historical record of Evidence.
+
+================================================================================
+Decision Constraint
+===================
+
+Any subsequent decision concerning:
+
+• persistence of Mastery State;
+
+• ORM mapping;
+
+• repository access;
+
+• Mastery Engine integration;
+
+• application-layer APIs;
+
+• concrete implementation details beyond the autonomous Domain Model object;
+
+requires separate architectural validation.
+
+================================================================================
+Architectural Consequence
+=========================
+
+The Mastery State implementation boundary is therefore:
+
+```text id="0h9z4u"
+Approved Domain Model
+        │
+        ▼
+Autonomous executable MasteryState
+        │
+        ├── no persistence decision
+        ├── no ORM decision
+        ├── no repository decision
+        └── no Mastery Engine algorithm decision
+```
+
+This decision resolves the implementation boundary of Mastery State tracked by
+discrepancy #17 at the Domain Model level.
+
+It does not resolve the subsequent implementation or persistence concerns.
+
 
 ================================================================
 
