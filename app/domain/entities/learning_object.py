@@ -3,6 +3,9 @@ from datetime import datetime, timezone
 from enum import Enum
 from uuid import UUID, uuid4
 
+from .example import Example
+from .note import Note
+
 
 class LearningObjectState(str, Enum):
     CANDIDATE = "Candidate"
@@ -34,6 +37,9 @@ class LearningObject:
     anchor_id: UUID
     statement: str
     category_id: UUID
+
+    examples: set[Example] = field(default_factory=set)
+    notes: set[Note] = field(default_factory=set)
 
     id: UUID = field(default_factory=uuid4)
     state: LearningObjectState = LearningObjectState.CANDIDATE
