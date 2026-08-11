@@ -109,11 +109,19 @@ La KEP analizza conversazioni ma non le memorizza come conoscenza.
 La conversazione rappresenta esclusivamente una fonte temporanea di evidenza.
 
 
-Il risultato prodotto dalla KEP è esclusivamente:
+Il risultato prodotto dalla KEP comprende:
 
+• Knowledge Candidate;
 • ELR Change Proposal;
+• Evidence Candidate.
 
-• Mastery Evidence.
+La KEP può produrre Change Evidence a supporto della ELR Change Proposal,
+secondo il modello definito dalla Evidence Model Specification.
+
+La KEP non produce Mastery Evidence.
+
+La Mastery Evidence è prodotta dal Mastery Engine / Learning Interaction
+Process secondo quanto definito dalla Evidence Model Specification.
 
 La persistenza dei Learning Object appartiene all'ELR dopo approvazione.
 
