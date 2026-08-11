@@ -73,7 +73,7 @@ Matrice di consistenza architetturale
 | LIL                              | R  | R       | Learning Interaction Language Specification | Nessuna modifica |
 | Derived Views                    | R  | R       | Specifiche sistemi derivati                | Separare per dominio |
 | Phrasebook                       | R  | R       | Phrasebook Specification                   | Sistema derivato |
-| Exercise System                  | R  | R       | Exercise System Specification              | Sistema derivato |
+| Exercise System                  | R  | R       | Exercise System Specification              | Sistema operativo di processo |
 | Dashboard / Reporting            | R  | R       | Reporting Specification                    | Documento futuro |
 
 
