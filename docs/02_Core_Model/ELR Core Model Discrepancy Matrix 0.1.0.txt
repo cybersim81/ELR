@@ -228,55 +228,60 @@ Resolution Date:
 4. Mastery State Domain Contract
    ================================================================
 
-Status: DOCUMENTATION BASELINE ESTABLISHED / IMPLEMENTATION DEFERRED
+Status:
 
-Finding:
-
-Mastery Engine Specification 1.0.0 defines Mastery State as the current
-state of the relationship between a User and a Learning Object.
-
-The precise Mastery State model was intentionally delegated to a separate
-specification.
+APPROVED
 
 Decision:
 
-The Mastery State Specification 1.0.0 now establishes the architectural
-baseline for Mastery State.
+The Mastery State Domain Contract is established and approved.
 
-The specification defines:
+MasteryState has an autonomous executable representation within the Domain
+Model.
 
-* semantic role;
-* relationship to User;
-* relationship to Learning Object;
-* relationship to Learning State;
-* relationship to Mastery Evidence;
-* relationship to the Mastery Engine;
-* current persistence boundary.
+MasteryState is a distinct Domain Model object and is not part of the
+LearningObject aggregate.
 
-The specification does not require immediate Python or persistence
-implementation.
+The approved Mastery State structure is:
 
-Current implementation:
+```text id="n6r8qt"
+MasteryState
+├── mastery_value
+├── updated_at
+└── source_evidence: Set<EvidenceReference>
+```
 
-The Domain Python model does not contain a Mastery State representation.
+This decision is consistent with and incorporates the implementation-boundary
+decision established by #17.
 
-Persistence:
+The executable Domain Model representation of MasteryState therefore is
+authorized at the Domain Model level.
 
-The Persistence Mapping Specification 0.1.0 excludes Mastery State from
-Core Repository v0.1 persistence.
+This decision does not define or authorize:
 
-Decision:
+* persistence;
+* ORM mapping;
+* database schema;
+* repository implementation;
+* persistence identity as a semantic Domain property;
+* technical versioning as a semantic Domain property;
+* Mastery Engine algorithms;
+* Evidence generation;
+* Evidence History storage;
+* application-layer APIs.
 
-Mastery State remains architecturally defined but implementation-deferred.
+Persistence and infrastructure concerns remain separately governed.
 
-Do not implement:
+The Mastery State Domain Contract therefore resolves the previous
+implementation deferral at the Domain Model level while preserving the
+architectural separation between Domain Model and Persistence Model.
 
-* MasteryState domain entity;
-* MasteryState value object;
-* MasteryState SQLAlchemy model;
-* Mastery persistence tables;
+The Mastery State Domain Contract is considered RESOLVED at the Domain Model
+level.
 
-until an explicit implementation decision is approved.
+Any subsequent persistence or infrastructure implementation requires a
+separate architectural decision where applicable.
+
 
 ================================================================
 
