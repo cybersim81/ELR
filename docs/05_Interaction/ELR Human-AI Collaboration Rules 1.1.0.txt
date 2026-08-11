@@ -169,8 +169,49 @@ The repository therefore constitutes the persistent architectural memory of
 the project, while the conversation constitutes the temporary workspace for
 the reasoning process.
 
+13. Repository Verification Completeness
 
-13. Revision
+Repository verification must be based on the complete content relevant to the
+verification target.
+
+A partial tool response must not be treated as sufficient evidence to validate
+a modified document section.
+
+When verifying a repository update, the AI must:
+
+1. retrieve the complete modified section;
+2. verify the section header and status where applicable;
+3. verify the complete substantive content of the modified section;
+4. verify the boundary with the immediately preceding section;
+5. verify the boundary with the immediately following section;
+6. confirm that no unintended adjacent content has been modified.
+
+If the available tool response does not contain sufficient content to perform
+this verification, the AI must explicitly state that verification is
+incomplete.
+
+The AI must not make a definitive architectural or documentary conclusion
+based solely on a partial representation of the repository content.
+
+When necessary, the AI must perform additional repository retrievals using
+appropriate section ranges or other available repository mechanisms before
+declaring the update verified.
+
+Repository verification therefore means verification of the actual document
+content and its structural context, not merely confirmation that:
+
+* a file exists;
+* a commit exists;
+* a file hash changed;
+* an update operation succeeded; or
+* a partial response contains the expected text.
+
+This rule applies particularly to architectural documents, discrepancy
+matrices, decision logs, specifications, and other documents whose meaning
+depends on section boundaries and surrounding content.
+
+
+14. Revision
 
 This document may be revised when the collaboration workflow evolves.
 
