@@ -1084,101 +1084,120 @@ Conseguenze
 Ogni modifica dell'ELR richiede una Learning Review successiva.
 
 
-================================================================================
-English Learning Repository (ELR)
-
-Architecture Decision Record
-
-# ADR-021 — Learning Activity Layer
-
-# Document Identity
-
-Document Name:
+-------------------------------------------------------------------------------
 ADR-021 — Learning Activity Layer
-
-Version:
-1.0.0
+-------------------------------------------------------------------------------
 
 Status:
+
 APPROVED
 
-Date:
-2026-08-11
-
-Dependencies:
-
-* ELR Architecture Specification 1.1.0
-* ELR Architecture Decision Log 1.0.0
-* ELR Architecture Consistency Matrix 1.1.0
-* Learning Activity Specification 1.0.0
-* Exercise System Specification 1.0.0
-* Mastery Engine Specification 1.0.0
-
-================================================================================
-Context
-=======
-
-L'ELR dispone di Learning Object persistenti e di Mastery State persistente.
-
-La progettazione dei Derived Learning Systems ha inoltre introdotto il
-concetto di Learning Activity come livello intermedio tra conoscenza, stato
-di apprendimento e realizzazione concreta dell'interazione didattica.
-
-La Learning Activity Specification 1.0.0 definisce già questo concetto, ma la
-Architecture Consistency Matrix 1.1.0 non gli assegna ancora ownership
-documentale e la Roadmap 1.1.0 non lo rappresenta esplicitamente.
-
-Questa situazione crea un gap di governance: un concetto operativo reale
-esiste in una Specification, ma non è formalmente riconosciuto nell'ownership
-architetturale.
-
-================================================================================
 Decision
-========
 
 La Learning Activity viene formalizzata come concetto architetturale ufficiale
-dell'ELR.
+dell'English Learning Repository.
 
 La Learning Activity costituisce il livello di collegamento tra:
 
-* Learning Object;
-* Mastery State;
-* azione didattica proposta;
-* Exercise System.
+• Learning Object;
 
-La Learning Activity non è:
+• Mastery State;
 
-* conoscenza persistente;
-* Learning Object;
-* Mastery State;
-* Exercise Instance;
-* Evidence;
-* protocollo di interazione.
+• azione didattica proposta;
 
-La Learning Activity è un process object che definisce quale tipo di
-intervento didattico è appropriato rispetto a una conoscenza e a uno stato di
-apprendimento.
+• Exercise System.
 
-L'Exercise System rimane responsabile della realizzazione concreta
-dell'attività in esercizi e interazioni.
+La Learning Activity rappresenta una proposta strutturata di intervento
+didattico associata a uno o più Learning Object e informata dallo stato di
+apprendimento dell'utente.
+
+La Learning Activity non costituisce:
+
+• conoscenza linguistica persistente;
+
+• Learning Object;
+
+• Mastery State;
+
+• Exercise Instance;
+
+• Evidence;
+
+• protocollo di interazione.
+
+La Learning Activity non modifica direttamente il Learning Object né il
+Mastery State.
+
+L'Exercise System rimane responsabile della realizzazione concreta della
+Learning Activity attraverso esercizi e interazioni.
 
 Il Mastery Engine rimane responsabile della determinazione e dell'evoluzione
-della Mastery State.
+del Mastery State.
 
-L'ELR rimane la Source of Truth della conoscenza linguistica.
+Motivazione
 
-================================================================================
-Architectural Boundary
-======================
+L'architettura ELR separa la conoscenza linguistica persistente, lo stato di
+apprendimento e i processi attraverso i quali tale conoscenza viene utilizzata
+durante l'apprendimento.
 
-Il flusso concettuale è:
+La Learning Activity Specification 1.0.0 definisce già un livello distinto
+tra Learning Object, Mastery State ed Exercise System, ma tale concetto non è
+ancora formalmente riconosciuto nella Architecture Consistency Matrix.
 
-ELR Repository
-|
-v
-Learning Object
-+
-Mastery State
+L'assenza di questo livello produce una sovrapposizione potenziale tra:
+
+• selezione dell'intervento didattico;
+
+• generazione dell'esercizio;
+
+• interazione con l'utente;
+
+• adattamento basato sulla Mastery.
+
+La formalizzazione della Learning Activity rende esplicita questa separazione
+senza introdurre una nuova fonte persistente di conoscenza.
+
+La decisione mantiene inoltre il principio Repository First: l'ELR rimane la
+sorgente autorevole della conoscenza e le attività didattiche vengono derivate
+a partire da tale conoscenza e dallo stato di apprendimento.
+
+Conseguenze
+
+La documentazione architetturale dell'ELR deve riconoscere la Learning
+Activity come concetto ufficiale e assegnarle un unico documento proprietario.
+
+La Learning Activity Specification costituisce il documento proprietario
+della definizione operativa della Learning Activity.
+
+La Architecture Consistency Matrix deve essere aggiornata per registrare:
+
+Learning Activity → Learning Activity Specification
+
+La Architecture Specification deve riconoscere esplicitamente la Learning
+Activity come livello di collegamento tra conoscenza, stato di apprendimento
+e azione didattica.
+
+La Roadmap deve riflettere la presenza della Learning Activity e chiarirne il
+rapporto con la Fase 6 — Derived Learning Systems e la Fase 7 — Interaction
+Layer.
+
+La Learning Activity non introduce un nuovo repository né una nuova unità di
+conoscenza persistente.
+
+Qualsiasi informazione ricostruibile dal Learning Object e dal Mastery State
+rimane derivata e non costituisce stato persistente dell'ELR.
+
+Adaptive Review rimane una futura estensione.
+
+Quando verrà progettato, Adaptive Review potrà utilizzare Mastery State,
+Evidence, tempo e altre informazioni autorizzate per determinare quali
+Learning Activity proporre e quando.
+
+Adaptive Review non sostituisce la Learning Activity.
+
+Il boundary concettuale previsto è:
+
+Adaptive Review
 |
 v
 Learning Activity
@@ -1195,68 +1214,14 @@ Evidence
 v
 Mastery Engine
 
-La Learning Activity può utilizzare Learning Object, Mastery State e altri
-segnali didattici autorizzati, ma non modifica direttamente nessuno di essi.
+La formalizzazione della Learning Activity non modifica le responsabilità già
+assegnate al Phrasebook, all'Exercise System, all'Evidence Model o al Mastery
+Engine.
 
-================================================================================
-Adaptive Review Boundary
-========================
+---
 
-Adaptive Review rimane una futura estensione.
+## Fine ADR-021
 
-Adaptive Review non viene introdotto come nuovo modello di conoscenza né come
-sostituto della Learning Activity.
-
-Quando sarà progettato, Adaptive Review potrà costituire una policy/processo
-di selezione e scheduling capace di proporre Learning Activity sulla base di
-Mastery, Evidence, tempo e priorità didattiche.
-
-Pertanto:
-
-Adaptive Review -> selezione/scheduling
-Learning Activity -> tipo e obiettivo dell'intervento
-Exercise System -> realizzazione dell'intervento
-
-================================================================================
-Consequences
-============
-
-La formalizzazione:
-
-* elimina l'attuale gap di ownership;
-* separa conoscenza, stato, attività ed esercizio;
-* evita di attribuire all'Exercise System responsabilità di selezione
-  didattica;
-* consente una futura Adaptive Review senza sovrapporla alla Learning Activity;
-* mantiene l'Interaction Layer indipendente dal modello decisionale
-  dell'attività.
-
-Richiede la sincronizzazione di:
-
-* Architecture Specification;
-* Architecture Consistency Matrix;
-* Architectural Roadmap;
-* Learning Activity Specification.
-
-================================================================================
-Governance Rule
-===============
-
-La Learning Activity Specification costituisce il documento proprietario del
-modello operativo della Learning Activity.
-
-Gli altri documenti possono riferirsi alla Learning Activity ma non devono
-ridefinirne integralmente significato, responsabilità o comportamento.
-
-================================================================================
-Decision Status
-===============
-
-APPROVED
-
-================================================================================
-Fine ADR-021
-============
 
 
 
