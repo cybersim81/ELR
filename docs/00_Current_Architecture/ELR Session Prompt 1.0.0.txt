@@ -18,8 +18,8 @@ Il suo scopo è:
 * inizializzare la sessione;
 * indicare come recuperare il contesto corrente;
 * definire il metodo di lavoro;
-* impedire che decisioni architetturali vengano ricostruite dalla
-  memoria conversazionale;
+* impedire che decisioni architetturali vengano ricostruite dalla memoria
+  conversazionale;
 * definire le regole di verifica del repository.
 
 ---
@@ -49,28 +49,13 @@ All'inizio di una nuova sessione:
 
 `docs/00_Current_Architecture/ELR Continuity Package 2.0.0.txt`
 
-Il Continuity Package definisce:
-
-* lo stato persistente della continuità;
-* la posizione corrente nella Roadmap;
-* le regole di continuità;
-* il corpus documentale rilevante;
-* i vincoli operativi.
-
 ### Step 3 — Leggi l'Handoff
 
 `docs/00_Current_Architecture/ELR Architectural Work State - Handoff 4.0.0.txt`
 
-L'Handoff definisce:
-
-* l'ultimo checkpoint operativo;
-* la fase corrente;
-* l'ultima posizione verificata;
-* la prossima azione autorizzata.
-
 ### Step 4 — Leggi la Roadmap
 
-`docs/00_Current_Architecture/ELR Roadmap 1.1.0.txt`
+`docs/00_Current_Architecture/ELR Roadmap 1.2.0.txt`
 
 La Roadmap determina la posizione corrente del lavoro e le attività
 successive autorizzate.
@@ -84,8 +69,21 @@ Verifica sempre il contenuto effettivo dei documenti nel repository.
 
 ### Step 6 — Recupera i documenti specialistici rilevanti
 
-Leggi solamente le Specification, ADR, Matrix e altri documenti
-direttamente pertinenti al lavoro corrente.
+La fase corrente è:
+
+**Fase 7 — Document Consistency Consolidation**
+
+Il primo controllo deve riguardare:
+
+* Dependencies;
+* document names;
+* paths;
+* versions;
+* cross-references;
+* ownership references.
+
+Leggi solamente le Specification, ADR, Matrix e altri documenti direttamente
+pertinenti alla discrepanza corrente.
 
 Non ricreare documenti già presenti.
 
@@ -115,7 +113,8 @@ Per risolverla:
 3. identifica il documento proprietario del concetto;
 4. verifica eventuali ADR applicabili;
 5. verifica la Consistency Matrix;
-6. applica il processo di decisione architetturale.
+6. verifica la Roadmap;
+7. applica il processo di decisione architetturale.
 
 ---
 
@@ -133,7 +132,9 @@ Durante il lavoro:
   reale;
 * distinguere Domain Model, Process Model, Evidence Model, Mastery Engine
   e Persistence Model;
-* verificare status e versioni dei documenti prima di proporre modifiche.
+* verificare status e versioni dei documenti prima di proporre modifiche;
+* non trasformare una verifica documentale in una nuova decisione
+  architetturale senza evidenza di una reale contraddizione.
 
 L'implementazione esistente costituisce evidenza tecnica, non
 automaticamente autorità architetturale.
@@ -150,7 +151,8 @@ Quando emerge un conflitto documentale:
 4. identifica il documento proprietario;
 5. verifica eventuali decisioni ADR;
 6. verifica la Consistency Matrix;
-7. proponi una riconciliazione solo dopo questa verifica.
+7. verifica la Roadmap;
+8. proponi una riconciliazione solo dopo questa verifica.
 
 Una bozza non può silenziosamente sovrascrivere una decisione APPROVED.
 
@@ -217,13 +219,16 @@ Non assumere una fase corrente hardcoded in questo Prompt.
 
 La fase corrente deve essere determinata verificando:
 
-1. Roadmap;
+1. Roadmap 1.2.0;
 2. Continuity Package;
 3. Handoff;
 4. repository state.
 
-Quando una fase viene completata, questo Prompt non deve essere
-modificato soltanto per aggiornare il numero della fase.
+La posizione corrente prevista è **Fase 7 — Document Consistency
+Consolidation**, ma deve comunque essere verificata nel repository.
+
+Quando una fase viene completata, questo Prompt non deve essere modificato
+soltanto per aggiornare il numero della fase.
 
 Il nuovo punto di ripresa deve essere determinato dai documenti correnti
 del repository.
@@ -239,13 +244,17 @@ Dopo il bootstrap:
 3. verifica quali artefatti esistono già;
 4. identifica i documenti proprietari;
 5. verifica eventuali discrepanze;
-6. leggi i documenti direttamente rilevanti;
-7. proponi il primo passo concreto.
+6. per Fase 7, inizia dal controllo delle Dependencies e dei riferimenti
+   documentali;
+7. leggi i documenti direttamente rilevanti;
+8. proponi il primo passo concreto.
 
 Non inventare lavoro già completato.
 
 Non assumere che un'attività sia aperta solo perché lo era in una
 precedente sessione.
+
+Non anticipare la Fase 8 finché la Fase 7 non è stata completata.
 
 ---
 
@@ -323,8 +332,8 @@ Questi documenti hanno responsabilità diverse e non devono duplicarsi.
 
 Dopo aver completato il bootstrap:
 
-**verifica il repository, identifica la fase corrente e individua il
-prossimo lavoro autorizzato.**
+**verifica il repository, identifica la Fase 7 corrente e inizia il controllo
+repository-wide delle Dependencies, path, versioni, nomi e cross-reference.**
 
 Non ricostruire il contesto dalla memoria conversazionale.
 
@@ -332,6 +341,9 @@ Non assumere che il lavoro precedente sia ancora aperto.
 
 Non riaprire decisioni APPROVED senza una contraddizione documentale
 reale.
+
+Non introdurre nuova architettura durante una verifica di consistenza salvo
+che emerga una contraddizione architetturale reale.
 
 Procedi secondo il Decision Workflow definito in questo documento.
 
