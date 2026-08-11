@@ -49,8 +49,11 @@ organizzata in Learning Object atomici, persistenti ed evolutivi.
 L'ELR non rappresenta:
 
 • il processo di apprendimento;
+
 • la cronologia delle conversazioni;
+
 • i ragionamenti dell'LLM;
+
 • gli stati intermedi dei processi di estrazione.
 
 
@@ -63,10 +66,15 @@ Mastery Engine.
 Ogni altra rappresentazione del sistema:
 
 • Phrasebook;
+
 • esercizi;
+
 • statistiche;
+
 • dashboard;
+
 • report;
+
 • viste di progresso;
 
 è una vista derivata generata a partire dal repository.
@@ -82,10 +90,15 @@ dell'English Learning Repository.
 Il documento definisce:
 
 • modello concettuale;
+
 • componenti architetturali;
+
 • responsabilità dei componenti;
+
 • confini tra sistemi;
+
 • relazioni architetturali;
+
 • principi strutturali.
 
 
@@ -235,73 +248,6 @@ I principi precedenti sono definiti attraverso le seguenti decisioni:
 
 - ADR-013 — Mastery Representation
 
-- ADR-021 — Learning Activity Layer
-
-
-================================================================================
-Learning Activity
-================================================================================
-
-La Learning Activity è un concetto architetturale che collega la conoscenza
-rappresentata dai Learning Object, lo stato di apprendimento rappresentato
-dal Mastery State e l'azione didattica realizzata dall'Exercise System.
-
-La Learning Activity è un process object e non costituisce conoscenza
-linguistica persistente del repository.
-
-La Learning Activity può essere informata da:
-
-• uno o più Learning Object;
-• Mastery State;
-• segnali didattici autorizzati.
-
-La Learning Activity definisce l'intento e la struttura dell'intervento
-didattico, ma non costituisce:
-
-• Learning Object;
-• Mastery State;
-• Exercise Instance;
-• Evidence;
-• protocollo di interazione.
-
-La Learning Activity non modifica direttamente il Learning Object né il
-Mastery State.
-
-L'Exercise System è responsabile della realizzazione concreta della Learning
-Activity attraverso esercizi e interazioni.
-
-Il Mastery Engine è responsabile della determinazione e dell'evoluzione del
-Mastery State.
-
-Il rapporto architetturale è:
-
-Learning Object + Mastery State
-            |
-            v
-    Learning Activity
-            |
-            v
-     Exercise System
-            |
-            v
-   Exercise / Interaction
-            |
-            v
-         Evidence
-            |
-            v
-      Mastery Engine
-
-Adaptive Review rimane una futura estensione e, quando sarà progettato, potrà
-selezionare o schedulare Learning Activity sulla base di Mastery State,
-Evidence, tempo e altri segnali autorizzati.
-
-Per la definizione operativa della Learning Activity si rimanda alla
-Learning Activity Specification.
-
-Riferimento ADR:
-
-- ADR-021 — Learning Activity Layer
 
 ================================================================================
 Domain Model
@@ -322,6 +268,10 @@ persistenti del repository.
 Evidence appartiene al Process Layer e supporta i processi ELR senza
 costituire conoscenza persistente del repository.
 
+Learning Activity appartiene al Process Layer e supporta la selezione e la
+strutturazione degli interventi didattici senza costituire conoscenza
+persistente del repository.
+
 ================================================================================
 Process Objects
 ================================================================================
@@ -335,7 +285,9 @@ Esempi:
 
 - ELR Change Proposal;
 
-- Evidence.
+- Evidence;
+
+- Learning Activity.
 
 Questi oggetti appartengono ai processi di evoluzione, valutazione e gestione
 del repository.
@@ -425,6 +377,7 @@ Riferimento ADR:
 
 
 - ADR-007 — Anchor-centric Knowledge
+
 ================================================================================
 Fine documento
 
