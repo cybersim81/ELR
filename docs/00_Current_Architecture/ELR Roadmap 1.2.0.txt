@@ -192,7 +192,7 @@ Responsabilità:
 * Anchor Resolution;
 * estrazione del Knowledge Statement;
 * confronto con Learning Object esistenti;
-* classificazione CREATE / MERGE / UPDATE / SPLIT;
+* classificazione CREATE / MERGE / UPDATE;
 * definizione dell'ELR Change Proposal;
 * produzione delle Evidence previste dal processo;
 * definizione dei confini con Learning Review, ELR e Mastery Engine.
