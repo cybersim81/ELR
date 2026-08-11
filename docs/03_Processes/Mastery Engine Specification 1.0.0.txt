@@ -643,7 +643,37 @@ Aggiornamento dello stato di padronanza associato a un Learning Object.
 Mastery History
 --------------------------------------------------------------------------------
 
-Storico delle Evidence utilizzate per la valutazione.
+La Mastery History non costituisce un output o una proprietà semantica del
+Mastery Engine.
+
+La storia delle Evidence utilizzate nel tempo appartiene al Evidence Model e
+rimane parte della Evidence History.
+
+Il Mastery Engine può utilizzare Evidence correnti o storiche come input per
+interpretare l'evoluzione della Mastery e determinare un aggiornamento del
+Mastery State.
+
+Tale utilizzo non trasferisce ownership della Evidence History al Mastery
+Engine e non introduce una distinta Mastery History nel Domain Model.
+
+Il Mastery Engine produce esclusivamente il nuovo stato corrente della Mastery
+come definito dalla Mastery State Specification.
+
+La distinzione è quindi:
+
+Evidence Model
+└── Evidence History
+│
+│ input informativo
+▼
+Mastery Engine
+└── interpreta Evidence
+│
+▼
+Mastery State
+├── mastery_value
+├── updated_at
+└── source_evidence
 
 
 --------------------------------------------------------------------------------
