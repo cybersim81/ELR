@@ -1,0 +1,624 @@
+================================================================================
+English Learning Repository (ELR)
+
+Architectural Roadmap
+
+Version: 1.2.0
+Status: ACTIVE
+==============
+
+# Document Identity
+
+Document Name:
+
+ELR Architectural Roadmap
+
+Document Version:
+
+1.2.0
+
+Status:
+
+ACTIVE
+
+Document Type:
+
+Strategic Planning Document
+
+Purpose:
+
+Defines the planned evolution path of the ELR architecture and identifies
+the current architectural state, completed consolidation work, and remaining
+verification and evolution activities.
+
+Dependencies:
+
+* ELR Architecture Specification
+* ELR Documentation Architecture
+* ELR Architecture Baseline
+* ELR Architecture Decision Log
+* ELR Architecture Consistency Matrix
+* ELR Continuity Package
+
+Maintained By:
+
+ELR Architecture Governance
+
+================================================================================
+
+# Document Purpose
+
+La Architectural Roadmap definisce l'evoluzione prevista dell'English Learning
+Repository e identifica le attività necessarie per consolidare, verificare ed
+evolvere l'architettura ELR.
+
+La Roadmap non definisce requisiti architetturali né sostituisce le singole
+Specification.
+
+Le decisioni architetturali sono mantenute nell'ELR Architecture Decision Log.
+
+La Roadmap distingue esplicitamente:
+
+* fondazioni architetturali completate;
+* specifiche di dominio e processo consolidate;
+* verifiche di consistenza documentale;
+* sistemi derivati ancora da definire;
+* future evoluzioni dell'Interaction Layer.
+
+================================================================================
+Stato architetturale corrente
+=============================
+
+L'architettura ELR ha raggiunto un livello di consolidamento sufficiente per
+considerare definiti i principali confini tra:
+
+* Architecture Layer;
+* Domain Model;
+* Process Model;
+* Interaction Layer;
+* Derived Systems.
+
+Sono stati inoltre verificati i principali confini tra:
+
+Learning Object
+→ Learning Activity
+→ Exercise System
+→ Evidence
+→ Mastery Engine
+→ Mastery State
+
+e:
+
+Conversation Episode
+→ Knowledge Extraction Pipeline
+→ Change Evidence
+→ ELR Change Proposal
+→ Learning Review
+→ ELR.
+
+================================================================================
+Fase 0 — Fondazioni Architetturali
+==================================
+
+Stato:
+
+Completata.
+
+Obiettivo:
+
+Definizione del modello architetturale fondamentale dell'ELR.
+
+Comprende:
+
+✓ ELR Architecture Specification
+
+✓ ELR Architecture Decision Log
+
+✓ ELR Architecture Consistency Matrix
+
+Responsabilità consolidate:
+
+* definizione dei componenti architetturali;
+* definizione dei confini;
+* ownership documentale;
+* responsabilità dei livelli architetturali;
+* principi fondamentali;
+* tracciabilità delle decisioni.
+
+La fase è considerata completata a livello architetturale.
+
+================================================================================
+Fase 1 — ELR Knowledge Model
+============================
+
+Stato:
+
+Completata.
+
+Obiettivo:
+
+Stabilizzare il modello della conoscenza rappresentata dal repository.
+
+Comprende:
+
+✓ Learning Object
+
+✓ Anchor
+
+✓ Knowledge Statement
+
+✓ Knowledge Category
+
+✓ Learning State
+
+✓ Mastery State
+
+Documenti proprietari:
+
+* Learning Object Specification
+* Anchor Specification
+* Learning State Specification
+* Mastery State Specification
+* ELR Taxonomy
+
+Responsabilità consolidate:
+
+* identità degli oggetti di conoscenza;
+* struttura concettuale;
+* relazione Anchor / Knowledge Statement;
+* classificazione della conoscenza;
+* stato persistente dell'apprendimento;
+* stato persistente della Mastery.
+
+La fase è considerata completata a livello architetturale.
+
+================================================================================
+Fase 2 — Knowledge Extraction Architecture
+==========================================
+
+Stato:
+
+Completata.
+
+Obiettivo:
+
+Definire l'architettura del processo di estrazione della conoscenza.
+
+Responsabilità:
+
+* definizione della pipeline operativa;
+* definizione del Trigger;
+* definizione del Knowledge Candidate;
+* Anchor Resolution;
+* estrazione del Knowledge Statement;
+* confronto con Learning Object esistenti;
+* classificazione CREATE / MERGE / UPDATE / SPLIT;
+* definizione dell'ELR Change Proposal;
+* produzione delle Evidence previste dal processo;
+* definizione dei confini con Learning Review, ELR e Mastery Engine.
+
+Documento proprietario:
+
+* Knowledge Extraction Pipeline Specification
+
+Documenti correlati:
+
+* Learning Object Specification
+* Evidence Model Specification
+* Learning Review Specification
+
+La fase è considerata completata a livello architetturale.
+
+Eventuali implementazioni, test o raffinamenti operativi successivi non
+costituiscono una riapertura della fase architetturale.
+
+================================================================================
+Fase 3 — Evidence Architecture
+==============================
+
+Stato:
+
+Completata.
+
+Obiettivo:
+
+Definire il modello architetturale delle Evidence e i relativi confini
+di responsabilità.
+
+Responsabilità:
+
+* definizione del concetto di Evidence;
+* definizione di Change Evidence;
+* definizione di Mastery Evidence;
+* lifecycle delle Evidence;
+* ownership delle Evidence;
+* relazione tra Evidence e processi ELR;
+* distinzione tra Evidence Model e processi produttori/utilizzatori.
+
+Documento proprietario:
+
+* Evidence Model Specification
+
+Documenti correlati:
+
+* Knowledge Extraction Pipeline Specification
+* Learning Review Specification
+* Mastery Engine Specification
+* ELR Architecture Consistency Matrix
+
+Confini consolidati:
+
+Change Evidence
+→ utilizzata nel processo di Learning Review.
+
+Mastery Evidence
+→ utilizzata dal Mastery Engine per l'aggiornamento del Mastery State.
+
+La Learning Review non introduce un ulteriore tipo di Evidence.
+
+La Review Decision Trace rappresenta esclusivamente la traccia della
+decisione della Learning Review e non costituisce una Evidence del modello.
+
+La fase è considerata completata a livello architetturale.
+
+================================================================================
+Fase 4 — Mastery Architecture
+=============================
+
+Stato:
+
+Completata.
+
+Obiettivo:
+
+Separare il concetto architetturale di Mastery dalla logica di aggiornamento
+del Mastery State.
+
+Documenti proprietari:
+
+* Mastery Engine Specification
+* Mastery State Specification
+
+Responsabilità:
+
+Mastery Engine:
+
+* interpretazione delle Mastery Evidence;
+* valutazione della padronanza;
+* aggiornamento del Mastery State;
+* evoluzione futura delle policy di adaptive learning.
+
+Mastery State:
+
+* rappresentazione dello stato persistente della padronanza;
+* mastery_value;
+* updated_at;
+* source_evidence.
+
+Principio architetturale:
+
+Mastery Engine interpreta Evidence.
+
+Mastery State rappresenta lo stato risultante.
+
+La fase è considerata completata a livello architetturale.
+
+================================================================================
+Fase 5 — Human Learning Control
+===============================
+
+Stato:
+
+Completata.
+
+Obiettivo:
+
+Definire il controllo umano sugli aggiornamenti del repository.
+
+Documento proprietario:
+
+* Learning Review Specification
+
+Responsabilità:
+
+* ricezione dell'ELR Change Proposal;
+* valutazione della proposta;
+* approvazione;
+* rifiuto;
+* richiesta di revisione;
+* produzione della Review Decision Trace.
+
+Principio:
+
+La conoscenza entra nell'ELR solamente dopo approvazione.
+
+La fase è considerata completata a livello architetturale.
+
+================================================================================
+Fase 6 — Learning Activity and Exercise Systems
+===============================================
+
+Stato:
+
+Completata a livello architetturale.
+
+Obiettivo:
+
+Definire la separazione tra intenzione didattica, realizzazione
+dell'esercizio, interazione e produzione delle Evidence.
+
+Documenti principali:
+
+* Learning Activity Specification
+* Exercise System Specification
+
+Responsabilità della Learning Activity:
+
+* collegamento tra Learning Object, Mastery State e azione didattica;
+* definizione dell'intento didattico;
+* definizione della struttura dell'intervento;
+* selezione dell'attività in base ai segnali autorizzati;
+* separazione tra attività didattica ed esercizio concreto.
+
+La Learning Activity non costituisce:
+
+* conoscenza persistente;
+* Mastery State;
+* Exercise Instance;
+* Evidence;
+* protocollo di interazione.
+
+Responsabilità dell'Exercise System:
+
+* realizzazione delle Learning Activity attraverso esercizi;
+* gestione dell'interazione esercizio-utente;
+* produzione del risultato dell'esercizio;
+* produzione delle Evidence di propria responsabilità secondo
+  l'Evidence Model.
+
+Principio consolidato:
+
+Learning Object
+→ Learning Activity
+→ Exercise System
+→ User Interaction
+→ Evidence.
+
+La fase è considerata completata a livello architetturale.
+
+================================================================================
+Fase 7 — Document Consistency Consolidation
+===========================================
+
+Stato:
+
+In corso — fase finale.
+
+Obiettivo:
+
+Verificare che i documenti dell'architettura consolidata utilizzino
+correttamente:
+
+* nomi dei documenti;
+* path;
+* versioni;
+* riferimenti nelle Dependencies;
+* ownership;
+* cross-reference;
+* terminologia architetturale.
+
+Verifiche già completate:
+
+✓ Learning Activity ↔ Exercise System ↔ Evidence
+
+✓ KEP ↔ Change Evidence ↔ Learning Review ↔ ELR
+
+✓ Evidence ↔ Mastery Evidence ↔ Mastery Engine ↔ Mastery State
+
+✓ Learning Object ↔ Anchor ↔ Knowledge Statement
+
+✓ Learning Activity ↔ Learning Object / Anchor
+
+✓ Knowledge Category ↔ ELR Taxonomy ↔ KEP
+
+✓ Architecture Consistency Matrix ↔ document ownership
+
+Modifiche di consistenza già consolidate:
+
+* Learning Object Specification utilizzato con il nome corretto;
+* Mastery State Specification riconosciuta come documento proprietario;
+* CREATE / MERGE / UPDATE / SPLIT allineato alla KEP;
+* ownership della Knowledge Category allineata alla ELR Taxonomy.
+
+Attività rimanenti:
+
+* controllo completo delle Dependencies;
+* verifica dei path reali;
+* verifica delle versioni dichiarate;
+* verifica dei nomi esatti dei documenti;
+* controllo dei riferimenti incrociati;
+* controllo finale delle duplicazioni semantiche.
+
+Questa fase non modifica l'architettura: verifica la consistenza della
+documentazione rispetto all'architettura già consolidata.
+
+================================================================================
+Fase 8 — Derived Learning Systems
+=================================
+
+Stato:
+
+Da definire.
+
+Obiettivo:
+
+Costruire sistemi derivati basati sull'ELR come unica sorgente, mantenendo
+separata la selezione dell'intervento didattico dalla sua realizzazione.
+
+Sistemi previsti:
+
+Phrasebook Specification
+
+Responsabilità:
+
+* navigazione;
+* visualizzazione dei Learning Object;
+* ricerca.
+
+Adaptive Review Specification
+
+Responsabilità previste:
+
+* selezione delle Learning Activity;
+* scheduling;
+* revisione basata su Mastery State, Evidence, tempo e altri segnali
+  autorizzati.
+
+Adaptive Review non sostituisce la Learning Activity.
+
+Costituisce una futura policy/processo di selezione e scheduling.
+
+Reporting Specification
+
+Responsabilità previste:
+
+* reporting;
+* visualizzazioni derivate;
+* analisi aggregate.
+
+I sistemi derivati non costituiscono una nuova Source of Truth della
+conoscenza linguistica.
+
+================================================================================
+Fase 9 — Interaction Layer
+==========================
+
+Stato:
+
+Da definire.
+
+Obiettivo:
+
+Evolvere le modalità di interazione con l'utente.
+
+Documento principale:
+
+* Learning Interaction Language Specification
+
+Responsabilità:
+
+* comandi espliciti;
+* shortcut;
+* interazioni didattiche strutturate;
+* realizzazione delle interazioni attraverso Learning Activity e sistemi
+  che le implementano.
+
+Estensioni future:
+
+* speaking;
+* pronunciation;
+* audio;
+* input multimodale.
+
+================================================================================
+Sequenza documentale di ripristino ambiente
+===========================================
+
+Per una nuova sessione progettuale:
+
+1.
+
+ELR Architecture Specification
+
+2.
+
+ELR Architecture Decision Log
+
+3.
+
+ELR Architecture Consistency Matrix
+
+4.
+
+Learning Object Specification
+
+5.
+
+Anchor Specification
+
+6.
+
+Learning State Specification
+
+7.
+
+Mastery State Specification
+
+8.
+
+ELR Taxonomy
+
+9.
+
+Knowledge Extraction Pipeline Specification
+
+10.
+
+Evidence Model Specification
+
+11.
+
+Mastery Engine Specification
+
+12.
+
+Learning Review Specification
+
+13.
+
+Learning Activity Specification
+
+14.
+
+Exercise System Specification
+
+15.
+
+ELR Stress Test Log
+
+16.
+
+ELR Roadmap
+
+17.
+
+Learning Interaction Language Specification
+
+================================================================================
+Criterio di completamento architetturale
+========================================
+
+L'architettura ELR sarà considerata stabile quando:
+
+* ogni concetto possiede un documento proprietario;
+* la Architecture Specification contiene esclusivamente responsabilità
+  architetturali;
+* gli ADR spiegano il perché delle decisioni;
+* le Specification descrivono il funzionamento interno;
+* i confini tra Domain, Process e Interaction Model sono rispettati;
+* Evidence, Change Evidence e Mastery Evidence mantengono responsabilità
+  distinte;
+* Mastery Engine e Mastery State mantengono responsabilità distinte;
+* i sistemi derivati dipendono esclusivamente dall'ELR;
+* non esistono duplicazioni semantiche tra documenti;
+* i riferimenti documentali utilizzano nomi, path e versioni coerenti;
+* il repository rimane la Source of Truth della conoscenza linguistica.
+
+================================================================================
+Fine documento
+
+ELR Architectural Roadmap
+
+Versione 1.2.0
+
+================================================================================
