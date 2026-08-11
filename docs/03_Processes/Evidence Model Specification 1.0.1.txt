@@ -4,7 +4,7 @@ English Learning Repository (ELR)
 Evidence Model Specification
 
 Version: 1.0.1
-Status: DRAFT
+Status: APPROVED
 ================================================================================
 
 
@@ -23,7 +23,7 @@ Document Version:
 
 Status:
 
-DRAFT
+APPROVED
 
 
 Dependencies:
@@ -78,7 +78,6 @@ separatamente attraverso:
 - Mastery State.
 
 Learning State e Mastery State non costituiscono conoscenza persistente.
-
 
 ================================================================================
 Responsabilità del documento
