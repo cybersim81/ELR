@@ -1,463 +1,151 @@
-# English Learning Repository (ELR)
+## 12B. WORKING METHOD — EFFICIENCY AND VERIFICATION RULES
 
-## Continuity Package
+Il lavoro architetturale ELR deve privilegiare accuratezza, tracciabilità e
+riduzione delle iterazioni non necessarie.
 
-**Version:** 2.0.0
-**Status:** ACTIVE
-**Document Type:** Governance and Continuity Document
+### 1. Owner First
 
----
+Prima di proporre o applicare una modifica, identificare il documento
+proprietario del concetto coinvolto.
 
-## 1. Purpose
+Se l'ownership non è chiara:
 
-Il Continuity Package permette di ripristinare l'ambiente di lavoro ELR in una
-nuova sessione senza dipendere dal contesto conversazionale precedente.
+* non propagare la modifica ad altri documenti;
+* verificare Architecture Specification, Architecture Decision Log,
+  Architecture Consistency Matrix e relative Specifications;
+* determinare l'autorità documentale prima di procedere.
 
-Il Continuity Package:
+### 2. Evidence Before Propagation
 
-* definisce lo stato corrente del progetto;
-* identifica il punto corrente della Roadmap;
-* identifica il corpus documentale autorevole;
-* definisce le regole di continuità;
-* registra i vincoli operativi rilevanti;
-* indica la procedura di ripresa.
+Una modifica deve essere verificata prima nel documento proprietario.
 
-Il Continuity Package non sostituisce Architecture Specification, ADR, Matrix,
-Roadmap o Specification specialistiche.
+Solo dopo questa verifica le sue conseguenze possono essere propagate a:
 
-Non deve duplicare integralmente le decisioni contenute nei documenti
-proprietari.
-
-Il repository è la fonte di verità.
-
----
-
-## 2. Source of Truth
-
-Lo stato architetturale effettivo deve essere determinato dai documenti
-presenti nel repository.
-
-In caso di divergenza tra:
-
-* memoria conversazionale;
-* Continuity Package;
-* Handoff;
-* implementazione;
-* documentazione proprietaria;
-
-la verifica deve essere effettuata sul repository e sui documenti
-proprietari.
-
-Il Continuity Package non può modificare retroattivamente una decisione
-architetturale approvata.
-
----
-
-## 3. Architectural Authority
-
-Le autorità documentali sono:
-
-### ELR Architecture Specification
-
-Definisce:
-
-* modello architetturale;
-* componenti;
-* responsabilità;
-* confini;
-* relazioni tra sistemi.
-
-### ELR Architecture Decision Log
-
-Definisce:
-
-* decisioni architetturali;
-* motivazioni;
-* conseguenze;
-* evoluzione delle decisioni.
-
-### ELR Architecture Consistency Matrix
-
-Definisce:
-
-* ownership documentale;
-* distribuzione delle responsabilità;
-* coerenza tra documenti.
-
-### Specialist Specifications
-
-Definiscono il comportamento e la struttura dei singoli componenti secondo
-la relativa ownership.
-
-Nessun documento di continuità deve sostituire tali documenti.
-
----
-
-## 4. Current Roadmap Position
-
-Le seguenti fasi sono completate a livello architetturale:
-
-* Fase 0 — Fondazioni Architetturali
-* Fase 1 — ELR Knowledge Model
-* Fase 2 — Knowledge Extraction Architecture
-* Fase 3 — Evidence Architecture
-* Fase 4 — Mastery Architecture
-* Fase 5 — Human Learning Control
-* Fase 6 — Learning Activity and Exercise Systems
-
-### Current Phase
-
-**Fase 7 — Document Consistency Consolidation**
-
-Obiettivo corrente:
-
-verificare la consistenza repository-wide dei documenti dell'architettura
-consolidata.
-
-La verifica comprende:
-
-* Dependencies;
-* path;
-* nomi dei documenti;
-* versioni;
-* cross-reference;
-* ownership;
-* terminologia;
-* eventuali duplicazioni semantiche residue.
-
-### Next Phase
-
-**Fase 8 — Derived Learning Systems**
-
-La Fase 8 sarà avviata solamente dopo il completamento della Fase 7.
-
----
-
-## 5. Completed Architectural Baseline
-
-Le seguenti aree sono considerate consolidate a livello architetturale:
-
-* Architecture Specification;
-* Architecture Decision Log;
 * Architecture Consistency Matrix;
-* Knowledge Model;
-* Knowledge Extraction boundaries;
-* Evidence Model;
-* Learning Review;
-* Mastery State;
-* Mastery Engine;
-* Human Learning Control;
-* Learning Activity;
-* Exercise System.
-
-Le decisioni APPROVED non devono essere riaperte senza una contraddizione
-documentale reale.
-
-In particolare:
-
-* `Mastery State` è distinto da `Mastery Engine`;
-* `Knowledge Category` appartiene alla ELR Taxonomy;
-* KEP operations sono `CREATE / MERGE / UPDATE`;
-* `SPLIT` non deve essere assunto come operazione KEP senza una decisione
-  documentata;
-* le decisioni architetturali relative a Learning Activity sono registrate
-  nell'Architecture Decision Log.
-
----
-
-## 6. Domain / Process / Persistence Boundary
-
-Durante il lavoro:
-
-* il Domain Model non deve essere inferito dal Persistence Model;
-* il Persistence Model non acquisisce autorità semantica per il solo fatto di
-  esistere;
-* i processi non devono essere introdotti come entità del Domain Model senza
-  decisione esplicita;
-* le Evidence operative appartengono ai relativi processi e modelli
-  proprietari;
-* una implementazione esistente non costituisce automaticamente una
-  decisione architetturale.
-
-Ogni nuova responsabilità deve essere assegnata al documento proprietario
-appropriato.
-
----
-
-## 7. Decision Workflow
-
-Il processo di lavoro è:
-
-**verifica → problema/discrepanza → analisi documentale → proposta focalizzata →
-approvazione esplicita → blocco copiabile → aggiornamento repository →
-verifica → prossimo punto**
-
-Una decisione non è considerata definitiva prima dell'approvazione esplicita.
-
-Una modifica documentale non è considerata applicata prima della verifica
-del repository.
-
-Non devono essere introdotte simultaneamente più decisioni indipendenti
-senza una ragione esplicita.
-
----
-
-## 8. Repository Verification Rule
-
-Prima di qualsiasi decisione:
-
-1. individuare i documenti rilevanti;
-2. recuperarne lo stato effettivo dal repository;
-3. verificare versione e status;
-4. confrontare le definizioni pertinenti;
-5. identificare eventuali contraddizioni.
-
-Dopo ogni aggiornamento:
-
-1. verificare il file nel repository;
-2. verificare la sezione modificata;
-3. verificare i boundary adiacenti;
-4. solo dopo procedere.
-
-La conversazione non costituisce prova dell'avvenuto aggiornamento del
-repository.
-
----
-
-## 9. GitHub Integration Constraint
-
-La connessione GitHub è stata verificata nel corso del lavoro.
-
-### Read
-
-**Disponibile.**
-
-Il connettore può recuperare e verificare file presenti nel repository.
-
-### Write
-
-**Non disponibile nel contesto operativo corrente.**
-
-Le richieste di scrittura diretta al repository hanno restituito:
-
-**HTTP 403 — Forbidden**
-
-Pertanto una richiesta di scrittura non deve essere considerata riuscita
-sulla sola base della risposta dello strumento.
-
-### Procedura operativa conseguente
-
-Quando la scrittura diretta restituisce `403`:
-
-1. non dichiarare il documento aggiornato;
-2. produrre il blocco copiabile esatto;
-3. l'utente applica la modifica al repository;
-4. recuperare nuovamente il documento;
-5. verificare il contenuto aggiornato;
-6. solo allora considerare la modifica effettivamente applicata.
-
-Il `403` è un vincolo operativo dell'integrazione, non una decisione
-architetturale ELR.
-
----
-
-## 10. Continuity Documents
-
-Il sistema di continuità utilizza tre artefatti distinti.
-
-### Continuity Package
-
-**Path:**
-
-`docs/00_Current_Architecture/ELR Continuity Package 2.0.0.txt`
-
-Funzione:
-
-**stato persistente e regole di continuità del progetto.**
-
-Non deve duplicare le Specification.
-
-### Architectural Work State — Handoff
-
-**Path:**
-
-`docs/00_Current_Architecture/ELR Architectural Work State - Handoff 4.0.0.txt`
-
-Funzione:
-
-**checkpoint operativo sintetico dell'ultimo punto raggiunto.**
-
-### ELR Session Prompt
-
-**Path:**
-
-`docs/00_Current_Architecture/ELR Session Prompt 1.0.0.txt`
-
-Funzione:
-
-**definire il comportamento operativo richiesto alla sessione.**
-
-Non deve essere utilizzato come fonte primaria dello stato architetturale.
-
-Il punto di ripresa deve essere determinato dal repository, Continuity Package
-e Roadmap.
-
----
-
-## 11. Rules for New Sessions
-
-### Una nuova sessione deve:
-
-1. leggere `ELR Session Prompt 1.0.0.txt`;
-2. leggere `ELR Continuity Package 2.0.0.txt`;
-3. leggere `ELR Roadmap 1.2.0.txt`;
-4. leggere `ELR Architectural Work State - Handoff 4.0.0.txt`;
-5. leggere `ELR Architecture Specification`, `ELR Architecture Decision Log`
-   e `ELR Architecture Consistency Matrix`;
-6. verificare lo stato effettivo dei documenti nel repository;
-7. identificare la Fase 7 e il relativo stato verificato;
-8. iniziare dal controllo repository-wide delle Dependencies;
-9. leggere soltanto i documenti specialistici direttamente rilevanti per
-   la prima discrepanza;
-10. non ricostruire decisioni dalla memoria della conversazione precedente;
-11. non riaprire decisioni APPROVED senza una contraddizione documentale
-    reale;
-12. non assumere che un'attività rimanga aperta soltanto perché lo era in
-    una precedente sessione;
-13. mantenere il workflow:
-
-**verifica → problema/discrepanza → analisi → proposta → approvazione →
-blocco copiabile → aggiornamento repository → verifica → prossimo punto.**
-
-Non deve:
-
-* ricostruire decisioni dalla memoria;
-* riaprire automaticamente decisioni APPROVED;
-* creare documenti duplicati;
-* assumere che un documento sia aggiornato senza verifica;
-* assumere che una modifica GitHub sia riuscita dopo un errore `403`.
-
----
-
-## 12. Current Next Action
-
-La prossima attività autorizzata è:
-
-**Fase 7 — Document Consistency Consolidation**
-
-Prima di proporre qualsiasi modifica:
-
-1. verificare le `Dependencies` dei documenti rilevanti;
-2. verificare che ogni riferimento punti a un documento realmente esistente;
-3. verificare nomi e versioni;
-4. verificare i path;
-5. verificare i cross-reference;
-6. verificare eventuali riferimenti obsoleti;
-7. identificare eventuali duplicazioni semantiche residue;
-8. proporre una sola correzione focalizzata alla volta.
-
-Non anticipare la Fase 8 finché la Fase 7 non è completata.
-
----
-
-## 12A. SESSION CLOSURE RULE
-
-Quando viene deciso di chiudere una sessione per proseguire il lavoro in una
-nuova chat, prima della chiusura devono essere verificati e, se necessario,
-aggiornati tutti i continuity artifacts correnti:
-
-1. `ELR Architectural Work State - Handoff`
-2. `ELR Continuity Package`
-3. `ELR Roadmap`
-4. `ELR Session Prompt`
-
-I quattro documenti devono essere riallineati allo stato effettivo del
-repository e verificati dopo l'aggiornamento.
-
-Non è necessario modificare tutti e quattro i documenti a ogni chiusura.
-
-È invece obbligatorio:
-
-* verificare ciascuno dei quattro documenti;
-* aggiornare quelli che risultano non allineati;
-* verificare nuovamente il repository dopo ogni aggiornamento;
-* assicurarsi che i quattro documenti descrivano uno stato coerente;
-* non considerare la nuova sessione pronta al bootstrap finché la verifica
-  non è completata.
-
-### Session Closure Sequence
-
-**decisione di chiudere la sessione**
-→ verifica dello stato corrente
-→ aggiornamento dell'Handoff
-→ aggiornamento del Continuity Package
-→ aggiornamento della Roadmap
-→ aggiornamento del Session Prompt
-→ verifica dei quattro documenti nel repository
-→ **sessione pronta per una nuova chat**
-
-Questa procedura impedisce che una nuova sessione erediti uno stato
-documentale parzialmente aggiornato o incoerente.
-
----
-
-## 13. Corpus Integrity
-
-Un documento appartiene al corpus ELR quando:
-
-* è presente nel repository ed è riconosciuto dal relativo sistema di
-  ownership;
-* oppure è esplicitamente previsto come documento futuro dalla Roadmap.
-
-La presenza di un concetto durante l'analisi non implica automaticamente la
-necessità di creare una nuova Specification.
-
-Prima di creare un nuovo documento occorre verificare:
-
-1. se la responsabilità appartiene a un documento esistente;
-2. se la Consistency Matrix assegna già tale responsabilità;
-3. se la creazione modifica l'architettura;
-4. se è necessaria una decisione ADR;
-5. se è necessario aggiornare la Roadmap.
-
----
-
-## 14. Continuity Principle
-
-L'ELR deve essere documentariamente autoportante.
-
-La continuità non deve dipendere dalla conversazione precedente.
-
-La continuità è garantita da:
-
-* documenti proprietari;
-* decisioni registrate;
-* ownership esplicita;
 * Roadmap;
-* Continuity Package;
 * Handoff;
-* procedure di verifica del repository.
+* Continuity Package;
+* Session Prompt;
+* altri documenti dipendenti.
 
-La memoria conversazionale può facilitare il lavoro, ma non costituisce
-autorità architetturale.
+Non modificare un documento derivato per accomodare un'assunzione non ancora
+verificata nel documento proprietario.
 
----
+### 3. Batch Analysis, Focused Decisions
 
-## 15. End State
+Quando viene rilevata una possibile inconsistenza:
 
-Il Continuity Package deve rimanere uno strumento di orientamento e
-governance.
+1. identificare tutti i documenti direttamente coinvolti;
+2. raccogliere le discrepanze correlate;
+3. verificare il loro stato effettivo nel repository;
+4. determinare quali discrepanze costituiscono realmente problemi;
+5. risolvere una decisione alla volta.
 
-Non deve diventare una seconda Architecture Specification.
+L'analisi può essere raggruppata per efficienza.
 
-Quando il contenuto di questo documento diverge da una Specification, ADR,
-Matrix o Roadmap verificata nel repository, la divergenza deve essere
-segnalata e risolta attraverso il normale processo documentale.
+Le decisioni architetturali devono invece rimanere focalizzate e
+indipendentemente approvabili.
 
----
+### 4. No Reactive Propagation
 
-**Fine documento**
+Non utilizzare il ciclo:
 
-English Learning Repository (ELR)
-Continuity Package
-Version 2.0.0
+**modifica → verifica → scoperta di un nuovo prerequisito →
+nuova modifica → nuova verifica**
+
+come metodo predefinito.
+
+Prima di propagare una modifica, eseguire una verifica sufficiente delle
+dipendenze direttamente interessate.
+
+Le verifiche iterative rimangono obbligatorie quando il repository rivela
+nuove informazioni, ma devono essere conseguenza di evidenza reale e non di
+assunzioni.
+
+### 5. Consistency Surface
+
+Dopo una modifica, verificare almeno:
+
+* il documento modificato;
+* il documento proprietario del concetto;
+* i documenti direttamente dipendenti;
+* i cross-reference interessati;
+* versioni e path coinvolti.
+
+Non è necessario rileggere l'intero repository per ogni modifica.
+
+### 6. Repository-First Verification
+
+Quando una formulazione, un nome, una versione, un path, un'operazione o una
+relazione viene messa in dubbio:
+
+**verifica repository → confronto documentale → decisione**
+
+e non:
+
+**memoria conversazionale → supposizione → modifica**.
+
+La memoria della chat può fornire un indizio, ma non costituisce evidenza.
+
+### 7. Approved Decisions Are Stable
+
+Una decisione APPROVED non deve essere riaperta semplicemente perché una
+nuova sessione non ne ricorda il contesto.
+
+La riapertura richiede una contraddizione documentale, tecnica o architetturale
+verificabile.
+
+### 8. Propagation Order
+
+Quando una decisione modifica il corpus documentale, utilizzare il seguente
+ordine preferenziale:
+
+**documento proprietario → Consistency Matrix → Roadmap → continuity
+artifacts**
+
+I continuity artifacts vengono aggiornati per riflettere lo stato finale,
+non utilizzati per determinare la decisione architetturale.
+
+### 9. Completion Requires Verification
+
+Una modifica non è completata quando:
+
+* è stata proposta;
+* è stato prodotto il blocco copiabile;
+* oppure è stato effettuato un tentativo di scrittura.
+
+È completata solamente quando il repository è stato aggiornato e il
+contenuto effettivo è stato nuovamente verificato.
+
+### 10. Session Closure
+
+Quando viene deciso di chiudere una sessione:
+
+1. verificare lo stato corrente;
+2. aggiornare, se necessario, Handoff;
+3. aggiornare, se necessario, Continuity Package;
+4. aggiornare, se necessario, Roadmap;
+5. aggiornare, se necessario, Session Prompt;
+6. verificare tutti e quattro gli artefatti nel repository;
+7. solo dopo dichiarare la sessione pronta per una nuova chat.
+
+Questa regola opera insieme alla **Session Closure Rule** già definita nella
+sezione 12A.
+
+### 11. Efficiency Principle
+
+L'obiettivo non è minimizzare il numero assoluto di verifiche.
+
+L'obiettivo è minimizzare le verifiche ripetitive e non informative,
+mantenendo sempre:
+
+* autorità documentale;
+* evidenza repository;
+* decisioni focalizzate;
+* tracciabilità;
+* verifica post-modifica.
+
+**Principio operativo:**
+
+> **Analizzare abbastanza prima di modificare, modificare poco alla volta,
+> verificare sempre dopo.**
