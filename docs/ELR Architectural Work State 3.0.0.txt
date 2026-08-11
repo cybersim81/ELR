@@ -294,8 +294,6 @@ These concerns require separate decisions where applicable.
 
 ================================================================
 
-================================================================
-
 7. # CURRENT DISCREPANCY MATRIX BASELINE
 
 The Discrepancy Matrix remains the authoritative audit baseline.
@@ -391,7 +389,11 @@ discrepancy.
 
 10. # IMPLEMENTATION CONSTRAINTS
 
-Until the remaining Mastery decisions are closed:
+The following implementation constraints remain in force.
+
+They preserve the approved Domain Model boundaries and prevent
+implementation from introducing architectural decisions that have not
+yet been explicitly approved.
 
 DO NOT:
 
@@ -417,7 +419,6 @@ Persistence contracts are already sufficiently defined.
 
 Current conceptual knowledge model:
 
-```
 LearningObject
 |
 +-- Anchor
@@ -427,17 +428,13 @@ LearningObject
 +-- Knowledge Category
 |
 +-- Examples / Notes / other approved supporting concepts
-```
 
 Current executable Knowledge Statement representation:
 
-```
 LearningObject.statement: str
-```
 
 Current user learning context:
 
-```
 User
 |
 +-- Learning State
@@ -445,11 +442,9 @@ User
 +-- Mastery State
          |
          +-- Learning Object
-```
 
 Evidence processing:
 
-```
 Learning Activity / Evidence
           |
           v
@@ -460,19 +455,26 @@ Learning Activity / Evidence
           |
           v
     Mastery State
-```
 
 Approved conceptual Mastery State structure:
 
-```
 MasteryState
 ├── mastery_value
 ├── updated_at
 └── source_evidence: Set<EvidenceReference>
-```
 
-The executable Domain and Persistence representation of Mastery State
-remains intentionally deferred.
+The executable Domain representation of Mastery State is APPROVED as an
+autonomous Domain Model object, separate from the Learning Object.
+
+The executable representation must preserve the approved Mastery State
+Domain Model structure.
+
+Persistence representation, ORM mapping, repository implementation, and
+other infrastructure concerns remain separately governed and are not
+defined by this decision.
+
+The Domain Model must not be inferred from or reshaped by the Persistence
+Model.
 
 ================================================================
 
