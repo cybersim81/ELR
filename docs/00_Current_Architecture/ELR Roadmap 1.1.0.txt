@@ -213,45 +213,69 @@ Responsabilità:
 
 ================================================================================
 Fase 2 — Knowledge Extraction Architecture
-================================================================================
+==========================================
 
 Stato:
 
-In corso.
+Completata.
 
 
 Obiettivo:
 
-Definire il sistema che trasforma eventi conversazionali in proposte di
-aggiornamento del repository.
-
-
-Documenti:
-
-
-✓ KEP Specification
-
+Definire l'architettura del processo di estrazione della conoscenza.
 
 Responsabilità:
 
+• definizione della pipeline operativa;
 
-- pipeline operativa;
+• definizione del Knowledge Candidate;
 
-- Knowledge Candidate;
+• Anchor Resolution;
 
-- Anchor Resolution operativa;
+• definizione della Change Proposal;
 
-- Change Proposal;
+• classificazione CREATE / MERGE / UPDATE;
 
-- CREATE / MERGE / UPDATE;
+• criteri decisionali;
 
-- criteri decisionali;
+• produzione Evidence.
 
-- produzione Evidence.
+Documenti principali:
+
+• Knowledge Extraction Pipeline Specification;
+
+• Learning Object Specification;
+
+• Evidence Model Specification.
 
 
-La Architecture Specification mantiene solamente il ruolo architetturale
-della KEP.
+La Knowledge Extraction Pipeline Specification definisce il processo di
+trasformazione tra interazione conversazionale, conoscenza candidata e
+proposta di modifica del repository.
+
+La specifica definisce inoltre:
+
+• Knowledge Candidate;
+
+• Anchor Resolution;
+
+• Knowledge Statement extraction;
+
+• confronto con Learning Object esistenti;
+
+• classificazione CREATE / MERGE / UPDATE;
+
+• ELR Change Proposal;
+
+• Evidence Candidate;
+
+• confini di responsabilità con Learning Review, ELR e Mastery Engine.
+
+La fase è considerata completata a livello architetturale.
+
+Eventuali implementazioni, test o raffinamenti operativi successivi non
+costituiscono una riapertura della fase architetturale.
+
 
 
 ================================================================================
