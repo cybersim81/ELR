@@ -57,8 +57,9 @@ Matrice di consistenza architetturale
 | Learning Object                  | R  | R       | Learning Object Specification              | Nessuna modifica |
 | Anchor                           | R  | R       | Anchor Specification                       | Nessuna modifica |
 | Knowledge Statement              | R  | R       | Learning Object Specification              | Nessuna modifica |
-| Knowledge Category               | R  | R       | ELR Taxonomy / Knowledge Model             | Separare tassonomia e uso operativo |
+| Knowledge Category               | R  | R       | ELR Taxonomy / Knowledge Model             | Nessuna modifica |
 | Learning State                   | R  | R       | Learning State Specification               | Nessuna modifica |
+| Mastery State                   | R  | R       | Mastery State Specification             | Nessuna modifica |
 | Mastery                          | R  | R       | Mastery Engine Specification               | Mantenere solo ruolo architetturale in AS |
 | Evidence                         | R  | R       | Evidence Model Specification               | Modello comune delle Evidence |
 | Change Evidence                  | R  | R       | Evidence Model Specification               | Tipo specifico di Evidence |
@@ -67,7 +68,7 @@ Matrice di consistenza architetturale
 | Trigger                          | R  | R       | KEP Specification                          | Definizione operativa KEP |
 | Knowledge Candidate              | R  | R       | KEP Specification                          | Output temporaneo KEP |
 | ELR Change Proposal              | R  | R       | KEP Specification                          | Output KEP verso Learning Review |
-| CREATE / MERGE / UPDATE          | R  | R       | KEP Specification                          | Operazioni KEP |
+| CREATE / MERGE / UPDATE / SPLIT  | R  | R       | KEP Specification                          | Operazioni KEP |
 | Learning Review                  | R  | R       | Learning Review Specification              | Processo approvativo |
 | Learning Activity                | R  | R       | Learning Activity Specification            | Nuovo concetto formalizzato da ADR-021 |
 | LIL                              | R  | R       | Learning Interaction Language Specification | Nessuna modifica |
