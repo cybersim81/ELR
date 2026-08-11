@@ -226,6 +226,10 @@ Il sistema di continuità utilizza tre artefatti distinti.
 
 ### Continuity Package
 
+**Path:**
+
+`docs/00_Current_Architecture/ELR Continuity Package 2.0.0.txt`
+
 Funzione:
 
 **stato persistente e regole di continuità del progetto.**
@@ -233,6 +237,10 @@ Funzione:
 Non deve duplicare le Specification.
 
 ### Architectural Work State — Handoff
+
+**Path:**
+
+`docs/00_Current_Architecture/ELR Architectural Work State - Handoff 4.0.0.txt`
 
 Funzione:
 
@@ -254,7 +262,9 @@ Funzione:
 
 Non deve essere utilizzato come fonte primaria dello stato architetturale.
 
-Il punto di ripresa deve essere determinato dal repository, Continuity Package e Roadmap.
+Il punto di ripresa deve essere determinato dal repository, Continuity Package
+e Roadmap.
+
 
 ---
 
