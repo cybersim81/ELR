@@ -1,0 +1,214 @@
+# ELR Architectural Work State — Handoff
+
+**Version:** 4.0.0
+**Status:** Active Working State
+
+---
+
+## 1. PURPOSE
+
+This document is the operational checkpoint for continuity between ELR
+architectural working sessions.
+
+It records the last verified working position, the current Roadmap phase,
+the next authorized action, and relevant operational constraints.
+
+It does not replace:
+
+* ELR Architecture Specification;
+* ELR Architecture Decision Log;
+* ELR Architecture Consistency Matrix;
+* specialist Specifications;
+* ELR Roadmap;
+* ELR Continuity Package.
+
+The repository is the source of truth.
+
+---
+
+## 2. CURRENT ROADMAP POSITION
+
+The following architectural phases are completed:
+
+* Fase 0 — Fondazioni Architetturali
+* Fase 1 — ELR Knowledge Model
+* Fase 2 — Knowledge Extraction Architecture
+* Fase 3 — Evidence Architecture
+* Fase 4 — Mastery Architecture
+* Fase 5 — Human Learning Control
+
+### Current phase
+
+**Fase 6 — Derived Learning Systems**
+
+### Next phase
+
+**Fase 7 — Interaction Layer**
+
+---
+
+## 3. CURRENT WORKING STATE
+
+The architectural baseline through Human Learning Control has been
+consolidated and verified in the repository.
+
+The next work concerns systems derived from the established ELR
+architecture.
+
+The current Phase 6 scope identified by the Roadmap includes:
+
+* Phrasebook;
+* Exercise System;
+* Adaptive Review as a future extension.
+
+No Phase 6 architectural decision is assumed to have been made until the
+relevant repository documents have been inspected.
+
+---
+
+## 4. LAST VERIFIED POSITION
+
+The previous architectural work completed the reconciliation of the
+Mastery architecture and subsequently completed the Human Learning
+Control phase.
+
+The relevant approved decisions remain authoritative in their owning
+documents.
+
+They must not be reconstructed from this Handoff or from conversational
+memory.
+
+If a previous decision appears to conflict with the current repository
+state, the conflict must be verified against the authoritative document
+before any change is proposed.
+
+---
+
+## 5. CURRENT TASK
+
+The next session must begin by verifying the current state of Phase 6.
+
+The first task is to inspect the repository for:
+
+1. Phrasebook-related Specifications;
+2. Exercise System Specifications;
+3. Adaptive Review Specifications or planned documents;
+4. relevant ADRs;
+5. relevant entries in the Architecture Consistency Matrix;
+6. relevant implementation evidence;
+7. current Roadmap status.
+
+The purpose is to determine what already exists before proposing any new
+architecture.
+
+---
+
+## 6. WORKING METHOD
+
+Use the following process:
+
+**verification → focused problem or architectural gap → document analysis
+→ one focused proposal → explicit approval → copyable documentation block
+→ repository update → repository verification → next point**
+
+Do not treat a proposal as an approved decision.
+
+Do not treat an unverified repository write as an applied change.
+
+Do not advance to the next architectural point until the current change,
+when applicable, has been verified.
+
+---
+
+## 7. ARCHITECTURAL CONTINUITY RULES
+
+The following rules remain in force:
+
+* the repository is the source of truth;
+* approved architectural decisions must not be reopened without a real
+  documented contradiction;
+* implementation does not acquire architectural authority merely because
+  it exists;
+* Domain semantics must not be inferred from ORM or persistence
+  structures;
+* each architectural responsibility must have an identifiable owning
+  document;
+* new architectural decisions require explicit approval;
+* specifications must remain consistent with approved architectural
+  decisions.
+
+For detailed rules, use the ELR Continuity Package and the authoritative
+repository documents.
+
+---
+
+## 8. GITHUB INTEGRATION STATUS
+
+The GitHub integration has been operationally verified.
+
+### READ
+
+**Available.**
+
+Repository files can be retrieved and inspected.
+
+### WRITE
+
+**Unavailable in the current integration state.**
+
+Direct write attempts have returned:
+
+**HTTP 403 — Forbidden**
+
+Therefore:
+
+* never claim that a repository modification was applied solely because
+  a write operation was attempted;
+* when direct write is unavailable, provide the exact copyable block;
+* after the user applies the change, retrieve the repository file again;
+* verify the complete modified section and its boundaries;
+* only then mark the change as applied.
+
+This is an operational tooling constraint and does not affect ELR
+architectural authority.
+
+---
+
+## 9. SESSION RESUMPTION
+
+A new session should:
+
+1. read this Handoff;
+2. read the ELR Continuity Package;
+3. read the current Roadmap;
+4. verify the repository state;
+5. identify the current Phase 6 artifacts;
+6. inspect only the documents directly relevant to the next decision;
+7. continue from the verified repository state.
+
+Do not ask the user to reconstruct previously documented architectural
+decisions.
+
+Do not assume that the Handoff itself is more authoritative than the
+repository.
+
+---
+
+## 10. CHECKPOINT RULE
+
+This document is a checkpoint, not a historical transcript.
+
+When a new architectural phase is completed, this Handoff should be
+updated so that:
+
+* the completed phase is recorded;
+* the current phase is identified;
+* the next action is explicit;
+* obsolete historical working details are removed or superseded.
+
+The Handoff should remain concise enough to be useful as a session
+bootstrap document.
+
+---
+
+**END OF HANDOFF**
