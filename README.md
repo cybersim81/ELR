@@ -35,13 +35,18 @@ Documentazione corrente
 
 ## 00_Current_Architecture
 
-Documenti di continuità del progetto.
+Documenti di continuità e stato corrente del progetto.
+
+• ELR Session Prompt
 
 • ELR Continuity Package
+
+• ELR Architectural Work State — Handoff
 
 • ELR Roadmap
 
 • ELR Stress Test Log
+
 
 ---
 
