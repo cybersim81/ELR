@@ -170,87 +170,96 @@ Un Exercise contiene:
 
 Un Exercise non diventa parte del contenuto del Learning Object.
 
-
 ================================================================================
-2. Exercise Boundary
+2. Learning Activity Boundary
 ================================================================================
 
-L'Exercise System appartiene al livello Process Layer.
+La Learning Activity costituisce il contesto didattico ricevuto dall'Exercise
+System per la generazione e l'esecuzione di un Exercise.
 
+La Learning Activity identifica l'intervento didattico da realizzare e collega:
 
-Relazione architetturale:
+* conoscenza disponibile;
+* stato di apprendimento;
+* azione didattica proposta.
 
+L'Exercise System utilizza la Learning Activity come input per determinare
+l'Exercise appropriato da generare.
 
-ELR Repository
+L'Exercise System non seleziona autonomamente la Learning Activity e non
+determina lo scheduling adattivo delle attività.
 
-        |
+Il confine operativo è quindi:
 
-        | fornisce
-
-        v
-
+```
 Learning Object
-
-        |
-
-        v
-
+      +
+Mastery State
+      |
+      v
+Learning Activity
+      |
+      v
 Exercise System
-
-        |
-
-        v
-
+      |
+      v
+Exercise
+      |
+      v
 User Interaction
-
-        |
-
-        v
-
+      |
+      v
 Evidence
+```
 
+La definizione e il comportamento della Learning Activity appartengono alla
+Learning Activity Specification.
+
+La generazione, presentazione e valutazione dell'Exercise appartengono
+all'Exercise System Specification.
 
 ================================================================================
 3. Exercise Lifecycle
 ================================================================================
 
-Il ciclo di vita concettuale di un Exercise è:
+Il ciclo di vita di un Exercise è il seguente:
 
-
-Selezione Learning Object
-
-        |
-
-        v
-
-Generazione Exercise
-
-        |
-
-        v
-
+```
+Ricezione Learning Activity
+      |
+      v
+Identificazione del Learning Object e del contesto di apprendimento
+      |
+      v
+Generazione Exercise coerente con la Learning Activity
+      |
+      v
 Presentazione all'utente
-
-        |
-
-        v
-
-Produzione risposta
-
-        |
-
-        v
-
-Analisi risposta
-
-        |
-
-        v
-
+      |
+      v
+Produzione della risposta
+      |
+      v
+Analisi della risposta
+      |
+      v
 Generazione Evidence
+      |
+      v
+Aggiornamento del Mastery State
+```
 
+L'Exercise System riceve la Learning Activity come contesto didattico.
 
-Un Exercise concluso non modifica automaticamente il Learning Object.
+L'Exercise System utilizza il Learning Object e le informazioni di contesto
+associate alla Learning Activity per generare un Exercise appropriato.
+
+La selezione della Learning Activity e lo scheduling adattivo non appartengono
+all'Exercise System.
+
+L'Exercise System è responsabile della generazione, presentazione e valutazione
+dell'Exercise e della produzione della relativa Evidence.
+
 
 
 ================================================================================
