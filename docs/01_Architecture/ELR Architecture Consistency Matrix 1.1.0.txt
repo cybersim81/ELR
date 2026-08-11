@@ -153,8 +153,6 @@ Derived Systems:
 
 - Phrasebook Specification
 
-- Exercise System Specification
-
 - Reporting Specification (futuro)
 
 
