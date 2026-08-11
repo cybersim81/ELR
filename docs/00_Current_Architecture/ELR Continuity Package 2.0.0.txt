@@ -266,11 +266,6 @@ Funzione:
 
 Non deve essere utilizzato come fonte primaria dello stato architetturale.
 
-Funzione:
-
-**definire il comportamento operativo richiesto all'AI.**
-
-Non deve essere utilizzato come fonte primaria dello stato architetturale.
 
 Il punto di ripresa deve essere determinato dal repository, Continuity Package
 e Roadmap.
