@@ -228,7 +228,7 @@ Il ciclo di vita di un Exercise è il seguente:
 Ricezione Learning Activity
       |
       v
-Identificazione del Learning Object e del contesto di apprendimento
+Utilizzo del Learning Object target e del contesto di apprendimento
       |
       v
 Generazione Exercise coerente con la Learning Activity
