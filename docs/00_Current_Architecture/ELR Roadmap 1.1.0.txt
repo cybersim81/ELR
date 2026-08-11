@@ -280,47 +280,72 @@ costituiscono una riapertura della fase architetturale.
 
 ================================================================================
 Fase 3 — Evidence Architecture
-================================================================================
-
-Stato:
-
-In evoluzione.
-
+==============================
 
 Obiettivo:
 
-Definire un modello comune delle informazioni di supporto prodotte dai
-processi ELR.
-
-
-Documento proprietario:
-
-
-Evidence Model Specification
-
+Definire il modello architetturale delle Evidence e i relativi confini di
+responsabilità tra i processi ELR.
 
 Responsabilità:
 
+• definizione del concetto di Evidence;
 
-- definizione generale di Evidence;
+• definizione di Change Evidence;
 
-- Change Evidence;
+• definizione di Mastery Evidence;
 
-- Mastery Evidence;
+• definizione del lifecycle delle Evidence;
 
-- relazione tra Evidence e processi.
+• definizione dell'ownership delle Evidence;
 
+• definizione della relazione tra Evidence, Knowledge Extraction Pipeline,
+Learning Review e Mastery Engine;
 
-Risultato atteso:
+• definizione dei confini tra Evidence Model e processi che producono o
+utilizzano Evidence.
 
+Documenti principali:
 
-Separazione definitiva tra:
+• Evidence Model Specification;
 
-- conoscenza persistente;
+• Learning Review Specification;
 
-- informazioni che giustificano modifiche;
+• Knowledge Extraction Pipeline Specification;
 
-- informazioni che supportano valutazioni.
+• Mastery Engine Specification;
+
+• ELR Architecture Consistency Matrix.
+
+Stato:
+
+Completata.
+
+L'architettura Evidence è definita e coerente con i processi ELR.
+
+Il modello Evidence distingue:
+
+• Change Evidence, utilizzata nel processo di Learning Review;
+
+• Mastery Evidence, utilizzata dal Mastery Engine per l'aggiornamento del
+Mastery State.
+
+La Learning Review non introduce un ulteriore tipo di Evidence.
+
+La Review Decision Trace rappresenta esclusivamente la traccia della
+decisione della Learning Review e non costituisce una Evidence del modello.
+
+L'ownership documentale delle Evidence è assegnata alla Evidence Model
+Specification secondo la ELR Architecture Consistency Matrix.
+
+I confini tra Knowledge Extraction Pipeline, Evidence Model, Learning Review
+e Mastery Engine sono definiti nelle rispettive specifiche.
+
+La fase è considerata completata a livello architetturale.
+
+Eventuali implementazioni, test o raffinamenti operativi successivi non
+costituiscono una riapertura della fase.
+
 
 
 ================================================================================
