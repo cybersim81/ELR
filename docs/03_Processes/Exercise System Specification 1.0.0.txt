@@ -246,7 +246,7 @@ Analisi della risposta
 Generazione Evidence
       |
       v
-Aggiornamento del Mastery State
+Utilizzo dell'Evidence da parte del Mastery Engine
 ```
 
 L'Exercise System riceve la Learning Activity come contesto didattico.
@@ -490,27 +490,28 @@ La valutazione non modifica direttamente la Mastery.
 9. Exercise Evidence
 ================================================================================
 
-Gli esercizi possono generare Mastery Evidence.
+Gli esercizi producono osservazioni e risultati che possono contribuire alla
+produzione di Evidence secondo il modello definito nella Evidence Model
+Specification.
 
+L'Exercise System non determina autonomamente il tipo di Evidence persistente
+prodotta.
 
-Una Exercise Evidence può rappresentare:
+Le osservazioni generate durante l'esercizio possono contribuire, attraverso
+i processi proprietari, a:
 
+Change Evidence, quando l'osservazione supporta una proposta di modifica
+dell'ELR;
+Mastery Evidence, quando l'osservazione riguarda la padronanza dell'utente
+rispetto a una conoscenza già rappresentata.
 
-- uso corretto;
+La produzione di Change Evidence appartiene alla KEP.
 
-- errore;
+La produzione di Mastery Evidence appartiene al Mastery Engine / Learning
+Interaction Process.
 
-- esitazione;
-
-- richiesta di supporto;
-
-- miglioramento rispetto a tentativi precedenti.
-
-
-La struttura dell'Evidence appartiene a:
-
-
-Evidence Model Specification.
+La struttura e i criteri delle Evidence appartengono alla Evidence Model
+Specification.
 
 
 ================================================================================
