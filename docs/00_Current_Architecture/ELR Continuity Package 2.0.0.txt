@@ -360,6 +360,47 @@ Non anticipare la Fase 8 finché la Fase 7 non è completata.
 
 ---
 
+## 12A. SESSION CLOSURE RULE
+
+Quando viene deciso di chiudere una sessione per proseguire il lavoro in una
+nuova chat, prima della chiusura devono essere verificati e, se necessario,
+aggiornati tutti i continuity artifacts correnti:
+
+1. `ELR Architectural Work State - Handoff`
+2. `ELR Continuity Package`
+3. `ELR Roadmap`
+4. `ELR Session Prompt`
+
+I quattro documenti devono essere riallineati allo stato effettivo del
+repository e verificati dopo l'aggiornamento.
+
+Non è necessario modificare tutti e quattro i documenti a ogni chiusura.
+
+È invece obbligatorio:
+
+* verificare ciascuno dei quattro documenti;
+* aggiornare quelli che risultano non allineati;
+* verificare nuovamente il repository dopo ogni aggiornamento;
+* assicurarsi che i quattro documenti descrivano uno stato coerente;
+* non considerare la nuova sessione pronta al bootstrap finché la verifica
+  non è completata.
+
+### Session Closure Sequence
+
+**decisione di chiudere la sessione**
+→ verifica dello stato corrente
+→ aggiornamento dell'Handoff
+→ aggiornamento del Continuity Package
+→ aggiornamento della Roadmap
+→ aggiornamento del Session Prompt
+→ verifica dei quattro documenti nel repository
+→ **sessione pronta per una nuova chat**
+
+Questa procedura impedisce che una nuova sessione erediti uno stato
+documentale parzialmente aggiornato o incoerente.
+
+---
+
 ## 13. Corpus Integrity
 
 Un documento appartiene al corpus ELR quando:
