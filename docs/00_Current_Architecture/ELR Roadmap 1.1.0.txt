@@ -397,7 +397,7 @@ Fase 5 — Human Learning Control
 
 Stato:
 
-Da iniziare.
+Completata.
 
 
 Obiettivo:
@@ -429,6 +429,12 @@ Principio:
 
 
 La conoscenza entra nell'ELR solamente dopo approvazione.
+
+
+La fase è considerata completata a livello architetturale.
+
+Eventuali implementazioni, test o raffinamenti operativi successivi non
+costituiscono una riapertura della fase architetturale.
 
 
 ================================================================================
