@@ -537,25 +537,44 @@ Per una proposta UPDATE la Learning Review verifica:
 
 
 ================================================================================
-Review Evidence
+Review Decision Trace
 ================================================================================
 
-La decisione della Learning Review deve produrre una traccia operativa.
+La decisione della Learning Review deve produrre una traccia operativa della
+valutazione effettuata.
 
-
-Può includere:
-
+La Review Decision Trace può includere:
 
 • decisione;
 
 • motivazione;
 
-• Evidence utilizzata;
+• Evidence utilizzata per la valutazione;
 
-• eventuali osservazioni.
+• eventuali osservazioni;
 
+• riferimenti alla Change Proposal valutata.
 
-La Review Evidence non rappresenta conoscenza persistente.
+La Review Decision Trace non costituisce una nuova Evidence del modello
+Evidence.
+
+In particolare, la Learning Review non produce:
+
+• Change Evidence;
+
+• Mastery Evidence;
+
+• un ulteriore tipo di Evidence.
+
+La Change Evidence utilizzata dalla Learning Review rimane parte del modello
+Evidence e conserva la propria identità, semantica e ownership.
+
+La Review Decision Trace rappresenta esclusivamente la traccia della decisione
+presa dalla Learning Review e appartiene al processo di Learning Review.
+
+La Review Decision Trace non rappresenta conoscenza persistente e non modifica
+la struttura o il significato delle Evidence utilizzate.
+
 
 
 ================================================================================
