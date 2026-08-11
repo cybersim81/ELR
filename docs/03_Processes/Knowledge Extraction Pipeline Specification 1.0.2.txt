@@ -64,9 +64,15 @@ La ELR Change Proposal rappresenta una proposta atomica di modifica del reposito
 
 L'Evidence Candidate rappresenta una rappresentazione strutturata di un evento osservabile potenzialmente rilevante per un successivo processo di validazione secondo il modello definito nella Evidence Model Specification.
 
-L'Evidence Candidate non rappresenta Evidence persistente, Mastery Evidence validata o stato dell'utente.
+L'Evidence Candidate non rappresenta Evidence persistente, Mastery Evidence
+o stato dell'utente.
 
-La trasformazione di un Evidence Candidate in Change Evidence o Mastery Evidence non appartiene alla KEP, ma al sistema Evidence secondo le regole definite nella Evidence Model Specification.
+La KEP può trasformare un Evidence Candidate validato in Change Evidence
+a supporto della ELR Change Proposal secondo le regole definite nella
+Evidence Model Specification.
+
+La produzione di Mastery Evidence non appartiene alla KEP.
+
 
 La trasformazione da Knowledge Candidate a ELR Change Proposal non è automatica e richiede il superamento dei criteri di validazione definiti dalla KEP.
 
@@ -366,25 +372,17 @@ modifiche al repository.
 A parità di:
 
 • Conversation Episode;
-
 • stato dell'ELR;
-
 • configurazione della KEP;
 
 la Knowledge Extraction Pipeline deve produrre lo stesso insieme di:
 
 • Knowledge Candidate;
-
 • ELR Change Proposal;
+• Evidence Candidate;
+• Change Evidence associata alla ELR Change Proposal.
 
-• Mastery Evidence.
-
-Eventuali modelli probabilistici utilizzati internamente devono produrre risultati normalizzati secondo la configurazione della KEP.
-
-Il comportamento della KEP deve essere deterministico.
-
-Eventuali differenze implementative non devono modificare il significato
-concettuale dell'estrazione.
+La KEP non produce Mastery Evidence.
 
 ================================================================================
 Boundary della KEP
