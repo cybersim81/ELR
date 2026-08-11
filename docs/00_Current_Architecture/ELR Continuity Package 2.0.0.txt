@@ -10,7 +10,8 @@
 
 ## 1. Purpose
 
-Il Continuity Package permette di ripristinare l'ambiente di lavoro ELR in una nuova sessione senza dipendere dal contesto conversazionale precedente.
+Il Continuity Package permette di ripristinare l'ambiente di lavoro ELR in una
+nuova sessione senza dipendere dal contesto conversazionale precedente.
 
 Il Continuity Package:
 
@@ -21,9 +22,11 @@ Il Continuity Package:
 * registra i vincoli operativi rilevanti;
 * indica la procedura di ripresa.
 
-Il Continuity Package **non sostituisce** Architecture Specification, ADR, Matrix, Roadmap o Specification specialistiche.
+Il Continuity Package non sostituisce Architecture Specification, ADR, Matrix,
+Roadmap o Specification specialistiche.
 
-Non deve duplicare integralmente le decisioni contenute nei documenti proprietari.
+Non deve duplicare integralmente le decisioni contenute nei documenti
+proprietari.
 
 Il repository è la fonte di verità.
 
@@ -31,7 +34,8 @@ Il repository è la fonte di verità.
 
 ## 2. Source of Truth
 
-Lo stato architetturale effettivo deve essere determinato dai documenti presenti nel repository.
+Lo stato architetturale effettivo deve essere determinato dai documenti
+presenti nel repository.
 
 In caso di divergenza tra:
 
@@ -41,9 +45,11 @@ In caso di divergenza tra:
 * implementazione;
 * documentazione proprietaria;
 
-la verifica deve essere effettuata sul repository e sui documenti proprietari.
+la verifica deve essere effettuata sul repository e sui documenti
+proprietari.
 
-Il Continuity Package non può modificare retroattivamente una decisione architetturale approvata.
+Il Continuity Package non può modificare retroattivamente una decisione
+architetturale approvata.
 
 ---
 
@@ -80,7 +86,8 @@ Definisce:
 
 ### Specialist Specifications
 
-Definiscono il comportamento e la struttura dei singoli componenti secondo la relativa ownership.
+Definiscono il comportamento e la struttura dei singoli componenti secondo
+la relativa ownership.
 
 Nessun documento di continuità deve sostituire tali documenti.
 
@@ -96,22 +103,33 @@ Le seguenti fasi sono completate a livello architetturale:
 * Fase 3 — Evidence Architecture
 * Fase 4 — Mastery Architecture
 * Fase 5 — Human Learning Control
+* Fase 6 — Learning Activity and Exercise Systems
 
 ### Current Phase
 
-**Fase 6 — Derived Learning Systems**
+**Fase 7 — Document Consistency Consolidation**
 
 Obiettivo corrente:
 
-verificare e definire l'architettura dei sistemi derivati costruiti sopra l'ELR.
+verificare la consistenza repository-wide dei documenti dell'architettura
+consolidata.
 
-La Fase 6 comprende:
+La verifica comprende:
 
-* Phrasebook Specification;
-* Exercise System Specification;
-* Adaptive Review Specification, come futura estensione.
+* Dependencies;
+* path;
+* nomi dei documenti;
+* versioni;
+* cross-reference;
+* ownership;
+* terminologia;
+* eventuali duplicazioni semantiche residue.
 
-La Fase 7 — Interaction Layer — rimane successiva.
+### Next Phase
+
+**Fase 8 — Derived Learning Systems**
+
+La Fase 8 sarà avviata solamente dopo il completamento della Fase 7.
 
 ---
 
@@ -128,11 +146,22 @@ Le seguenti aree sono considerate consolidate a livello architetturale:
 * Learning Review;
 * Mastery State;
 * Mastery Engine;
-* Human Learning Control.
+* Human Learning Control;
+* Learning Activity;
+* Exercise System.
 
-Le decisioni APPROVED non devono essere riaperte senza una contraddizione documentale reale.
+Le decisioni APPROVED non devono essere riaperte senza una contraddizione
+documentale reale.
 
-In particolare, le decisioni relative a Mastery State già approvate devono essere recuperate dalla relativa Specification e dagli ADR, non ricostruite dalla memoria conversazionale.
+In particolare:
+
+* `Mastery State` è distinto da `Mastery Engine`;
+* `Knowledge Category` appartiene alla ELR Taxonomy;
+* KEP operations sono `CREATE / MERGE / UPDATE`;
+* `SPLIT` non deve essere assunto come operazione KEP senza una decisione
+  documentata;
+* le decisioni architetturali relative a Learning Activity sono registrate
+  nell'Architecture Decision Log.
 
 ---
 
@@ -141,12 +170,17 @@ In particolare, le decisioni relative a Mastery State già approvate devono esse
 Durante il lavoro:
 
 * il Domain Model non deve essere inferito dal Persistence Model;
-* il Persistence Model non acquisisce autorità semantica per il solo fatto di esistere;
-* i processi non devono essere introdotti come entità del Domain Model senza decisione esplicita;
-* le Evidence operative appartengono ai relativi processi e modelli proprietari;
-* una implementazione esistente non costituisce automaticamente una decisione architetturale.
+* il Persistence Model non acquisisce autorità semantica per il solo fatto di
+  esistere;
+* i processi non devono essere introdotti come entità del Domain Model senza
+  decisione esplicita;
+* le Evidence operative appartengono ai relativi processi e modelli
+  proprietari;
+* una implementazione esistente non costituisce automaticamente una
+  decisione architetturale.
 
-Ogni nuova responsabilità deve essere assegnata al documento proprietario appropriato.
+Ogni nuova responsabilità deve essere assegnata al documento proprietario
+appropriato.
 
 ---
 
@@ -154,13 +188,17 @@ Ogni nuova responsabilità deve essere assegnata al documento proprietario appro
 
 Il processo di lavoro è:
 
-**verifica → problema/discrepanza → analisi documentale → proposta focalizzata → approvazione esplicita → blocco copiabile → aggiornamento repository → verifica → prossimo punto**
+**verifica → problema/discrepanza → analisi documentale → proposta focalizzata →
+approvazione esplicita → blocco copiabile → aggiornamento repository →
+verifica → prossimo punto**
 
 Una decisione non è considerata definitiva prima dell'approvazione esplicita.
 
-Una modifica documentale non è considerata applicata prima della verifica del repository.
+Una modifica documentale non è considerata applicata prima della verifica
+del repository.
 
-Non devono essere introdotte simultaneamente più decisioni indipendenti senza una ragione esplicita.
+Non devono essere introdotte simultaneamente più decisioni indipendenti
+senza una ragione esplicita.
 
 ---
 
@@ -181,7 +219,8 @@ Dopo ogni aggiornamento:
 3. verificare i boundary adiacenti;
 4. solo dopo procedere.
 
-La conversazione non costituisce prova dell'avvenuto aggiornamento del repository.
+La conversazione non costituisce prova dell'avvenuto aggiornamento del
+repository.
 
 ---
 
@@ -203,7 +242,8 @@ Le richieste di scrittura diretta al repository hanno restituito:
 
 **HTTP 403 — Forbidden**
 
-Pertanto una richiesta di scrittura non deve essere considerata riuscita sulla sola base della risposta dello strumento.
+Pertanto una richiesta di scrittura non deve essere considerata riuscita
+sulla sola base della risposta dello strumento.
 
 ### Procedura operativa conseguente
 
@@ -216,7 +256,8 @@ Quando la scrittura diretta restituisce `403`:
 5. verificare il contenuto aggiornato;
 6. solo allora considerare la modifica effettivamente applicata.
 
-Il `403` è un vincolo operativo dell'integrazione, non una decisione architetturale ELR.
+Il `403` è un vincolo operativo dell'integrazione, non una decisione
+architetturale ELR.
 
 ---
 
@@ -246,14 +287,6 @@ Funzione:
 
 **checkpoint operativo sintetico dell'ultimo punto raggiunto.**
 
-Deve indicare:
-
-* ultima fase completata;
-* fase corrente;
-* ultimo stato verificato;
-* prossima azione;
-* vincoli operativi rilevanti.
-
 ### ELR Session Prompt
 
 **Path:**
@@ -266,10 +299,8 @@ Funzione:
 
 Non deve essere utilizzato come fonte primaria dello stato architetturale.
 
-
 Il punto di ripresa deve essere determinato dal repository, Continuity Package
 e Roadmap.
-
 
 ---
 
@@ -279,15 +310,15 @@ e Roadmap.
 
 1. leggere `ELR Session Prompt 1.0.0.txt`;
 2. leggere `ELR Continuity Package 2.0.0.txt`;
-3. leggere `ELR Roadmap 1.1.0.txt`;
+3. leggere `ELR Roadmap 1.2.0.txt`;
 4. leggere `ELR Architectural Work State - Handoff 4.0.0.txt`;
 5. leggere `ELR Architecture Specification`, `ELR Architecture Decision Log`
    e `ELR Architecture Consistency Matrix`;
 6. verificare lo stato effettivo dei documenti nel repository;
-7. identificare la fase corrente dalla Roadmap e dal relativo stato verificato;
-8. identificare il prossimo lavoro autorizzato;
+7. identificare la Fase 7 e il relativo stato verificato;
+8. iniziare dal controllo repository-wide delle Dependencies;
 9. leggere soltanto i documenti specialistici direttamente rilevanti per
-   quel lavoro;
+   la prima discrepanza;
 10. non ricostruire decisioni dalla memoria della conversazione precedente;
 11. non riaprire decisioni APPROVED senza una contraddizione documentale
     reale;
@@ -297,7 +328,6 @@ e Roadmap.
 
 **verifica → problema/discrepanza → analisi → proposta → approvazione →
 blocco copiabile → aggiornamento repository → verifica → prossimo punto.**
-
 
 Non deve:
 
@@ -313,17 +343,20 @@ Non deve:
 
 La prossima attività autorizzata è:
 
-**Fase 6 — Derived Learning Systems**
+**Fase 7 — Document Consistency Consolidation**
 
-Prima di proporre una nuova Specification o una modifica architetturale:
+Prima di proporre qualsiasi modifica:
 
-1. verificare quali artefatti Phrasebook, Exercise System e Adaptive Review esistono già;
-2. verificare il loro status;
-3. verificare la Consistency Matrix;
-4. verificare eventuali ADR pertinenti;
-5. verificare eventuali implementazioni solo come evidenza tecnica, non come autorità architetturale;
-6. identificare eventuali responsabilità già assegnate;
-7. proporre una sola decisione focalizzata alla volta.
+1. verificare le `Dependencies` dei documenti rilevanti;
+2. verificare che ogni riferimento punti a un documento realmente esistente;
+3. verificare nomi e versioni;
+4. verificare i path;
+5. verificare i cross-reference;
+6. verificare eventuali riferimenti obsoleti;
+7. identificare eventuali duplicazioni semantiche residue;
+8. proporre una sola correzione focalizzata alla volta.
+
+Non anticipare la Fase 8 finché la Fase 7 non è completata.
 
 ---
 
@@ -331,10 +364,12 @@ Prima di proporre una nuova Specification o una modifica architetturale:
 
 Un documento appartiene al corpus ELR quando:
 
-* è presente nel repository ed è riconosciuto dal relativo sistema di ownership;
+* è presente nel repository ed è riconosciuto dal relativo sistema di
+  ownership;
 * oppure è esplicitamente previsto come documento futuro dalla Roadmap.
 
-La presenza di un concetto durante l'analisi non implica automaticamente la necessità di creare una nuova Specification.
+La presenza di un concetto durante l'analisi non implica automaticamente la
+necessità di creare una nuova Specification.
 
 Prima di creare un nuovo documento occorre verificare:
 
@@ -362,17 +397,21 @@ La continuità è garantita da:
 * Handoff;
 * procedure di verifica del repository.
 
-La memoria conversazionale può facilitare il lavoro, ma non costituisce autorità architetturale.
+La memoria conversazionale può facilitare il lavoro, ma non costituisce
+autorità architetturale.
 
 ---
 
 ## 15. End State
 
-Il Continuity Package deve rimanere uno strumento di orientamento e governance.
+Il Continuity Package deve rimanere uno strumento di orientamento e
+governance.
 
 Non deve diventare una seconda Architecture Specification.
 
-Quando il contenuto di questo documento diverge da una Specification, ADR, Matrix o Roadmap verificata nel repository, la divergenza deve essere segnalata e risolta attraverso il normale processo documentale.
+Quando il contenuto di questo documento diverge da una Specification, ADR,
+Matrix o Roadmap verificata nel repository, la divergenza deve essere
+segnalata e risolta attraverso il normale processo documentale.
 
 ---
 
