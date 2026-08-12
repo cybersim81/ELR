@@ -623,7 +623,7 @@ La Learning Review non aggiorna la Mastery.
 Una volta che un Learning Object è presente nell'ELR:
 
 
-• il Mastery Engine può ricevere Mastery Evidence;
+• il Mastery Engine può ricevere Evidence rilevanti ai fini della Mastery;
 
 • il Mastery Engine gestisce il livello di padronanza.
 
