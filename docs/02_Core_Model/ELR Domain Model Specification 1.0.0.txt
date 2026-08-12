@@ -32,8 +32,8 @@ Dependencies:
 
 - ELR Architecture Specification
 - ELR Architecture Decision Log
-- KEP Specification
-- Learning Interaction Language (LIL)
+- Knowledge Extraction Pipeline Specification
+- Learning Interaction Language Specification
 
 
 ================================================================================
