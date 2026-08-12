@@ -81,7 +81,7 @@ Questo documento definisce:
 
 - principi di generazione degli esercizi;
 
-- struttura degli Exercise Object;
+- struttura degli Exercise;
 
 - produzione di Evidence durante gli esercizi;
 
