@@ -313,7 +313,8 @@ Valido:
 4.4 Phrasebook Validation
 ================================================================================
 
-Una Phrasebook Entry valida deve:
+Una Phrasebook Entry valida deve riferirsi a una conoscenza
+rappresentata da un Learning Object valido e deve:
 
 
 - rappresentare una combinazione riutilizzabile;
@@ -519,7 +520,7 @@ Un Learning State valido deve:
 
 - appartenere a un utente valido;
 
-- essere aggiornato solo dal Mastery Engine.
+- essere aggiornato attraverso il processo autorizzato di gestione dello stato.
 
 
 Il Learning State non può contenere conoscenza linguistica.
