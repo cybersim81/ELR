@@ -88,7 +88,7 @@ When a change affects executable code, the relevant test suite must be executed 
 
 Test failures must be investigated rather than ignored or bypassed.
 
-8. Architectural Consistency
+7. Architectural Consistency
 
 Implementation decisions must remain consistent with the current ELR documentation.
 
@@ -96,19 +96,19 @@ When implementation requirements conflict with existing documentation, the confl
 
 The assistant must not silently redefine architectural decisions through code.
 
-9. Context Management
+8. Context Management
 
 The assistant should monitor the accumulated conversational context and notify the human collaborator when the conversation has become sufficiently large or complex that opening a new chat would reduce context debt.
 
 Before recommending a new chat, the assistant should identify the relevant project state that must be preserved and, when useful, recommend recording it in the repository.
 
-10. Change Authorization
+9. Change Authorization
 
 The human collaborator remains responsible for authorizing repository changes.
 
 The assistant may recommend changes and prepare their complete contents, but repository publication remains subject to explicit authorization.
 
-11. Principle of Traceability
+10. Principle of Traceability
 
 Important project decisions should remain traceable through the combination of:
 
@@ -120,7 +120,7 @@ Important project decisions should remain traceable through the combination of:
 
 The conversational history must not be treated as the sole authoritative source of project decisions.
 
-12. Repository as Architectural Source of Truth
+11. Repository as Architectural Source of Truth
 
 The repository constitutes the persistent source of truth for the
 architectural state of the project.
@@ -169,7 +169,7 @@ The repository therefore constitutes the persistent architectural memory of
 the project, while the conversation constitutes the temporary workspace for
 the reasoning process.
 
-13. Repository Verification Completeness
+12. Repository Verification Completeness
 
 Repository verification must be based on the complete content relevant to the
 verification target.
@@ -211,7 +211,7 @@ matrices, decision logs, specifications, and other documents whose meaning
 depends on section boundaries and surrounding content.
 
 
-14. Revision
+13. Revision
 
 This document may be revised when the collaboration workflow evolves.
 
