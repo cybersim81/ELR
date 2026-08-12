@@ -143,7 +143,7 @@ Response:
 
 {
 "id": "uuid",
-"state": "Candidate"
+"lifecycle_status": "Candidate"
 }
 
 Regole:
