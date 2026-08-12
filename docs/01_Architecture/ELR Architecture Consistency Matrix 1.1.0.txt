@@ -57,7 +57,7 @@ Matrice di consistenza architetturale
 | Learning Object                  | R  | R       | Learning Object Specification              | Nessuna modifica |
 | Anchor                           | R  | R       | Anchor Specification                       | Nessuna modifica |
 | Knowledge Statement              | R  | R       | Learning Object Specification              | Nessuna modifica |
-| Knowledge Category               | R  | R       | ELR Taxonomy / Knowledge Model             | Nessuna modifica |
+| Knowledge Category               | R  | R       | ELR Taxonomy                               | Nessuna modifica |
 | Learning State                   | R  | R       | Learning State Specification               | Nessuna modifica |
 | Mastery State                   | R  | R       | Mastery State Specification             | Nessuna modifica |
 | Mastery                          | R  | R       | Mastery Engine Specification               | Mantenere solo ruolo architetturale in AS |
