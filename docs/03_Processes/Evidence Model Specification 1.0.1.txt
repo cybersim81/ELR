@@ -38,7 +38,7 @@ Dependencies:
 
 - Learning Review Specification
 
-- Learning Object Model Specification
+- Learning Object Specification
 
 
 ================================================================================
