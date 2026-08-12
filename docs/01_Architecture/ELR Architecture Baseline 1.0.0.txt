@@ -30,7 +30,7 @@ Dependencies:
 
 - ELR Architecture Specification
 
-- ELR Documentation Index
+- README.md — ELR Documentation Index
 
 Scopo
 =====
