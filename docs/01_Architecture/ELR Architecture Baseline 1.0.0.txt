@@ -85,7 +85,7 @@ Architecture
 
 * ELR Architecture Consistency Matrix 1.1.0
 
-* ELR Documentation Architecture
+* ELR Documentation Architecture 1.1.0
 
 * ELR Design Protocol
 
