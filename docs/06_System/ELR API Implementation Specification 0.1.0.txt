@@ -59,6 +59,12 @@ API-IMPLEMENTATION-003 — Lifecycle Compliance
 
 Ogni modifica deve rispettare il Lifecycle Model.
 
+Le API non implementano direttamente le transizioni di Lifecycle.
+
+L'API invoca il caso d'uso applicativo corrispondente;
+la validazione e l'applicazione della transizione sono responsabilità
+del livello applicativo e del dominio secondo il Lifecycle Model.
+
 API-IMPLEMENTATION-004 — Traceable Actions
 
 Ogni modifica deve produrre audit.
@@ -158,7 +164,7 @@ Response:
 
 {
 "id": "uuid",
-"state": "Active",
+"lifecycle_status": "Active",
 "version": 1
 }
 
@@ -205,7 +211,7 @@ Active
 Vincoli:
 
 * solo Learning Review;
-* genera nuova versione;
+* stabilizza la versione risultante secondo il Lifecycle Model;
 * genera audit.
 
 ================================================================================
