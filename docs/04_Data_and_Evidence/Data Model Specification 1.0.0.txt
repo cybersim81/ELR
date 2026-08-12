@@ -160,7 +160,7 @@ Learning Object
 ```
     |
 
-    | possiede
+    | associato a
 
     v
 ```
@@ -175,9 +175,6 @@ Sono gestite nel Process Layer.
 2. Learning Object Entity
 =========================
 
-Il Learning Object rappresenta l'unità minima persistente di conoscenza
-linguistica.
-
 Un Learning Object contiene:
 
 * identificativo unico;
@@ -188,9 +185,12 @@ Un Learning Object contiene:
 
 * Knowledge Category;
 
-* Learning State;
-
 * metadati di gestione.
+
+Il Learning State non appartiene al Learning Object.
+
+Il Learning State è associato al Learning Object in relazione allo User
+e costituisce uno stato didattico User-specific.
 
 Un Learning Object rappresenta una sola conoscenza atomica.
 
@@ -250,15 +250,15 @@ Categorie definite:
 
 * Meaning
 
-* Construction
-
 * Function
 
+* Context
+
+* Construction
+
+* Complement
+
 * Morphology
-
-* Pronunciation
-
-* Phraseology
 
 La categoria supporta ricerca e organizzazione.
 
@@ -305,11 +305,16 @@ Learning Object
 
 Knowledge Category
 
-Learning Object
 
-1 --- 1
+User
+
+1 --- *
 
 Learning State
+
+* --- 1
+
+Learning Object
 
 Un Anchor può essere associato a più Learning Object quando rappresenta
 conoscenze indipendenti.
