@@ -558,7 +558,7 @@ Exercise Layer
 
         v
 
-Exercise Instance
+Exercise
 
 
 Interaction Layer
