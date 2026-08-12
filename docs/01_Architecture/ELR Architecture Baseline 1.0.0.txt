@@ -83,7 +83,7 @@ Architecture
 
 * ELR Architecture Decision Log 1.0.0
 
-* ELR Architecture Consistency Matrix 1.0.0
+* ELR Architecture Consistency Matrix 1.1.0
 
 * ELR Documentation Architecture
 
@@ -116,7 +116,7 @@ Processes
 
 ---
 
-* Knowledge Extraction Pipeline (KEP) Specification 1.0.1
+* Knowledge Extraction Pipeline Specification 1.0.2
 
 * Evidence Model Specification 1.0.1
 
@@ -148,7 +148,7 @@ Interaction
 
 ---
 
-* Learning Interaction Language (LIL) Specification 1.0.0
+* Learning Interaction Language Specification 1.0.0
 
 ---
 
@@ -180,7 +180,7 @@ Governance
 
 Collocazione repository:
 
-00_Current_Architecture
+docs/01_Architecture
 
 ================================================================================
 Documenti esclusi dalla Baseline
