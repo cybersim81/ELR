@@ -237,6 +237,11 @@ Una nuova versione può derivare da:
 L'identità del Learning Object rimane invariata quando la conoscenza fondamentale
 rimane la stessa.
 
+Il versionamento del Learning Object riguarda l'evoluzione della conoscenza
+rappresentata dall'entità.
+
+Il Learning State non viene versionato insieme al Learning Object e non
+appartiene a una specifica versione del Learning Object.
 
 ================================================================================
 5. Version Change Types
@@ -404,7 +409,12 @@ Il Versioning Model non aggiorna la Mastery.
 10. Versioning and Evidence
 ================================================================================
 
-Le Evidence possono riferirsi a una specifica versione.
+Le Evidence possono riferirsi a una specifica versione di un'entità
+versionata.
+
+La Change Evidence può inoltre motivare la creazione di una nuova versione.
+
+La Evidence e la conoscenza versionata rimangono entità distinte.
 
 
 Esempio:
