@@ -184,25 +184,32 @@ Non persistente nel Repository:
 La struttura concettuale è:
 
 
-                    Anchor
+                                        Anchor
 
                        |
-
                        v
 
               Learning Object
 
                        |
-
                        v
 
           Knowledge Statement
 
-                       |
 
-                       v
+User
+ |
+ | 1 --- *
+ v
 
-             Learning State
+Learning State
+
+Learning State
+ |
+ | * --- 1
+ v
+
+Learning Object
 
 
 
@@ -267,10 +274,13 @@ Un Learning Object contiene:
 
 - Knowledge Statement;
 
-- Knowledge Category;
+- Knowledge Category.
 
-- stato di apprendimento associato.
 
+Il Learning State non appartiene al Learning Object.
+
+Il Learning State è associato al Learning Object in relazione allo User
+e costituisce uno stato didattico User-specific.
 
 Un Learning Object rappresenta una conoscenza atomica.
 
@@ -309,20 +319,20 @@ Non deve contenere:
 La Knowledge Category classifica il tipo di conoscenza rappresentata.
 
 
-Esempi:
+Categorie definite:
 
 
 - Meaning;
 
-- Construction;
-
 - Function;
 
-- Morphology;
+- Context;
 
-- Pronunciation;
+- Construction;
 
-- Phraseology.
+- Complement;
+
+- Morphology.
 
 
 La categoria è metadato della conoscenza e non conoscenza autonoma.
@@ -391,10 +401,16 @@ look forward to = attendere con piacere
 
 
 --------------------------------------------------------------------------------
-Learning Object → Learning State
+User → Learning State → Learning Object
 --------------------------------------------------------------------------------
 
-Ogni Learning Object può avere uno stato di apprendimento associato.
+Un Learning State rappresenta lo stato didattico di uno User
+rispetto a un Learning Object.
+
+Uno User può avere Learning State distinti per diversi Learning Object.
+
+Uno stesso Learning Object può essere associato a Learning State
+appartenenti a User differenti.
 
 
 --------------------------------------------------------------------------------
