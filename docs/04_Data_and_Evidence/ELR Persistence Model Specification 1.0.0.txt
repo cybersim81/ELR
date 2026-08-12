@@ -342,8 +342,11 @@ La categoria è metadato della conoscenza e non conoscenza autonoma.
 3.5 Learning State
 ================================================================================
 
-Learning State rappresenta lo stato associato all'apprendimento del Learning
-Object.
+Learning State rappresenta lo stato didattico di uno User
+rispetto a uno specifico Learning Object.
+
+Il Learning State è User-specific e non costituisce parte
+dell'identità o del contenuto del Learning Object.
 
 
 Contiene informazioni relative a:
