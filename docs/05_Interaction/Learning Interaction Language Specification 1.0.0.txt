@@ -25,7 +25,7 @@ Document Version:
 
 Status:
 
-DRAFT
+APPROVED
 
 
 Dependencies:
@@ -561,9 +561,7 @@ La KEP può utilizzare segnali LIL come:
 
 - Trigger aggiuntivi;
 
-- informazioni sull'intenzione dell'utente;
-
-- priorità di analisi.
+- informazioni sull'intenzione dell'utente durante la Trigger Analysis.
 
 
 La presenza di un segnale LIL non elimina:
