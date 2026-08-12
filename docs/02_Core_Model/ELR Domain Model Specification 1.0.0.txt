@@ -2058,33 +2058,50 @@ conoscere il contesto operativo che ne ha determinato la creazione.
 
 
 ================================================================================
-Invariant 9 — Learning Object Mastery State
+Invariant 9 — Mastery State Separation
 ================================================================================
 
-Ogni Learning Object deve possedere uno stato persistente di Mastery.
+Il Mastery State non appartiene al Learning Object e non costituisce un
+elemento dell'aggregate boundary del Learning Object.
 
-La Mastery:
+Il Mastery State rappresenta lo stato corrente della padronanza di uno
+specifico User rispetto ad uno specifico Learning Object.
 
-• appartiene esclusivamente al Learning Object;
+La relazione è User-specific:
 
-• rappresenta lo stato corrente di consolidamento;
+User
+    |
+    +---- Mastery State ----> Learning Object
 
-• non rappresenta il processo che ha prodotto lo stato.
+Il Learning Object rappresenta esclusivamente la conoscenza linguistica
+persistente.
 
+Il Mastery State rappresenta esclusivamente lo stato di padronanza relativo
+a tale conoscenza.
 
-La Mastery non deve contenere:
+Il Mastery State non deve contenere:
 
-• evidenze;
+• la conoscenza linguistica;
+• gli eventi che hanno prodotto il cambiamento;
+• le evidenze utilizzate;
+• gli algoritmi decisionali;
+• la conversazione che ha originato l'evidenza.
 
-• eventi;
+L'evoluzione del Mastery State non modifica:
 
-• conversazioni;
+• l'identità del Learning Object;
+• l'Anchor;
+• il Knowledge Statement;
+• la Knowledge Category;
+• gli Examples;
+• le Notes.
 
-• algoritmi decisionali.
+La trasformazione delle informazioni operative in aggiornamenti del Mastery
+State appartiene ai componenti applicativi dedicati e non al Domain Model.
 
+Le regole specifiche di valutazione, aggiornamento e persistenza del Mastery
+State appartengono alle rispettive specifiche di dominio e di processo.
 
-La trasformazione delle informazioni operative in aggiornamenti di Mastery
-appartiene ai componenti applicativi esterni al Domain Model.
 ================================================================================
 Invariant 10 — Derived Data Exclusion
 ====================================
@@ -2498,7 +2515,7 @@ valida dell'ELR.
 
 ================================================================================
 Appendix A — Conceptual Model Summary
-====================
+================================================================================
 
 Il modello persistente dell'ELR è centrato sul Learning Object come unità
 atomica di conoscenza linguistica.
@@ -2509,38 +2526,54 @@ atomica di conoscenza linguistica.
 | Anchor              | Identifica l'elemento linguistico osservabile              | Learning Object |
 | Knowledge Statement | Descrive la conoscenza associata all'Anchor                | Learning Object |
 | Knowledge Category  | Classifica la natura della conoscenza                      | Repository      |
-| Mastery             | Rappresenta il livello di padronanza della conoscenza      | Learning Object |
 | Examples            | Fornisce manifestazioni linguistiche della conoscenza      | Learning Object |
 | Notes               | Fornisce informazioni complementari alla comprensione      | Learning Object |
+| Mastery State       | Rappresenta la padronanza di uno specifico User            | User-specific   |
 
 Relazioni fondamentali:
 
 Learning Object
 
-```
 1 ─── 1 Anchor
 
 1 ─── 1 Knowledge Statement
 
 1 ─── 1 Knowledge Category
 
-1 ─── 1 Mastery
-
 1 ─── N Examples
 
 1 ─── N Notes
-```
 
-Il Learning Object costituisce il confine principale del dominio persistente.
 
-Tutte le entità associate descrivono aspetti della stessa conoscenza e non
-possono introdurre conoscenze autonome indipendenti.
+Relazione User-specific:
 
+User
+
+1 ─── N Mastery State
+
+Mastery State
+
+N ─── 1 Learning Object
+
+
+Il Learning Object costituisce il confine principale della conoscenza
+persistente.
+
+Il Mastery State non appartiene all'aggregate boundary del Learning Object.
+
+Il Mastery State rappresenta uno stato User-specific relativo ad uno specifico
+Learning Object e può evolvere indipendentemente dal contenuto conoscitivo del
+Learning Object.
+
+Tutte le entità contenute nel Learning Object devono descrivere aspetti della
+stessa conoscenza e non possono introdurre conoscenze autonome indipendenti.
+
+Il Mastery State è mantenuto separato dal contenuto conoscitivo del Learning
+Object e non costituisce un elemento interno al Learning Object.
 
 
 ================================================================================
 Fine documento
-==============
-
+================================================================================
 
 
