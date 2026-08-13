@@ -287,20 +287,7 @@ Un Learning Object Active rappresenta conoscenza ufficiale del Repository.
 
 
 ================================================================================
-3.5 Updated
-================================================================================
-
-Uno stato Updated indica una modifica approvata.
-
-
-La nuova versione diventa quella corrente.
-
-
-La versione precedente rimane nella storia.
-
-
-================================================================================
-3.6 Retired
+3.5 Retired
 ================================================================================
 
 Un Learning Object Retired non è più utilizzato come conoscenza attiva.
