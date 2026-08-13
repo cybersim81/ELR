@@ -283,21 +283,6 @@ Event Flow Example
 
 Approve Learning Object:
 
-Command
-
-```
-|
-
-v
-```
-
-Application Service
-
-```
-|
-
-v
-```
 
 Command
     |
