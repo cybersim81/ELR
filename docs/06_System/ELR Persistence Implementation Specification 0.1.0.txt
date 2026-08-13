@@ -186,7 +186,7 @@ category_id
 
 UUID foreign key
 
-state
+lifecycle_status
 
 VARCHAR
 
@@ -244,7 +244,7 @@ Table: versions
 
 Scopo:
 
-Conservare la storia delle modifiche.
+Conservare la storia delle versioni di un Learning Object.
 
 Campi:
 
@@ -252,13 +252,9 @@ id
 
 UUID primary key
 
-entity_type
+learning_object_id
 
-VARCHAR
-
-entity_id
-
-UUID
+UUID foreign key
 
 version_number
 
@@ -278,8 +274,15 @@ TIMESTAMP
 
 Vincoli:
 
-* una sola versione Active per entità;
-* versioni precedenti immutabili.
+* ogni Version appartiene a un Learning Object;
+
+* version_number è univoco all'interno del Learning Object;
+
+* le versioni precedenti sono immutabili;
+
+* il Learning Object identifica al massimo una versione corrente;
+
+* la versione corrente è coerente con il lifecycle del Learning Object.
 
 ================================================================================
 Table: audit_records
@@ -287,7 +290,8 @@ Table: audit_records
 
 Scopo:
 
-Tracciare eventi significativi.
+Tracciare le modifiche significative e le operazioni rilevanti
+effettuate sul dominio.
 
 Campi:
 
@@ -318,6 +322,7 @@ TIMESTAMP
 metadata
 
 JSONB
+
 
 ================================================================================
 Repository Pattern
@@ -365,15 +370,14 @@ Esempio:
 
 Approve Learning Object:
 
-1. verifica stato corrente;
+1. verifica lo stato corrente;
+2. esegue la transizione di lifecycle autorizzata;
+3. risolve l'azione di versioning secondo le regole del dominio;
+4. persiste lo stato risultante;
+5. registra l'AuditRecord;
+6. registra eventuali Transactional Event Record;
+7. conferma il commit.
 
-2. aggiorna lifecycle;
-
-3. crea nuova versione;
-
-4. registra audit;
-
-5. conferma commit.
 
 ================================================================================
 Persistence Validation
