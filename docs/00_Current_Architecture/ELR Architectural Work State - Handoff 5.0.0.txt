@@ -198,13 +198,23 @@ decisions.
 
 ## 11. CHECKPOINT STATUS
 
-Current session has reached a clean checkpoint candidate.
+The current session has reached a clean and verified checkpoint.
 
-The checkpoint becomes authoritative only after:
+The checkpoint is ready for session closure because:
 
-* explicit user approval;
-* successful update of the required continuity artifacts;
-* repository verification of those updates.
+* the current working position has been verified against the repository;
+* no partially applied correction remains;
+* the required continuity artifact has been updated and verified;
+* the next authorized action is explicitly recorded;
+* the session can be restored without relying on conversational-only context.
+
+The next session should resume from the authorized action recorded in this
+Handoff.
+
+---
+
+**END OF HANDOFF**
+
 
 ---
 
