@@ -70,7 +70,7 @@ Domain First
 
 Ordine:
 
-1. Domain Model
+1. Domain Model + Lifecycle/Versioning Rules
 
 2. Persistence
 
@@ -138,7 +138,8 @@ Criteri:
 
 * entità indipendenti;
 * regole dominio testate;
-* lifecycle implementato.
+* lifecycle implementato;
+* versioning e invarianti delle versioni implementati.
 
 ================================================================================
 Milestone 3 — Persistence Layer
@@ -224,7 +225,10 @@ Eventi:
 Criteri:
 
 * eventi persistiti;
-* eventi tracciabili.
+* eventi tracciabili;
+* eventi prodotti dal flusso applicativo in seguito a transizioni
+  o modifiche di dominio significative;
+* l'API non genera direttamente eventi di dominio.
 
 ================================================================================
 Milestone 7 — Security Layer
@@ -277,7 +281,7 @@ ELR Core Repository v0.1 è completato quando:
 * può attraversare lifecycle;
 * può essere versionato;
 * può essere recuperato via API;
-* ogni modifica è auditata;
+* ogni modifica significativa è auditata;
 * gli eventi sono prodotti;
 * i test principali passano.
 
