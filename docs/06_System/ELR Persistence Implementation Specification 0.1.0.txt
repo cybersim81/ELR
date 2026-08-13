@@ -323,6 +323,56 @@ metadata
 
 JSONB
 
+================================================================================
+Table: event_records
+====================
+
+Scopo:
+
+Conservare gli eventi di dominio destinati alla successiva pubblicazione.
+
+Campi:
+
+id
+
+UUID primary key
+
+event_type
+
+VARCHAR
+
+aggregate_type
+
+VARCHAR
+
+aggregate_id
+
+UUID
+
+payload
+
+JSONB
+
+occurred_at
+
+TIMESTAMP
+
+published_at
+
+TIMESTAMP nullable
+
+created_at
+
+TIMESTAMP
+
+Vincoli:
+
+* event_type obbligatorio;
+* aggregate_id obbligatorio;
+* payload obbligatorio;
+* un Event Record è immutabile dopo la creazione;
+* published_at può essere valorizzato solo per indicare l'avvenuta pubblicazione.
+
 
 ================================================================================
 Repository Pattern
@@ -378,6 +428,12 @@ Approve Learning Object:
 6. registra eventuali Transactional Event Record;
 7. conferma il commit.
 
+Il Transactional Event Record deve essere creato
+nella stessa transazione che persiste la modifica
+di dominio che ha prodotto l'evento.
+
+La pubblicazione dell'evento è un'operazione successiva
+e non fa parte della transazione di dominio.
 
 ================================================================================
 Persistence Validation
@@ -389,7 +445,7 @@ La persistenza deve impedire:
 
 * versione duplicata;
 
-* stato non valido;
+* lifecycle_status non valido;
 
 * modifica di snapshot storici;
 
@@ -425,7 +481,9 @@ La prima migrazione crea:
 
 * versions;
 
-* audit_records.
+* audit_records;
+
+* event_records.
 
 ================================================================================
 Excluded Scope
