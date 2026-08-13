@@ -1,7 +1,7 @@
 ================================================================================
 English Learning Repository (ELR)
 
-ELR Core Domain Implementation Specification
+ELR Core Repository Implementation Plan
 
 Version: 0.1.0
 Status: DRAFT
@@ -11,7 +11,7 @@ Status: DRAFT
 
 Document Name:
 
-ELR Core Domain Implementation Specification
+ELR Core Repository Implementation Plan
 
 Document Version:
 
@@ -23,417 +23,321 @@ DRAFT
 
 Dependencies:
 
-* ELR Domain Model Specification
-* Anchor Specification
-* Learning Object Specification
-* Learning State Specification
-* ELR Persistence Model Specification
-* ELR Versioning Model Specification
-* ELR Validation Rules Specification
 * ELR Implementation Architecture Specification
+* ELR Core Domain Implementation Specification
+* ELR Persistence Implementation Specification
+* ELR API Implementation Specification
+* ELR Application Service Implementation Specification
+* ELR Event Implementation Specification
+* ELR Security Implementation Specification
 
 ================================================================================
 Scopo
 =====
 
-La ELR Core Domain Implementation Specification definisce la prima
-rappresentazione software del dominio cognitivo ELR.
+Questo documento definisce il piano operativo per realizzare il primo
+incremento funzionante dell'English Learning Repository.
 
-Il documento descrive:
-
-* entità dominio;
-* relazioni;
-* invarianti;
-* responsabilità;
-* regole fondamentali.
-
-Il dominio rappresenta la conoscenza ELR senza dipendere da:
-
-* database;
-* API;
-* framework;
-* sistemi esterni.
+Il piano traduce le specifiche architetturali in una sequenza implementativa
+controllata.
 
 ================================================================================
-Domain Principles
-=================
-
-DOMAIN-IMPLEMENTATION-001 — Domain Independence
-
-Le entità dominio non devono conoscere dettagli infrastrutturali.
-
-DOMAIN-IMPLEMENTATION-002 — Explicit State
-
-Ogni entità con ciclo di vita deve rappresentare esplicitamente il proprio
-stato.
-
-DOMAIN-IMPLEMENTATION-003 — Immutable History
-
-La storia delle modifiche non viene sovrascritta.
-
-DOMAIN-IMPLEMENTATION-004 — Controlled Mutation
-
-Le modifiche alle entità avvengono attraverso operazioni autorizzate.
-
-================================================================================
-Core Domain Model
-=================
-
-Il dominio iniziale contiene:
-
-Anchor
-
-```
-|
-|
-```
-
-LearningObject
-
-```
-|
-|
-```
-
-KnowledgeStatement
-
-LearningObject
-
-```
-|
-|
-```
-
-Version
-
-LearningObject
-
-```
-|
-|
-```
-
-AuditRecord
-
-================================================================================
-Entity: Anchor
-==============
-
-Responsabilità:
-
-Rappresentare il riferimento linguistico fondamentale.
-
-Attributi concettuali:
-
-id:
-
-Identificativo univoco.
-
-content:
-
-Rappresentazione dell'anchor.
-
-type:
-
-Tipo di anchor.
-
-metadata:
-
-Informazioni descrittive.
-
-Vincoli:
-
-* un Anchor deve avere un identificativo;
-* un Anchor non viene modificato distruggendo la storia;
-* un Anchor può essere collegato a più Learning Object.
-
-================================================================================
-Entity: LearningObject
-======================
-
-Responsabilità:
-
-Rappresentare una unità persistente di conoscenza ELR.
-
-Attributi concettuali:
-
-id:
-
-Identificativo univoco.
-
-anchor_id:
-
-Riferimento all'Anchor.
-
-statement:
-
-Knowledge Statement associato.
-
-category:
-
-Categoria cognitiva.
-
-lifecycle_status:
-
-Stato del ciclo di vita del Learning Object.
-
-current_version:
-
-Versione corrente.
-
-created_at:
-
-Data creazione.
-
-updated_at:
-
-Ultimo aggiornamento.
-
-================================================================================
-LearningObject Lifecycle Status
-====================
-
-Gli stati consentiti sono:
-
-Candidate
-
-Proposed
-
-Reviewed
-
-Active
-
-Updated
-
-Retired
-
-Sono vietate transizioni non definite dal Lifecycle Model.
-
-================================================================================
-Entity: KnowledgeStatement
-==========================
-
-Responsabilità:
-
-Rappresentare il contenuto cognitivo del Learning Object.
-
-Attributi:
-
-id:
-
-Identificativo.
-
-text:
-
-Contenuto della conoscenza.
-
-language:
-
-Lingua.
-
-evidence_reference:
-
-Riferimento alle evidenze utilizzate.
-
-Vincoli:
-
-* il Knowledge Statement non contiene dati personali;
-* il Knowledge Statement non contiene informazioni temporanee di processo.
-
-================================================================================
-Entity: KnowledgeCategory
-=========================
-
-Responsabilità:
-
-Classificare la conoscenza.
-
-Attributi:
-
-id:
-
-Identificativo.
-
-name:
-
-Nome categoria.
-
-parent_id:
-
-Categoria superiore opzionale.
-
-Vincoli:
-
-* la tassonomia deve mantenere coerenza gerarchica.
-
-================================================================================
-Entity: Version
-===============
-
-Responsabilità:
-
-Conservare la storia evolutiva.
-
-Attributi:
-
-id:
-
-Identificativo versione.
-
-learning_object_id:
-
-Learning Object a cui appartiene la versione.
-
-number:
-
-Numero versione.
-
-status:
-
-Stato versione.
-
-created_at:
-
-Data creazione.
-
-content_snapshot:
-
-Rappresentazione storica.
-
-Vincoli:
-
-* una versione attiva è unica per Learning Object;
-* una versione precedente non viene eliminata;
-* una versione è immutabile dopo la sua stabilizzazione.
-
-================================================================================
-Entity: AuditRecord
+Implementation Goal
 ===================
 
-Responsabilità:
+Nome incremento:
 
-Tracciare eventi significativi.
+ELR Core Repository v0.1
 
-Attributi:
+Obiettivo:
 
-id:
+Realizzare un sistema capace di:
 
-Identificativo.
-
-entity_id:
-
-Entità coinvolta.
-
-event_type:
-
-Tipo evento.
-
-actor:
-
-Componente responsabile.
-
-timestamp:
-
-Data evento.
+* creare Learning Object;
+* gestire lifecycle;
+* conservare versioni;
+* mantenere audit;
+* esporre API;
+* pubblicare eventi base.
 
 ================================================================================
-Domain Operations
-=================
-
-Le operazioni dominio iniziali:
-
-create_learning_object()
-
-Crea un nuovo Learning Object con lifecycle_status Candidate.
-
-submit_learning_object()
-
-Avvia il processo di revisione.
-
-approve_learning_object()
-
-Applica l'approvazione autorizzata secondo le regole del Lifecycle Model
-e determina la conseguente stabilizzazione o creazione della versione.
-
-reject_learning_object()
-
-Rifiuta una proposta.
-
-create_new_version()
-
-Genera una nuova versione preservando la precedente.
-
-================================================================================
-Domain Rules
-============
-
-RULE-001
-
-Un Learning Object non può diventare Active senza Review.
-
-RULE-002
-
-Una versione storica non può essere modificata.
-
-RULE-003
-
-Il dominio non accede direttamente alla persistenza.
-
-RULE-004
-
-Ogni modifica significativa genera AuditRecord.
-
-RULE-005
-
-Le transizioni di stato devono rispettare il Lifecycle Model.
-
-================================================================================
-Implementation Boundary
+Implementation Strategy
 =======================
 
-Il dominio espone:
+L'implementazione segue il principio:
 
-* entità;
-* regole;
-* comportamenti.
+Domain First
 
-Il dominio NON espone:
+Ordine:
 
-* query database;
-* endpoint HTTP;
-* serializzazione API;
-* configurazioni infrastrutturali.
+1. Domain Model + Lifecycle/Versioning Rules
+
+2. Persistence
+
+3. Application Services
+
+4. API
+
+5. Events
+
+6. Security
+
+7. Integration Testing
 
 ================================================================================
-Prossimo Incremento
-===================
+Milestone 1 — Project Foundation
+================================
 
-Il prossimo livello implementativo sarà:
+Obiettivo:
 
-ELR Persistence Implementation Specification
+Creare struttura software iniziale.
 
-che definirà:
+Deliverables:
 
-* mapping relazionale;
-* repository;
+* repository codice;
+* ambiente Python;
+* gestione dipendenze;
+* configurazione test.
+
+Struttura:
+
+elr/
+
+```
+app/
+
+
+tests/
+
+
+migrations/
+```
+
+Criterio completamento:
+
+Il progetto viene eseguito localmente.
+
+================================================================================
+Milestone 2 — Domain Implementation
+===================================
+
+Obiettivo:
+
+Implementare entità dominio.
+
+Componenti:
+
+* Anchor;
+* LearningObject;
+* KnowledgeStatement;
+* KnowledgeCategory;
+* Version;
+* AuditRecord.
+
+Criteri:
+
+* entità indipendenti;
+* regole dominio testate;
+* lifecycle implementato;
+* versioning e invarianti delle versioni implementati.
+
+================================================================================
+Milestone 3 — Persistence Layer
+===============================
+
+Obiettivo:
+
+Persistenza PostgreSQL.
+
+Componenti:
+
 * database schema;
-* migrazioni.
+* migrations;
+* repositories.
+
+Criteri:
+
+* CRUD base;
+* version persistence;
+* version history preservation;
+* audit persistence;
+* event record persistence;
+* historical versions are immutable.
+
+================================================================================
+Milestone 4 — Application Layer
+===============================
+
+Obiettivo:
+
+Implementare casi d'uso.
+
+Use Case:
+
+* create candidate;
+* submit review;
+* approve;
+* reject;
+* retrieve;
+* history.
+
+Criteri:
+
+* transaction boundary;
+* error handling;
+* domain protection.
+
+================================================================================
+Milestone 5 — API Layer
+=======================
+
+Obiettivo:
+
+Esporre API REST.
+
+Endpoint iniziali:
+
+/learning-objects
+
+/categories
+
+/health
+
+Criteri:
+
+* API funzionanti;
+* validazione;
+* mapping corretto.
+
+================================================================================
+Milestone 6 — Event Layer
+=========================
+
+Obiettivo:
+
+Implementare eventi.
+
+Eventi:
+
+* LearningObjectCreated;
+* LearningObjectSubmitted;
+* LearningObjectApproved;
+* LearningObjectRejected;
+* LearningObjectUpdated.
+
+Criteri:
+
+* eventi persistiti;
+* eventi tracciabili;
+* eventi prodotti dal flusso applicativo in seguito a transizioni
+  o modifiche di dominio significative;
+* l'API non genera direttamente eventi di dominio.
+
+================================================================================
+Milestone 7 — Security Layer
+============================
+
+Obiettivo:
+
+Applicare controllo accessi.
+
+Implementare:
+
+* Identity Context;
+* Role checks;
+* Authorization middleware.
+
+Criteri:
+
+* operazioni protette;
+* audit attore.
+
+================================================================================
+Testing Strategy
+================
+
+Livelli:
+
+Unit Test
+
+Test dominio.
+
+Integration Test
+
+Test dominio + persistenza.
+
+API Test
+
+Test endpoint.
+
+System Test
+
+Test flusso completo.
+
+================================================================================
+Definition of Done
+==================
+
+ELR Core Repository v0.1 è completato quando:
+
+* un Learning Object può essere creato;
+* può attraversare lifecycle;
+* può essere versionato;
+* può essere recuperato via API;
+* ogni modifica significativa è auditata;
+* gli eventi relativi a transizioni o modifiche di dominio significative sono prodotti dal flusso applicativo;
+* i test principali passano.
+
+
+================================================================================
+Excluded Scope
+==============
+
+Fuori dal primo incremento:
+
+* UI;
+* Mastery Engine completo;
+* KEP completa;
+* Exercise System;
+* analytics;
+* distribuzione cloud.
+
+================================================================================
+Future Evolution
+================
+
+Dopo v0.1:
+
+v0.2
+
+Knowledge Extraction Integration
+
+v0.3
+
+Mastery and Evidence Integration
+
+v0.4
+
+Learning Interaction Layer
+
+v1.0
+
+Complete ELR Platform
 
 ================================================================================
 Principio conclusivo
 ====================
 
-Il Core Domain rappresenta il nucleo cognitivo dell'ELR.
+Questo piano rappresenta il ponte tra architettura e implementazione.
 
-La tecnologia implementativa deve adattarsi al dominio e non modificare il
-significato della conoscenza rappresentata.
+Ogni incremento futuro deve mantenere coerenza con il corpus ELR.
 
 ================================================================================
 Fine documento
 
 English Learning Repository (ELR)
 
-ELR Core Domain Implementation Specification
+ELR Core Repository Implementation Plan
 
 Version: 0.1.0
 
