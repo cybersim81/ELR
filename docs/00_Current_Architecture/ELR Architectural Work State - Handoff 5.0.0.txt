@@ -214,8 +214,3 @@ Handoff.
 ---
 
 **END OF HANDOFF**
-
-
----
-
-**END OF HANDOFF**
