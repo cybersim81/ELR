@@ -178,23 +178,14 @@ Relazione:
 
 
 Component
-
-        |
-
-        v
-
-Event Publisher
-
-        |
-
-        v
-
+    |
+    v
+Event Publication
+    |
+    v
 ELR Event
-
-        |
-
-        v
-
+    |
+    v
 Event Consumer
 
 
@@ -308,7 +299,9 @@ Esempi:
 
 - Mastery Engine;
 
-- Exercise System.
+- Exercise System;
+
+- Application Service.
 
 
 --------------------------------------------------------------------------------
@@ -363,6 +356,24 @@ Mastery Events
 4.
 
 Learning Activity Events
+
+5. 
+
+Learning Object Lifecycle Events
+
+Learning Object Lifecycle Events rappresentano eventi relativi
+alle transizioni significative del ciclo di vita di un Learning Object.
+
+Esempi:
+
+- LearningObjectCreated;
+- LearningObjectSubmitted;
+- LearningObjectApproved;
+- LearningObjectRejected;
+- LearningObjectUpdated.
+
+Gli eventi descrivono il fatto avvenuto e non determinano
+autonomamente la transizione di lifecycle_status.
 
 
 ================================================================================
@@ -454,7 +465,11 @@ Esempi:
 Mastery Evidence Recorded
 --------------------------------------------------------------------------------
 
-Indica che una nuova Evidence relativa alla padronanza è stata registrata.
+Indica che una Evidence rilevante per il processo di Mastery
+è stata registrata.
+
+L'evento non determina direttamente alcun cambiamento
+del Mastery State.
 
 
 Non determina direttamente:
