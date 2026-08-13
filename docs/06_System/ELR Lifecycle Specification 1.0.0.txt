@@ -130,31 +130,28 @@ Il ciclo di vita risponde alla domanda:
 1. Lifecycle Boundary
 ================================================================================
 
-Il Lifecycle Model opera tra processo e persistenza.
-
+Il Lifecycle Model opera tra processo applicativo, dominio e persistenza.
 
 Relazione:
 
-
-Event
-
+Event / Command
         |
-
         v
-
+Application Service
+        |
+        v
 Process Decision
-
         |
-
         v
-
 Entity State Transition
-
         |
-
         v
-
 Repository Update
+
+Un Event o un Command non determina autonomamente una transizione di stato.
+
+La transizione deve essere eseguita dal processo competente secondo le regole
+del Lifecycle Model.
 
 
 ================================================================================
@@ -196,61 +193,47 @@ Ogni transizione appartiene a un componente responsabile.
 
 Il Learning Object rappresenta la conoscenza persistente dell'ELR.
 
-
 Ciclo principale:
 
-
 Candidate
-
-        |
-
-        v
-
+    |
+    v
 Proposed
-
-        |
-
-        v
-
+    |
+    v
 Reviewed
-
-        |
-
-        v
-
+    |
+    v
 Active
-
-        |
-
-        v
-
-Updated
-
-        |
-
-        v
-
+    |
+    v
 Retired
+
+Una modifica approvata di un Learning Object Active non introduce uno stato
+`Updated`.
+
+La modifica viene rappresentata attraverso una nuova Version, mentre il
+Learning Object mantiene il proprio lifecycle status coerente con il
+Lifecycle Model.
+
+La versione precedente rimane nella storia.
 
 
 ================================================================================
 3.1 Candidate
 ================================================================================
 
-Uno stato Candidate rappresenta una conoscenza non ancora persistente.
+Uno stato Candidate rappresenta una conoscenza candidata che non è ancora
+conoscenza ufficiale del Repository.
 
+Il Candidate può essere rappresentato e persistito nel Repository, ma non è
+disponibile come conoscenza ufficiale per recupero, esercizi o apprendimento.
 
 Origine possibile:
 
-
-- KEP;
-
-- importazione validata;
-
-- creazione controllata.
-
-
-Un Candidate non è disponibile come conoscenza ufficiale.
+* KEP;
+* importazione validata;
+* creazione controllata.
 
 
 ================================================================================
@@ -512,26 +495,29 @@ KEP:
 
 produce Candidate e Change Proposal.
 
-
 Learning Review:
 
-decide approvazione.
+decide l'approvazione o il rifiuto delle Change Proposal.
 
+Application Service:
 
-ELR:
+coordina il caso d'uso e invoca le transizioni di dominio autorizzate.
 
-conserva conoscenza approvata.
+Lifecycle Model:
 
+definisce e governa le transizioni consentite.
 
-Mastery Engine:
+Repository / Persistence:
 
-gestisce evoluzione dello stato di apprendimento.
-
+persiste lo stato risultante dalle transizioni.
 
 Versioning Model:
 
-conserva storia evolutiva.
+conserva la storia evolutiva delle versioni.
 
+Mastery Engine:
+
+gestisce l'evoluzione dello stato di apprendimento.
 
 ================================================================================
 8. Invalid Transitions
@@ -558,8 +544,12 @@ Modificare un Learning Object senza transizione.
 Evidence Mutation
 --------------------------------------------------------------------------------
 
-Cambiare una Evidence già prodotta.
+Modificare una Evidence già prodotta.
 
+Una Evidence prodotta è immutabile.
+
+Eventuali nuove informazioni o risultati devono essere rappresentati attraverso
+una nuova Evidence, senza modificare la Evidence storica.
 
 --------------------------------------------------------------------------------
 Mastery Override
