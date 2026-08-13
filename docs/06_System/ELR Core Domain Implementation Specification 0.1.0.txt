@@ -173,9 +173,9 @@ category:
 
 Categoria cognitiva.
 
-state:
+lifecycle_status:
 
-Stato lifecycle.
+Stato del ciclo di vita del Learning Object.
 
 current_version:
 
@@ -190,7 +190,7 @@ updated_at:
 Ultimo aggiornamento.
 
 ================================================================================
-LearningObject State
+LearningObject Lifecycle Status
 ====================
 
 Gli stati consentiti sono:
@@ -280,9 +280,9 @@ id:
 
 Identificativo versione.
 
-entity_id:
+learning_object_id:
 
-Entità associata.
+Learning Object a cui appartiene la versione.
 
 number:
 
@@ -302,8 +302,9 @@ Rappresentazione storica.
 
 Vincoli:
 
-* una versione attiva è unica;
-* una versione precedente non viene eliminata.
+* una versione attiva è unica per Learning Object;
+* una versione precedente non viene eliminata;
+* una versione è immutabile dopo la sua stabilizzazione.
 
 ================================================================================
 Entity: AuditRecord
@@ -351,7 +352,8 @@ Avvia il processo di revisione.
 
 approve_learning_object()
 
-Porta il Learning Object allo stato Active.
+Applica l'approvazione autorizzata secondo le regole del Lifecycle Model
+e determina la conseguente stabilizzazione o creazione della versione.
 
 reject_learning_object()
 
