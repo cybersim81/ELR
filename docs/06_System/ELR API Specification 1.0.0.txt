@@ -134,25 +134,16 @@ L'ELR API appartiene al livello Integration Layer.
 Relazione:
 
 
-Application Layer
-
-        |
-
-        v
-
 ELR API
-
         |
-
         v
-
-ELR Services
-
+Application Layer
         |
-
         v
-
-ELR Repository
+Domain Layer
+        |
+        v
+Persistence / Repository
 
 
 L'API non sostituisce i componenti di dominio.
@@ -176,17 +167,17 @@ Le modifiche devono seguire:
 
 
 Proposal
-
-        |
-
-        v
-
+   |
+   v
+Application Service
+   |
+   v
+Domain Validation
+   |
+   v
 Review
-
-        |
-
-        v
-
+   |
+   v
 Persistence
 
 
@@ -262,8 +253,7 @@ Utilizza l'API per:
 
 - recuperare Change Proposal;
 
-- approvare o rifiutare modifiche.
-
+- inviare la decisione di approvazione o rifiuto.
 
 --------------------------------------------------------------------------------
 Mastery Engine
@@ -275,8 +265,7 @@ Utilizza l'API per:
 
 - associare Evidence;
 
-- aggiornare stato di padronanza secondo le proprie regole.
-
+- registrare o aggiornare i dati di Mastery secondo le proprie regole.
 
 --------------------------------------------------------------------------------
 Exercise System
