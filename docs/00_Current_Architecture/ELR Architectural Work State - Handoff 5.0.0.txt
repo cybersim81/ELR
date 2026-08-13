@@ -1,0 +1,211 @@
+# ELR Architectural Work State — Handoff
+
+**Version:** 5.0.0
+**Status:** Session Closure Checkpoint
+
+---
+
+## 1. PURPOSE
+
+This document is the operational checkpoint for continuity between ELR
+architectural working sessions.
+
+It records the last verified working position, the current Roadmap phase,
+the next authorized action, and the conditions for proposing session closure.
+
+The repository is the source of truth.
+
+---
+
+## 2. CURRENT ROADMAP POSITION
+
+Completed architectural phases:
+
+* Fase 0 — Fondazioni Architetturali
+* Fase 1 — ELR Knowledge Model
+* Fase 2 — Knowledge Extraction Architecture
+* Fase 3 — Evidence Architecture
+* Fase 4 — Mastery Architecture
+* Fase 5 — Human Learning Control
+* Fase 6 — Learning Activity and Exercise Systems
+
+### Current phase
+
+**Fase 7 — Document Consistency Consolidation**
+
+### Next phase
+
+**Fase 8 — Derived Learning Systems**
+
+---
+
+## 3. LAST VERIFIED WORKING POSITION
+
+The following documents were explicitly verified during the current session:
+
+* `docs/06_System/ELR Event Model Specification 1.0.0.txt` — VERIFIED;
+* `docs/06_System/ELR Lifecycle Specification 1.0.0.txt` — VERIFIED;
+* `docs/06_System/ELR Persistence Implementation Specification 0.1.0.txt` — VERIFIED;
+* `docs/06_System/Core Repository Implementation Plan 0.1.0.txt` — VERIFIED.
+
+The verified consolidation includes:
+
+* Event Boundary and Event Source semantics;
+* Learning Object lifecycle semantics;
+* lifecycle transition ownership;
+* immutable Evidence;
+* Version history and Version invariants;
+* persistence of Transactional Event Records;
+* separation of `AuditRepository` and `EventRecordRepository`;
+* transactional creation of Event Records with domain changes;
+* publication of persisted events outside the domain transaction.
+
+`Core Domain` was modified earlier in the work and remains a candidate for a
+later cross-check. It is not being reopened automatically.
+
+---
+
+## 4. CURRENT TASK / NEXT AUTHORIZED ACTION
+
+The next session must continue Fase 7 from the verified repository state.
+
+First action:
+
+**Rebuild the real inventory of `docs/06_System` and identify the next
+consistency target by dependency, ownership, and repository evidence.**
+
+Do not assume a document exists from conversational memory.
+
+Do not use alphabetical order when dependency order is more informative.
+
+Do not reopen verified documents without a concrete contradiction.
+
+---
+
+## 5. WORKING METHOD
+
+Use:
+
+**repository verification → focused discrepancy → document analysis →
+one focused proposal → explicit approval → copyable documentation block →
+repository update → repository verification → next point**
+
+A proposal is not an applied change until the repository is reread and the
+modified section is verified.
+
+---
+
+## 6. SESSION CHECKPOINT / CLOSURE PROTOCOL
+
+The assistant should proactively monitor the working state for a clean
+session boundary.
+
+A **session closure point** may be proposed when:
+
+* the current document or logical correction block is VERIFIED;
+* no partially applied correction remains;
+* the next task can be reconstructed deterministically from repository
+  evidence;
+* the current architectural state can be summarized without relying on
+  conversational-only context;
+* the continuity artifacts can accurately represent the next authorized
+  action.
+
+When these conditions are satisfied, the assistant should explicitly tell the
+user that the session has reached a clean checkpoint and **propose closing
+the chat**.
+
+The assistant must not close the session automatically.
+
+The user must explicitly approve the closure.
+
+---
+
+## 7. CHECKPOINT UPDATE PROTOCOL
+
+When the user approves a proposed session closure:
+
+1. identify which continuity artifacts actually require updating;
+2. update only the necessary artifacts;
+3. preserve the repository as the architectural source of truth;
+4. record the verified working position;
+5. record the next authorized action;
+6. record any explicitly approved but not yet verified decisions;
+7. verify the updated continuity artifacts in the repository;
+8. report the checkpoint as ready for a new session.
+
+The assistant must not claim that a continuity artifact was updated until the
+repository has been successfully written and reread.
+
+---
+
+## 8. CONTINUITY ARTIFACTS
+
+Primary restoration artifacts:
+
+* `ELR Architectural Work State - Handoff 5.0.0.txt`
+* `ELR Continuity Package 2.0.0.txt`
+* `ELR Roadmap 1.2.0.txt`
+* `ELR Session Prompt 1.0.0.txt`
+
+The Handoff records the current operational position.
+
+The Continuity Package records the broader continuity rules.
+
+The Roadmap records phase ownership and sequencing.
+
+The Session Prompt provides the bootstrap procedure.
+
+No continuity artifact overrides the repository.
+
+---
+
+## 9. SESSION RESUMPTION
+
+A new session should:
+
+1. read this Handoff;
+2. read `ELR Continuity Package 2.0.0.txt`;
+3. read `ELR Roadmap 1.2.0.txt`;
+4. read `ELR Session Prompt 1.0.0.txt`;
+5. verify the repository state;
+6. verify the Architecture Consistency Matrix;
+7. rebuild the real `docs/06_System` inventory;
+8. continue from the next verified Fase 7 discrepancy.
+
+Do not ask the user to reconstruct previously documented architectural
+decisions.
+
+---
+
+## 10. ARCHITECTURAL CONTINUITY RULES
+
+* the repository is the source of truth;
+* approved architectural decisions must not be reopened without a real
+  documented contradiction;
+* implementation does not acquire architectural authority merely because it
+  exists;
+* Domain semantics must not be inferred from ORM or persistence structures;
+* each architectural responsibility must have an identifiable owning
+  document;
+* new architectural decisions require explicit approval;
+* specifications must remain consistent with approved architectural
+  decisions;
+* continuity artifacts must not become alternative sources of architectural
+  authority.
+
+---
+
+## 11. CHECKPOINT STATUS
+
+Current session has reached a clean checkpoint candidate.
+
+The checkpoint becomes authoritative only after:
+
+* explicit user approval;
+* successful update of the required continuity artifacts;
+* repository verification of those updates.
+
+---
+
+**END OF HANDOFF**
