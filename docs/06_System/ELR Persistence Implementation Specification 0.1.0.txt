@@ -378,37 +378,68 @@ Vincoli:
 Repository Pattern
 ==================
 
-I repository espongono operazioni dominio.
 
-Esempi:
+I repository espongono operazioni coerenti con le responsabilità
+del dominio e della persistenza.
 
+---------------------------------------------------------------------------
 LearningObjectRepository
-
+---------------------------------------------------------------------------
 Metodi:
 
-save()
+* `save()`
+* `find_by_id()`
+* `find_active()`
+* `find_history()`
 
-find_by_id()
+Responsabilità:
 
-find_active()
+Persistenza e recupero dei Learning Object.
 
-find_history()
-
+---------------------------------------------------------------------------
 VersionRepository
+---------------------------------------------------------------------------
 
 Metodi:
 
-create_version()
+* `create_version()`
+* `get_versions()`
 
-get_versions()
+Responsabilità:
 
+Persistenza e recupero delle Version.
+
+---------------------------------------------------------------------------
 AuditRepository
+---------------------------------------------------------------------------
 
 Metodi:
 
-record_event()
+* `record_audit()`
+* `find_audit_records()`
 
-find_events()
+Responsabilità:
+
+Persistenza e recupero degli AuditRecord.
+
+---------------------------------------------------------------------------
+EventRecordRepository
+---------------------------------------------------------------------------
+
+Metodi:
+
+* `save_event_record()`
+* `find_pending_events()`
+* `mark_published()`
+
+Responsabilità:
+
+Persistenza e gestione dei Transactional Event Record destinati
+alla successiva pubblicazione.
+
+`EventRecordRepository` non pubblica direttamente gli eventi e non
+gestisce gli AuditRecord.
+
 
 ================================================================================
 Transaction Rules
