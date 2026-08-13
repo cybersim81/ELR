@@ -117,7 +117,7 @@ Metodi:
 
 create_candidate()
 
-Crea un nuovo Learning Object nello stato Candidate.
+Crea un nuovo Learning Object con lifecycle_status Candidate.
 
 submit_for_review()
 
@@ -164,6 +164,12 @@ Gestire accesso alla storia evolutiva.
 Metodi:
 
 create_version()
+
+Coordina la richiesta di creazione di una nuova versione
+secondo le regole definite dal Versioning Model e dal Domain Layer.
+
+L'Application Layer non decide autonomamente la validità
+della creazione della versione.
 
 get_versions()
 
@@ -229,47 +235,41 @@ Approve Learning Object
 
 Request
 
-```
-|
-```
+↓
 
 Authorization Check
 
-```
-|
-```
+↓
 
 Load Entity
 
-```
-|
-```
+↓
 
-Validate State
+Validate Lifecycle State
 
-```
-|
-```
+↓
 
 Domain Transition
 
-```
-|
-```
+↓
 
-Create Version
+Resolve Versioning Action
 
-```
-|
-```
++--------------------------+
+|                          |
+v                          v
+Stabilize Version    Create New Version
+|                          |
++------------+-------------+
+             |
+             v
+          Persist
 
-Persist
+             |
 
-```
-|
-```
+             v
 
-Audit Event
+        Audit Event
 
 ================================================================================
 Transaction Rules
