@@ -344,7 +344,7 @@ Le operazioni dominio iniziali:
 
 create_learning_object()
 
-Crea un nuovo Candidate.
+Crea un nuovo Learning Object con lifecycle_status Candidate.
 
 submit_learning_object()
 
