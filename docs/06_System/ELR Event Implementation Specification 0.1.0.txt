@@ -147,7 +147,7 @@ Payload:
 
 "anchor_id": "uuid",
 
-"state": "Candidate"
+"lifecycle_status": "Candidate"
 ```
 
 }
@@ -171,9 +171,9 @@ Payload:
 ```
 "learning_object_id": "uuid",
 
-"previous_state": "Candidate",
+"previous_lifecycle_status": "Candidate",
 
-"new_state": "Proposed"
+"new_lifecycle_status": "Proposed"
 ```
 
 }
@@ -184,7 +184,8 @@ LearningObjectApproved
 
 Descrizione:
 
-Un Learning Object è diventato Active.
+L'approvazione di un Learning Object è stata completata
+secondo le regole del Lifecycle Model.
 
 Producer:
 
@@ -298,31 +299,29 @@ Application Service
 v
 ```
 
+Command
+    |
+    v
+Application Service
+    |
+    v
 Domain Transition
-
-```
-|
-
-v
-```
-
-Persist Entity
-
-```
-|
-
-v
-```
-
-Create Version
-
-```
-|
-
-v
-```
-
-Publish Event
+    |
+    v
+Resolve Versioning Action
+    |
+    +----------------------+
+    |                      |
+    v                      v
+Stabilize Version    Create New Version
+    |                      |
+    +----------+-----------+
+               |
+               v
+          Persist Entity
+               |
+               v
+          Publish Event
 
 LearningObjectApproved
 
@@ -356,6 +355,13 @@ dominio.
 Prima implementazione:
 
 Transactional Event Record
+
+L'evento viene registrato nella stessa transazione
+dell'operazione di dominio/applicativa.
+
+La pubblicazione verso consumer esterni avviene successivamente
+senza rendere la disponibilità del consumer una precondizione
+per la consistenza del dominio.
 
 Successivamente:
 
