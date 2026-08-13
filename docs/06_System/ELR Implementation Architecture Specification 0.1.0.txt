@@ -127,14 +127,23 @@ ELR System
 Domain Layer
 ============
 
-Il Domain Layer contiene le entità ELR:
+Il Domain Layer contiene i principali concetti e oggetti ELR utilizzati
+dall'implementazione:
 
 * Anchor;
 * Learning Object;
-* Knowledge Statement;
 * Knowledge Category;
 * Version;
 * Learning State.
+
+Knowledge Statement non è modellato come entità autonoma.
+
+Il contenuto del Knowledge Statement è rappresentato come valore del
+Learning Object secondo il modello di dominio corrente.
+
+Mastery State appartiene al Domain Model ELR, ma la sua persistenza è fuori
+dal Core Repository v0.1 e non costituisce quindi una persistence responsibility
+di questa implementazione.
 
 Il Domain Layer non dipende da:
 
@@ -161,18 +170,21 @@ L'Application Layer applica le regole di processo.
 API Layer
 =========
 
-L'API Layer espone operazioni verso sistemi esterni.
+L'API Layer espone verso sistemi esterni le capacità definite dal contratto
+ELR API.
 
-Prima versione:
+Il contratto API comprende, tra le altre:
 
-Learning Object:
+* accesso e ricerca dei Learning Object;
+* accesso alla conoscenza tramite Anchor e categorie;
+* creazione e gestione delle Change Proposal;
+* accesso ai dati di Learning State;
+* accesso ai dati relativi alla Mastery;
+* gestione delle Evidence secondo i relativi contratti;
+* autenticazione, autorizzazione e separazione dei ruoli.
 
-* create candidate;
-* submit for review;
-* approve;
-* reject;
-* retrieve;
-* retrieve history.
+Il Core Repository v0.1 può implementare soltanto il sottoinsieme delle
+capacità API incluso nel proprio scope.
 
 Le API non modificano direttamente il dominio.
 
@@ -182,13 +194,20 @@ Ogni modifica passa attraverso Application Layer.
 Persistence Layer
 =================
 
-La persistenza iniziale conserva:
+La persistenza iniziale del Core Repository conserva:
 
 * Learning Object;
 * Anchor;
-* Knowledge Statement;
+* Knowledge Category;
 * Version;
 * Audit Record.
+
+Knowledge Statement non è una persistence entity autonoma.
+
+Il valore del Knowledge Statement è persistito come parte del Learning Object.
+
+Mastery State non appartiene alla persistence boundary del Core Repository
+v0.1 e non viene quindi incluso nella persistenza iniziale.
 
 La persistenza non contiene logica di dominio.
 
@@ -196,19 +215,53 @@ La persistenza non contiene logica di dominio.
 Event Layer
 ===========
 
-Gli eventi iniziali sono:
+L'Event Layer implementa il modello di eventi definito dalla ELR Event Model
+Specification.
 
-LearningObjectCreated
+Le categorie principali sono:
 
-LearningObjectSubmitted
+* Knowledge Process Events;
+* Review Events;
+* Mastery Events;
+* Learning Activity Events;
+* Learning Object Lifecycle Events.
 
-LearningObjectApproved
+Gli eventi di lifecycle del Learning Object includono, tra gli altri:
 
-LearningObjectRejected
+* LearningObjectCreated;
+* LearningObjectSubmitted;
+* LearningObjectApproved;
+* LearningObjectRejected;
+* LearningObjectUpdated.
 
-LearningObjectUpdated
+Il Core Repository v0.1 può implementare un sottoinsieme degli eventi
+definiti dal modello corrente in funzione dello scope implementativo.
 
-Gli eventi rappresentano fatti avvenuti.
+Gli eventi rappresentano fatti avvenuti e non sostituiscono API, processi,
+Evidence o conoscenza persistente.
+
+================================================================================
+Specification Ownership and Consistency
+========================================
+
+L'Implementation Architecture Specification traduce i contratti architetturali
+e di dominio in una struttura software concreta.
+
+Non ridefinisce la semantica proprietaria dei concetti.
+
+Le responsabilità semantiche rimangono nei rispettivi documenti:
+
+* Domain Model e relative specifiche per i concetti di dominio;
+* Persistence Model e Persistence Mapping per la persistenza;
+* API Specification per il contratto API;
+* Event Model Specification per il modello degli eventi.
+
+Questa specifica deve mantenere coerenza con tali documenti senza duplicarne
+o modificarne le decisioni.
+
+Quando lo scope implementativo Core Repository v0.1 è più ristretto rispetto
+al modello ELR complessivo, la differenza deve essere esplicitamente trattata
+come scope boundary e non come modifica del modello architetturale.
 
 ================================================================================
 Repository Structure
