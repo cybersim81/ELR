@@ -205,7 +205,7 @@ TIMESTAMP
 Vincoli:
 
 * anchor obbligatorio;
-* stato valido secondo Lifecycle Model;
+* lifecycle_status valido secondo Lifecycle Model;
 * versione corrente unica.
 
 ================================================================================
