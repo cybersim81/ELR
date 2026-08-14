@@ -100,14 +100,16 @@ Audit Consumer   Future Services
 Event Envelope
 ==============
 
-Ogni evento utilizza una struttura comune:
+Ogni evento utilizza una struttura comune coerente con l'ELR Event Model
+Specification:
 
 {
 
-```
 "event_id": "uuid",
 
 "event_type": "string",
+
+"event_source": "string",
 
 "entity_id": "uuid",
 
@@ -118,9 +120,25 @@ Ogni evento utilizza una struttura comune:
 "version": "integer",
 
 "payload": {}
-```
 
 }
+
+event_id identifica univocamente l'evento.
+
+event_type identifica il tipo di fatto rappresentato.
+
+event_source identifica il componente che ha prodotto l'evento.
+
+entity_id identifica l'aggregate o l'entità a cui il fatto si riferisce.
+
+entity_type identifica il tipo dell'aggregate o dell'entità.
+
+timestamp identifica l'istante di registrazione dell'evento.
+
+version identifica la versione dello schema dell'evento.
+
+payload contiene esclusivamente le informazioni necessarie a rappresentare
+il fatto avvenuto.
 
 ================================================================================
 Core Events v0.1
@@ -179,13 +197,13 @@ Payload:
 }
 
 ================================================================================
-LearningObjectApproved
+ChangeProposalApproved
 ======================
 
 Descrizione:
 
-L'approvazione di un Learning Object è stata completata
-secondo le regole del Lifecycle Model.
+Una Change Proposal è stata approvata dalla Learning Review secondo
+le regole del Review e del Lifecycle Model.
 
 Producer:
 
@@ -195,33 +213,49 @@ Payload:
 
 {
 
-```
+"change_proposal_id": "uuid",
+
 "learning_object_id": "uuid",
 
-"version": 1
-```
+"review_id": "uuid"
 
 }
 
+L'evento rappresenta un fatto già avvenuto.
+
+Non costituisce un comando e non determina autonomamente una transizione
+del Learning Object.
+
 ================================================================================
-LearningObjectRejected
+ChangeProposalRejected
 ======================
 
 Descrizione:
 
-Una proposta è stata rifiutata.
+Una Change Proposal è stata rifiutata dalla Learning Review.
+
+Producer:
+
+LearningReview / Application Service
 
 Payload:
 
 {
 
-```
+"change_proposal_id": "uuid",
+
 "learning_object_id": "uuid",
 
+"review_id": "uuid",
+
 "reason": "string"
-```
 
 }
+
+L'evento rappresenta un fatto già avvenuto.
+
+Non costituisce un comando e non determina autonomamente una transizione
+del Learning Object.
 
 ================================================================================
 LearningObjectUpdated
@@ -281,7 +315,7 @@ TIMESTAMP
 Event Flow Example
 ==================
 
-Approve Learning Object:
+Approve Change Proposal:
 
 
 Command
@@ -290,25 +324,28 @@ Command
 Application Service
     |
     v
+Learning Review Decision
+    |
+    v
 Domain Transition
     |
     v
 Resolve Versioning Action
     |
-    +----------------------+
-    |                      |
-    v                      v
-Stabilize Version    Create New Version
-    |                      |
-    +----------+-----------+
-               |
-               v
-          Persist Entity
-               |
-               v
-          Publish Event
+    v
+Create New Version when required
+    |
+    v
+Persist Entity
+    |
+    v
+Publish Event
 
-LearningObjectApproved
+ChangeProposalApproved
+
+Quando la decisione approvata produce una nuova versione del Learning Object,
+l'evoluzione viene inoltre rappresentata dal relativo evento
+LearningObjectUpdated.
 
 ================================================================================
 Event Consumers
