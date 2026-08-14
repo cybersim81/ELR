@@ -226,19 +226,30 @@ Le categorie principali sono:
 * Learning Activity Events;
 * Learning Object Lifecycle Events.
 
-Gli eventi di lifecycle del Learning Object includono, tra gli altri:
+Learning Object Lifecycle Events:
 
 * LearningObjectCreated;
 * LearningObjectSubmitted;
-* LearningObjectApproved;
-* LearningObjectRejected;
-* LearningObjectUpdated.
+* LearningObjectUpdated;
+* LearningObjectRetired.
+
+Review Events:
+
+* ChangeProposalApproved;
+* ChangeProposalRejected;
+* ChangeProposalModified.
+
+Le decisioni della Learning Review sono rappresentate come Review Events
+e non costituiscono direttamente eventi del lifecycle del Learning Object.
 
 Il Core Repository v0.1 può implementare un sottoinsieme degli eventi
 definiti dal modello corrente in funzione dello scope implementativo.
 
 Gli eventi rappresentano fatti avvenuti e non sostituiscono API, processi,
 Evidence o conoscenza persistente.
+
+Gli eventi vengono persistiti tramite il Persistence Layer e possono essere
+pubblicati verso consumer esterni.
 
 ================================================================================
 Specification Ownership and Consistency
