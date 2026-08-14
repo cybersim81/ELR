@@ -425,6 +425,12 @@ Create New Version when required
 Persist Entity
     |
     v
+Create Transactional Event Record
+    |
+    v
+Commit Transaction
+    |
+    v
 Publish Event
 
 ChangeProposalApproved
