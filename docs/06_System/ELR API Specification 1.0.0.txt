@@ -309,9 +309,13 @@ Output:
 
 - Knowledge Statement;
 
-- Knowledge Category;
+- Knowledge Category.
 
-- Learning State.
+Learning State:
+
+- è restituito solo quando richiesto nel contesto autorizzato dello User;
+- è riferito esclusivamente allo User autenticato;
+- non costituisce parte della rappresentazione condivisa del Learning Object.
 
 
 --------------------------------------------------------------------------------
@@ -378,13 +382,25 @@ Update Proposal Status
 Permette alla Learning Review di aggiornare lo stato della proposta.
 
 
-Possibili stati:
+Stati della proposta:
 
 - Pending;
 
 - Approved;
 
 - Rejected.
+
+Gli stati Approved e Rejected rappresentano lo stato corrente della
+Change Proposal e non costituiscono Lifecycle Events del Learning Object.
+
+Le decisioni di Review producono gli eventi di dominio previsti
+dall'Event Model:
+
+- ChangeProposalApproved;
+
+- ChangeProposalRejected;
+
+- ChangeProposalModified.
 
 
 ================================================================================
@@ -420,9 +436,12 @@ Operazioni possibili:
 
 - creare Evidence;
 
-- recuperare Evidence;
+- recuperare Evidence nel contesto autorizzato;
 
-- associare Evidence a Learning Object.
+- associare Change Evidence a Change Proposal;
+
+- associare Mastery Evidence al contesto di Learning State previsto dal
+  Mastery Model.
 
 
 Evidence non diventa automaticamente Learning Object.
