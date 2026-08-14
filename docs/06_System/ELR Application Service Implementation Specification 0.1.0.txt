@@ -186,15 +186,20 @@ get_versions()
 Audit Service
 =============
 
-Responsabilità:
+Responsabilità: 
+Registrare e recuperare Audit Record relativi alle operazioni significative dell'Application Layer. 
 
-Registrare eventi significativi.
+L'Audit Service non produce, decide o sostituisce gli eventi di dominio definiti dall'Event Model. 
 
-Metodi:
+Metodi: 
 
-record_event()
+record_event() 
 
-get_events()
+Registra un Audit Record relativo all'operazione applicativa. 
+
+get_events() 
+
+Recupera gli Audit Record secondo le regole di accesso previste dal Security and Access Model.
 
 ================================================================================
 Use Case Flow
