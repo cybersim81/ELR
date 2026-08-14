@@ -347,6 +347,47 @@ Path:
 
 Questi documenti hanno responsabilità diverse e non devono duplicarsi.
 
+### Canonical Naming and Version Resolution
+
+I continuity artifacts hanno un **canonical logical name** indipendente dalla
+versione fisica del file.
+
+Il canonical name identifica l'artefatto logico.
+
+Il filename versionato identifica la specifica versione corrente dell'artefatto
+nel repository.
+
+Esempio:
+
+| Canonical name                           | Current repository file                            |
+| ---------------------------------------- | -------------------------------------------------- |
+| `ELR Roadmap`                            | `ELR Roadmap 1.2.1.txt`                            |
+| `ELR Session Prompt`                     | `ELR Session Prompt 1.1.0.txt`                     |
+| `ELR Continuity Package`                 | `ELR Continuity Package 2.0.0.txt`                 |
+| `ELR Architectural Work State — Handoff` | `ELR Architectural Work State - Handoff 6.0.0.txt` |
+
+Regola operativa:
+
+* usare il **canonical name** quando si identifica semanticamente un
+  documento;
+* usare il **current versioned filename** quando si deve leggere, modificare
+  o verificare un file nel repository;
+* risolvere sempre il canonical name nel filename/versione corrente tramite
+  repository evidence;
+* non assumere che una versione precedente del filename sia ancora valida;
+* non creare un nuovo canonical name solamente perché cambia la versione;
+* quando un documento viene versionato, aggiornare i riferimenti fisici
+  necessari nei continuity artifacts;
+* il canonical name rimane stabile mentre il versioned filename rappresenta
+  la versione corrente.
+
+Il repository è l'autorità per la risoluzione:
+
+**canonical name → current versioned filename**
+
+La versione dichiarata nei documenti di continuità deve essere verificata
+contro il file effettivamente presente nel repository.
+
 ---
 
 ## 14. START COMMAND
