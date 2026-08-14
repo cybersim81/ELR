@@ -187,9 +187,9 @@ KNOWLEDGE_PRODUCER
 
 Submit Review:
 
-Richiede:
+Richiede: 
 
-KNOWLEDGE_PRODUCER
+KNOWLEDGE_REVIEWER
 
 Approve:
 
@@ -207,13 +207,16 @@ Retrieve:
 
 Richiede:
 
-READ_LEARNING_OBJECT
+autenticazione valida e autorizzazione alla consultazione della conoscenza. 
 
-Accesso consentito a:
+Accesso consentito a: 
 
-* User;
-* Exercise System;
-* Mastery Engine.
+* User; 
+* Exercise System; 
+* Mastery Engine. 
+
+Il controllo autorizzativo deve verificare che l'Identity Context disponga del permesso di lettura previsto dal Security and Access Model. 
+Il permesso di lettura non costituisce un Actor Type o un Role.
 
 ================================================================================
 Security Boundary API
