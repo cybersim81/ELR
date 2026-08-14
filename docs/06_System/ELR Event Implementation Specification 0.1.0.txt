@@ -144,59 +144,73 @@ il fatto avvenuto.
 Event Envelope / Persistence Mapping
 ====================================
 
-L'Event Envelope rappresenta il contratto dell'evento nel livello
-di integrazione.
+Il Transactional Event Record viene persistito nella tabella:
 
-Il Transactional Event Record rappresenta la forma persistita dell'evento
-destinata alla successiva pubblicazione.
-
-I due livelli non richiedono una corrispondenza uno-a-uno dei campi.
+event_records
 
 Mapping:
 
-event_id
+Event Envelope
+    |
+    v
+Transactional Event Record
+    |
+    v
+event_records
 
-→ event_records.id
+Campi:
+
+event_id
+    -> id
 
 event_type
-
-→ event_records.event_type
+    -> event_type
 
 event_source
+    -> event_source
 
-→ event metadata associato al Transactional Event Record
+aggregate_type
+    -> aggregate_type
 
-entity_id
-
-→ event_records.aggregate_id
-
-entity_type
-
-→ event_records.aggregate_type
-
-timestamp
-
-→ event_records.occurred_at
+aggregate_id
+    -> aggregate_id
 
 version
-
-→ event schema metadata persistito associato al Transactional Event Record
+    -> version
 
 payload
+    -> payload
 
-→ event_records.payload
+occurred_at
+    -> occurred_at
 
-Il valore di event_source deve essere preservato nella persistenza del
-Transactional Event Record e deve rimanere disponibile per la successiva
-pubblicazione dell'evento.
+published_at
+    -> published_at
 
-Il valore di version deve essere preservato nella persistenza del
-Transactional Event Record e deve rimanere disponibile per la successiva
-pubblicazione e interpretazione dell'evento.
+created_at
+    -> created_at
 
-Non è necessario che event_source o version siano colonne dedicate nella
-tabella event_records, purché siano persistiti in metadata associati al
-Transactional Event Record.
+metadata
+    -> metadata
+
+`event_source` e `version` devono essere persistiti nelle rispettive
+colonne dedicate.
+
+Il campo `metadata` contiene esclusivamente metadati aggiuntivi
+dell'Event Envelope e non deve essere utilizzato come sostituto dei
+campi strutturali `event_source` o `version`.
+
+Il Transactional Event Record è un artefatto infrastrutturale separato
+dalla persistenza delle entità del Repository di conoscenza.
+
+La sua persistenza non introduce eventi operativi nel Persistence Model
+del Repository.
+
+Il record deve essere creato nella stessa transazione che persiste la
+modifica di dominio che ha prodotto l'evento.
+
+La pubblicazione verso consumer esterni avviene successivamente.
+
 
 ================================================================================
 Core Events v0.1
