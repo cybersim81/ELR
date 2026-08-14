@@ -339,10 +339,16 @@ Payload:
 Event Persistence
 =================
 
-La prima implementazione utilizza una Transactional Event Record persistence
+La prima implementazione utilizza un Transactional Event Record persistence
 coerente con la Persistence Implementation Specification.
 
-PostgreSQL Event Record Table
+Il Transactional Event Record è un artefatto infrastrutturale destinato alla
+successiva pubblicazione degli eventi.
+
+Non costituisce parte del Repository di conoscenza e non introduce eventi
+operativi nel Persistence Model del Repository.
+
+PostgreSQL Transactional Event Record Table
 
 Tabella:
 
@@ -358,6 +364,10 @@ event_type
 
 VARCHAR
 
+event_source
+
+VARCHAR
+
 aggregate_type
 
 VARCHAR
@@ -365,6 +375,10 @@ VARCHAR
 aggregate_id
 
 UUID
+
+version
+
+VARCHAR
 
 payload
 
@@ -382,19 +396,35 @@ created_at
 
 TIMESTAMP
 
+metadata
+
+JSONB nullable
+
 Vincoli:
 
 * event_type obbligatorio;
+* event_source obbligatorio;
 * aggregate_id obbligatorio;
+* version obbligatoria;
 * payload obbligatorio;
-* un Event Record è immutabile dopo la creazione;
+* event_source deve essere preservato per la successiva pubblicazione;
+* version deve essere preservata per la successiva pubblicazione e
+  interpretazione;
+* un Transactional Event Record è immutabile dopo la creazione;
 * published_at può essere valorizzato solo per indicare l'avvenuta
   pubblicazione.
 
 Il Transactional Event Record viene creato nella stessa transazione che
 persiste la modifica di dominio che ha prodotto l'evento.
 
+La sua persistenza è separata dalla persistenza delle entità del Repository.
+
 La pubblicazione verso consumer esterni avviene successivamente.
+
+Il Transactional Event Record non modifica il perimetro del Persistence Model:
+gli eventi operativi non diventano entità del Repository e non fanno parte
+del modello persistente della conoscenza.
+
 
 ================================================================================
 Event Flow Example
