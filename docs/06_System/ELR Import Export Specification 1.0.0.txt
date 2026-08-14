@@ -211,25 +211,23 @@ Model.
 3. Export Model
 ================================================================================
 
-L'esportazione permette di produrre una rappresentazione controllata del
-Repository ELR.
-
+L'esportazione permette di produrre una rappresentazione controllata
+del Repository ELR.
 
 Possono essere esportati:
 
+Learning Object;
+Anchor;
+Knowledge Statement;
+Knowledge Category;
+metadati di versione.
 
-- Learning Object;
+Il Learning State può essere esportato esclusivamente nel contesto
+autorizzato dello User cui appartiene e non costituisce parte della
+conoscenza condivisa esportata dal Repository.
 
-- Anchor;
-
-- Knowledge Statement;
-
-- Knowledge Category;
-
-- Learning State autorizzati;
-
-- metadati di versione.
-
+Ogni esportazione di Learning State deve rispettare le autorizzazioni
+definite dal Security Model e le regole di protezione dei dati utente.
 
 ================================================================================
 4. Export Exclusions
