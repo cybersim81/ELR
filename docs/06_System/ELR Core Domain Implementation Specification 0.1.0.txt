@@ -83,37 +83,31 @@ Il dominio iniziale contiene:
 
 Anchor
 
-```
+
+
 |
 |
-```
+
 
 LearningObject
 
-```
+
+
 |
 |
-```
+
 
 KnowledgeStatement
 
 LearningObject
 
-```
+
+
 |
 |
-```
+
 
 Version
-
-LearningObject
-
-```
-|
-|
-```
-
-AuditRecord
 
 ================================================================================
 Entity: Anchor
@@ -342,34 +336,10 @@ Vincoli:
 * una versione è immutabile dopo la sua stabilizzazione.
 
 ================================================================================
-Entity: AuditRecord
+AuditRecord Boundary
 ===================
 
-Responsabilità:
-
-Tracciare eventi significativi.
-
-Attributi:
-
-id:
-
-Identificativo.
-
-entity_id:
-
-Entità coinvolta.
-
-event_type:
-
-Tipo evento.
-
-actor:
-
-Componente responsabile.
-
-timestamp:
-
-Data evento.
+AuditRecord non costituisce un'entità del Core Domain cognitivo. La registrazione e il recupero degli Audit Record appartengono al livello Application Service / infrastrutturale secondo le responsabilità definite dall'Implementation Architecture e dal Security and Access Model. Il Core Domain può essere soggetto a operazioni che richiedono la registrazione di un Audit Record, ma non possiede né gestisce direttamente l'entity model dell'AuditRecord.
 
 ================================================================================
 Domain Operations
