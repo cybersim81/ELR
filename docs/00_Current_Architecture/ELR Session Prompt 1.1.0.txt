@@ -1,6 +1,6 @@
 # ELR Session Prompt
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 **Status:** ACTIVE
 **Document Type:** Session Bootstrap and Working Protocol
 
@@ -43,7 +43,7 @@ All'inizio di una nuova sessione:
 
 ### Step 1 — Leggi questo documento
 
-`docs/00_Current_Architecture/ELR Session Prompt 1.0.0.txt`
+`docs/00_Current_Architecture/ELR Session Prompt 1.1.0.txt`
 
 ### Step 2 — Leggi il Continuity Package
 
@@ -51,11 +51,11 @@ All'inizio di una nuova sessione:
 
 ### Step 3 — Leggi l'Handoff
 
-`docs/00_Current_Architecture/ELR Architectural Work State - Handoff 4.0.0.txt`
+`docs/00_Current_Architecture/ELR Architectural Work State - Handoff 6.0.0.txt`
 
 ### Step 4 — Leggi la Roadmap
 
-`docs/00_Current_Architecture/ELR Roadmap 1.2.0.txt`
+`docs/00_Current_Architecture/ELR Roadmap 1.2.1.txt`
 
 La Roadmap determina la posizione corrente del lavoro e le attività
 successive autorizzate.
@@ -67,25 +67,29 @@ la conversazione precedente lo suggerisce.
 
 Verifica sempre il contenuto effettivo dei documenti nel repository.
 
-### Step 6 — Recupera i documenti specialistici rilevanti
+### Step 6 — Determina la fase corrente
 
-La fase corrente è:
+La fase corrente non deve essere hardcoded in questo Prompt.
 
-**Fase 7 — Document Consistency Consolidation**
+Deve essere determinata verificando:
 
-Il primo controllo deve riguardare:
+1. Roadmap;
+2. Continuity Package;
+3. Handoff;
+4. repository state.
 
-* Dependencies;
-* document names;
-* paths;
-* versions;
-* cross-references;
-* ownership references.
+La posizione corrente registrata al checkpoint è:
+
+**Fase 8 — Implementation Readiness Review**
+
+### Step 7 — Recupera i documenti specialistici rilevanti
 
 Leggi solamente le Specification, ADR, Matrix e altri documenti direttamente
-pertinenti alla discrepanza corrente.
+pertinenti al lavoro corrente.
 
 Non ricreare documenti già presenti.
+
+Non riaprire documenti verificati senza una contraddizione concreta.
 
 ---
 
@@ -134,7 +138,9 @@ Durante il lavoro:
   e Persistence Model;
 * verificare status e versioni dei documenti prima di proporre modifiche;
 * non trasformare una verifica documentale in una nuova decisione
-  architetturale senza evidenza di una reale contraddizione.
+  architetturale senza evidenza di una reale contraddizione;
+* considerare le specifiche consolidate frozen rispetto ai confini già
+  verificati, salvo contraddizione reale.
 
 L'implementazione esistente costituisce evidenza tecnica, non
 automaticamente autorità architetturale.
@@ -219,19 +225,21 @@ Non assumere una fase corrente hardcoded in questo Prompt.
 
 La fase corrente deve essere determinata verificando:
 
-1. Roadmap 1.2.0;
+1. Roadmap 1.2.1;
 2. Continuity Package;
 3. Handoff;
 4. repository state.
 
-La posizione corrente prevista è **Fase 7 — Document Consistency
-Consolidation**, ma deve comunque essere verificata nel repository.
+La posizione corrente registrata è:
 
-Quando una fase viene completata, questo Prompt non deve essere modificato
-soltanto per aggiornare il numero della fase.
+**Fase 8 — Implementation Readiness Review**
 
-Il nuovo punto di ripresa deve essere determinato dai documenti correnti
-del repository.
+Il prossimo passaggio previsto dalla Roadmap è:
+
+**Fase 9 — Derived Learning Systems**
+
+ma non deve essere iniziato finché la Fase 8 non è stata completata e
+superata tramite il relativo checkpoint.
 
 ---
 
@@ -244,17 +252,20 @@ Dopo il bootstrap:
 3. verifica quali artefatti esistono già;
 4. identifica i documenti proprietari;
 5. verifica eventuali discrepanze;
-6. per Fase 7, inizia dal controllo delle Dependencies e dei riferimenti
-   documentali;
-7. leggi i documenti direttamente rilevanti;
-8. proponi il primo passo concreto.
+6. per Fase 8, verifica la completezza delle responsabilità implementative;
+7. verifica i contratti tra Domain, Application, Persistence, Event,
+   Security e API;
+8. verifica la tracciabilità tra Specification e componenti implementativi;
+9. identifica le decisioni tecniche residue;
+10. definisci la sequenza di implementazione e i primi contract checks;
+11. proponi il primo passo concreto.
 
 Non inventare lavoro già completato.
 
 Non assumere che un'attività sia aperta solo perché lo era in una
 precedente sessione.
 
-Non anticipare la Fase 8 finché la Fase 7 non è stata completata.
+Non anticipare la Fase 9 finché la Fase 8 non è stata completata.
 
 ---
 
@@ -302,7 +313,7 @@ Definisce:
 
 Path:
 
-`docs/00_Current_Architecture/ELR Session Prompt 1.0.0.txt`
+`docs/00_Current_Architecture/ELR Session Prompt 1.1.0.txt`
 
 ### Continuity Package
 
@@ -322,7 +333,17 @@ Definisce:
 
 Path:
 
-`docs/00_Current_Architecture/ELR Architectural Work State - Handoff 4.0.0.txt`
+`docs/00_Current_Architecture/ELR Architectural Work State - Handoff 6.0.0.txt`
+
+### Roadmap
+
+Definisce:
+
+**la posizione del lavoro, la sequenza delle fasi e il prossimo gate.**
+
+Path:
+
+`docs/00_Current_Architecture/ELR Roadmap 1.2.1.txt`
 
 Questi documenti hanno responsabilità diverse e non devono duplicarsi.
 
@@ -332,8 +353,8 @@ Questi documenti hanno responsabilità diverse e non devono duplicarsi.
 
 Dopo aver completato il bootstrap:
 
-**verifica il repository, identifica la Fase 7 corrente e inizia il controllo
-repository-wide delle Dependencies, path, versioni, nomi e cross-reference.**
+**verifica il repository, determina la Fase 8 corrente e inizia la
+Implementation Readiness Review secondo la Roadmap 1.2.1.**
 
 Non ricostruire il contesto dalla memoria conversazionale.
 
@@ -342,8 +363,8 @@ Non assumere che il lavoro precedente sia ancora aperto.
 Non riaprire decisioni APPROVED senza una contraddizione documentale
 reale.
 
-Non introdurre nuova architettura durante una verifica di consistenza salvo
-che emerga una contraddizione architetturale reale.
+Non introdurre nuova architettura durante la Implementation Readiness
+Review salvo che emerga una contraddizione architetturale reale.
 
 Procedi secondo il Decision Workflow definito in questo documento.
 
