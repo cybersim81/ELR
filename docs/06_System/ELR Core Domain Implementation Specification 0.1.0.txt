@@ -220,7 +220,7 @@ La storia evolutiva non viene rappresentata introducendo uno stato Updated,
 ma attraverso le Version records immutabili associate al Learning Object.
 
 ================================================================================
-Entity: KnowledgeStatement
+KnowledgeStatement
 ==========================
 
 Responsabilità:
