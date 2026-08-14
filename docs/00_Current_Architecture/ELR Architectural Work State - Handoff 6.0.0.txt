@@ -220,7 +220,7 @@ A new session should:
 1. read this Handoff;
 2. read `ELR Continuity Package 2.0.0.txt`;
 3. read `ELR Roadmap 1.2.1.txt`;
-4. read `ELR Session Prompt 1.0.0.txt`;
+4. read `ELR Session Prompt 1.1.0.txt`;
 5. verify the repository state;
 6. determine the current phase from the Roadmap and verified repository state;
 7. begin the Implementation Readiness Review;
