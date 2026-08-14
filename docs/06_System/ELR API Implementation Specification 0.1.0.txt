@@ -171,9 +171,6 @@ Response:
 "category": {
 "id": "uuid"
 },
-"learning_state": {
-"status": "Active"
-},
 "lifecycle_status": "Active",
 "version": 1
 }
@@ -182,8 +179,16 @@ Regole:
 
 recupera il Learning Object attraverso il livello applicativo;
 non espone strutture interne del database;
-include i dati di Anchor, Knowledge Statement, Knowledge Category e Learning State previsti dal contratto API;
-non calcola né modifica il Learning State;
+include i dati di Anchor, Knowledge Statement e Knowledge Category previsti
+dal contratto API;
+
+Learning State:
+
+- non fa parte della rappresentazione condivisa del Learning Object;
+- viene restituito solo nel contesto autorizzato dello User;
+- rappresenta esclusivamente il Learning State dello User autenticato;
+- non viene calcolato né modificato dall'API Layer.
+
 non modifica il Learning Object.
 
 ================================================================================
