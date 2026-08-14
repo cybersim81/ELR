@@ -159,7 +159,10 @@ Criteri:
 
 * CRUD base;
 * version persistence;
-* audit persistence.
+* version history preservation;
+* audit persistence;
+* event record persistence;
+* historical versions are immutable.
 
 ================================================================================
 Milestone 4 — Application Layer
@@ -216,19 +219,22 @@ Implementare eventi.
 
 Eventi:
 
-* LearningObjectCreated;
-* LearningObjectSubmitted;
-* LearningObjectApproved;
-* LearningObjectRejected;
-* LearningObjectUpdated.
+LearningObjectCreated;
+LearningObjectSubmitted;
+LearningObjectUpdated;
+ChangeProposalApproved;
+ChangeProposalRejected;
+ChangeProposalModified.
 
 Criteri:
 
-* eventi persistiti;
-* eventi tracciabili;
-* eventi prodotti dal flusso applicativo in seguito a transizioni
-  o modifiche di dominio significative;
-* l'API non genera direttamente eventi di dominio.
+eventi persistiti;
+eventi tracciabili;
+eventi prodotti dal flusso applicativo in seguito a transizioni
+o modifiche di dominio significative;
+gli eventi di Review rappresentano le decisioni sulla Change Proposal
+e non costituiscono Lifecycle Events del Learning Object;
+l'API non genera direttamente eventi di dominio.
 
 ================================================================================
 Milestone 7 — Security Layer
@@ -282,8 +288,9 @@ ELR Core Repository v0.1 è completato quando:
 * può essere versionato;
 * può essere recuperato via API;
 * ogni modifica significativa è auditata;
-* gli eventi sono prodotti;
+* gli eventi relativi a transizioni o modifiche di dominio significative sono prodotti dal flusso applicativo;
 * i test principali passano.
+
 
 ================================================================================
 Excluded Scope
