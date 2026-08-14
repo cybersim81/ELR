@@ -199,15 +199,23 @@ Candidate
 
 Proposed
 
-Reviewed
-
 Active
 
 Retired
 
-Rejected
-
 Sono vietate transizioni non definite dal Lifecycle Model.
+
+Reviewed, Approved e Rejected non costituiscono stati persistenti del
+Learning Object.
+
+Reviewed rappresenta l'esito del processo di Review di una Change Proposal.
+
+Approved e Rejected rappresentano gli esiti possibili della Change Proposal
+e non sono lifecycle status del Learning Object.
+
+L'approvazione di una Change Proposal può determinare la creazione di una
+nuova Versione e il conseguente aggiornamento del lifecycle del Learning
+Object secondo le regole del Lifecycle Model.
 
 Updated non costituisce uno stato persistente del Learning Object.
 
@@ -407,7 +415,7 @@ Domain Rules
 
 RULE-001
 
-Un Learning Object non può diventare Active senza Review.
+Un Learning Object non può diventare Active senza l'approvazione della Change Proposal che introduce o modifica la conoscenza. L'esito della Review appartiene alla Change Proposal e non costituisce uno stato del Learning Object.
 
 RULE-002
 
