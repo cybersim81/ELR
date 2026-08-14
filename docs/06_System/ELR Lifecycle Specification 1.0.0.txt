@@ -193,21 +193,40 @@ Ogni transizione appartiene a un componente responsabile.
 
 Il Learning Object rappresenta la conoscenza persistente dell'ELR.
 
+Il suo lifecycle descrive lo stato del Learning Object e non l'esito della
+Learning Review di una Change Proposal.
+
 Ciclo principale:
 
 Candidate
-    |
-    v
+|
+v
 Proposed
-    |
-    v
-Reviewed
-    |
-    v
+|
+v
 Active
-    |
-    v
+|
+v
 Retired
+
+Una Change Proposal può essere associata a un Learning Object Proposed o
+Active e segue il proprio lifecycle indipendente:
+
+Created
+|
+v
+Under Review
+|
++-------------+
+|             |
+v             v
+Approved       Rejected
+
+L'approvazione di una Change Proposal può determinare una nuova Version del
+Learning Object.
+
+Il rifiuto di una Change Proposal non costituisce una transizione del
+Learning Object verso uno stato di rifiuto.
 
 Una modifica approvata di un Learning Object Active non introduce uno stato
 `Updated`.
@@ -217,6 +236,34 @@ Learning Object mantiene il proprio lifecycle status coerente con il
 Lifecycle Model.
 
 La versione precedente rimane nella storia.
+
+================================================================================
+3.3 Review Decision and Learning Object State
+=============================================
+
+La decisione di Learning Review appartiene alla Change Proposal e non
+costituisce uno stato del Learning Object.
+
+Una Change Proposal può essere:
+
+* Approved;
+* Rejected.
+
+`Approved` indica che la modifica proposta può essere applicata secondo le
+regole del dominio e del processo applicativo.
+
+`Rejected` indica che la modifica proposta non può essere applicata.
+
+Il Learning Object non assume uno stato `Reviewed`, `Approved` o `Rejected`
+come conseguenza della decisione di Review.
+
+La decisione di Review è rappresentata dagli eventi di dominio previsti
+dall'Event Model:
+
+* ChangeProposalApproved;
+* ChangeProposalRejected;
+* ChangeProposalModified.
+
 
 
 ================================================================================
