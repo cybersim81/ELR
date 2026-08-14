@@ -1,4 +1,342 @@
 ================================================================================
+English Learning Repository (ELR)
+
+ELR Event Implementation Specification
+
+Version: 0.1.0
+Status: DRAFT
+=============
+
+# Document Identity
+
+Document Name:
+
+ELR Event Implementation Specification
+
+Document Version:
+
+0.1.0
+
+Status:
+
+DRAFT
+
+Dependencies:
+
+* ELR Event Model Specification
+* ELR Application Service Implementation Specification
+* ELR Core Domain Implementation Specification
+* ELR Persistence Implementation Specification
+* ELR Implementation Architecture Specification
+
+================================================================================
+Scopo
+=====
+
+La ELR Event Implementation Specification definisce la prima implementazione
+del modello eventi dell'English Learning Repository.
+
+Gli eventi rappresentano fatti avvenuti nel sistema.
+
+Gli eventi:
+
+* non comandano il sistema;
+* non sostituiscono le API;
+* non contengono logica applicativa.
+
+================================================================================
+Event Principles
+================
+
+EVENT-IMPLEMENTATION-001 — Facts Only
+
+Gli eventi descrivono eventi già completati.
+
+EVENT-IMPLEMENTATION-002 — Immutable Events
+
+Un evento pubblicato non viene modificato.
+
+EVENT-IMPLEMENTATION-003 — Domain Origin
+
+Gli eventi significativi originano dal dominio o dall'application layer.
+
+EVENT-IMPLEMENTATION-004 — Loose Coupling
+
+I consumer non devono conoscere il produttore interno dell'evento.
+
+================================================================================
+Event Architecture
+==================
+
+Application Service
+
+```
+    |
+
+    v
+```
+
+Domain Event Publisher
+
+```
+    |
+
+    v
+```
+
+Event Store / Event Bus
+
+```
+    |
+
+    +----------------+
+
+    |                |
+```
+
+Audit Consumer   Future Services
+
+================================================================================
+Event Envelope
+==============
+
+Ogni evento utilizza una struttura comune coerente con l'ELR Event Model
+Specification:
+
+{
+
+"event_id": "uuid",
+
+"event_type": "string",
+
+"event_source": "string",
+
+"entity_id": "uuid",
+
+"entity_type": "string",
+
+"timestamp": "datetime",
+
+"version": "integer",
+
+"payload": {}
+
+}
+
+event_id identifica univocamente l'evento.
+
+event_type identifica il tipo di fatto rappresentato.
+
+event_source identifica il componente che ha prodotto l'evento.
+
+entity_id identifica l'aggregate o l'entità a cui il fatto si riferisce.
+
+entity_type identifica il tipo dell'aggregate o dell'entità.
+
+timestamp identifica l'istante di registrazione dell'evento.
+
+version identifica la versione dello schema dell'evento.
+
+payload contiene esclusivamente le informazioni necessarie a rappresentare
+il fatto avvenuto.
+
+================================================================================
+Event Envelope / Persistence Mapping
+====================================
+
+L'Event Envelope rappresenta il contratto dell'evento nel livello
+di integrazione.
+
+Il Transactional Event Record rappresenta la forma persistita dell'evento
+destinata alla successiva pubblicazione.
+
+I due livelli non richiedono una corrispondenza uno-a-uno dei campi.
+
+Mapping:
+
+event_id
+
+→ event_records.id
+
+event_type
+
+→ event_records.event_type
+
+event_source
+
+→ event metadata / publication context
+
+entity_id
+
+→ event_records.aggregate_id
+
+entity_type
+
+→ event_records.aggregate_type
+
+timestamp
+
+→ event_records.occurred_at
+
+version
+
+→ event schema metadata
+
+payload
+
+→ event_records.payload
+
+event_source e version non costituiscono attributi del dominio persistito
+e non richiedono colonne dedicate nella tabella event_records.
+
+event_source identifica il componente che ha prodotto l'evento e appartiene
+al contesto dell'evento e della sua pubblicazione.
+
+version identifica la versione dello schema dell'evento e appartiene
+ai metadata dello schema.
+
+La persistenza del Transactional Event Record deve mantenere la semantica
+del fatto rappresentato senza introdurre nel modello persistence attributi
+che appartengono esclusivamente al contratto o ai metadata dell'evento.
+
+================================================================================
+Core Events v0.1
+================
+
+================================================================================
+LearningObjectCreated
+=====================
+
+Descrizione:
+
+Un nuovo Learning Object Candidate è stato creato.
+
+Producer:
+
+LearningObjectService
+
+Payload:
+
+{
+
+```
+"learning_object_id": "uuid",
+
+"anchor_id": "uuid",
+
+"lifecycle_status": "Candidate"
+```
+
+}
+
+================================================================================
+LearningObjectSubmitted
+=======================
+
+Descrizione:
+
+Un Learning Object è stato inviato a revisione.
+
+Producer:
+
+LearningObjectService
+
+Payload:
+
+{
+
+```
+"learning_object_id": "uuid",
+
+"previous_lifecycle_status": "Candidate",
+
+"new_lifecycle_status": "Proposed"
+```
+
+}
+
+================================================================================
+ChangeProposalApproved
+======================
+
+Descrizione:
+
+Una Change Proposal è stata approvata dalla Learning Review secondo
+le regole del Review e del Lifecycle Model.
+
+Producer:
+
+LearningReview / Application Service
+
+Payload:
+
+{
+
+"change_proposal_id": "uuid",
+
+"learning_object_id": "uuid",
+
+"review_id": "uuid"
+
+}
+
+L'evento rappresenta un fatto già avvenuto.
+
+Non costituisce un comando e non determina autonomamente una transizione
+del Learning Object.
+
+================================================================================
+ChangeProposalRejected
+======================
+
+Descrizione:
+
+Una Change Proposal è stata rifiutata dalla Learning Review.
+
+Producer:
+
+LearningReview / Application Service
+
+Payload:
+
+{
+
+"change_proposal_id": "uuid",
+
+"learning_object_id": "uuid",
+
+"review_id": "uuid",
+
+"reason": "string"
+
+}
+
+L'evento rappresenta un fatto già avvenuto.
+
+Non costituisce un comando e non determina autonomamente una transizione
+del Learning Object.
+
+================================================================================
+LearningObjectUpdated
+=====================
+
+Descrizione:
+
+Una nuova versione è stata creata.
+
+Payload:
+
+{
+
+```
+"learning_object_id": "uuid",
+
+"new_version": 2
+```
+
+}
+
+================================================================================
 Event Persistence
 =================
 
@@ -58,3 +396,122 @@ Il Transactional Event Record viene creato nella stessa transazione che
 persiste la modifica di dominio che ha prodotto l'evento.
 
 La pubblicazione verso consumer esterni avviene successivamente.
+
+================================================================================
+Event Flow Example
+==================
+
+Approve Change Proposal:
+
+
+Command
+    |
+    v
+Application Service
+    |
+    v
+Learning Review Decision
+    |
+    v
+Domain Transition
+    |
+    v
+Resolve Versioning Action
+    |
+    v
+Create New Version when required
+    |
+    v
+Persist Entity
+    |
+    v
+Publish Event
+
+ChangeProposalApproved
+
+Quando la decisione approvata produce una nuova versione del Learning Object,
+l'evoluzione viene inoltre rappresentata dal relativo evento
+LearningObjectUpdated.
+
+================================================================================
+Event Consumers
+===============
+
+Consumer iniziali:
+
+Audit Consumer
+
+Responsabilità:
+
+registrare eventi significativi.
+
+Future:
+
+Mastery Engine
+
+Learning Analytics
+
+KEP Pipeline
+
+================================================================================
+Error Handling
+==============
+
+La mancata pubblicazione evento non deve compromettere la consistenza del
+dominio.
+
+Prima implementazione:
+
+Transactional Event Record
+
+L'evento viene registrato nella stessa transazione
+dell'operazione di dominio/applicativa.
+
+La pubblicazione verso consumer esterni avviene successivamente
+senza rendere la disponibilità del consumer una precondizione
+per la consistenza del dominio.
+
+Successivamente:
+
+Outbox Pattern
+
+================================================================================
+Excluded Scope
+==============
+
+Non incluso:
+
+* Kafka/RabbitMQ;
+* distribuzione multi servizio;
+* event streaming;
+* analytics pipeline.
+
+================================================================================
+Prossimo Incremento
+===================
+
+Il prossimo documento previsto:
+
+ELR Security Implementation Specification
+
+che definirà il primo modello concreto di accesso e protezione.
+
+================================================================================
+Principio conclusivo
+====================
+
+Gli eventi ELR rappresentano la memoria dinamica dell'evoluzione della
+conoscenza.
+
+Il dominio rimane la fonte della verità.
+
+================================================================================
+Fine documento
+
+English Learning Repository (ELR)
+
+ELR Event Implementation Specification
+
+Version: 0.1.0
+
+================================================================================
