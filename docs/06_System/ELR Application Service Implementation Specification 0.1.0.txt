@@ -111,7 +111,9 @@ Learning Object Service
 
 Responsabilità:
 
-Gestire i casi d'uso relativi ai Learning Object.
+Gestire i casi d'uso applicativi relativi ai Learning Object e coordinare
+l'accesso alla conoscenza persistente secondo i contratti Domain, Lifecycle,
+Review e Versioning.
 
 Metodi:
 
@@ -121,21 +123,30 @@ Crea un nuovo Learning Object con lifecycle_status Candidate.
 
 submit_for_review()
 
-Avvia il processo di revisione.
+Avvia il processo di revisione della proposta associata al Learning Object.
 
-approve_learning_object()
+approve_change_proposal()
 
-Applica approvazione autorizzata.
+Coordina l'approvazione autorizzata di una Change Proposal.
 
-reject_learning_object()
+L'Application Service non decide autonomamente l'approvazione.
 
-Gestisce rifiuto della proposta.
+La decisione di Review e la validazione delle transizioni rimangono affidate
+ai componenti proprietari del dominio e del processo di Learning Review.
+
+reject_change_proposal()
+
+Coordina il rifiuto autorizzato di una Change Proposal.
+
+L'Application Service non decide autonomamente il rifiuto.
 
 get_learning_object()
 
 Recupera conoscenza persistente.
 
 get_history()
+
+Recupera la storia evolutiva e le versioni secondo il Versioning Model.
 
 Recupera version history.
 
@@ -230,7 +241,7 @@ v
 Audit Record
 
 ================================================================================
-Approve Learning Object
+Approve Change Proposal
 =======================
 
 Request
@@ -241,52 +252,64 @@ Authorization Check
 
 ↓
 
-Load Entity
+Load Change Proposal
 
 ↓
 
-Validate Lifecycle State
+Validate Review Decision
 
 ↓
 
-Domain Transition
+Apply Authorized Domain Transition
 
 ↓
 
-Resolve Versioning Action
+Apply Approved Change
 
-+--------------------------+
-|                          |
-v                          v
-Stabilize Version    Create New Version
-|                          |
-+------------+-------------+
-             |
-             v
-          Persist
+↓
 
-             |
+Create New Version when required by the Versioning Model
 
-             v
+↓
 
-        Audit Event
+Persist Result
+
+↓
+
+Audit Event
+
+La decisione di approvazione appartiene al processo di Learning Review.
+
+L'Application Service coordina il caso d'uso, verifica l'autorizzazione,
+invoca le transizioni di dominio appropriate e coordina persistenza e audit.
+
+L'Application Service non decide autonomamente:
+
+* se una Change Proposal è approvabile;
+* quale transizione di dominio sia semanticamente valida;
+* quale versione debba essere creata.
+
+Tali responsabilità appartengono rispettivamente ai componenti proprietari
+di Review, Domain/Lifecycle e Versioning.
 
 ================================================================================
 Transaction Rules
 =================
 
-Ogni use case di modifica deve essere atomico.
+Ogni use case applicativo di modifica deve essere atomico.
 
 Esempio:
 
-Approve:
+Approve Change Proposal:
 
 BEGIN TRANSACTION
 
-* validate;
-* transition;
-* resolve versioning action;
-* stabilize or create version as required;
+* validate authorization;
+* load Change Proposal;
+* validate Review decision;
+* apply authorized domain transition;
+* apply approved change;
+* create new version when required by the Versioning Model;
 * persistence;
 * audit.
 
@@ -295,6 +318,9 @@ COMMIT
 In caso di errore:
 
 ROLLBACK
+
+L'Application Service coordina il confine transazionale ma non sostituisce le
+responsabilità di Domain, Review o Versioning.
 
 ================================================================================
 Dependency Rules
