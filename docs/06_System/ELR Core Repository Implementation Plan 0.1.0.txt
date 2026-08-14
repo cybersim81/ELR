@@ -131,8 +131,7 @@ Componenti:
 * LearningObject;
 * KnowledgeStatement;
 * KnowledgeCategory;
-* Version;
-* AuditRecord.
+* Version.
 
 Criteri:
 
