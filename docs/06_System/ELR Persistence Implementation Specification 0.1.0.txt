@@ -329,7 +329,8 @@ Table: event_records
 
 Scopo:
 
-Conservare gli eventi di dominio destinati alla successiva pubblicazione.
+Conservare i Transactional Event Record destinati alla successiva
+pubblicazione.
 
 Campi:
 
@@ -341,6 +342,10 @@ event_type
 
 VARCHAR
 
+event_source
+
+VARCHAR
+
 aggregate_type
 
 VARCHAR
@@ -348,6 +353,10 @@ VARCHAR
 aggregate_id
 
 UUID
+
+version
+
+VARCHAR
 
 payload
 
@@ -365,13 +374,25 @@ created_at
 
 TIMESTAMP
 
+metadata
+
+JSONB nullable
+
 Vincoli:
 
 * event_type obbligatorio;
+* event_source obbligatorio;
 * aggregate_id obbligatorio;
+* version obbligatoria;
 * payload obbligatorio;
+* event_source deve essere preservato per la successiva pubblicazione
+  dell'evento;
+* version deve essere preservata per la successiva pubblicazione e
+  interpretazione dell'evento;
+* metadata può contenere ulteriori metadati dell'Event Envelope;
 * un Event Record è immutabile dopo la creazione;
-* published_at può essere valorizzato solo per indicare l'avvenuta pubblicazione.
+* published_at può essere valorizzato solo per indicare l'avvenuta
+  pubblicazione.
 
 
 ================================================================================
