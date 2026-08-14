@@ -4,98 +4,224 @@
 
 **Version:** 2.0.0
 **Status:** ACTIVE
-**Document Type:** Governance and Continuity Document
+**Document Type:** Session Continuity and Architectural Recovery Package
 
 ---
 
-## 1. Purpose
+# 1. PURPOSE
 
-Il Continuity Package permette di ripristinare l'ambiente di lavoro ELR in una
-nuova sessione senza dipendere dal contesto conversazionale precedente.
+This document defines the persistent continuity model for ELR architectural
+work across separate sessions.
 
-Il Continuity Package:
+Its purpose is to ensure that a new session can reconstruct the current
+working state from repository evidence without relying on conversational
+memory.
 
-* definisce lo stato corrente del progetto;
-* identifica il punto corrente della Roadmap;
-* identifica il corpus documentale autorevole;
-* definisce le regole di continuità;
-* registra i vincoli operativi rilevanti;
-* indica la procedura di ripresa.
+The repository is the source of truth.
 
-Il Continuity Package non sostituisce Architecture Specification, ADR, Matrix,
-Roadmap o Specification specialistiche.
+This document does not replace:
 
-Non deve duplicare integralmente le decisioni contenute nei documenti
-proprietari.
-
-Il repository è la fonte di verità.
-
----
-
-## 2. Source of Truth
-
-Lo stato architetturale effettivo deve essere determinato dai documenti
-presenti nel repository.
-
-In caso di divergenza tra:
-
-* memoria conversazionale;
-* Continuity Package;
+* Architecture Specification;
+* Architecture Decision Log;
+* Architecture Consistency Matrix;
+* domain specifications;
+* implementation specifications;
+* Roadmap;
 * Handoff;
-* implementazione;
-* documentazione proprietaria;
+* Session Prompt.
 
-la verifica deve essere effettuata sul repository e sui documenti
-proprietari.
-
-Il Continuity Package non può modificare retroattivamente una decisione
-architetturale approvata.
+It defines how those artifacts are used together for continuity.
 
 ---
 
-## 3. Architectural Authority
+# 2. SOURCE OF TRUTH
 
-Le autorità documentali sono:
+The ELR repository is the authoritative source for:
 
-### ELR Architecture Specification
+* document existence;
+* document content;
+* document version;
+* document status;
+* canonical document identity;
+* current versioned filename;
+* architecture decisions;
+* implementation state;
+* roadmap state;
+* continuity state.
 
-Definisce:
+Conversational memory must not override repository evidence.
 
-* modello architetturale;
-* componenti;
-* responsabilità;
-* confini;
-* relazioni tra sistemi.
-
-### ELR Architecture Decision Log
-
-Definisce:
-
-* decisioni architetturali;
-* motivazioni;
-* conseguenze;
-* evoluzione delle decisioni.
-
-### ELR Architecture Consistency Matrix
-
-Definisce:
-
-* ownership documentale;
-* distribuzione delle responsabilità;
-* coerenza tra documenti.
-
-### Specialist Specifications
-
-Definiscono il comportamento e la struttura dei singoli componenti secondo
-la relativa ownership.
-
-Nessun documento di continuità deve sostituire tali documenti.
+If the current repository state differs from a previous conversation, the
+repository state is authoritative.
 
 ---
 
-## 4. Current Roadmap Position
+# 3. CANONICAL DOCUMENT IDENTITY
 
-Le seguenti fasi sono completate a livello architetturale:
+ELR continuity artifacts distinguish between:
+
+* **canonical logical name**;
+* **versioned repository filename**.
+
+The canonical logical name identifies the artifact independently of version.
+
+The versioned repository filename identifies the current physical document
+version stored in the repository.
+
+A version change does not create a new canonical identity.
+
+---
+
+# 4. CANONICAL NAME → CURRENT FILE RESOLUTION
+
+Current canonical-to-file mapping:
+
+| Canonical name                           | Current repository file                            |
+| ---------------------------------------- | -------------------------------------------------- |
+| `ELR Architectural Work State — Handoff` | `ELR Architectural Work State - Handoff 6.0.0.txt` |
+| `ELR Continuity Package`                 | `ELR Continuity Package 2.0.0.txt`                 |
+| `ELR Roadmap`                            | `ELR Roadmap 1.2.1.txt`                            |
+| `ELR Session Prompt`                     | `ELR Session Prompt 1.1.0.txt`                     |
+
+Resolution rule:
+
+**canonical name → repository lookup → current versioned filename**
+
+When a document is referenced semantically, use the canonical name.
+
+When a document must be read, modified or verified, resolve the canonical
+name to the current versioned filename using repository evidence.
+
+Never assume that a previous versioned filename remains current.
+
+---
+
+# 5. VERSION RESOLUTION RULES
+
+When opening or modifying a continuity artifact:
+
+1. identify the canonical document name;
+2. inspect the repository;
+3. determine the current versioned filename;
+4. verify the version contained in the document;
+5. verify that all continuity references point to the current version;
+6. only then perform READ, WRITE or VERIFY operations.
+
+A reference to a canonical name must not silently imply a historical version.
+
+A reference to a versioned filename must be verified explicitly against the
+repository.
+
+---
+
+# 6. CONTINUITY ARTIFACT RESPONSIBILITIES
+
+The four primary continuity artifacts have different responsibilities.
+
+## 6.1 ELR Session Prompt
+
+Canonical name:
+
+`ELR Session Prompt`
+
+Current file:
+
+`ELR Session Prompt 1.1.0.txt`
+
+Responsibility:
+
+Defines how a new session must bootstrap, verify the repository and work.
+
+---
+
+## 6.2 ELR Continuity Package
+
+Canonical name:
+
+`ELR Continuity Package`
+
+Current file:
+
+`ELR Continuity Package 2.0.0.txt`
+
+Responsibility:
+
+Defines the persistent continuity model and recovery rules.
+
+---
+
+## 6.3 ELR Architectural Work State — Handoff
+
+Canonical name:
+
+`ELR Architectural Work State — Handoff`
+
+Current file:
+
+`ELR Architectural Work State - Handoff 6.0.0.txt`
+
+Responsibility:
+
+Records the latest verified operational checkpoint and the next authorized
+action.
+
+---
+
+## 6.4 ELR Roadmap
+
+Canonical name:
+
+`ELR Roadmap`
+
+Current file:
+
+`ELR Roadmap 1.2.1.txt`
+
+Responsibility:
+
+Defines architectural phases, sequencing and future gates.
+
+---
+
+# 7. CURRENT ARCHITECTURAL STATE
+
+The specification consistency consolidation has been completed.
+
+The final verification covered 15 ELR documents.
+
+Verified boundaries include:
+
+* Domain Model ↔ Core Domain Implementation;
+* Persistence Model ↔ Persistence Implementation;
+* Lifecycle ↔ Domain ↔ Application;
+* Event Model ↔ Event Implementation ↔ Persistence;
+* Security Model ↔ Security Implementation ↔ API;
+* API Specification ↔ API Implementation;
+* Architecture ↔ implementation layers;
+* Import / Export ↔ Domain / Persistence;
+* Learning Object ↔ Anchor ↔ Knowledge Statement;
+* Learning Activity ↔ Exercise System ↔ Evidence;
+* Knowledge Extraction Pipeline ↔ Change Evidence ↔ Learning Review;
+* Evidence ↔ Mastery Engine ↔ Mastery State.
+
+The final consistency corrections were verified.
+
+Final result:
+
+**Finding aperti: 0**
+
+The specification consistency checkpoint is:
+
+**GO**
+
+The consolidated specifications are considered frozen with respect to the
+architectural boundaries and decisions verified during this checkpoint.
+
+---
+
+# 8. CURRENT ROADMAP POSITION
+
+Completed phases:
 
 * Fase 0 — Fondazioni Architetturali
 * Fase 1 — ELR Knowledge Model
@@ -104,567 +230,294 @@ Le seguenti fasi sono completate a livello architetturale:
 * Fase 4 — Mastery Architecture
 * Fase 5 — Human Learning Control
 * Fase 6 — Learning Activity and Exercise Systems
+* Fase 7 — Document Consistency Consolidation
 
-### Current Phase
+Current phase:
 
-**Fase 7 — Document Consistency Consolidation**
+**Fase 8 — Implementation Readiness Review**
 
-Obiettivo corrente:
+Next phase:
 
-verificare la consistenza repository-wide dei documenti dell'architettura
-consolidata.
+**Fase 9 — Derived Learning Systems**
 
-La verifica comprende:
-
-* Dependencies;
-* path;
-* nomi dei documenti;
-* versioni;
-* cross-reference;
-* ownership;
-* terminologia;
-* eventuali duplicazioni semantiche residue.
-
-### Next Phase
-
-**Fase 8 — Derived Learning Systems**
-
-La Fase 8 sarà avviata solamente dopo il completamento della Fase 7.
+Fase 9 must not begin until Fase 8 has been completed and its checkpoint
+has been passed.
 
 ---
 
-## 5. Completed Architectural Baseline
+# 9. CURRENT NEXT ACTION
 
-Le seguenti aree sono considerate consolidate a livello architetturale:
+The next authorized activity is:
 
-* Architecture Specification;
-* Architecture Decision Log;
-* Architecture Consistency Matrix;
-* Knowledge Model;
-* Knowledge Extraction boundaries;
-* Evidence Model;
-* Learning Review;
-* Mastery State;
-* Mastery Engine;
-* Human Learning Control;
-* Learning Activity;
-* Exercise System.
+**Implementation Readiness Review**
 
-Le decisioni APPROVED non devono essere riaperte senza una contraddizione
-documentale reale.
+The review must verify:
 
-In particolare:
+* completeness of implementation responsibilities;
+* contracts between Domain, Application, Persistence, Event, Security and API;
+* traceability between specifications and implementation components;
+* remaining technical decisions;
+* implementation sequencing;
+* initial tests and contract checks.
 
-* `Mastery State` è distinto da `Mastery Engine`;
-* `Knowledge Category` appartiene alla ELR Taxonomy;
-* KEP operations sono `CREATE / MERGE / UPDATE`;
-* `SPLIT` non deve essere assunto come operazione KEP senza una decisione
-  documentata;
-* le decisioni architetturali relative a Learning Activity sono registrate
-  nell'Architecture Decision Log.
+The expected output is:
+
+**Implementation Readiness Checkpoint**
 
 ---
 
-## 6. Domain / Process / Persistence Boundary
+# 10. SESSION BOOTSTRAP
 
-Durante il lavoro:
+A new session must read, in this order:
 
-* il Domain Model non deve essere inferito dal Persistence Model;
-* il Persistence Model non acquisisce autorità semantica per il solo fatto di
-  esistere;
-* i processi non devono essere introdotti come entità del Domain Model senza
-  decisione esplicita;
-* le Evidence operative appartengono ai relativi processi e modelli
-  proprietari;
-* una implementazione esistente non costituisce automaticamente una
-  decisione architetturale.
+1. `ELR Session Prompt 1.1.0.txt`
+2. `ELR Continuity Package 2.0.0.txt`
+3. `ELR Architectural Work State - Handoff 6.0.0.txt`
+4. `ELR Roadmap 1.2.1.txt`
 
-Ogni nuova responsabilità deve essere assegnata al documento proprietario
-appropriato.
+The session must then:
 
----
+1. verify the repository;
+2. verify the current version of each continuity artifact;
+3. resolve canonical names to current filenames;
+4. determine the current phase;
+5. read only the specialist documents relevant to the current phase;
+6. begin the next authorized activity.
 
-## 7. Decision Workflow
-
-Il processo di lavoro è:
-
-**verifica → problema/discrepanza → analisi documentale → proposta focalizzata →
-approvazione esplicita → blocco copiabile → aggiornamento repository →
-verifica → prossimo punto**
-
-Una decisione non è considerata definitiva prima dell'approvazione esplicita.
-
-Una modifica documentale non è considerata applicata prima della verifica
-del repository.
-
-Non devono essere introdotte simultaneamente più decisioni indipendenti
-senza una ragione esplicita.
+The current phase must not be reconstructed from conversational memory.
 
 ---
 
-## 8. Repository Verification Rule
+# 11. SESSION WORKING PROTOCOL
 
-Prima di qualsiasi decisione:
+Use the following sequence:
 
-1. individuare i documenti rilevanti;
-2. recuperarne lo stato effettivo dal repository;
-3. verificare versione e status;
-4. confrontare le definizioni pertinenti;
-5. identificare eventuali contraddizioni.
+**repository verification
+→ focused discrepancy
+→ document analysis
+→ one focused proposal
+→ explicit approval
+→ copyable documentation block
+→ repository update
+→ repository verification
+→ next point**
 
-Dopo ogni aggiornamento:
-
-1. verificare il file nel repository;
-2. verificare la sezione modificata;
-3. verificare i boundary adiacenti;
-4. solo dopo procedere.
-
-La conversazione non costituisce prova dell'avvenuto aggiornamento del
-repository.
+A proposal is not an applied change until the repository has been reread and
+the modified content has been verified.
 
 ---
 
-## 9. GitHub Integration Constraint
+# 12. DOCUMENT PROPAGATION RULE
 
-La connessione GitHub è stata verificata nel corso del lavoro.
+When a document is changed:
 
-### Read
+1. identify its canonical identity;
+2. identify its current versioned filename;
+3. identify all dependent continuity artifacts;
+4. update only references affected by the version/path change;
+5. preserve canonical identity;
+6. reread the modified documents;
+7. verify canonical name, filename and version consistency.
 
-**Disponibile.**
+Propagation must be controlled.
 
-Il connettore può recuperare e verificare file presenti nel repository.
-
-### Write
-
-**Non disponibile nel contesto operativo corrente.**
-
-Le richieste di scrittura diretta al repository hanno restituito:
-
-**HTTP 403 — Forbidden**
-
-Pertanto una richiesta di scrittura non deve essere considerata riuscita
-sulla sola base della risposta dello strumento.
-
-### Procedura operativa conseguente
-
-Quando la scrittura diretta restituisce `403`:
-
-1. non dichiarare il documento aggiornato;
-2. produrre il blocco copiabile esatto;
-3. l'utente applica la modifica al repository;
-4. recuperare nuovamente il documento;
-5. verificare il contenuto aggiornato;
-6. solo allora considerare la modifica effettivamente applicata.
-
-Il `403` è un vincolo operativo dell'integrazione, non una decisione
-architetturale ELR.
+Do not update unrelated documents merely because they mention the same
+concept.
 
 ---
 
-## 10. Continuity Documents
+# 13. ARCHITECTURAL AUTHORITY
 
-Il sistema di continuità utilizza tre artefatti distinti.
+The following principles remain mandatory:
 
-### Continuity Package
-
-**Path:**
-
-`docs/00_Current_Architecture/ELR Continuity Package 2.0.0.txt`
-
-Funzione:
-
-**stato persistente e regole di continuità del progetto.**
-
-Non deve duplicare le Specification.
-
-### Architectural Work State — Handoff
-
-**Path:**
-
-`docs/00_Current_Architecture/ELR Architectural Work State - Handoff 4.0.0.txt`
-
-Funzione:
-
-**checkpoint operativo sintetico dell'ultimo punto raggiunto.**
-
-### ELR Session Prompt
-
-**Path:**
-
-`docs/00_Current_Architecture/ELR Session Prompt 1.0.0.txt`
-
-Funzione:
-
-**definire il comportamento operativo richiesto alla sessione.**
-
-Non deve essere utilizzato come fonte primaria dello stato architetturale.
-
-Il punto di ripresa deve essere determinato dal repository, Continuity Package
-e Roadmap.
+* the repository is the source of truth;
+* Architecture Specification defines architectural responsibility;
+* Architecture Decision Log records architectural decisions;
+* Architecture Consistency Matrix records cross-document consistency;
+* specifications define detailed behavior;
+* implementation does not acquire architectural authority merely because it
+  exists;
+* persistence structures must not be used to infer Domain semantics;
+* Domain semantics must not be inferred from ORM structures;
+* APPROVED architectural decisions must not be reopened without a real
+  documented contradiction.
 
 ---
 
-## 11. Rules for New Sessions
+# 14. APPROVED DECISION RULE
 
-### Una nuova sessione deve:
+A decision is considered authoritative only when:
 
-1. leggere `ELR Session Prompt 1.0.0.txt`;
-2. leggere `ELR Continuity Package 2.0.0.txt`;
-3. leggere `ELR Roadmap 1.2.0.txt`;
-4. leggere `ELR Architectural Work State - Handoff 4.0.0.txt`;
-5. leggere `ELR Architecture Specification`, `ELR Architecture Decision Log`
-   e `ELR Architecture Consistency Matrix`;
-6. verificare lo stato effettivo dei documenti nel repository;
-7. identificare la Fase 7 e il relativo stato verificato;
-8. iniziare dal controllo repository-wide delle Dependencies;
-9. leggere soltanto i documenti specialistici direttamente rilevanti per
-   la prima discrepanza;
-10. non ricostruire decisioni dalla memoria della conversazione precedente;
-11. non riaprire decisioni APPROVED senza una contraddizione documentale
-    reale;
-12. non assumere che un'attività rimanga aperta soltanto perché lo era in
-    una precedente sessione;
-13. mantenere il workflow:
+* it exists in the appropriate authoritative document;
+* its status is verified;
+* it is consistent with the Architecture Decision Log;
+* no unresolved contradiction exists.
 
-**verifica → problema/discrepanza → analisi → proposta → approvazione →
-blocco copiabile → aggiornamento repository → verifica → prossimo punto.**
+A new architectural decision requires:
 
-Non deve:
-
-* ricostruire decisioni dalla memoria;
-* riaprire automaticamente decisioni APPROVED;
-* creare documenti duplicati;
-* assumere che un documento sia aggiornato senza verifica;
-* assumere che una modifica GitHub sia riuscita dopo un errore `403`.
+**problem → verification → proposal → explicit approval → documentation →
+verification**
 
 ---
 
-## 12. Current Next Action
+# 15. FROZEN SPECIFICATION RULE
 
-La prossima attività autorizzata è:
+The specifications consolidated during the Specification Consistency
+checkpoint are considered frozen with respect to their verified
+architectural boundaries.
 
-**Fase 7 — Document Consistency Consolidation**
+They must not be reopened merely to:
 
-Prima di proporre qualsiasi modifica:
+* improve wording;
+* introduce implementation preferences;
+* accommodate an ORM structure;
+* accommodate an existing code structure;
+* change a previously approved architectural decision without contradiction.
 
-1. verificare le `Dependencies` dei documenti rilevanti;
-2. verificare che ogni riferimento punti a un documento realmente esistente;
-3. verificare nomi e versioni;
-4. verificare i path;
-5. verificare i cross-reference;
-6. verificare eventuali riferimenti obsoleti;
-7. identificare eventuali duplicazioni semantiche residue;
-8. proporre una sola correzione focalizzata alla volta.
-
-Non anticipare la Fase 8 finché la Fase 7 non è completata.
+A real contradiction may trigger a controlled reopening.
 
 ---
 
-## 12A. SESSION CLOSURE RULE
+# 16. IMPLEMENTATION READINESS RULE
 
-Quando viene deciso di chiudere una sessione per proseguire il lavoro in una
-nuova chat, prima della chiusura devono essere verificati e, se necessario,
-aggiornati tutti i continuity artifacts correnti:
+Fase 8 exists to determine whether the frozen specifications are sufficiently
+precise for implementation.
 
-1. `ELR Architectural Work State - Handoff`
-2. `ELR Continuity Package`
-3. `ELR Roadmap`
-4. `ELR Session Prompt`
+The review must not silently introduce architecture.
 
-I quattro documenti devono essere riallineati allo stato effettivo del
-repository e verificati dopo l'aggiornamento.
+Any unresolved item must be classified as either:
 
-Non è necessario modificare tutti e quattro i documenti a ogni chiusura.
+* already defined by an authoritative Specification;
+* an implementation/technical decision;
+* an architectural decision requiring explicit approval.
 
-È invece obbligatorio:
-
-* verificare ciascuno dei quattro documenti;
-* aggiornare quelli che risultano non allineati;
-* verificare nuovamente il repository dopo ogni aggiornamento;
-* assicurarsi che i quattro documenti descrivano uno stato coerente;
-* non considerare la nuova sessione pronta al bootstrap finché la verifica
-  non è completata.
-
-### Session Closure Sequence
-
-**decisione di chiudere la sessione**
-→ verifica dello stato corrente
-→ aggiornamento dell'Handoff
-→ aggiornamento del Continuity Package
-→ aggiornamento della Roadmap
-→ aggiornamento del Session Prompt
-→ verifica dei quattro documenti nel repository
-→ **sessione pronta per una nuova chat**
-
-Questa procedura impedisce che una nuova sessione erediti uno stato
-documentale parzialmente aggiornato o incoerente.
+The Implementation Readiness Checkpoint is the gate between the frozen
+specification set and implementation work.
 
 ---
 
-## 12B. WORKING METHOD — EFFICIENCY AND VERIFICATION RULES
+# 17. SESSION CLOSURE CHECKPOINT
 
-Il lavoro architetturale ELR deve privilegiare accuratezza, tracciabilità e
-riduzione delle iterazioni non necessarie.
+A session may propose closure when:
 
-### 1. Owner First
+* the current work item is verified;
+* no partially applied correction remains;
+* the next authorized action is explicit;
+* the working state is reconstructable from repository evidence;
+* continuity artifacts are internally consistent;
+* canonical names resolve to current versioned filenames;
+* no unresolved documentation finding remains.
 
-Prima di proporre o applicare una modifica, identificare il documento
-proprietario del concetto coinvolto.
+The assistant must explicitly state when a clean checkpoint has been reached.
 
-Se l'ownership non è chiara:
+The assistant must not close the session automatically.
 
-* non propagare la modifica ad altri documenti;
-* verificare Architecture Specification, Architecture Decision Log,
-  Architecture Consistency Matrix e relative Specifications;
-* determinare l'autorità documentale prima di procedere.
-
-### 2. Evidence Before Propagation
-
-Una modifica deve essere verificata prima nel documento proprietario.
-
-Solo dopo questa verifica le sue conseguenze possono essere propagate a:
-
-* Architecture Consistency Matrix;
-* Roadmap;
-* Handoff;
-* Continuity Package;
-* Session Prompt;
-* altri documenti dipendenti.
-
-Non modificare un documento derivato per accomodare un'assunzione non ancora
-verificata nel documento proprietario.
-
-### 3. Batch Analysis, Focused Decisions
-
-Quando viene rilevata una possibile inconsistenza:
-
-1. identificare tutti i documenti direttamente coinvolti;
-2. raccogliere le discrepanze correlate;
-3. verificare il loro stato effettivo nel repository;
-4. determinare quali discrepanze costituiscono realmente problemi;
-5. risolvere una decisione alla volta.
-
-L'analisi può essere raggruppata per efficienza.
-
-Le decisioni architetturali devono invece rimanere focalizzate e
-indipendentemente approvabili.
-
-### 4. No Reactive Propagation
-
-Non utilizzare il ciclo:
-
-**modifica → verifica → scoperta di un nuovo prerequisito →
-nuova modifica → nuova verifica**
-
-come metodo predefinito.
-
-Prima di propagare una modifica, eseguire una verifica sufficiente delle
-dipendenze direttamente interessate.
-
-Le verifiche iterative rimangono obbligatorie quando il repository rivela
-nuove informazioni, ma devono essere conseguenza di evidenza reale e non di
-assunzioni.
-
-### 5. Consistency Surface
-
-Dopo una modifica, verificare almeno:
-
-* il documento modificato;
-* il documento proprietario del concetto;
-* i documenti direttamente dipendenti;
-* i cross-reference interessati;
-* versioni e path coinvolti.
-
-Non è necessario rileggere l'intero repository per ogni modifica.
-
-### 6. Repository-First Verification
-
-Quando una formulazione, un nome, una versione, un path, un'operazione o una
-relazione viene messa in dubbio:
-
-**verifica repository → confronto documentale → decisione**
-
-e non:
-
-**memoria conversazionale → supposizione → modifica**.
-
-La memoria della chat può fornire un indizio, ma non costituisce evidenza.
-
-### 7. Approved Decisions Are Stable
-
-Una decisione APPROVED non deve essere riaperta semplicemente perché una
-nuova sessione non ne ricorda il contesto.
-
-La riapertura richiede una contraddizione documentale, tecnica o architetturale
-verificabile.
-
-### 8. Propagation Order
-
-Quando una decisione modifica il corpus documentale, utilizzare il seguente
-ordine preferenziale:
-
-**documento proprietario → Consistency Matrix → Roadmap → continuity
-artifacts**
-
-I continuity artifacts vengono aggiornati per riflettere lo stato finale,
-non utilizzati per determinare la decisione architetturale.
-
-### 9. Completion Requires Verification
-
-Una modifica non è completata quando:
-
-* è stata proposta;
-* è stato prodotto il blocco copiabile;
-* oppure è stato effettuato un tentativo di scrittura.
-
-È completata solamente quando il repository è stato aggiornato e il
-contenuto effettivo è stato nuovamente verificato.
-
-### 10. Session Closure
-
-Quando viene deciso di chiudere una sessione:
-
-1. verificare lo stato corrente;
-2. aggiornare, se necessario, Handoff;
-3. aggiornare, se necessario, Continuity Package;
-4. aggiornare, se necessario, Roadmap;
-5. aggiornare, se necessario, Session Prompt;
-6. verificare tutti e quattro gli artefatti nel repository;
-7. solo dopo dichiarare la sessione pronta per una nuova chat.
-
-Questa regola opera insieme alla **Session Closure Rule** già definita nella
-sezione 12A.
-
-### 11. Efficiency Principle
-
-L'obiettivo non è minimizzare il numero assoluto di verifiche.
-
-L'obiettivo è minimizzare le verifiche ripetitive e non informative,
-mantenendo sempre:
-
-* autorità documentale;
-* evidenza repository;
-* decisioni focalizzate;
-* tracciabilità;
-* verifica post-modifica.
-
-**Principio operativo:**
-
-> **Analizzare abbastanza prima di modificare, modificare poco alla volta,
-> verificare sempre dopo.**
+The user must explicitly approve closure.
 
 ---
 
-### 12C. CANONICAL NAMING AND VERSION RESOLUTION
+# 18. CHECKPOINT VERIFICATION
 
-I documenti ELR devono distinguere tra:
+Before declaring a continuity checkpoint complete, verify:
 
-* **canonical logical name**;
-* **versioned repository filename**.
+* canonical names;
+* current filenames;
+* versions;
+* statuses;
+* current Roadmap phase;
+* next authorized action;
+* Handoff references;
+* Session Prompt references;
+* Continuity Package references;
+* Roadmap references.
 
-Il canonical logical name identifica l'artefatto indipendentemente dalla
-versione.
-
-Il versioned repository filename identifica la versione fisica corrente
-presente nel repository.
-
-Regola:
-
-**canonical name → repository lookup → current versioned filename**
-
-Quando un documento viene referenziato:
-
-* usare il canonical name per identificare semanticamente l'artefatto;
-* usare il filename versionato corrente per operazioni READ / WRITE / VERIFY;
-* verificare sempre il filename corrente nel repository;
-* non assumere che un filename appartenente a una versione precedente sia
-  ancora valido;
-* un cambio di versione non costituisce un cambio di canonical identity;
-* i continuity artifacts devono essere riallineati quando cambia il
-  versioned filename corrente.
-
-Esempio:
-
-`ELR Session Prompt`
-→ `ELR Session Prompt 1.1.0.txt`
-
-`ELR Roadmap`
-→ `ELR Roadmap 1.2.1.txt`
-
-`ELR Continuity Package`
-→ `ELR Continuity Package 2.0.0.txt`
-
-`ELR Architectural Work State — Handoff`
-→ `ELR Architectural Work State - Handoff 6.0.0.txt`
-
-Il repository rimane l'autorità finale per determinare quale versione fisica
-è corrente.
-
-Una referenza a un canonical name non deve essere interpretata come
-referenza a una specifica versione storica.
-
-Una referenza a un filename versionato deve invece essere verificata
-esplicitamente contro il repository.
+The final verification result must be reported explicitly.
 
 ---
 
-## 13. Corpus Integrity
+# 19. CURRENT CHECKPOINT
 
-Un documento appartiene al corpus ELR quando:
+Checkpoint:
 
-* è presente nel repository ed è riconosciuto dal relativo sistema di
-  ownership;
-* oppure è esplicitamente previsto come documento futuro dalla Roadmap.
+**Specification Consistency**
 
-La presenza di un concetto durante l'analisi non implica automaticamente la
-necessità di creare una nuova Specification.
+Result:
 
-Prima di creare un nuovo documento occorre verificare:
+**GO**
 
-1. se la responsabilità appartiene a un documento esistente;
-2. se la Consistency Matrix assegna già tale responsabilità;
-3. se la creazione modifica l'architettura;
-4. se è necessaria una decisione ADR;
-5. se è necessario aggiornare la Roadmap.
+Verified corpus:
 
----
+**15 documents**
 
-## 14. Continuity Principle
+Open findings:
 
-L'ELR deve essere documentariamente autoportante.
+**0**
 
-La continuità non deve dipendere dalla conversazione precedente.
+Current Roadmap:
 
-La continuità è garantita da:
+**ELR Roadmap 1.2.1.txt**
 
-* documenti proprietari;
-* decisioni registrate;
-* ownership esplicita;
-* Roadmap;
-* Continuity Package;
-* Handoff;
-* procedure di verifica del repository.
+Current Handoff:
 
-La memoria conversazionale può facilitare il lavoro, ma non costituisce
-autorità architetturale.
+**ELR Architectural Work State - Handoff 6.0.0.txt**
 
----
+Current Session Prompt:
 
-## 15. End State
+**ELR Session Prompt 1.1.0.txt**
 
-Il Continuity Package deve rimanere uno strumento di orientamento e
-governance.
+Current Continuity Package:
 
-Non deve diventare una seconda Architecture Specification.
+**ELR Continuity Package 2.0.0.txt**
 
-Quando il contenuto di questo documento diverge da una Specification, ADR,
-Matrix o Roadmap verificata nel repository, la divergenza deve essere
-segnalata e risolta attraverso il normale processo documentale.
+Next authorized action:
+
+**Fase 8 — Implementation Readiness Review**
+
+Next gate:
+
+**Implementation Readiness Checkpoint**
 
 ---
 
-**Fine documento**
+# 20. RECOVERY PRINCIPLE
 
-English Learning Repository (ELR)
-Continuity Package
-Version 2.0.0
+A new session must be able to reconstruct the current working position
+without access to previous conversational context.
+
+Therefore:
+
+* canonical document identity must remain stable;
+* current filenames must be resolvable;
+* versions must be explicit;
+* the Roadmap must define the phase;
+* the Handoff must define the operational checkpoint;
+* the Continuity Package must define continuity rules;
+* the Session Prompt must define bootstrap behavior.
+
+No single continuity artifact is sufficient by itself.
+
+Together they form the ELR continuity system.
+
+---
+
+# 21. END STATE
+
+At the current checkpoint:
+
+**Architecture consolidation → COMPLETE**
+
+**Specification consistency → GO**
+
+**Finding aperti → 0**
+
+**Roadmap → 1.2.1**
+
+**Current phase → Fase 8 — Implementation Readiness Review**
+
+**Next gate → Implementation Readiness Checkpoint**
+
+**Continuity system → canonical naming and version resolution defined**
+
+---
+
+**END OF ELR CONTINUITY PACKAGE**
