@@ -303,7 +303,7 @@ completata.
 
 ## 13. CONTINUITY MODEL
 
-La continuità ELR utilizza tre artefatti distinti:
+La continuità ELR utilizza quattro artefatti distinti:
 
 ### Session Prompt
 
