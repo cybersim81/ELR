@@ -358,19 +358,28 @@ Mastery Events
 Learning Activity Events
 
 5. 
-
 Learning Object Lifecycle Events
 
 Learning Object Lifecycle Events rappresentano eventi relativi
-alle transizioni significative del ciclo di vita di un Learning Object.
+ai cambiamenti significativi del ciclo di vita di un Learning Object.
 
 Esempi:
 
 - LearningObjectCreated;
 - LearningObjectSubmitted;
-- LearningObjectApproved;
-- LearningObjectRejected;
-- LearningObjectUpdated.
+- LearningObjectUpdated;
+- LearningObjectRetired.
+
+Le decisioni della Learning Review non costituiscono eventi
+di lifecycle del Learning Object.
+
+Gli eventi:
+
+- ChangeProposalApproved;
+- ChangeProposalRejected;
+- ChangeProposalModified;
+
+appartengono alla categoria Review Events.
 
 Gli eventi descrivono il fatto avvenuto e non determinano
 autonomamente la transizione di lifecycle_status.
