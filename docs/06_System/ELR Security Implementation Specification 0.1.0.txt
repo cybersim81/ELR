@@ -222,15 +222,16 @@ Il permesso di lettura non costituisce un Actor Type o un Role.
 Security Boundary API
 =====================
 
-Ogni endpoint protetto deve:
+Ogni endpoint protetto deve: 
 
-1. autenticare l'identità;
+1. autenticare l'identità; 
+2. creare l'Identity Context; 
+3. determinare i ruoli e le autorizzazioni effettive dell'identità secondo il Security and Access Model; 
+4. verificare che l'operazione richiesta sia autorizzata; 
+5. passare l'Identity Context all'Application Layer. 
 
-2. verificare il ruolo;
-
-3. creare Identity Context;
-
-4. passare il contesto all'Application Layer.
+L'API Layer non definisce autonomamente ruoli o permessi. 
+L'autorizzazione deve essere derivata dal Security and Access Model e deve essere applicata prima dell'esecuzione dell'operazione protetta.
 
 ================================================================================
 Audit Integration
