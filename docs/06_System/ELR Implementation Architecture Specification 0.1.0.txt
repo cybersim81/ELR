@@ -194,22 +194,28 @@ Ogni modifica passa attraverso Application Layer.
 Persistence Layer
 =================
 
-La persistenza iniziale del Core Repository conserva:
+Il Persistence Layer gestisce la persistenza dello stato applicativo e dei dati necessari al funzionamento del Repository.
 
-* Learning Object;
-* Anchor;
-* Knowledge Category;
-* Version;
-* Audit Record.
+La persistenza della conoscenza comprende:
 
-Knowledge Statement non è una persistence entity autonoma.
+Learning Object;
+Anchor;
+Knowledge Category;
+Version;
+Audit Record.
 
-Il valore del Knowledge Statement è persistito come parte del Learning Object.
+I Transactional Event Record sono gestiti dal Persistence Layer come infrastructure persistence necessaria al transactional event flow, ma non costituiscono conoscenza persistente del Repository e non ampliano il persistence boundary definito dalla Persistence Model Specification.
 
-Mastery State non appartiene alla persistence boundary del Core Repository
-v0.1 e non viene quindi incluso nella persistenza iniziale.
+Gli eventi operativi non fanno parte della conoscenza conservata dal Repository. Il Transactional Event Record rappresenta esclusivamente il fatto tecnico necessario a garantire la registrazione transazionale e la successiva pubblicazione dell'evento.
 
-La persistenza non contiene logica di dominio.
+Il Persistence Layer non contiene:
+
+logica cognitiva;
+logica di estrazione della conoscenza;
+calcolo della Mastery;
+generazione degli esercizi;
+decisioni di Review;
+logica di pubblicazione degli eventi.
 
 ================================================================================
 Event Layer
