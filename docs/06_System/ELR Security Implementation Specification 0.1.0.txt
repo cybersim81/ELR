@@ -207,7 +207,13 @@ Retrieve:
 
 Richiede:
 
-READ access
+READ_LEARNING_OBJECT
+
+Accesso consentito a:
+
+* User;
+* Exercise System;
+* Mastery Engine.
 
 ================================================================================
 Security Boundary API
@@ -227,7 +233,7 @@ Ogni endpoint protetto deve:
 Audit Integration
 =================
 
-Ogni operazione autorizzata deve produrre:
+Ogni modifica significativa al Repository deve produrre:
 
 AuditRecord
 
