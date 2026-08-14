@@ -238,35 +238,6 @@ Lifecycle Model.
 La versione precedente rimane nella storia.
 
 ================================================================================
-3.3 Review Decision and Learning Object State
-=============================================
-
-La decisione di Learning Review appartiene alla Change Proposal e non
-costituisce uno stato del Learning Object.
-
-Una Change Proposal può essere:
-
-* Approved;
-* Rejected.
-
-`Approved` indica che la modifica proposta può essere applicata secondo le
-regole del dominio e del processo applicativo.
-
-`Rejected` indica che la modifica proposta non può essere applicata.
-
-Il Learning Object non assume uno stato `Reviewed`, `Approved` o `Rejected`
-come conseguenza della decisione di Review.
-
-La decisione di Review è rappresentata dagli eventi di dominio previsti
-dall'Event Model:
-
-* ChangeProposalApproved;
-* ChangeProposalRejected;
-* ChangeProposalModified.
-
-
-
-================================================================================
 3.1 Candidate
 ================================================================================
 
@@ -301,19 +272,31 @@ Richiede:
 
 
 ================================================================================
-3.3 Reviewed
-================================================================================
+3.3 Review Decision and Learning Object State
+=============================================
 
-Una conoscenza Reviewed ha superato la valutazione del processo di Learning
-Review.
+La decisione di Learning Review appartiene alla Change Proposal e non
+costituisce uno stato del Learning Object.
 
+Una Change Proposal può essere:
 
-Può essere:
+* Approved;
+* Rejected.
 
+`Approved` indica che la modifica proposta può essere applicata secondo le
+regole del dominio e del processo applicativo.
 
-- approvata;
+`Rejected` indica che la modifica proposta non può essere applicata.
 
-- rifiutata.
+Il Learning Object non assume uno stato `Reviewed`, `Approved` o `Rejected`
+come conseguenza della decisione di Review.
+
+La decisione di Review è rappresentata dagli eventi di dominio previsti
+dall'Event Model:
+
+* ChangeProposalApproved;
+* ChangeProposalRejected;
+* ChangeProposalModified.
 
 
 ================================================================================
