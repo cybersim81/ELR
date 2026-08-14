@@ -1,6 +1,6 @@
 # ELR Architectural Work State — Handoff
 
-**Version:** 5.0.0
+**Version:** 6.0.0
 **Status:** Session Closure Checkpoint
 
 ---
@@ -28,57 +28,85 @@ Completed architectural phases:
 * Fase 4 — Mastery Architecture
 * Fase 5 — Human Learning Control
 * Fase 6 — Learning Activity and Exercise Systems
+* Fase 7 — Document Consistency Consolidation
 
 ### Current phase
 
-**Fase 7 — Document Consistency Consolidation**
+**Fase 8 — Implementation Readiness Review**
 
 ### Next phase
 
-**Fase 8 — Derived Learning Systems**
+**Fase 9 — Derived Learning Systems**
 
 ---
 
 ## 3. LAST VERIFIED WORKING POSITION
 
-The following documents were explicitly verified during the current session:
+The specification consistency consolidation has been completed.
 
-* `docs/06_System/ELR Event Model Specification 1.0.0.txt` — VERIFIED;
-* `docs/06_System/ELR Lifecycle Specification 1.0.0.txt` — VERIFIED;
-* `docs/06_System/ELR Persistence Implementation Specification 0.1.0.txt` — VERIFIED;
-* `docs/06_System/Core Repository Implementation Plan 0.1.0.txt` — VERIFIED.
+A corpus of 15 ELR documents was verified across the principal boundaries:
 
-The verified consolidation includes:
+* Domain Model ↔ Core Domain Implementation;
+* Persistence Model ↔ Persistence Implementation;
+* Lifecycle ↔ Domain ↔ Application;
+* Event Model ↔ Event Implementation ↔ Persistence;
+* Security Model ↔ Security Implementation ↔ API;
+* API Specification ↔ API Implementation;
+* Architecture ↔ implementation layers;
+* Import / Export ↔ Domain / Persistence;
+* Learning Object ↔ Anchor ↔ Knowledge Statement;
+* Learning Activity ↔ Exercise System ↔ Evidence;
+* Knowledge Extraction Pipeline ↔ Change Evidence ↔ Learning Review;
+* Evidence ↔ Mastery Engine ↔ Mastery State.
 
-* Event Boundary and Event Source semantics;
-* Learning Object lifecycle semantics;
-* lifecycle transition ownership;
-* immutable Evidence;
-* Version history and Version invariants;
-* persistence of Transactional Event Records;
-* separation of `AuditRepository` and `EventRecordRepository`;
-* transactional creation of Event Records with domain changes;
-* publication of persisted events outside the domain transaction.
+The final consistency corrections included:
 
-`Core Domain` was modified earlier in the work and remains a candidate for a
-later cross-check. It is not being reopened automatically.
+* alignment of Event Envelope `event_source` and `version` with persistence;
+* separation of Transactional Event Records from Repository knowledge
+  persistence;
+* clarification that Knowledge Statement is a value contained by the
+  Learning Object;
+* correction of the `event_records.version` persistence type to `INTEGER`;
+* clarification of the persistence representation of Knowledge Statements.
+
+Final verification result:
+
+**Finding aperti: 0**
+
+The specification consistency checkpoint is:
+
+**GO**
+
+The specifications are considered frozen with respect to the architectural
+boundaries and decisions verified during the consolidation.
+
+No verified document should be reopened without a concrete documented,
+technical, or architectural contradiction.
 
 ---
 
 ## 4. CURRENT TASK / NEXT AUTHORIZED ACTION
 
-The next session must continue Fase 7 from the verified repository state.
+The next authorized action is:
 
-First action:
+**Fase 8 — Implementation Readiness Review**
 
-**Rebuild the real inventory of `docs/06_System` and identify the next
-consistency target by dependency, ownership, and repository evidence.**
+The purpose of this phase is to verify that the consolidated specifications
+are sufficiently precise to begin implementation without introducing new
+architectural decisions during coding.
 
-Do not assume a document exists from conversational memory.
+The review must verify:
 
-Do not use alphabetical order when dependency order is more informative.
+* completeness of implementation responsibilities;
+* contracts between Domain, Application, Persistence, Event, Security and API;
+* traceability between specifications and implementation components;
+* remaining technical decisions;
+* implementation sequencing;
+* initial tests and contract checks.
 
-Do not reopen verified documents without a concrete contradiction.
+The output of the phase is:
+
+**Implementation Readiness Checkpoint**
 
 ---
 
@@ -112,8 +140,8 @@ A **session closure point** may be proposed when:
   action.
 
 When these conditions are satisfied, the assistant should explicitly tell the
-user that the session has reached a clean checkpoint and **propose closing
-the chat**.
+user that the session has reached a clean checkpoint and propose closing
+the chat.
 
 The assistant must not close the session automatically.
 
@@ -143,9 +171,9 @@ repository has been successfully written and reread.
 
 Primary restoration artifacts:
 
-* `ELR Architectural Work State - Handoff 5.0.0.txt`
+* `ELR Architectural Work State - Handoff 6.0.0.txt`
 * `ELR Continuity Package 2.0.0.txt`
-* `ELR Roadmap 1.2.0.txt`
+* `ELR Roadmap 1.2.1.txt`
 * `ELR Session Prompt 1.0.0.txt`
 
 The Handoff records the current operational position.
@@ -166,12 +194,12 @@ A new session should:
 
 1. read this Handoff;
 2. read `ELR Continuity Package 2.0.0.txt`;
-3. read `ELR Roadmap 1.2.0.txt`;
+3. read `ELR Roadmap 1.2.1.txt`;
 4. read `ELR Session Prompt 1.0.0.txt`;
 5. verify the repository state;
-6. verify the Architecture Consistency Matrix;
-7. rebuild the real `docs/06_System` inventory;
-8. continue from the next verified Fase 7 discrepancy.
+6. determine the current phase from the Roadmap and verified repository state;
+7. begin the Implementation Readiness Review;
+8. record the resulting Implementation Readiness Checkpoint.
 
 Do not ask the user to reconstruct previously documented architectural
 decisions.
@@ -200,16 +228,23 @@ decisions.
 
 The current session has reached a clean and verified checkpoint.
 
-The checkpoint is ready for session closure because:
+The specification consistency checkpoint is:
 
-* the current working position has been verified against the repository;
-* no partially applied correction remains;
-* the required continuity artifact has been updated and verified;
+**GO**
+
+The conditions for session closure are satisfied:
+
+* the specification consistency review is complete;
+* 15 documents were verified;
+* the final findings were corrected and reverified;
+* finding aperti: 0;
+* the Roadmap 1.2.1 records the completed Fase 7 and the next Fase 8;
 * the next authorized action is explicitly recorded;
-* the session can be restored without relying on conversational-only context.
+* the session can be restored from repository evidence.
 
-The next session should resume from the authorized action recorded in this
-Handoff.
+The next session should resume with:
+
+**Fase 8 — Implementation Readiness Review**
 
 ---
 
