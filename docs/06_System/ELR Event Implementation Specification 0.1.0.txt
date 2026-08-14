@@ -164,7 +164,7 @@ event_type
 
 event_source
 
-→ event metadata / publication context
+→ event metadata associato al Transactional Event Record
 
 entity_id
 
@@ -180,24 +180,23 @@ timestamp
 
 version
 
-→ event schema metadata
+→ event schema metadata persistito associato al Transactional Event Record
 
 payload
 
 → event_records.payload
 
-event_source e version non costituiscono attributi del dominio persistito
-e non richiedono colonne dedicate nella tabella event_records.
+Il valore di event_source deve essere preservato nella persistenza del
+Transactional Event Record e deve rimanere disponibile per la successiva
+pubblicazione dell'evento.
 
-event_source identifica il componente che ha prodotto l'evento e appartiene
-al contesto dell'evento e della sua pubblicazione.
+Il valore di version deve essere preservato nella persistenza del
+Transactional Event Record e deve rimanere disponibile per la successiva
+pubblicazione e interpretazione dell'evento.
 
-version identifica la versione dello schema dell'evento e appartiene
-ai metadata dello schema.
-
-La persistenza del Transactional Event Record deve mantenere la semantica
-del fatto rappresentato senza introdurre nel modello persistence attributi
-che appartengono esclusivamente al contratto o ai metadata dell'evento.
+Non è necessario che event_source o version siano colonne dedicate nella
+tabella event_records, purché siano persistiti in metadata associati al
+Transactional Event Record.
 
 ================================================================================
 Core Events v0.1
