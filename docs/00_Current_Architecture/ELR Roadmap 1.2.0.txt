@@ -1,9 +1,10 @@
+```text
 ================================================================================
 English Learning Repository (ELR)
 
 Architectural Roadmap
 
-Version: 1.2.0
+Version: 1.2.1
 Status: ACTIVE
 ==============
 
@@ -15,7 +16,7 @@ ELR Architectural Roadmap
 
 Document Version:
 
-1.2.0
+1.2.1
 
 Status:
 
@@ -392,7 +393,7 @@ Fase 7 — Document Consistency Consolidation
 
 Stato:
 
-In corso — fase finale.
+Completata.
 
 Obiettivo:
 
@@ -407,7 +408,7 @@ correttamente:
 * cross-reference;
 * terminologia architetturale.
 
-Verifiche già completate:
+Verifiche completate:
 
 ✓ Learning Activity ↔ Exercise System ↔ Evidence
 
@@ -423,29 +424,125 @@ Verifiche già completate:
 
 ✓ Architecture Consistency Matrix ↔ document ownership
 
-Modifiche di consistenza già consolidate:
+✓ Domain Model ↔ Core Domain Implementation
+
+✓ Persistence Model ↔ Persistence Implementation
+
+✓ Lifecycle ↔ Domain ↔ Application
+
+✓ Event Model ↔ Event Implementation ↔ Persistence
+
+✓ Security Model ↔ Security Implementation ↔ API
+
+✓ API Specification ↔ API Implementation
+
+✓ Architecture ↔ implementation layers
+
+✓ Import / Export ↔ Domain / Persistence
+
+✓ terminologia, stati e permission
+
+✓ versioni e date dei documenti verificati
+
+Modifiche di consistenza consolidate:
 
 * Learning Object Specification utilizzato con il nome corretto;
 * Mastery State Specification riconosciuta come documento proprietario;
 * CREATE / MERGE / UPDATE allineato alla KEP;
 * ownership della Knowledge Category allineata alla ELR Taxonomy;
 * Learning Activity allineata all'Architecture Decision Log come registro
-  della decisione architetturale.
+  della decisione architetturale;
+* Transactional Event Record distinto dalla persistenza del Repository
+  di conoscenza;
+* event_source e version allineati tra Event Envelope e persistence;
+* Knowledge Statement mantenuto come valore del Learning Object,
+  anche quando rappresentato in una struttura persistente separata.
 
-Attività rimanenti:
+La consistenza finale è stata verificata su un corpus di 15 documenti.
 
-* controllo completo delle Dependencies;
-* verifica dei path reali;
-* verifica delle versioni dichiarate;
-* verifica dei nomi esatti dei documenti;
-* controllo dei riferimenti incrociati;
-* controllo finale delle duplicazioni semantiche.
+Finding aperti:
 
-Questa fase non modifica l'architettura: verifica la consistenza della
+0
+
+La fase non modifica l'architettura: verifica la consistenza della
 documentazione rispetto all'architettura già consolidata.
 
 ================================================================================
-Fase 8 — Derived Learning Systems
+Checkpoint — Specification Consistency
+======================================
+
+Stato:
+
+GO.
+
+Risultato:
+
+✓ corpus documentale verificato;
+
+✓ 15 documenti controllati;
+
+✓ finding iniziali corretti e verificati;
+
+✓ finding aperti: 0;
+
+✓ coerenza cross-documento confermata;
+
+✓ boundary Domain / Process / Persistence / Event / Security / API
+  confermati;
+
+✓ versioni e date verificate sui documenti modificati.
+
+Decisione:
+
+Le specifiche sono considerate sufficientemente consolidate per il
+passaggio alla fase successiva.
+
+Le specifiche architetturali e di sistema sono considerate frozen per
+quanto riguarda i confini e le decisioni architetturali già consolidate.
+
+Eventuali modifiche successive devono essere trattate come modifiche
+controllate e non come riapertura implicita della fase di consolidamento.
+
+================================================================================
+Fase 8 — Implementation Readiness Review
+=========================================
+
+Stato:
+
+Prossima fase.
+
+Obiettivo:
+
+Verificare che le specifiche consolidate siano sufficientemente precise
+per avviare l'implementazione senza introdurre nuove decisioni
+architetturali durante il coding.
+
+Attività:
+
+* verifica della completezza delle responsabilità implementative;
+* verifica dei contratti tra Domain, Application, Persistence, Event,
+  Security e API;
+* verifica della tracciabilità tra specifiche e componenti implementativi;
+* identificazione delle eventuali decisioni tecniche residue;
+* definizione della sequenza di implementazione;
+* definizione dei primi test e contract checks.
+
+Criterio di uscita:
+
+La fase sarà completata quando ogni decisione necessaria per iniziare
+l'implementazione sarà:
+
+* già definita nelle Specification;
+* registrata nell'Architecture Decision Log;
+* oppure esplicitamente classificata come decisione tecnica
+  non architetturale.
+
+Output previsto:
+
+Implementation Readiness Checkpoint.
+
+================================================================================
+Fase 9 — Derived Learning Systems
 =================================
 
 Stato:
@@ -492,8 +589,8 @@ I sistemi derivati non costituiscono una nuova Source of Truth della
 conoscenza linguistica.
 
 ================================================================================
-Fase 9 — Interaction Layer
-==========================
+Fase 10 — Interaction Layer
+===========================
 
 Stato:
 
@@ -614,13 +711,16 @@ L'architettura ELR sarà considerata stabile quando:
 * i sistemi derivati dipendono esclusivamente dall'ELR;
 * non esistono duplicazioni semantiche tra documenti;
 * i riferimenti documentali utilizzano nomi, path e versioni coerenti;
-* il repository rimane la Source of Truth della conoscenza linguistica.
+* il repository rimane la Source of Truth della conoscenza linguistica;
+* la documentazione consolidata ha superato il checkpoint di consistenza;
+* l'Implementation Readiness Review definisce esplicitamente il passaggio
+  dalla specifica congelata all'implementazione.
 
 ================================================================================
 Fine documento
 
 ELR Architectural Roadmap
 
-Versione 1.2.0
+Versione 1.2.1
 
 ================================================================================
