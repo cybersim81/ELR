@@ -169,70 +169,62 @@ Response:
 }
 
 ================================================================================
-POST /api/v1/learning-objects/{id}/submit
-=========================================
+Write Operations
+================
 
-Scopo:
+Le operazioni di modifica seguono il modello Change Proposal.
 
-Inviare un Learning Object alla revisione.
+Le principali write operations applicative sono:
 
-Effetti:
+POST /change-proposals
 
-Candidate
+Crea una Change Proposal per una modifica proposta alla conoscenza.
 
-```
-    |
+POST /change-proposals/{id}/status
 
-    v
-```
+Richiede l'aggiornamento dello stato della Change Proposal secondo il processo
+di Review e le autorizzazioni applicabili.
 
-Proposed
+Le operazioni di approvazione e rifiuto non modificano direttamente il
+Learning Object tramite un endpoint lifecycle generico.
 
-================================================================================
-POST /api/v1/learning-objects/{id}/approve
-==========================================
+Il passaggio:
 
-Scopo:
+API
+↓
+Application Service
+↓
+Review / Domain
+↓
+Lifecycle / Versioning
+↓
+Repository
 
-Approvare un Learning Object.
+deve essere rispettato.
 
-Effetti:
-
-Reviewed
-
-```
-    |
-
-    v
-```
-
-Active
-
-Vincoli:
-
-* solo Learning Review;
-* stabilizza la versione risultante secondo il Lifecycle Model;
-* genera audit.
+L'API Implementation non contiene logica di dominio e non decide
+autonomamente se una Change Proposal possa essere approvata o rifiutata.
 
 ================================================================================
-POST /api/v1/learning-objects/{id}/reject
-=========================================
+Change Proposal Boundary
+========================
 
-Scopo:
+La Change Proposal costituisce l'unità operativa della write path.
 
-Rifiutare una proposta.
+L'API riceve una richiesta di modifica e la inoltra all'Application Layer.
 
-Effetti:
+L'Application Layer coordina il caso d'uso.
 
-Reviewed
+La Learning Review determina l'esito della Review secondo le regole
+autorizzative e di dominio.
 
-```
-    |
+Il Domain Layer applica le transizioni consentite.
 
-    v
-```
+Il Versioning Model determina la rappresentazione evolutiva risultante.
 
-Rejected
+Il Repository persiste il risultato.
+
+L'API Layer non bypassa questi confini.
 
 ================================================================================
 GET /api/v1/learning-objects/{id}/history
