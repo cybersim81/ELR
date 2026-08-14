@@ -209,7 +209,7 @@ LearningObjectCreated
 
 Descrizione:
 
-Un nuovo Learning Object Candidate è stato creato.
+Un nuovo Learning Object è stato creato con lifecycle status Candidate.
 
 Producer:
 
