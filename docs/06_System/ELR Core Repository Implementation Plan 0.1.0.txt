@@ -161,7 +161,7 @@ Criteri:
 * version persistence;
 * version history preservation;
 * audit persistence;
-* event record persistence;
+* Transactional Event Record persistence;
 * historical versions are immutable.
 
 ================================================================================
@@ -228,7 +228,7 @@ ChangeProposalModified.
 
 Criteri:
 
-eventi persistiti;
+Transactional Event Record persistiti;
 eventi tracciabili;
 eventi prodotti dal flusso applicativo in seguito a transizioni
 o modifiche di dominio significative;
