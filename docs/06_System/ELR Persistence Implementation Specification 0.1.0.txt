@@ -381,7 +381,7 @@ UUID
 
 version
 
-VARCHAR
+INTEGER
 
 payload
 
