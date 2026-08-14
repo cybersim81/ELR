@@ -198,11 +198,14 @@ Il Persistence Layer gestisce la persistenza dello stato applicativo e dei dati 
 
 La persistenza della conoscenza comprende:
 
-Learning Object;
-Anchor;
-Knowledge Category;
-Version;
-Audit Record.
+- Learning Object;
+- Anchor;
+- Knowledge Category;
+- Version.
+
+La persistenza operativa e di tracciabilità comprende:
+
+- Audit Record.
 
 I Transactional Event Record sono gestiti dal Persistence Layer come infrastructure persistence necessaria al transactional event flow, ma non costituiscono conoscenza persistente del Repository e non ampliano il persistence boundary definito dalla Persistence Model Specification.
 
