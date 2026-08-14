@@ -449,15 +449,18 @@ Ogni modifica persistente deve essere transazionale.
 
 Esempio:
 
-Approve Learning Object:
+Approve Change Proposal:
 
-1. verifica lo stato corrente;
-2. esegue la transizione di lifecycle autorizzata;
-3. risolve l'azione di versioning secondo le regole del dominio;
-4. persiste lo stato risultante;
-5. registra l'AuditRecord;
-6. registra eventuali Transactional Event Record;
-7. conferma il commit.
+1. verifica l'autorizzazione;
+2. carica la Change Proposal;
+3. valida la decisione di Review;
+4. applica la transizione di dominio autorizzata;
+5. applica la modifica approvata;
+6. risolve l'azione di versioning secondo le regole del dominio;
+7. persiste lo stato risultante;
+8. registra l'AuditRecord;
+9. registra eventuali Transactional Event Record;
+10. conferma il commit.
 
 Il Transactional Event Record deve essere creato
 nella stessa transazione che persiste la modifica
