@@ -148,8 +148,6 @@ get_history()
 
 Recupera la storia evolutiva e le versioni secondo il Versioning Model.
 
-Recupera version history.
-
 ================================================================================
 Category Service
 ================
@@ -381,11 +379,22 @@ Non incluso:
 Prossimo Incremento
 ===================
 
-Il prossimo documento previsto:
+Il prossimo incremento implementativo sarà determinato in base alle
+dipendenze e alle priorità definite dall'architettura corrente ELR.
 
-ELR Event Implementation Specification
+Eventuali nuove specifiche implementative dovranno mantenere coerenza con:
 
-che definirà la realizzazione concreta del modello eventi ELR.
+* ELR Domain Model;
+* ELR Lifecycle Model;
+* ELR Versioning Model;
+* ELR Security and Access Model;
+* ELR Persistence Model;
+* ELR API Specification;
+* ELR Event Model.
+
+L'Application Service Implementation Specification non introduce nuove
+decisioni semantiche nei modelli proprietari, ma ne coordina l'applicazione
+a livello di use case.
 
 ================================================================================
 Principio conclusivo
