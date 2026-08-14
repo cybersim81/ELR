@@ -214,7 +214,15 @@ Table: knowledge_statements
 
 Scopo:
 
-Conservare il contenuto cognitivo.
+Conservare la rappresentazione persistente dei Knowledge Statement
+appartenenti ai Learning Object.
+
+Il Knowledge Statement non costituisce una Entity autonoma del dominio.
+
+Nel Domain Model è un valore interno al Learning Object.
+
+La tabella `knowledge_statements` è quindi una struttura di persistence
+representation e non introduce una identity di dominio autonoma.
 
 Campi:
 
@@ -237,6 +245,23 @@ VARCHAR
 created_at
 
 TIMESTAMP
+
+Vincoli:
+
+* ogni Knowledge Statement appartiene a un Learning Object;
+* `learning_object_id` è obbligatorio;
+* la struttura persistente non deve essere interpretata come un aggregate
+  o Entity autonoma del dominio;
+* l'identità `id` è tecnica e non costituisce una Domain Identity;
+* i Knowledge Statement non possono essere modificati indipendentemente
+  dal processo di modifica autorizzato del Learning Object.
+
+Il Repository deve ricostruire i Knowledge Statement come parte del
+Learning Object.
+
+La persistenza può normalizzare il valore in una tabella separata per
+ragioni tecniche senza alterare il modello dominio.
+
 
 ================================================================================
 Table: versions
