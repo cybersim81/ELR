@@ -362,8 +362,9 @@ Scheduling risponde alla domanda:
 
 Una decisione di scheduling non implica automaticamente una nuova selezione.
 
-Una nuova selezione può invece utilizzare lo stato prodotto da uno scheduling
-precedente.
+Una successiva selezione può utilizzare segnali temporali o di eleggibilità
+derivati da un precedente Review Schedule, senza trasformare il Review
+Schedule in una nuova Source of Truth.
 
 
 ================================================================================
