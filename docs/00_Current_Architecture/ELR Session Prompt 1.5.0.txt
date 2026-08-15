@@ -1,6 +1,6 @@
 # ELR Session Prompt
 
-**Version:** 1.4.0
+**Version:** 1.5.0
 **Status:** ACTIVE
 **Document Type:** Session Bootstrap and Working Protocol
 
@@ -93,6 +93,30 @@ tramite la regola di `Canonical Naming and Version Resolution`.
 La Roadmap determina la posizione corrente del lavoro e le attività
 successive autorizzate.
 
+### CURRENT CONTINUITY CHAIN
+
+The current continuity artifact chain is:
+
+`ELR Session Prompt 1.5.0.txt`
+→ `ELR Continuity Package 2.4.0.txt`
+→ `ELR Architectural Work State - Handoff 6.4.0.txt`
+→ `ELR Roadmap 1.4.0.txt`
+
+These filenames represent the currently verified physical versions
+of the four bootstrap continuity artifacts.
+
+The chain must not be considered valid unless all four files:
+
+1. exist in the repository;
+2. declare the corresponding version;
+3. reference the expected current versions of the other continuity artifacts;
+4. are mutually consistent.
+
+The Session Prompt is updated last in the continuity versioning sequence.
+
+A new Session Prompt version must not reference continuity artifact
+versions that have not already been applied and verified in the repository.
+
 ### Step 5 — Verifica il repository
 
 Non assumere che i documenti di continuità siano aggiornati solo perché
@@ -161,6 +185,38 @@ Se viene rilevata una divergenza:
 3. verificare i file effettivamente presenti;
 4. determinare quale versione è realmente corrente;
 5. riconciliare la catena prima di procedere con il lavoro.
+
+### Step 5B — Continuity Artifact Update Ordering
+
+When a continuity checkpoint requires new versions of the bootstrap
+artifacts, the update order is mandatory:
+
+1. Continuity Package;
+2. Architectural Work State — Handoff;
+3. Roadmap;
+4. Session Prompt.
+
+The Session Prompt must always be the last continuity artifact to be
+versioned and updated.
+
+Before updating the Session Prompt, the assistant must verify that the
+new Continuity Package, Handoff and Roadmap:
+
+* exist in the repository;
+* contain their declared versions;
+* are mutually consistent;
+* correctly reference the current continuity chain;
+* record the same verified architectural position.
+
+The Session Prompt must never reference a future, proposed or unverified
+continuity artifact version.
+
+A continuity chain is considered materialized only after the repository
+contains all four corresponding physical files and their references have
+been verified.
+
+If any earlier artifact has not yet been applied or verified, the Session
+Prompt must remain on its previous version.
 
 ### Step 6 — Determina la fase corrente
 
@@ -635,6 +691,27 @@ lavoro conversazionale appare concluso.
 Il checkpoint deve essere verificato sulla base delle evidenze del repository,
 secondo le regole esistenti di verifica e chiusura della sessione.
 
+### Phase Completion Percentage
+
+When a consistency check or verification point produces a PASS, the
+assistant must report the current completion percentage of the active
+phase.
+
+The percentage must reflect verified work only.
+
+A PASS must not increase the percentage merely because work was proposed,
+discussed or assumed complete.
+
+The progress model is operational and must remain consistent with the
+verified phase checklist.
+
+When the phase reaches its final verified gate:
+
+**100% = COMPLETE / PASS**
+
+The percentage does not constitute architectural authority and must not
+override the Roadmap or continuity artifacts.
+
 ---
 
 ## 11. APPROVED DECISIONS
@@ -662,7 +739,10 @@ Un'attività documentale è considerata completata solamente quando:
 * il blocco documentale è stato prodotto;
 * il repository è stato aggiornato;
 * il contenuto aggiornato è stato verificato;
-* eventuali documenti di continuità interessati sono stati riallineati.
+* eventuali documenti di continuità interessati sono stati riallineati
+  secondo il Continuity Artifact Update Ordering;
+* il Session Prompt è stato aggiornato per ultimo;
+* la nuova continuity chain completa è stata verificata nel repository.
 
 Una modifica non verificata nel repository non deve essere dichiarata
 completata.
@@ -741,10 +821,10 @@ Esempio:
 
 | Canonical name                           | Current repository file                            |
 | ---------------------------------------- | -------------------------------------------------- |
-| `ELR Session Prompt`                     | `ELR Session Prompt 1.4.0.txt`                     |
-| `ELR Continuity Package`                 | `ELR Continuity Package 2.3.0.txt`                 |
-| `ELR Architectural Work State — Handoff` | `ELR Architectural Work State - Handoff 6.3.0.txt` |
-| `ELR Roadmap`                            | `ELR Roadmap 1.3.0.txt`                            |
+| `ELR Session Prompt`                     | `ELR Session Prompt 1.5.0.txt`                     |
+| `ELR Continuity Package`                 | `ELR Continuity Package 2.4.0.txt`                 |
+| `ELR Architectural Work State — Handoff` | `ELR Architectural Work State - Handoff 6.4.0.txt` |
+| `ELR Roadmap`                            | `ELR Roadmap 1.4.0.txt`                            |
 
 Regola operativa:
 
