@@ -114,6 +114,25 @@ repository.
 
 ---
 
+# 5A. ARCHITECTURAL MAP REFERENCE
+
+The directory:
+
+`docs/01_Architecture/`
+
+is the architectural map of ELR.
+
+It is a structured corpus of architectural artifacts used for repository
+navigation, dependency identification and cross-document consistency checks.
+
+The architectural map is not a single specification and does not replace the
+normative scope of its individual documents.
+
+When architectural context is required, the relevant documents in
+`docs/01_Architecture/` must be consulted before interpreting specialist
+documents in isolation.
+
+---
 # 6. CONTINUITY ARTIFACT RESPONSIBILITIES
 
 The four primary continuity artifacts have different responsibilities.
