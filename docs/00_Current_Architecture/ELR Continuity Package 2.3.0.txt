@@ -646,7 +646,7 @@ Current Session Prompt:
 
 Current Continuity Package:
 
-**ELR Continuity Package 2.2.0.txt**
+**ELR Continuity Package 2.3.0.txt**
 
 Current phase:
 
