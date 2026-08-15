@@ -1,0 +1,170 @@
+================================================================================
+English Learning Repository (ELR)
+
+Adaptive Review Specification
+
+Version: 1.0.0
+Status: DRAFT
+================================================================================
+
+
+Document Identity
+================================================================================
+
+Document Name:
+
+Adaptive Review Specification
+
+
+Document Version:
+
+1.0.0
+
+
+Status:
+
+DRAFT
+
+
+Dependencies:
+
+- ELR Architecture Specification
+- ELR Architecture Decision Log
+- Learning Activity Specification
+- Mastery Engine Specification
+
+
+References:
+
+- ELR Architecture Consistency Matrix
+- ELR Taxonomy
+- Learning Object Specification
+- Evidence Model Specification
+- Exercise System Specification
+
+
+================================================================================
+Scopo
+================================================================================
+
+La Adaptive Review Specification definisce il processo responsabile della
+selezione e dello scheduling adattivo delle Learning Activity all'interno
+dell'English Learning Repository (ELR).
+
+Adaptive Review utilizza lo stato di apprendimento e i segnali autorizzati
+dal modello ELR per determinare quali Learning Activity proporre e quando
+riproporle.
+
+Adaptive Review non definisce le Learning Activity stesse.
+
+Adaptive Review non modifica la conoscenza persistente.
+
+Adaptive Review non calcola direttamente la Mastery.
+
+Adaptive Review opera sopra i componenti proprietari della conoscenza,
+della Mastery e delle Learning Activity.
+
+
+================================================================================
+Responsabilità del documento
+================================================================================
+
+Questo documento definisce:
+
+- il concetto di Adaptive Review;
+- la relazione tra Adaptive Review e Learning Activity;
+- i criteri di selezione adattiva;
+- i principi di scheduling;
+- gli input autorizzati al processo;
+- i confini con Mastery Engine, Evidence Model e Learning Activity.
+
+
+Questo documento NON definisce:
+
+- Learning Object;
+- Knowledge Statement;
+- Anchor;
+- Mastery State;
+- Evidence;
+- Learning Activity;
+- Exercise;
+- algoritmi di generazione degli esercizi;
+- algoritmi di calcolo della Mastery;
+- procedure di modifica del Repository.
+
+
+Queste responsabilità appartengono ai rispettivi componenti ELR.
+
+
+================================================================================
+Principio fondamentale
+================================================================================
+
+Adaptive Review risponde alla domanda:
+
+"Quale Learning Activity dovrebbe essere proposta all'utente e quando?"
+
+
+Non risponde alle domande:
+
+"Quale conoscenza deve essere memorizzata?"
+
+oppure:
+
+"Quanto è competente l'utente?"
+
+
+La prima appartiene ai processi di conoscenza.
+
+La seconda appartiene al Mastery Engine.
+
+Adaptive Review utilizza questi risultati per effettuare selezione e
+scheduling adattivi.
+
+
+================================================================================
+Boundary
+================================================================================
+
+Learning Object
+        |
+        v
+Mastery State / autorizzati segnali di apprendimento
+        |
+        v
+Adaptive Review
+        |
+        +----------------------+
+        |                      |
+        v                      v
+Learning Activity       Review Schedule
+        |
+        v
+Exercise System
+
+
+Adaptive Review seleziona e schedula.
+
+Learning Activity definisce l'attività didattica.
+
+Exercise System gestisce l'esecuzione degli esercizi.
+
+Mastery Engine gestisce la padronanza.
+
+ELR conserva la conoscenza persistente.
+
+
+================================================================================
+Principio conclusivo
+================================================================================
+
+Adaptive Review è un processo derivato che collega lo stato di apprendimento
+alla selezione e allo scheduling delle Learning Activity.
+
+Non introduce una nuova Source of Truth.
+
+Non assume ownership della conoscenza, della Mastery o delle Learning Activity.
+
+
+================================================================================
+Fine documento
