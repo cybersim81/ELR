@@ -59,7 +59,7 @@ Verified:
 * Adaptive Review Specification 1.0.0 — APPROVED / CLOSED;
 * Exercise System Specification 1.0.0 — DRAFT;
 * Architecture Consistency Matrix 1.1.0 — APPROVED;
-* Roadmap 1.3.0 responsibility coverage;
+* Roadmap 1.4.0 responsibility coverage;
 * LIL → KEP boundary;
 * Interaction Layer → Learning Activity boundary;
 * Learning Activity → Exercise System boundary;
@@ -187,13 +187,13 @@ repository has been successfully written and reread.
 Primary restoration artifacts:
 
 * `ELR Session Prompt`
-  → `ELR Session Prompt 1.4.0.txt`
+  → `ELR Session Prompt 1.5.0.txt`
 * `ELR Continuity Package`
-  → `ELR Continuity Package 2.3.0.txt`
+  → `ELR Continuity Package 2.4.0.txt`
 * `ELR Architectural Work State — Handoff`
-  → `ELR Architectural Work State - Handoff 6.3.0.txt`
+  → `ELR Architectural Work State - Handoff 6.4.0.txt`
 * `ELR Roadmap`
-  → `ELR Roadmap 1.3.0.txt`
+  → `ELR Roadmap 1.5.0.txt`
 
 The **canonical name** identifies the logical continuity artifact.
 
