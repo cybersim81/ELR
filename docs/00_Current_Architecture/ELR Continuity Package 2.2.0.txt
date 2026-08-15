@@ -2,7 +2,7 @@
 
 ## Continuity Package
 
-**Version:** 2.1.0
+**Version:** 2.2.0
 **Status:** ACTIVE
 **Document Type:** Session Continuity and Architectural Recovery Package
 
@@ -78,10 +78,10 @@ Current canonical-to-file mapping:
 
 | Canonical name                           | Current repository file                            |
 | ---------------------------------------- | -------------------------------------------------- |
-| `ELR Architectural Work State — Handoff` | `ELR Architectural Work State - Handoff 6.0.0.txt` |
-| `ELR Continuity Package`                 | `ELR Continuity Package 2.1.0.txt`                 |
-| `ELR Roadmap`                            | `ELR Roadmap 1.2.1.txt`                            |
-| `ELR Session Prompt`                     | `ELR Session Prompt 1.2.0.txt`                     |
+| `ELR Architectural Work State — Handoff` | `ELR Architectural Work State - Handoff 6.2.0.txt` |
+| `ELR Continuity Package`                 | `ELR Continuity Package 2.2.0.txt`                 |
+| `ELR Roadmap`                            | `ELR Roadmap 1.2.3.txt`                            |
+| `ELR Session Prompt`                     | `ELR Session Prompt 1.3.0.txt`                     |
 
 Resolution rule:
 
@@ -126,7 +126,7 @@ Canonical name:
 
 Current file:
 
-`ELR Session Prompt 1.2.0.txt`
+`ELR Session Prompt 1.3.0.txt`
 
 Responsibility:
 
@@ -142,7 +142,7 @@ Canonical name:
 
 Current file:
 
-`ELR Continuity Package 2.1.0.txt`
+`ELR Continuity Package 2.2.0.txt`
 
 Responsibility:
 
@@ -158,7 +158,7 @@ Canonical name:
 
 Current file:
 
-`ELR Architectural Work State - Handoff 6.0.0.txt`
+`ELR Architectural Work State - Handoff 6.2.0.txt`
 
 Responsibility:
 
@@ -175,7 +175,7 @@ Canonical name:
 
 Current file:
 
-`ELR Roadmap 1.2.1.txt`
+`ELR Roadmap 1.2.3.txt`
 
 Responsibility:
 
@@ -275,10 +275,10 @@ The expected next architectural position is:
 
 A new session must read, in this order:
 
-1. `ELR Session Prompt 1.2.0.txt`
-2. `ELR Continuity Package 2.1.0.txt`
-3. `ELR Architectural Work State - Handoff 6.0.0.txt`
-4. `ELR Roadmap 1.2.1.txt`
+1. `ELR Session Prompt 1.3.0.txt`
+2. `ELR Continuity Package 2.2.0.txt`
+3. `ELR Architectural Work State - Handoff 6.2.0.txt`
+4. `ELR Roadmap 1.2.3.txt`
 
 The session must then:
 
@@ -532,27 +532,44 @@ re-executing the entire checkpoint.
 
 Checkpoint:
 
-**Implementation Readiness Checkpoint**
+**Core Domain Implementation Propagation Checkpoint**
 
 Result:
 
-**GO**
+**COMPLETE**
+
+Previous checkpoint:
+
+**Implementation Readiness Checkpoint — GO**
 
 Fase 8:
 
 **COMPLETED**
 
-Verified readiness scope:
+Current roadmap position:
 
-* implementation responsibilities;
-* Domain ↔ Application ↔ Persistence contracts;
-* Event contracts;
-* Security contracts;
-* API contracts;
-* specification → implementation traceability;
-* remaining technical decisions;
-* implementation sequence;
-* initial contract checks.
+**Fase 9 — Derived Learning Systems**
+
+Verified propagation scope:
+
+* Anchor Specification 1.1.0;
+* ELR Domain Model Specification 1.1.0;
+* ELR Persistence Mapping Specification 0.2.0;
+* `app/domain/entities/anchor.py`;
+* `app/persistence/models/anchor_model.py`;
+* `tests/domain/test_anchor.py`;
+* `tests/persistence/models/test_anchor_model.py`.
+
+Verified extension:
+
+**Anchor.ipa**
+
+The Anchor supports an optional IPA phonetic transcription.
+
+The property does not contribute to Anchor identity and does not introduce
+a new Domain entity.
+
+No audio representation has been introduced.
 
 Open findings:
 
@@ -572,19 +589,19 @@ New matrices required:
 
 Current Roadmap:
 
-**ELR Roadmap 1.2.1.txt**
+**ELR Roadmap 1.2.3.txt**
 
 Current Handoff:
 
-**ELR Architectural Work State - Handoff 6.0.0.txt**
+**ELR Architectural Work State - Handoff 6.2.0.txt**
 
 Current Session Prompt:
 
-**ELR Session Prompt 1.2.0.txt**
+**ELR Session Prompt 1.3.0.txt**
 
 Current Continuity Package:
 
-**ELR Continuity Package 2.1.0.txt**
+**ELR Continuity Package 2.2.0.txt**
 
 Current phase:
 
@@ -631,6 +648,8 @@ At the current checkpoint:
 
 **Implementation Readiness Checkpoint → GO**
 
+**Core Domain Implementation Propagation Checkpoint → COMPLETE**
+
 **Blocking architectural decisions → 0**
 
 **New specifications required → 0**
@@ -639,13 +658,13 @@ At the current checkpoint:
 
 **Current roadmap position → Fase 9 — Derived Learning Systems**
 
-**Session Prompt → 1.2.0**
+**Session Prompt → 1.3.0**
 
-**Continuity Package → 2.1.0**
+**Continuity Package → 2.2.0**
 
-**Handoff → 6.0.0**
+**Handoff → 6.2.0**
 
-**Roadmap → 1.2.1**
+**Roadmap → 1.2.3**
 
 **Continuity system → canonical naming and version resolution defined**
 
