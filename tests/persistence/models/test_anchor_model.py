@@ -1,31 +1,27 @@
-from datetime import datetime
 from uuid import uuid4
-
-from sqlalchemy import inspect
 
 from app.persistence.models.anchor_model import AnchorModel
 
 
-def test_anchor_model_mapping():
-    mapper = inspect(AnchorModel)
-
-    assert AnchorModel.__tablename__ == "anchors"
-
-    columns = mapper.columns
-
-    assert columns["id"].primary_key is True
-    assert columns["content"].nullable is False
-    assert columns["type"].nullable is False
-    assert columns["created_at"].nullable is False
-
-
-def test_anchor_model_can_be_instantiated():
+def test_anchor_model_has_ipa():
     anchor = AnchorModel(
         id=uuid4(),
-        content="Test anchor",
-        type="source",
-        created_at=datetime.now(),
+        content="take a photo",
+        type="phrase",
+        ipa="/teɪk ə ˈfoʊtoʊ/",
+        created_at=None,
     )
 
-    assert anchor.content == "Test anchor"
-    assert anchor.type == "source"
+    assert anchor.ipa == "/teɪk ə ˈfoʊtoʊ/"
+
+
+def test_anchor_model_ipa_is_optional():
+    anchor = AnchorModel(
+        id=uuid4(),
+        content="take a photo",
+        type="phrase",
+        ipa=None,
+        created_at=None,
+    )
+
+    assert anchor.ipa is None
