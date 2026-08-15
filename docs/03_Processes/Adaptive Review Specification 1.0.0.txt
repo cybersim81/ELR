@@ -405,6 +405,235 @@ Le decisioni di Adaptive Review possono essere persistite solo secondo le
 regole del sistema di persistenza e non diventano automaticamente conoscenza
 ELR.
 
+================================================================================
+11. Mastery-Driven Review Policy
+================================================================================
+
+Adaptive Review utilizza il Mastery State come segnale per determinare la
+necessità relativa di revisione.
+
+La presenza di una Mastery insufficiente può aumentare la priorità di una
+Learning Activity associata alla conoscenza interessata.
+
+Adaptive Review non determina autonomamente il valore della Mastery.
+
+La soglia, il significato e il calcolo della Mastery appartengono al
+Mastery Engine.
+
+
+================================================================================
+12. Review Priority Classes
+================================================================================
+
+Adaptive Review può classificare le Learning Activity secondo una priorità
+relativa di revisione.
+
+Le classi concettuali possono includere:
+
+- Review Required;
+- Review Recommended;
+- Review Optional;
+- Not Currently Required.
+
+
+Queste classi descrivono una decisione di processo.
+
+Non costituiscono nuovi stati di Mastery.
+
+
+================================================================================
+13. Review Eligibility
+================================================================================
+
+Una Learning Activity è eleggibile per la revisione quando:
+
+- è disponibile per la selezione;
+- è compatibile con il relativo contesto di apprendimento;
+- è associata a conoscenza rilevante per la revisione;
+- non viola vincoli di sistema;
+- non è esclusa da una condizione di scheduling attiva.
+
+
+L'eleggibilità non implica necessariamente la selezione.
+
+Una Learning Activity eleggibile può essere esclusa quando altre attività
+presentano una priorità di revisione superiore.
+
+
+================================================================================
+14. Review Suppression
+================================================================================
+
+Adaptive Review può sopprimere temporaneamente la selezione di una
+Learning Activity quando:
+
+- è stata recentemente completata;
+- è già presente in una sessione attiva;
+- esiste una revisione equivalente già programmata;
+- la relativa conoscenza non richiede attualmente revisione;
+- esistono vincoli di scheduling incompatibili.
+
+
+La soppressione è una decisione di processo.
+
+Non modifica la Learning Activity né il relativo Mastery State.
+
+
+================================================================================
+15. Temporal Review Policy
+================================================================================
+
+Lo scheduling deve considerare il tempo come segnale di revisione.
+
+Una Learning Activity può diventare nuovamente eleggibile quando:
+
+- è trascorso l'intervallo minimo di revisione;
+- è raggiunta una condizione temporale prevista;
+- un nuovo segnale di apprendimento rende opportuna la revisione;
+- una nuova selezione richiede una rivalutazione.
+
+
+Gli intervalli temporali utilizzati da Adaptive Review devono essere
+configurabili secondo le regole del sistema.
+
+Adaptive Review non deve modificare retroattivamente gli eventi temporali
+utilizzati come input.
+
+
+================================================================================
+16. Recency and Repetition
+================================================================================
+
+La recency può essere utilizzata per evitare una ripetizione eccessivamente
+ravvicinata della stessa Learning Activity.
+
+La recency non deve essere interpretata come misura di Mastery.
+
+Una Learning Activity recentemente eseguita può essere nuovamente selezionata
+quando esiste una ragione adattiva autorizzata.
+
+
+La semplice ripetizione non costituisce di per sé una strategia adattiva.
+
+
+================================================================================
+17. Evidence-Aware Review
+================================================================================
+
+Quando Evidence è disponibile, Adaptive Review può utilizzarla per
+determinare se una revisione è opportuna.
+
+Evidence può aumentare, ridurre o non modificare la priorità di revisione
+solo secondo regole autorizzate dal modello ELR.
+
+
+Adaptive Review non può:
+
+- creare una nuova Evidence;
+- correggere una Evidence;
+- ridefinire il significato di una Evidence;
+- utilizzare Evidence come sostituto del Mastery State.
+
+
+================================================================================
+18. Session Constraints
+================================================================================
+
+La selezione deve rispettare i vincoli della sessione corrente.
+
+I vincoli possono includere:
+
+- numero massimo di attività;
+- durata prevista della sessione;
+- attività già completate;
+- attività già programmate;
+- diversità minima tra attività;
+- ordine relativo richiesto dal sistema.
+
+
+I vincoli di sessione possono modificare la selezione senza modificare la
+priorità intrinseca delle conoscenze o il relativo Mastery State.
+
+
+================================================================================
+19. Diversity Constraint
+================================================================================
+
+Adaptive Review può utilizzare la diversità come criterio di selezione per
+evitare sequenze didattiche eccessivamente ridondanti.
+
+La diversità può riguardare:
+
+- Learning Activity;
+- conoscenze target;
+- tipologia di attività;
+- pattern di revisione;
+- distribuzione temporale.
+
+
+La diversità non deve diventare un nuovo criterio di Mastery.
+
+
+================================================================================
+20. Scheduling Recalculation
+================================================================================
+
+Uno scheduling precedente non impedisce una successiva rivalutazione.
+
+Adaptive Review può ricalcolare la priorità o lo scheduling quando cambiano
+gli input autorizzati, inclusi:
+
+- Mastery State;
+- Evidence rilevante;
+- segnali temporali;
+- disponibilità delle Learning Activity;
+- vincoli della sessione.
+
+
+Una rivalutazione non modifica retroattivamente le decisioni già registrate.
+
+
+================================================================================
+21. Determinism and Explainability
+================================================================================
+
+A parità di:
+
+- Learning Activity disponibili;
+- Mastery State;
+- Evidence utilizzata;
+- segnali temporali;
+- vincoli di sistema;
+- configurazione della policy;
+
+Adaptive Review deve produrre una decisione riproducibile, salvo esplicita
+configurazione di comportamento non deterministico.
+
+
+Ogni decisione adattiva significativa deve poter essere ricondotta agli
+input e ai criteri che l'hanno determinata.
+
+
+================================================================================
+22. Policy Boundary
+================================================================================
+
+La Adaptive Review Policy definisce criteri di selezione e scheduling.
+
+Non definisce:
+
+- nuove metriche di Mastery;
+- nuovi tipi di Evidence;
+- nuove Learning Activity;
+- nuove categorie di conoscenza;
+- nuovi esercizi;
+- nuove regole grammaticali.
+
+
+Quando una decisione richiede una nuova responsabilità di dominio o di
+processo, tale responsabilità deve essere assegnata al componente ELR
+appropriato invece di essere assorbita dalla Adaptive Review Policy.
+
 
 ================================================================================
 Principio conclusivo
