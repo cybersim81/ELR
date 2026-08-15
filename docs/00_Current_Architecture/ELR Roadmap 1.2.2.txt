@@ -1,37 +1,37 @@
-================================================================================
-English Learning Repository (ELR)
+# English Learning Repository (ELR)
 
-Architectural Roadmap
+# Architectural Roadmap
 
-Version: 1.2.1
-Status: ACTIVE
-==============
+**Version:** 1.2.2
+**Status:** ACTIVE
+
+---
 
 # Document Identity
 
-Document Name:
+**Document Name:**
 
 ELR Architectural Roadmap
 
-Document Version:
+**Document Version:**
 
-1.2.1
+1.2.2
 
-Status:
+**Status:**
 
 ACTIVE
 
-Document Type:
+**Document Type:**
 
 Strategic Planning Document
 
-Purpose:
+**Purpose:**
 
 Defines the planned evolution path of the ELR architecture and identifies
 the current architectural state, completed consolidation work, and remaining
 verification and evolution activities.
 
-Dependencies:
+**Dependencies:**
 
 * ELR Architecture Specification
 * ELR Documentation Architecture
@@ -40,11 +40,11 @@ Dependencies:
 * ELR Architecture Consistency Matrix
 * ELR Continuity Package
 
-Maintained By:
+**Maintained By:**
 
 ELR Architecture Governance
 
-================================================================================
+---
 
 # Document Purpose
 
@@ -62,12 +62,13 @@ La Roadmap distingue esplicitamente:
 * fondazioni architetturali completate;
 * specifiche di dominio e processo consolidate;
 * verifiche di consistenza documentale;
+* readiness per l'implementazione;
 * sistemi derivati ancora da definire;
 * future evoluzioni dell'Interaction Layer.
 
-================================================================================
-Stato architetturale corrente
-=============================
+---
+
+# Stato architetturale corrente
 
 L'architettura ELR ha raggiunto un livello di consolidamento sufficiente per
 considerare definiti i principali confini tra:
@@ -96,15 +97,21 @@ Conversation Episode
 → Learning Review
 → ELR.
 
-================================================================================
-Fase 0 — Fondazioni Architetturali
-==================================
+La documentazione consolidata ha superato il checkpoint di consistenza.
 
-Stato:
+La verifica di Implementation Readiness ha inoltre completato il gate
+necessario per procedere verso l'implementazione senza introdurre
+implicitamente nuove decisioni architetturali durante il coding.
+
+---
+
+# Fase 0 — Fondazioni Architetturali
+
+## Stato:
 
 Completata.
 
-Obiettivo:
+## Obiettivo:
 
 Definizione del modello architetturale fondamentale dell'ELR.
 
@@ -127,15 +134,15 @@ Responsabilità consolidate:
 
 La fase è considerata completata a livello architetturale.
 
-================================================================================
-Fase 1 — ELR Knowledge Model
-============================
+---
 
-Stato:
+# Fase 1 — ELR Knowledge Model
+
+## Stato:
 
 Completata.
 
-Obiettivo:
+## Obiettivo:
 
 Stabilizzare il modello della conoscenza rappresentata dal repository.
 
@@ -172,15 +179,15 @@ Responsabilità consolidate:
 
 La fase è considerata completata a livello architetturale.
 
-================================================================================
-Fase 2 — Knowledge Extraction Architecture
-==========================================
+---
 
-Stato:
+# Fase 2 — Knowledge Extraction Architecture
+
+## Stato:
 
 Completata.
 
-Obiettivo:
+## Obiettivo:
 
 Definire l'architettura del processo di estrazione della conoscenza.
 
@@ -212,15 +219,15 @@ La fase è considerata completata a livello architetturale.
 Eventuali implementazioni, test o raffinamenti operativi successivi non
 costituiscono una riapertura della fase architetturale.
 
-================================================================================
-Fase 3 — Evidence Architecture
-==============================
+---
 
-Stato:
+# Fase 3 — Evidence Architecture
+
+## Stato:
 
 Completata.
 
-Obiettivo:
+## Obiettivo:
 
 Definire il modello architetturale delle Evidence e i relativi confini
 di responsabilità.
@@ -261,15 +268,15 @@ decisione della Learning Review e non costituisce una Evidence del modello.
 
 La fase è considerata completata a livello architetturale.
 
-================================================================================
-Fase 4 — Mastery Architecture
-=============================
+---
 
-Stato:
+# Fase 4 — Mastery Architecture
+
+## Stato:
 
 Completata.
 
-Obiettivo:
+## Obiettivo:
 
 Separare il concetto architetturale di Mastery dalla logica di aggiornamento
 del Mastery State.
@@ -303,15 +310,15 @@ Mastery State rappresenta lo stato risultante.
 
 La fase è considerata completata a livello architetturale.
 
-================================================================================
-Fase 5 — Human Learning Control
-===============================
+---
 
-Stato:
+# Fase 5 — Human Learning Control
+
+## Stato:
 
 Completata.
 
-Obiettivo:
+## Obiettivo:
 
 Definire il controllo umano sugli aggiornamenti del repository.
 
@@ -334,15 +341,15 @@ La conoscenza entra nell'ELR solamente dopo approvazione.
 
 La fase è considerata completata a livello architetturale.
 
-================================================================================
-Fase 6 — Learning Activity and Exercise Systems
-===============================================
+---
 
-Stato:
+# Fase 6 — Learning Activity and Exercise Systems
+
+## Stato:
 
 Completata a livello architetturale.
 
-Obiettivo:
+## Obiettivo:
 
 Definire la separazione tra intenzione didattica, realizzazione
 dell'esercizio, interazione e produzione delle Evidence.
@@ -386,15 +393,15 @@ Learning Object
 
 La fase è considerata completata a livello architetturale.
 
-================================================================================
-Fase 7 — Document Consistency Consolidation
-===========================================
+---
 
-Stato:
+# Fase 7 — Document Consistency Consolidation
+
+## Stato:
 
 Completata.
 
-Obiettivo:
+## Obiettivo:
 
 Verificare che i documenti dell'architettura consolidata utilizzino
 correttamente:
@@ -461,18 +468,18 @@ La consistenza finale è stata verificata su un corpus di 15 documenti.
 
 Finding aperti:
 
-0
+**0**
 
 La fase non modifica l'architettura: verifica la consistenza della
 documentazione rispetto all'architettura già consolidata.
 
-================================================================================
-Checkpoint — Specification Consistency
-======================================
+---
 
-Stato:
+# Checkpoint — Specification Consistency
 
-GO.
+## Stato:
+
+**GO**
 
 Risultato:
 
@@ -487,7 +494,7 @@ Risultato:
 ✓ coerenza cross-documento confermata;
 
 ✓ boundary Domain / Process / Persistence / Event / Security / API
-  confermati;
+confermati;
 
 ✓ versioni e date verificate sui documenti modificati.
 
@@ -502,60 +509,125 @@ quanto riguarda i confini e le decisioni architetturali già consolidate.
 Eventuali modifiche successive devono essere trattate come modifiche
 controllate e non come riapertura implicita della fase di consolidamento.
 
-================================================================================
-Fase 8 — Implementation Readiness Review
-=========================================
+---
 
-Stato:
+# Fase 8 — Implementation Readiness Review
 
-Prossima fase.
+## Stato:
 
-Obiettivo:
+**Completata.**
+
+## Obiettivo:
 
 Verificare che le specifiche consolidate siano sufficientemente precise
 per avviare l'implementazione senza introdurre nuove decisioni
 architetturali durante il coding.
 
-Attività:
+Attività completate:
 
-* verifica della completezza delle responsabilità implementative;
-* verifica dei contratti tra Domain, Application, Persistence, Event,
-  Security e API;
-* verifica della tracciabilità tra specifiche e componenti implementativi;
-* identificazione delle eventuali decisioni tecniche residue;
-* definizione della sequenza di implementazione;
-* definizione dei primi test e contract checks.
+✓ verifica della completezza delle responsabilità implementative;
 
-Criterio di uscita:
+✓ verifica dei contratti tra Domain, Application, Persistence, Event,
+Security e API;
 
-La fase sarà completata quando ogni decisione necessaria per iniziare
-l'implementazione sarà:
+✓ verifica della tracciabilità tra specifiche e componenti implementativi;
+
+✓ identificazione delle eventuali decisioni tecniche residue;
+
+✓ definizione della sequenza di implementazione;
+
+✓ definizione dei primi test e contract checks.
+
+## Risultato:
+
+**Implementation Readiness Checkpoint — GO**
+
+La fase è stata completata senza introdurre nuove decisioni architetturali.
+
+Ogni decisione necessaria per iniziare l'implementazione è risultata:
 
 * già definita nelle Specification;
 * registrata nell'Architecture Decision Log;
-* oppure esplicitamente classificata come decisione tecnica
-  non architetturale.
+* oppure classificata come decisione tecnica non architetturale.
 
-Output previsto:
+Finding aperti:
 
-Implementation Readiness Checkpoint.
+**0**
 
-================================================================================
-Fase 9 — Derived Learning Systems
-=================================
+Decisioni architetturali bloccanti:
 
-Stato:
+**0**
 
-Da definire.
+Nuove Specification richieste:
 
-Obiettivo:
+**0**
+
+Nuove Matrix richieste:
+
+**0**
+
+La fase è quindi considerata completata.
+
+Il completamento della Fase 8 non implica che l'implementazione sia completa.
+
+Esso costituisce il gate che autorizza il passaggio alla successiva posizione
+della Roadmap.
+
+---
+
+# Checkpoint — Implementation Readiness
+
+## Stato:
+
+**GO**
+
+Risultato:
+
+✓ specifiche consolidate;
+
+✓ responsabilità implementative verificate;
+
+✓ contratti inter-layer verificati;
+
+✓ tracciabilità Specification → implementation verificata;
+
+✓ decisioni tecniche residue identificate;
+
+✓ sequenza di implementazione definita;
+
+✓ primi test e contract checks identificati;
+
+✓ finding aperti: 0;
+
+✓ decisioni architetturali bloccanti: 0.
+
+Decisione:
+
+L'ELR è considerato **implementation-ready** rispetto al perimetro
+verificato dalla Fase 8.
+
+Le specifiche consolidate rimangono frozen rispetto ai confini e alle
+decisioni architetturali verificate.
+
+L'implementazione deve procedere secondo gli Implementation Specification
+e l'Implementation Plan autorizzati.
+
+---
+
+# Fase 9 — Derived Learning Systems
+
+## Stato:
+
+**Corrente / Prossima fase autorizzata.**
+
+## Obiettivo:
 
 Costruire sistemi derivati basati sull'ELR come unica sorgente, mantenendo
 separata la selezione dell'intervento didattico dalla sua realizzazione.
 
 Sistemi previsti:
 
-Phrasebook Specification
+## Phrasebook Specification
 
 Responsabilità:
 
@@ -563,7 +635,7 @@ Responsabilità:
 * visualizzazione dei Learning Object;
 * ricerca.
 
-Adaptive Review Specification
+## Adaptive Review Specification
 
 Responsabilità previste:
 
@@ -576,7 +648,7 @@ Adaptive Review non sostituisce la Learning Activity.
 
 Costituisce una futura policy/processo di selezione e scheduling.
 
-Reporting Specification
+## Reporting Specification
 
 Responsabilità previste:
 
@@ -587,15 +659,20 @@ Responsabilità previste:
 I sistemi derivati non costituiscono una nuova Source of Truth della
 conoscenza linguistica.
 
-================================================================================
-Fase 10 — Interaction Layer
-===========================
+La Fase 9 costituisce la posizione corrente della Roadmap.
 
-Stato:
+Il lavoro della Fase 9 non deve riaprire automaticamente le fasi
+architetturali precedenti.
+
+---
+
+# Fase 10 — Interaction Layer
+
+## Stato:
 
 Da definire.
 
-Obiettivo:
+## Obiettivo:
 
 Evolvere le modalità di interazione con l'utente.
 
@@ -618,9 +695,9 @@ Estensioni future:
 * audio;
 * input multimodale.
 
-================================================================================
-Sequenza documentale di ripristino ambiente
-===========================================
+---
+
+# Sequenza documentale di ripristino ambiente
 
 Per una nuova sessione progettuale:
 
@@ -692,9 +769,34 @@ ELR Roadmap
 
 Learning Interaction Language Specification
 
-================================================================================
-Criterio di completamento architetturale
-========================================
+La sequenza di ripristino deve essere integrata con gli artefatti di
+continuità definiti dal Session Prompt e dal Continuity Package.
+
+Per il bootstrap della sessione, i quattro continuity artifact hanno
+precedenza operativa sulla ricostruzione della fase:
+
+1.
+
+ELR Session Prompt 1.2.0.txt
+
+2.
+
+ELR Continuity Package 2.1.0.txt
+
+3.
+
+ELR Architectural Work State - Handoff 6.1.0.txt
+
+4.
+
+ELR Roadmap 1.2.2.txt
+
+Successivamente devono essere letti solamente i documenti specialistici
+necessari per la fase corrente.
+
+---
+
+# Criterio di completamento architetturale
 
 L'architettura ELR sarà considerata stabile quando:
 
@@ -712,14 +814,62 @@ L'architettura ELR sarà considerata stabile quando:
 * i riferimenti documentali utilizzano nomi, path e versioni coerenti;
 * il repository rimane la Source of Truth della conoscenza linguistica;
 * la documentazione consolidata ha superato il checkpoint di consistenza;
-* l'Implementation Readiness Review definisce esplicitamente il passaggio
-  dalla specifica congelata all'implementazione.
+* l'Implementation Readiness Review è stata completata con esito GO;
+* il passaggio dalla specifica congelata all'implementazione è esplicitamente
+  tracciato.
 
-================================================================================
-Fine documento
+---
+
+# Current Roadmap Position
+
+**Current Phase:**
+
+Fase 9 — Derived Learning Systems
+
+**Previous Completed Phase:**
+
+Fase 8 — Implementation Readiness Review
+
+**Previous Checkpoint:**
+
+Implementation Readiness Checkpoint — GO
+
+**Open Findings:**
+
+0
+
+**Blocking Architectural Decisions:**
+
+0
+
+**Next Authorized Work:**
+
+Fase 9 — Derived Learning Systems
+
+---
+
+# Continuity References
+
+**ELR Session Prompt:**
+
+ELR Session Prompt 1.2.0.txt
+
+**ELR Continuity Package:**
+
+ELR Continuity Package 2.1.0.txt
+
+**ELR Architectural Work State — Handoff:**
+
+ELR Architectural Work State - Handoff 6.1.0.txt
+
+**ELR Roadmap:**
+
+ELR Roadmap 1.2.2.txt
+
+---
+
+# Fine documento
 
 ELR Architectural Roadmap
 
-Versione 1.2.1
-
-================================================================================
+Versione 1.2.2
