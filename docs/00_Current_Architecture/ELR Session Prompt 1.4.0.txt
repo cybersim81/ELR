@@ -1,6 +1,6 @@
 # ELR Session Prompt
 
-**Version:** 1.3.0
+**Version:** 1.4.0
 **Status:** ACTIVE
 **Document Type:** Session Bootstrap and Working Protocol
 
@@ -47,6 +47,10 @@ Recupera il **current versioned filename** di:
 
 `ELR Session Prompt`
 
+Il file corrente è:
+
+`ELR Session Prompt 1.4.0.txt`
+
 tramite la regola di `Canonical Naming and Version Resolution` definita
 in §13.
 
@@ -56,6 +60,10 @@ Recupera il **current versioned filename** di:
 
 `ELR Continuity Package`
 
+Il file corrente è:
+
+`ELR Continuity Package 2.3.0.txt`
+
 tramite la regola di `Canonical Naming and Version Resolution`.
 
 ### Step 3 — Leggi l'Handoff
@@ -64,6 +72,10 @@ Recupera il **current versioned filename** di:
 
 `ELR Architectural Work State - Handoff`
 
+Il file corrente è:
+
+`ELR Architectural Work State - Handoff 6.3.0.txt`
+
 tramite la regola di `Canonical Naming and Version Resolution`.
 
 ### Step 4 — Leggi la Roadmap
@@ -71,6 +83,10 @@ tramite la regola di `Canonical Naming and Version Resolution`.
 Recupera il **current versioned filename** di:
 
 `ELR Roadmap`
+
+Il file corrente è:
+
+`ELR Roadmap 1.3.0.txt`
 
 tramite la regola di `Canonical Naming and Version Resolution`.
 
@@ -421,30 +437,28 @@ blocco copiabile → aggiornamento repository → verifica → prossimo punto**
 
 ## 8. REPOSITORY WRITE CONSTRAINT
 
-L'integrazione GitHub è attualmente verificata come segue:
+The user is the only actor authorized to modify documents in the repository
+for the current architectural workflow.
 
-**READ → AVAILABLE**
+Therefore:
 
-**WRITE → UNAVAILABLE**
+* the assistant must not modify repository documents directly;
+* the assistant must provide only copyable documentation blocks;
+* every proposed modification must identify the file and the exact section
+  to insert, replace or delete;
+* the user applies the modification in the repository;
+* the assistant verifies the resulting repository content after the user
+  confirms the modification;
+* a modification is not considered complete until the resulting repository
+  content has been verified.
 
-I tentativi di scrittura diretta hanno restituito:
+The proposal of a modification and the application of the modification are
+distinct activities.
 
-**HTTP 403 — Forbidden**
+The assistant must never present a proposed or locally prepared change as
+already applied.
 
-Pertanto:
-
-* non dichiarare mai una modifica come applicata sulla sola base di un
-  tentativo di scrittura;
-* se una scrittura diretta restituisce `403`, considera la scrittura non
-  applicata;
-* produci il blocco copiabile;
-* l'utente applica manualmente la modifica;
-* recupera nuovamente il file dal repository;
-* verifica il contenuto aggiornato;
-* considera la modifica effettivamente applicata solo dopo verifica READ.
-
-Il `403` è un vincolo operativo dell'integrazione e non una decisione
-architetturale ELR.
+The repository remains the source of truth.
 
 ---
 
@@ -498,6 +512,13 @@ Dopo il bootstrap:
     nuova evidenza che ne giustifichi la riapertura.
 
 Non inventare lavoro già completato.
+
+A completed phase must be treated as closed unless new evidence explicitly
+requires reopening it.
+
+When the current phase is a newly authorized phase, begin from the
+authoritative documents and dependencies of that phase rather than
+reconstructing the previous phase.
 
 Non assumere che un'attività sia aperta solo perché lo era in una
 precedente sessione.
@@ -678,10 +699,10 @@ Esempio:
 
 | Canonical name                           | Current repository file                            |
 | ---------------------------------------- | -------------------------------------------------- |
-| `ELR Roadmap`                            | `ELR Roadmap 1.2.2.txt`                            |
-| `ELR Session Prompt`                     | `ELR Session Prompt 1.2.0.txt`                     |
-| `ELR Continuity Package`                 | `ELR Continuity Package 2.1.0.txt`                 |
-| `ELR Architectural Work State — Handoff` | `ELR Architectural Work State - Handoff 6.1.0.txt` |
+| `ELR Session Prompt`                     | `ELR Session Prompt 1.4.0.txt`                     |
+| `ELR Continuity Package`                 | `ELR Continuity Package 2.3.0.txt`                 |
+| `ELR Architectural Work State — Handoff` | `ELR Architectural Work State - Handoff 6.3.0.txt` |
+| `ELR Roadmap`                            | `ELR Roadmap 1.3.0.txt`                            |
 
 Regola operativa:
 
