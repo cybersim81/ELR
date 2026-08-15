@@ -153,6 +153,257 @@ Mastery Engine gestisce la padronanza.
 
 ELR conserva la conoscenza persistente.
 
+================================================================================
+Adaptive Review Inputs
+================================================================================
+
+Adaptive Review riceve esclusivamente segnali prodotti o autorizzati dai
+componenti proprietari del modello ELR.
+
+Gli input principali sono:
+
+- Learning Activity disponibili;
+- Mastery State;
+- segnali temporali autorizzati;
+- Evidence rilevante, quando disponibile;
+- contesto minimo necessario alla selezione;
+- vincoli di scheduling definiti dal sistema.
+
+Adaptive Review non modifica direttamente nessuno degli input ricevuti.
+
+
+================================================================================
+1. Learning Activity Input
+================================================================================
+
+Le Learning Activity costituiscono l'insieme delle attività candidate alla
+selezione.
+
+Adaptive Review può:
+
+- valutare la loro eleggibilità;
+- ordinarle secondo criteri adattivi;
+- selezionare una o più attività;
+- assegnare una priorità di revisione;
+- determinare quando un'attività dovrebbe essere riproposta.
+
+
+Adaptive Review non modifica la definizione della Learning Activity.
+
+La struttura, il contenuto e la modalità di esecuzione della Learning Activity
+rimangono di proprietà della Learning Activity Specification.
+
+
+================================================================================
+2. Mastery State Input
+================================================================================
+
+Il Mastery State rappresenta uno dei principali segnali utilizzati da
+Adaptive Review.
+
+Adaptive Review può utilizzare il Mastery State per:
+
+- identificare conoscenze che richiedono revisione;
+- determinare priorità relative;
+- evitare ripetizioni non necessarie;
+- favorire attività associate a conoscenze con padronanza insufficiente;
+- determinare la necessità di una nuova esposizione.
+
+
+Adaptive Review non calcola né modifica il Mastery State.
+
+Il calcolo e l'aggiornamento della Mastery appartengono al Mastery Engine.
+
+
+================================================================================
+3. Evidence Input
+================================================================================
+
+Evidence può essere utilizzata come segnale complementare quando è disponibile
+e autorizzata dal modello ELR.
+
+Adaptive Review può utilizzare Evidence per:
+
+- identificare attività recentemente eseguite;
+- distinguere segnali recenti da segnali storici;
+- supportare decisioni di revisione;
+- evitare selezioni incoerenti con lo stato osservato.
+
+
+Adaptive Review non crea, modifica o interpreta Evidence al di fuori delle
+regole definite dal relativo Evidence Model.
+
+Evidence rimane proprietà del componente Evidence Model.
+
+
+================================================================================
+4. Temporal Input
+================================================================================
+
+Adaptive Review può utilizzare informazioni temporali per determinare
+l'opportunità della revisione.
+
+I segnali temporali possono includere:
+
+- tempo trascorso dall'ultima esposizione;
+- tempo trascorso dall'ultima attività;
+- intervallo previsto per una nuova revisione;
+- priorità temporale;
+- vincoli di sessione.
+
+
+Il tempo è un segnale decisionale e non costituisce di per sé conoscenza
+persistente.
+
+
+================================================================================
+5. Selection Decision
+================================================================================
+
+La selezione adattiva è il processo attraverso il quale Adaptive Review
+determina quali Learning Activity sono candidate alla revisione.
+
+
+Il processo concettuale è:
+
+Candidate Learning Activities
+        +
+Mastery State
+        +
+Evidence signals
+        +
+Temporal signals
+        +
+System constraints
+        |
+        v
+Adaptive Review Selection
+        |
+        v
+Selected Learning Activity
+
+
+La selezione deve essere spiegabile attraverso gli input autorizzati che
+hanno determinato la decisione.
+
+
+================================================================================
+6. Selection Priority
+================================================================================
+
+Adaptive Review può assegnare una priorità relativa alle Learning Activity.
+
+La priorità può essere determinata considerando:
+
+- necessità di revisione;
+- stato di Mastery;
+- recency;
+- tempo trascorso;
+- evidenza recente;
+- vincoli della sessione;
+- diversità delle attività già selezionate.
+
+
+La priorità non costituisce una nuova misura di Mastery.
+
+Non deve essere utilizzata come sostituto del Mastery State.
+
+
+================================================================================
+7. Scheduling Decision
+================================================================================
+
+Lo scheduling determina quando una Learning Activity selezionata dovrebbe
+essere proposta nuovamente.
+
+Il processo concettuale è:
+
+Selected Learning Activity
+        +
+Temporal signals
+        +
+Review priority
+        +
+System constraints
+        |
+        v
+Adaptive Review Scheduling
+        |
+        v
+Review Schedule
+
+
+Lo scheduling può produrre:
+
+- una finestra temporale;
+- una priorità temporale;
+- un ordine relativo;
+- una condizione per la successiva revisione.
+
+
+Lo scheduling non modifica la Learning Activity.
+
+
+================================================================================
+8. Separation of Selection and Scheduling
+================================================================================
+
+Selection e scheduling sono responsabilità correlate ma distinte.
+
+Selection risponde alla domanda:
+
+"Quale attività deve essere considerata per la revisione?"
+
+
+Scheduling risponde alla domanda:
+
+"Quando deve essere considerata nuovamente?"
+
+
+Una decisione di scheduling non implica automaticamente una nuova selezione.
+
+Una nuova selezione può invece utilizzare lo stato prodotto da uno scheduling
+precedente.
+
+
+================================================================================
+9. Decision Constraints
+================================================================================
+
+Adaptive Review non deve selezionare una Learning Activity esclusivamente
+perché:
+
+- è recente;
+- è frequente;
+- è stata utilizzata in precedenza;
+- appartiene a un Learning Object specifico;
+- contiene una parola specifica.
+
+
+La selezione deve essere giustificabile attraverso almeno un segnale
+adattivo autorizzato.
+
+
+================================================================================
+10. Source of Truth Boundary
+================================================================================
+
+Adaptive Review produce decisioni di processo.
+
+Non produce:
+
+- nuova conoscenza;
+- nuovi Anchor;
+- nuovi Learning Object;
+- nuovi Knowledge Statement;
+- nuovi Evidence;
+- nuovi Mastery State.
+
+
+Le decisioni di Adaptive Review possono essere persistite solo secondo le
+regole del sistema di persistenza e non diventano automaticamente conoscenza
+ELR.
+
 
 ================================================================================
 Principio conclusivo
