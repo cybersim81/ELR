@@ -15,7 +15,7 @@ English Learning Repository (ELR) Domain Model Specification
 
 Document Version:
 
-1.0.0
+1.1.0
 
 
 Status:
@@ -25,7 +25,7 @@ DRAFT
 
 Last Updated:
 
-2026-08-14
+2026-08-15
 
 
 Dependencies:
@@ -229,10 +229,6 @@ Il Learning Object non possiede né Learning State né Mastery State.
 La presenza di un Learning Object nel repository non implica l'esistenza di
 uno specifico stato di apprendimento o di padronanza per un User.
 
-
-================================================================================
-
-
 ================================================================================
 Aggregate Ownership
 ================================================================================
@@ -250,14 +246,14 @@ Il Learning Object garantisce che siano sempre rispettati:
 
 • Examples e Notes coerenti con la conoscenza rappresentata.
 
+L'Anchor può includere una trascrizione fonetica IPA opzionale della propria
+forma linguistica.
+
+La presenza o modifica della trascrizione IPA non altera l'identità
+dell'Anchor né la coerenza dell'aggregate Learning Object.
 
 Le entità appartenenti all'aggregate non possiedono un ciclo di vita autonomo
 rispetto al Learning Object.
-
-
-
-
-
 
 ================================================================================
 Entity Specifications
@@ -528,6 +524,20 @@ L'Anchor costituisce il punto di riferimento attraverso cui una conoscenza
 linguistica può essere riconosciuta, recuperata e riutilizzata.
 
 Ogni Learning Object possiede esattamente un Anchor.
+
+IPA
+
+Trascrizione fonetica opzionale dell'Anchor secondo l'International
+Phonetic Alphabet (IPA).
+
+La proprietà:
+
+* è opzionale;
+* non contribuisce all'identità dell'Anchor;
+* può essere assente/null;
+* non può essere una stringa vuota o composta esclusivamente da spazi;
+* non rappresenta una nuova entità di dominio;
+* non modifica la semantica dell'Anchor.
 
 
 ================================================================================
