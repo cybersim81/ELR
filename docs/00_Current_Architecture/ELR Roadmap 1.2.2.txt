@@ -2,7 +2,7 @@
 
 # Architectural Roadmap
 
-**Version:** 1.2.2
+**Version:** 1.2.3
 **Status:** ACTIVE
 
 ---
@@ -15,7 +15,7 @@ ELR Architectural Roadmap
 
 **Document Version:**
 
-1.2.2
+1.2.3
 
 **Status:**
 
@@ -614,6 +614,70 @@ e l'Implementation Plan autorizzati.
 
 ---
 
+# Checkpoint — Core Domain Implementation Propagation
+
+## Stato:
+
+**Completato.**
+
+## Obiettivo:
+
+Verificare la propagazione controllata di una estensione del Core Domain
+Model attraverso la documentazione proprietaria, il Domain Model,
+il Persistence Mapping, l'implementazione e i test.
+
+## Estensione verificata:
+
+L'Anchor supporta una trascrizione fonetica IPA opzionale mediante la
+proprietà:
+
+`Anchor.ipa`
+
+La proprietà non modifica l'identità dell'Anchor e non introduce una
+nuova entità di dominio `Pronunciation`.
+
+Non viene introdotta la gestione audio.
+
+## Propagazione verificata:
+
+✓ Anchor Specification 1.1.0
+
+✓ ELR Domain Model Specification 1.1.0
+
+✓ ELR Persistence Mapping Specification 0.2.0
+
+✓ `app/domain/entities/anchor.py`
+
+✓ `app/persistence/models/anchor_model.py`
+
+✓ `tests/domain/test_anchor.py`
+
+✓ `tests/persistence/models/test_anchor_model.py`
+
+## Risultato:
+
+**Core Domain Implementation Propagation Checkpoint — COMPLETE**
+
+La propagazione è stata verificata lungo la catena:
+
+Domain Specification
+→ Domain Model
+→ Persistence Mapping
+→ Domain Implementation
+→ Persistence Implementation
+→ Domain Tests
+→ Persistence Tests.
+
+Finding aperti:
+
+**0**
+
+Il checkpoint non riapre le fasi architetturali precedenti.
+
+La Fase 9 rimane la posizione corrente della Roadmap.
+
+---
+
 # Fase 9 — Derived Learning Systems
 
 ## Stato:
@@ -777,19 +841,19 @@ precedenza operativa sulla ricostruzione della fase:
 
 1.
 
-ELR Session Prompt 1.2.0.txt
+ELR Session Prompt 1.3.0.txt
 
 2.
 
-ELR Continuity Package 2.1.0.txt
+ELR Continuity Package 2.2.0.txt
 
 3.
 
-ELR Architectural Work State - Handoff 6.1.0.txt
+ELR Architectural Work State - Handoff 6.2.0.txt
 
 4.
 
-ELR Roadmap 1.2.2.txt
+ELR Roadmap 1.2.3.txt
 
 Successivamente devono essere letti solamente i documenti specialistici
 necessari per la fase corrente.
@@ -832,7 +896,7 @@ Fase 8 — Implementation Readiness Review
 
 **Previous Checkpoint:**
 
-Implementation Readiness Checkpoint — GO
+Core Domain Implementation Propagation Checkpoint — COMPLETE
 
 **Open Findings:**
 
@@ -852,19 +916,19 @@ Fase 9 — Derived Learning Systems
 
 **ELR Session Prompt:**
 
-ELR Session Prompt 1.2.0.txt
+ELR Session Prompt 1.3.0.txt
 
 **ELR Continuity Package:**
 
-ELR Continuity Package 2.1.0.txt
+ELR Continuity Package 2.2.0.txt
 
 **ELR Architectural Work State — Handoff:**
 
-ELR Architectural Work State - Handoff 6.1.0.txt
+ELR Architectural Work State - Handoff 6.2.0.txt
 
 **ELR Roadmap:**
 
-ELR Roadmap 1.2.2.txt
+ELR Roadmap 1.2.3.txt
 
 ---
 
@@ -872,4 +936,4 @@ ELR Roadmap 1.2.2.txt
 
 ELR Architectural Roadmap
 
-Versione 1.2.2
+Versione 1.2.3
