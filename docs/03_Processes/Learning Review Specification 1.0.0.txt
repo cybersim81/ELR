@@ -644,7 +644,6 @@ La Review Decision Trace non rappresenta conoscenza persistente e non modifica
 la struttura o il significato delle Evidence utilizzate.
 
 
-
 ================================================================================
 Relazione con ELR
 ================================================================================
@@ -665,20 +664,38 @@ Learning Review
 
         |
 
-        +----------------+
+        +----------------------+------------------+
 
-        |                |
+        |                      |                  |
 
-        v                v
+        v                      v                  v
 
-    APPROVE          REJECT
+    APPROVE                REQUEST REVISION     REJECT
+
+        |                      |                  |
+
+        v                      v                  v
+
+       ELR             Revisione proposta     terminale
+
+                               |
+
+                               v
+
+                       Nuova Change Proposal
+
+                               |
+
+                               v
+
+                       Nuova Learning Review
 
 
-        |
+Una Change Proposal sottoposta a REQUEST REVISION non può aggiornare
+direttamente il repository.
 
-        v
-
-       ELR
+Solo una successiva valutazione della proposta revisionata che produca
+APPROVE consente l'applicazione della modifica all'ELR.
 
 
 ================================================================================
