@@ -78,10 +78,10 @@ Current canonical-to-file mapping:
 
 | Canonical name                           | Current repository file                            |
 | ---------------------------------------- | -------------------------------------------------- |
-| `ELR Architectural Work State — Handoff` | `ELR Architectural Work State - Handoff 6.3.0.txt` |
-| `ELR Continuity Package`                 | `ELR Continuity Package 2.3.0.txt`                 |
-| `ELR Roadmap`                            | `ELR Roadmap 1.3.0.txt`                            |
-| `ELR Session Prompt`                     | `ELR Session Prompt 1.4.0.txt`                     |
+| `ELR Architectural Work State — Handoff` | `ELR Architectural Work State - Handoff 6.4.0.txt` |
+| `ELR Continuity Package`                 | `ELR Continuity Package 2.4.0.txt`                 |
+| `ELR Roadmap`                            | `ELR Roadmap 1.4.0.txt`                            |
+| `ELR Session Prompt`                     | `ELR Session Prompt 1.5.0.txt`                     |
 
 Resolution rule:
 
@@ -145,7 +145,7 @@ Canonical name:
 
 Current file:
 
-`ELR Session Prompt 1.4.0.txt`
+`ELR Session Prompt 1.5.0.txt`
 
 Responsibility:
 
@@ -161,7 +161,7 @@ Canonical name:
 
 Current file:
 
-`ELR Continuity Package 2.3.0.txt`
+`ELR Continuity Package 2.4.0.txt`
 
 Responsibility:
 
@@ -177,7 +177,7 @@ Canonical name:
 
 Current file:
 
-`ELR Architectural Work State - Handoff 6.3.0.txt`
+`ELR Architectural Work State - Handoff 6.4.0.txt`
 
 Responsibility:
 
@@ -194,7 +194,7 @@ Canonical name:
 
 Current file:
 
-`ELR Roadmap 1.3.0.txt`
+`ELR Roadmap 1.4.0.txt`
 
 Responsibility:
 
@@ -323,10 +323,10 @@ La Fase 10 non è ancora iniziata.
 
 A new session must read, in this order:
 
-1. `ELR Session Prompt 1.4.0.txt`
-2. `ELR Continuity Package 2.3.0.txt`
-3. `ELR Architectural Work State - Handoff 6.3.0.txt`
-4. `ELR Roadmap 1.3.0.txt`
+1. `ELR Session Prompt 1.5.0.txt`
+2. `ELR Continuity Package 2.4.0.txt`
+3. `ELR Architectural Work State - Handoff 6.4.0.txt`
+4. `ELR Roadmap 1.4.0.txt`
 
 The session must then:
 
