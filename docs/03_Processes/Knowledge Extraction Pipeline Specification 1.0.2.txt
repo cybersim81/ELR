@@ -2087,49 +2087,6 @@ La conoscenza fondamentale è la stessa, ma il Knowledge Statement precedente
 è impreciso e viene sostituito con una formulazione più corretta.
 
 
-Esempio: SPLIT
-
-Learning Object esistente
-
-Anchor
-
-say / tell
-
-Knowledge Statement
-
-Say e tell hanno usi differenti nella comunicazione.
-
-Durante successive analisi emerge che il Learning Object contiene due
-conoscenze indipendenti.
-
-Nuovi Learning Object
-
-Anchor
-
-say
-
-Knowledge Statement
-
-"Say" introduce il contenuto di ciò che viene detto.
-
-Anchor
-
-tell + person
-
-Knowledge Statement
-
-"Tell" richiede normalmente un destinatario diretto.
-
-Risultato:
-
-SPLIT
-
-Motivazione:
-
-Il Learning Object originario rappresentava due conoscenze che possono essere
-apprese, utilizzate e verificate separatamente.
-
-
 ================================================================================
 ELR Change Proposal
 ================================================================================
@@ -2163,9 +2120,7 @@ Indica il tipo di modifica:
 
 • MERGE;
 
-• UPDATE;
-
-• SPLIT.
+• UPDATE.
 
 
 -------------------------------------------------------------------------------
@@ -2198,13 +2153,6 @@ Per UPDATE:
 
 • modifica proposta.
 
-Per SPLIT:
-
-• Learning Object da suddividere;
-
-• insieme dei nuovi Learning Object proposti;
-
-• relazione tra il Learning Object originario e quelli derivati.
 
 -------------------------------------------------------------------------------
 Proposal Rationale
@@ -2222,7 +2170,7 @@ classificazione della proposta.
 
 Può includere, ad esempio:
 
-• motivazione della classificazione CREATE, MERGE, UPDATE o SPLIT;
+• motivazione della classificazione CREATE, MERGE, UPDATE;
 
 • relazione con Learning Object esistenti;
 
