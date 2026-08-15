@@ -1,6 +1,6 @@
 # ELR Session Prompt
 
-**Version:** 1.1.0
+**Version:** 1.2.0
 **Status:** ACTIVE
 **Document Type:** Session Bootstrap and Working Protocol
 
@@ -43,19 +43,36 @@ All'inizio di una nuova sessione:
 
 ### Step 1 — Leggi questo documento
 
-`docs/00_Current_Architecture/ELR Session Prompt 1.1.0.txt`
+Recupera il **current versioned filename** di:
+
+`ELR Session Prompt`
+
+tramite la regola di `Canonical Naming and Version Resolution` definita
+in §13.
 
 ### Step 2 — Leggi il Continuity Package
 
-`docs/00_Current_Architecture/ELR Continuity Package 2.0.0.txt`
+Recupera il **current versioned filename** di:
+
+`ELR Continuity Package`
+
+tramite la regola di `Canonical Naming and Version Resolution`.
 
 ### Step 3 — Leggi l'Handoff
 
-`docs/00_Current_Architecture/ELR Architectural Work State - Handoff 6.0.0.txt`
+Recupera il **current versioned filename** di:
+
+`ELR Architectural Work State - Handoff`
+
+tramite la regola di `Canonical Naming and Version Resolution`.
 
 ### Step 4 — Leggi la Roadmap
 
-`docs/00_Current_Architecture/ELR Roadmap 1.2.1.txt`
+Recupera il **current versioned filename** di:
+
+`ELR Roadmap`
+
+tramite la regola di `Canonical Naming and Version Resolution`.
 
 La Roadmap determina la posizione corrente del lavoro e le attività
 successive autorizzate.
@@ -66,6 +83,9 @@ Non assumere che i documenti di continuità siano aggiornati solo perché
 la conversazione precedente lo suggerisce.
 
 Verifica sempre il contenuto effettivo dei documenti nel repository.
+
+La versione dichiarata da un continuity artifact deve essere verificata
+contro il file effettivamente presente nel repository.
 
 ### Step 6 — Determina la fase corrente
 
@@ -78,9 +98,8 @@ Deve essere determinata verificando:
 3. Handoff;
 4. repository state.
 
-La posizione corrente registrata al checkpoint è:
-
-**Fase 8 — Implementation Readiness Review**
+Il Prompt definisce il metodo per determinare la posizione corrente, ma non
+conserva la posizione corrente stessa.
 
 ### Step 7 — Recupera i documenti specialistici rilevanti
 
@@ -89,7 +108,9 @@ pertinenti al lavoro corrente.
 
 Non ricreare documenti già presenti.
 
-Non riaprire documenti verificati senza una contraddizione concreta.
+Non riaprire documenti verificati senza una contraddizione concreta, una
+modifica del documento, una nuova versione, un nuovo finding o altra
+evidenza che richieda una nuova verifica.
 
 ---
 
@@ -398,21 +419,28 @@ Non assumere una fase corrente hardcoded in questo Prompt.
 
 La fase corrente deve essere determinata verificando:
 
-1. Roadmap 1.2.1;
-2. Continuity Package;
-3. Handoff;
+1. Roadmap corrente;
+2. Continuity Package corrente;
+3. Handoff corrente;
 4. repository state.
 
-La posizione corrente registrata è:
+Il Prompt definisce il metodo per determinare la posizione corrente, ma non
+conserva la posizione corrente stessa.
 
-**Fase 8 — Implementation Readiness Review**
+Il prossimo passaggio deve essere determinato dalla posizione effettivamente
+registrata nei continuity artifacts e verificata nel repository.
 
-Il prossimo passaggio previsto dalla Roadmap è:
+Una fase o un checkpoint già completato non deve essere riaperto
+automaticamente all'inizio di una nuova sessione.
 
-**Fase 9 — Derived Learning Systems**
+Deve essere riaperto solamente quando emerge nuova evidenza, inclusi:
 
-ma non deve essere iniziato finché la Fase 8 non è stata completata e
-superata tramite il relativo checkpoint.
+* modifica del documento;
+* nuova versione del documento;
+* contraddizione;
+* nuovo finding;
+* modifica rilevante dell'implementazione;
+* richiesta esplicita di rivalutazione.
 
 ---
 
@@ -425,20 +453,33 @@ Dopo il bootstrap:
 3. verifica quali artefatti esistono già;
 4. identifica i documenti proprietari;
 5. verifica eventuali discrepanze;
-6. per Fase 8, verifica la completezza delle responsabilità implementative;
-7. verifica i contratti tra Domain, Application, Persistence, Event,
-   Security e API;
-8. verifica la tracciabilità tra Specification e componenti implementativi;
-9. identifica le decisioni tecniche residue;
-10. definisci la sequenza di implementazione e i primi contract checks;
-11. proponi il primo passo concreto.
+6. verifica solamente i documenti necessari al lavoro corrente;
+7. verifica i contratti rilevanti per il punto operativo corrente;
+8. verifica la tracciabilità tra Specification e componenti implementativi
+   quando pertinente;
+9. identifica le decisioni tecniche residue solo quando necessarie;
+10. definisci il prossimo passo concreto;
+11. prima di riaprire una verifica già completata, controlla se esiste
+    nuova evidenza che ne giustifichi la riapertura.
 
 Non inventare lavoro già completato.
 
 Non assumere che un'attività sia aperta solo perché lo era in una
 precedente sessione.
 
-Non anticipare la Fase 9 finché la Fase 8 non è stata completata.
+Non anticipare attività appartenenti a una fase successiva quando il
+checkpoint della fase corrente non è stato superato.
+
+Quando un checkpoint significativo è stato superato:
+
+* registrare il risultato;
+* identificare eventuali finding aperti;
+* identificare la prossima posizione autorizzata;
+* verificare se gli artefatti di continuità devono essere aggiornati;
+* non ripetere automaticamente il lavoro del checkpoint appena chiuso.
+
+Quando la sessione raggiunge un checkpoint pulito, è consentito interrompere
+la sessione e riprendere dal checkpoint nella sessione successiva.
 
 ---
 
@@ -452,6 +493,7 @@ La mappa di progresso deve:
 * identificare la fase corrente e il relativo obiettivo;
 * elencare i principali punti di lavoro e i relativi sottopunti;
 * indicare ogni punto con:
+
   * `[ ]` non iniziato;
   * `[~]` in elaborazione;
   * `[x]` verificato/completato;
@@ -527,6 +569,18 @@ Un'attività documentale è considerata completata solamente quando:
 Una modifica non verificata nel repository non deve essere dichiarata
 completata.
 
+Un checkpoint significativo può costituire il punto di chiusura della
+sessione quando:
+
+* il checkpoint è stato verificato;
+* non esistono finding bloccanti non gestiti;
+* la prossima posizione autorizzata è identificabile;
+* gli artefatti di continuità interessati sono stati verificati o il loro
+  aggiornamento è stato esplicitamente identificato come prossimo lavoro.
+
+Non è necessario proseguire la sessione oltre un checkpoint pulito
+solamente per anticipare il lavoro della posizione successiva.
+
 ---
 
 ## 13. CONTINUITY MODEL
@@ -541,7 +595,7 @@ Definisce:
 
 Path:
 
-`docs/00_Current_Architecture/ELR Session Prompt 1.1.0.txt`
+`docs/00_Current_Architecture/ELR Session Prompt *.txt`
 
 ### Continuity Package
 
@@ -551,7 +605,7 @@ Definisce:
 
 Path:
 
-`docs/00_Current_Architecture/ELR Continuity Package 2.0.0.txt`
+`docs/00_Current_Architecture/ELR Continuity Package *.txt`
 
 ### Architectural Work State — Handoff
 
@@ -561,7 +615,7 @@ Definisce:
 
 Path:
 
-`docs/00_Current_Architecture/ELR Architectural Work State - Handoff 6.0.0.txt`
+`docs/00_Current_Architecture/ELR Architectural Work State - Handoff *.txt`
 
 ### Roadmap
 
@@ -571,7 +625,7 @@ Definisce:
 
 Path:
 
-`docs/00_Current_Architecture/ELR Roadmap 1.2.1.txt`
+`docs/00_Current_Architecture/ELR Roadmap *.txt`
 
 Questi documenti hanno responsabilità diverse e non devono duplicarsi.
 
@@ -622,8 +676,8 @@ contro il file effettivamente presente nel repository.
 
 Dopo aver completato il bootstrap:
 
-**verifica il repository, determina la Fase 8 corrente e inizia la
-Implementation Readiness Review secondo la Roadmap 1.2.1.**
+**verifica il repository, determina la posizione corrente dai continuity
+artifacts e inizia il prossimo lavoro autorizzato secondo la Roadmap.**
 
 Non ricostruire il contesto dalla memoria conversazionale.
 
@@ -632,8 +686,14 @@ Non assumere che il lavoro precedente sia ancora aperto.
 Non riaprire decisioni APPROVED senza una contraddizione documentale
 reale.
 
-Non introdurre nuova architettura durante la Implementation Readiness
-Review salvo che emerga una contraddizione architetturale reale.
+Non riaprire automaticamente un checkpoint già completato.
+
+Non introdurre nuova architettura durante il lavoro corrente salvo che emerga
+una contraddizione architetturale reale.
+
+Se il checkpoint precedente è stato superato e il repository non presenta
+nuova evidenza che richieda la riapertura, riprendi direttamente dalla
+successiva posizione autorizzata.
 
 Procedi secondo il Decision Workflow definito in questo documento.
 
