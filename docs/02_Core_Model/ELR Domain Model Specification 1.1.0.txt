@@ -525,19 +525,11 @@ linguistica può essere riconosciuta, recuperata e riutilizzata.
 
 Ogni Learning Object possiede esattamente un Anchor.
 
-IPA
+L'Anchor può includere una trascrizione fonetica opzionale della propria
+forma linguistica mediante l'International Phonetic Alphabet (IPA).
 
-Trascrizione fonetica opzionale dell'Anchor secondo l'International
-Phonetic Alphabet (IPA).
-
-La proprietà:
-
-* è opzionale;
-* non contribuisce all'identità dell'Anchor;
-* può essere assente/null;
-* non può essere una stringa vuota o composta esclusivamente da spazi;
-* non rappresenta una nuova entità di dominio;
-* non modifica la semantica dell'Anchor.
+La proprietà `ipa` non contribuisce all'identità dell'Anchor e la sua
+presenza o modifica non altera la semantica dell'Anchor.
 
 
 ================================================================================
