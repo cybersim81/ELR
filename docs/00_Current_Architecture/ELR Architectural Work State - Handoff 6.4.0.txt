@@ -1,6 +1,6 @@
 # ELR Architectural Work State — Handoff
 
-**Version:** 6.3.0
+**Version:** 6.4.0
 **Status:** Session Closure Checkpoint
 
 ---
@@ -31,10 +31,11 @@ Completed architectural phases:
 * Fase 7 — Document Consistency Consolidation
 * Fase 8 — Implementation Readiness Review
 * Fase 9 — Derived Learning Systems
+* Fase 10 — Interaction Layer
 
-### Current phase
+### Current completed phase
 
-**Fase 10 — Interaction Layer**
+**Fase 10 — Interaction Layer — COMPLETE / PASS — 100%**
 
 ### Previous phase
 
@@ -48,81 +49,65 @@ Completed architectural phases:
 
 ## 3. LAST VERIFIED WORKING POSITION
 
-Fase 9 — Derived Learning Systems has been completed.
+Fase 10 — Interaction Layer has been completed at architectural
+verification level.
 
-The Adaptive Review Specification 1.0.0 was:
+Verified:
 
-* verified;
-* cross-checked against the Architecture Consistency Matrix;
-* reviewed;
-* approved;
-* closed.
+* Learning Interaction Language Specification 1.0.0 — APPROVED;
+* Learning Activity Specification 1.0.0 — APPROVED;
+* Adaptive Review Specification 1.0.0 — APPROVED / CLOSED;
+* Exercise System Specification 1.0.0 — DRAFT;
+* Architecture Consistency Matrix 1.1.0 — APPROVED;
+* Roadmap 1.3.0 responsibility coverage;
+* LIL → KEP boundary;
+* Interaction Layer → Learning Activity boundary;
+* Learning Activity → Exercise System boundary;
+* Exercise System → User Interaction → Evidence boundary;
+* Adaptive Review → Learning Activity boundary.
 
-Adaptive Review is recorded in the Architecture Consistency Matrix as a
-Process Model with:
-
-`Adaptive Review Specification`
-
-as its owner document.
-
-The final Adaptive Review verification result was:
+Consistency result:
 
 **PASS**
+
+Phase completion:
+
+**100%**
 
 Finding aperti:
 
 **0**
 
-The Phrasebook and Learning Review / Learning Activity process boundaries
-were also verified as part of the Phase 9 dependency and continuity checks.
+F10-01:
 
-No unresolved architectural contradiction remains from the Phase 9 review.
+**CLOSED**
 
-The resulting checkpoint is:
-
-**Fase 9 — Derived Learning Systems — COMPLETE / PASS**
-
-No Phase 9 activity remains pending.
-
-The next authorized phase is:
-
-**Fase 10 — Interaction Layer**
-
-The repository remains the source of truth.
+No unresolved Phase 10 architectural finding remains.
 
 ---
 
 ## 4. CURRENT TASK / NEXT AUTHORIZED ACTION
 
-The previous authorized action was:
+Fase 10 — Interaction Layer is complete.
 
-**Fase 9 — Derived Learning Systems**
+Result:
 
-This phase has been completed.
-
-The Adaptive Review Specification 1.0.0 has been verified, reviewed,
-approved and closed.
-
-Final result:
-
-**PASS**
+**COMPLETE / PASS — 100%**
 
 Finding aperti:
 
 **0**
 
-No Phase 9 activity remains pending.
+No Phase 10 activity remains pending.
 
-The next authorized action is:
+The current Roadmap does not define a subsequent numbered phase.
 
-**Fase 10 — Interaction Layer**
+Next authorized action:
 
-Fase 10 has not yet started.
+**Verify the current Roadmap and determine the next authorized gate
+before starting new architectural work.**
 
-The completion of Fase 9 does not imply implementation completion.
-
-Implementation may proceed only according to the authoritative specifications
-and implementation plan applicable to the current phase.
+Do not invent or assume a Phase 11.
 
 ---
 
@@ -294,31 +279,33 @@ The session must resume from:
 The current session has reached a clean and verified phase-transition
 checkpoint.
 
-Fase 9 — Derived Learning Systems:
+Fase 10 — Interaction Layer:
 
-**COMPLETE / PASS**
-
-Adaptive Review Specification 1.0.0:
-
-**APPROVED / CLOSED**
+**COMPLETE / PASS — 100%**
 
 Finding aperti:
 
 **0**
 
-The conditions for session closure are satisfied:
+F10-01:
 
-* Fase 9 is complete;
-* Adaptive Review Specification 1.0.0 is approved and closed;
-* the final Phase 9 verification produced 0 open findings;
-* the current Roadmap position is explicitly recorded;
-* the next authorized phase is explicitly recorded;
-* the continuity artifact versions are explicitly recorded;
-* the session can be restored from repository evidence.
+**CLOSED**
 
-The next session should resume with:
+The Phase 10 consistency gate verified:
 
-**Fase 10 — Interaction Layer**
+* LIL ownership and boundaries;
+* LIL → KEP boundary;
+* Interaction → Learning Activity boundary;
+* Learning Activity → Exercise System boundary;
+* Exercise System → User Interaction → Evidence boundary;
+* Adaptive Review → Learning Activity boundary;
+* Roadmap responsibility coverage;
+* Architecture Consistency Matrix alignment.
+
+No unresolved Phase 10 architectural finding remains.
+
+The next session must verify the current Roadmap before beginning new
+architectural work.
 
 ---
 
