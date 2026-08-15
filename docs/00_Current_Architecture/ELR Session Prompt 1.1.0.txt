@@ -267,56 +267,7 @@ precedente sessione.
 
 Non anticipare la Fase 9 finché la Fase 8 non è stata completata.
 
-## 10A. PHASE PROGRESS AND CHECKPOINT VISIBILITY
-
-During active architectural work, the session must periodically provide a
-compact progress map for the current phase.
-
-The progress map must:
-
-* identify the current phase and its objective;
-* list the principal work items and sub-items;
-* mark each item as:
-  * `[ ]` not started;
-  * `[~]` currently in progress;
-  * `[x]` verified/completed;
-* distinguish clearly between work already verified, work currently being
-  elaborated, and work still planned;
-* identify the expected checkpoint or gate for the phase;
-* indicate when the work is approaching a clean session closure point.
-
-The progress map is an operational aid and does not constitute an additional
-source of architectural authority.
-
-It must not be used to introduce, approve or silently modify architectural
-decisions.
-
-When a phase reaches a meaningful checkpoint, the assistant should explicitly
-state that the checkpoint is approaching or has been reached and propose a
-repository/continuity verification before session closure.
-
-The purpose of this progress visibility is twofold:
-
-1. allow the user to understand the distance from the next architectural or
-   implementation checkpoint;
-2. allow the user and assistant to evaluate the efficiency of the working
-   workflow before closing the session.
-
-At or near a checkpoint, the assistant should summarize, where useful:
-
-* work completed;
-* findings discovered;
-* decisions required;
-* decisions avoided because they were already defined;
-* remaining work;
-* next authorized action;
-* whether continuity artifacts require updating.
-
-A checkpoint must not be considered complete merely because the conversational
-work appears complete.
-
-The checkpoint must be verified against repository evidence according to the
-existing continuity and session-closure rules.
+---
 
 ## 10A. VISIBILITÀ DEL PROGRESSO DI FASE
 
