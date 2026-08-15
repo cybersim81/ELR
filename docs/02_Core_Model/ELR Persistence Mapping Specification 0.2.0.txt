@@ -1,7 +1,7 @@
-ELR Persistence Mapping Specification 0.1.0
+ELR Persistence Mapping Specification 0.2.0
 
 Status: DRAFT
-Version: 0.1.0
+Version: 0.2.0
 Scope: Mapping between ELR Domain Entities and the Persistence Model
 
 1. Purpose
@@ -112,6 +112,7 @@ Required attributes:
 * id
 * content
 * type
+* ipa
 * created_at
 
 The Anchor UUID is the persistent identity.
@@ -119,6 +120,25 @@ The Anchor UUID is the persistent identity.
 Anchor content must not be silently transformed in a way that changes its semantic value.
 
 The Persistence Layer must preserve the domain invariant that an Anchor cannot have empty content.
+
+IPA Mapping
+
+The optional Anchor `ipa` property is persisted as a nullable text value.
+
+Mapping rule:
+
+Anchor.ipa
+    →
+anchors.ipa
+
+The persistence mapping MUST preserve the value of `Anchor.ipa`
+without semantic transformation.
+
+When `Anchor.ipa` is absent, the persistence representation MUST
+allow a null value.
+
+An empty or whitespace-only IPA value MUST NOT be introduced by
+the persistence layer.
 
 7. Knowledge Statement Mapping
 
@@ -450,7 +470,7 @@ Where they differ semantically, the discrepancy must be resolved through an expl
 
 25. Future Revision
 
-This specification is version 0.1.0 and is intended to support Core Repository v0.1.
+This specification is version 0.2.0 and is intended to support Core Repository v0.1.
 
 Future revisions may refine:
 
