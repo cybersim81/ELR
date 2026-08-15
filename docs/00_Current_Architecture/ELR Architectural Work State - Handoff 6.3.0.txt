@@ -1,6 +1,6 @@
 # ELR Architectural Work State — Handoff
 
-**Version:** 6.2.0
+**Version:** 6.3.0
 **Status:** Session Closure Checkpoint
 
 ---
@@ -30,95 +30,65 @@ Completed architectural phases:
 * Fase 6 — Learning Activity and Exercise Systems
 * Fase 7 — Document Consistency Consolidation
 * Fase 8 — Implementation Readiness Review
+* Fase 9 — Derived Learning Systems
 
 ### Current phase
 
-**Fase 9 — Derived Learning Systems**
+**Fase 10 — Interaction Layer**
 
 ### Previous phase
 
-**Fase 8 — Implementation Readiness Review**
+**Fase 9 — Derived Learning Systems**
 
 ### Previous checkpoint
 
-**Core Domain Implementation Propagation Checkpoint — COMPLETE**
+**Adaptive Review Specification 1.0.0 — APPROVED / CLOSED**
 
 ---
 
 ## 3. LAST VERIFIED WORKING POSITION
 
-The specification consistency consolidation has been completed.
+Fase 9 — Derived Learning Systems has been completed.
 
-A corpus of 15 ELR documents was verified across the principal boundaries:
+The Adaptive Review Specification 1.0.0 was:
 
-* Domain Model ↔ Core Domain Implementation;
-* Persistence Model ↔ Persistence Implementation;
-* Lifecycle ↔ Domain ↔ Application;
-* Event Model ↔ Event Implementation ↔ Persistence;
-* Security Model ↔ Security Implementation ↔ API;
-* API Specification ↔ API Implementation;
-* Architecture ↔ implementation layers;
-* Import / Export ↔ Domain / Persistence;
-* Learning Object ↔ Anchor ↔ Knowledge Statement;
-* Learning Activity ↔ Exercise System ↔ Evidence;
-* Knowledge Extraction Pipeline ↔ Change Evidence ↔ Learning Review;
-* Evidence ↔ Mastery Engine ↔ Mastery State.
+* verified;
+* cross-checked against the Architecture Consistency Matrix;
+* reviewed;
+* approved;
+* closed.
 
-The final consistency corrections included:
+Adaptive Review is recorded in the Architecture Consistency Matrix as a
+Process Model with:
 
-* alignment of Event Envelope `event_source` and `version` with persistence;
-* separation of Transactional Event Records from Repository knowledge
-  persistence;
-* clarification that Knowledge Statement is a value contained by the
-  Learning Object;
-* correction of the `event_records.version` persistence type to `INTEGER`;
-* clarification of the persistence representation of Knowledge Statements.
+`Adaptive Review Specification`
 
-Final verification result:
+as its owner document.
 
-**Finding aperti: 0**
+The final Adaptive Review verification result was:
 
-The specification consistency checkpoint is:
-
-**GO**
-
-The specifications are considered frozen with respect to the architectural
-boundaries and decisions verified during the consolidation.
-
-The post-readiness Core Domain implementation propagation has also been
-completed and verified.
-
-The verified extension is:
-
-**Anchor.ipa**
-
-The Anchor now supports an optional IPA phonetic transcription.
-
-The extension does not modify Anchor identity or semantics and does not
-introduce a new Domain entity `Pronunciation`.
-
-No audio representation has been introduced.
-
-The propagation was verified across:
-
-* Anchor Specification 1.1.0;
-* ELR Domain Model Specification 1.1.0;
-* ELR Persistence Mapping Specification 0.2.0;
-* `app/domain/entities/anchor.py`;
-* `app/persistence/models/anchor_model.py`;
-* `tests/domain/test_anchor.py`;
-* `tests/persistence/models/test_anchor_model.py`.
-
-Final propagation result:
-
-**Core Domain Implementation Propagation Checkpoint — COMPLETE**
+**PASS**
 
 Finding aperti:
 
 **0**
 
-No verified document should be reopened without a concrete documented,
-technical, or architectural contradiction.
+The Phrasebook and Learning Review / Learning Activity process boundaries
+were also verified as part of the Phase 9 dependency and continuity checks.
+
+No unresolved architectural contradiction remains from the Phase 9 review.
+
+The resulting checkpoint is:
+
+**Fase 9 — Derived Learning Systems — COMPLETE / PASS**
+
+No Phase 9 activity remains pending.
+
+The next authorized phase is:
+
+**Fase 10 — Interaction Layer**
+
+The repository remains the source of truth.
 
 ---
 
@@ -126,35 +96,33 @@ technical, or architectural contradiction.
 
 The previous authorized action was:
 
-**Fase 8 — Implementation Readiness Review**
+**Fase 9 — Derived Learning Systems**
 
 This phase has been completed.
 
-The Implementation Readiness Review verified:
+The Adaptive Review Specification 1.0.0 has been verified, reviewed,
+approved and closed.
 
-* completeness of implementation responsibilities;
-* contracts between Domain, Application, Persistence, Event, Security and API;
-* traceability between specifications and implementation components;
-* remaining technical decisions;
-* implementation sequencing;
-* initial tests and contract checks.
+Final result:
 
-The resulting checkpoint was:
+**PASS**
 
-**Implementation Readiness Checkpoint — GO**
+Finding aperti:
 
-The subsequent Core Domain implementation propagation checkpoint was:
+**0**
 
-**Core Domain Implementation Propagation Checkpoint — COMPLETE**
+No Phase 9 activity remains pending.
 
 The next authorized action is:
 
-**Fase 9 — Derived Learning Systems**
+**Fase 10 — Interaction Layer**
 
-The completion of Fase 8 does not imply that implementation work is complete.
+Fase 10 has not yet started.
 
-Implementation may proceed according to the authoritative implementation
-specifications and implementation plan where authorized.
+The completion of Fase 9 does not imply implementation completion.
+
+Implementation may proceed only according to the authoritative specifications
+and implementation plan applicable to the current phase.
 
 ---
 
@@ -233,14 +201,14 @@ repository has been successfully written and reread.
 
 Primary restoration artifacts:
 
-* `ELR Architectural Work State — Handoff`
-  → `ELR Architectural Work State - Handoff 6.2.0.txt`
-* `ELR Continuity Package`
-  → `ELR Continuity Package 2.2.0.txt`
-* `ELR Roadmap`
-  → `ELR Roadmap 1.2.3.txt`
 * `ELR Session Prompt`
-  → `ELR Session Prompt 1.3.0.txt`
+  → `ELR Session Prompt 1.4.0.txt`
+* `ELR Continuity Package`
+  → `ELR Continuity Package 2.3.0.txt`
+* `ELR Architectural Work State — Handoff`
+  → `ELR Architectural Work State - Handoff 6.3.0.txt`
+* `ELR Roadmap`
+  → `ELR Roadmap 1.3.0.txt`
 
 The **canonical name** identifies the logical continuity artifact.
 
@@ -258,18 +226,18 @@ Current canonical-to-file mapping:
 
 | Canonical name                           | Current repository file                            |
 | ---------------------------------------- | -------------------------------------------------- |
-| `ELR Architectural Work State — Handoff` | `ELR Architectural Work State - Handoff 6.2.0.txt` |
-| `ELR Continuity Package`                 | `ELR Continuity Package 2.2.0.txt`                 |
-| `ELR Roadmap`                            | `ELR Roadmap 1.2.3.txt`                            |
-| `ELR Session Prompt`                     | `ELR Session Prompt 1.3.0.txt`                     |
+| `ELR Session Prompt`                     | `ELR Session Prompt 1.4.0.txt`                     |
+| `ELR Continuity Package`                 | `ELR Continuity Package 2.3.0.txt`                 |
+| `ELR Architectural Work State — Handoff` | `ELR Architectural Work State - Handoff 6.3.0.txt` |
+| `ELR Roadmap`                            | `ELR Roadmap 1.3.0.txt`                            |
 
-The Handoff records the current operational position.
+The Session Prompt provides the bootstrap procedure.
 
 The Continuity Package records the broader continuity rules.
 
-The Roadmap records phase ownership and sequencing.
+The Handoff records the current operational position.
 
-The Session Prompt provides the bootstrap procedure.
+The Roadmap records phase ownership and sequencing.
 
 No continuity artifact overrides the repository.
 
@@ -293,8 +261,12 @@ The current phase must not be reconstructed from conversational memory.
 Do not ask the user to reconstruct previously documented architectural
 decisions.
 
-Do not repeat a completed checkpoint unless new evidence requires its
-reopening.
+Do not repeat Fase 9 or its completed checkpoints unless new evidence
+requires reopening them.
+
+The session must resume from:
+
+**Fase 10 — Interaction Layer**
 
 ---
 
@@ -319,40 +291,34 @@ reopening.
 
 ## 11. CHECKPOINT STATUS
 
-The current session has reached a clean and verified checkpoint.
+The current session has reached a clean and verified phase-transition
+checkpoint.
 
-The specification consistency checkpoint is:
+Fase 9 — Derived Learning Systems:
 
-**GO**
+**COMPLETE / PASS**
 
-The Implementation Readiness Checkpoint is:
+Adaptive Review Specification 1.0.0:
 
-**GO**
+**APPROVED / CLOSED**
 
-The Core Domain Implementation Propagation Checkpoint is:
+Finding aperti:
 
-**COMPLETE**
+**0**
 
 The conditions for session closure are satisfied:
 
-* the specification consistency review is complete;
-* 15 documents were verified;
-* the final findings were corrected and reverified;
-* finding aperti: 0;
-* Fase 8 — Implementation Readiness Review is complete;
-* the Implementation Readiness Checkpoint is GO;
-* the Core Domain Implementation Propagation Checkpoint is COMPLETE;
-* the Anchor IPA extension has been propagated and verified across the
-  documented Domain, Persistence and test boundaries;
-* finding aperti: 0;
-* the next authorized action is explicitly recorded;
-* the session can be restored from repository evidence;
-* the continuity artifacts identify the current versions required for
-  restoration.
+* Fase 9 is complete;
+* Adaptive Review Specification 1.0.0 is approved and closed;
+* the final Phase 9 verification produced 0 open findings;
+* the current Roadmap position is explicitly recorded;
+* the next authorized phase is explicitly recorded;
+* the continuity artifact versions are explicitly recorded;
+* the session can be restored from repository evidence.
 
 The next session should resume with:
 
-**Fase 9 — Derived Learning Systems**
+**Fase 10 — Interaction Layer**
 
 ---
 
