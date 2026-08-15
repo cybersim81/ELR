@@ -1,6 +1,6 @@
 # ELR Architectural Work State — Handoff
 
-**Version:** 6.0.0
+**Version:** 6.1.0
 **Status:** Session Closure Checkpoint
 
 ---
@@ -29,14 +29,19 @@ Completed architectural phases:
 * Fase 5 — Human Learning Control
 * Fase 6 — Learning Activity and Exercise Systems
 * Fase 7 — Document Consistency Consolidation
+* Fase 8 — Implementation Readiness Review
 
 ### Current phase
 
+**Fase 9 — Derived Learning Systems**
+
+### Previous phase
+
 **Fase 8 — Implementation Readiness Review**
 
-### Next phase
+### Previous checkpoint
 
-**Fase 9 — Derived Learning Systems**
+**Implementation Readiness Checkpoint — GO**
 
 ---
 
@@ -87,15 +92,13 @@ technical, or architectural contradiction.
 
 ## 4. CURRENT TASK / NEXT AUTHORIZED ACTION
 
-The next authorized action is:
+The previous authorized action was:
 
 **Fase 8 — Implementation Readiness Review**
 
-The purpose of this phase is to verify that the consolidated specifications
-are sufficiently precise to begin implementation without introducing new
-architectural decisions during coding.
+This phase has been completed.
 
-The review must verify:
+The Implementation Readiness Review verified:
 
 * completeness of implementation responsibilities;
 * contracts between Domain, Application, Persistence, Event, Security and API;
@@ -104,9 +107,18 @@ The review must verify:
 * implementation sequencing;
 * initial tests and contract checks.
 
-The output of the phase is:
+The resulting checkpoint was:
 
-**Implementation Readiness Checkpoint**
+**Implementation Readiness Checkpoint — GO**
+
+The next authorized action is:
+
+**Fase 9 — Derived Learning Systems**
+
+The completion of Fase 8 does not imply that implementation work is complete.
+
+Implementation may proceed according to the authoritative implementation
+specifications and implementation plan where authorized.
 
 ---
 
@@ -120,6 +132,18 @@ repository update → repository verification → next point**
 
 A proposal is not an applied change until the repository is reread and the
 modified section is verified.
+
+Completed checkpoints must not be re-executed merely to reconstruct context.
+
+Before reopening a completed checkpoint, verify whether new evidence exists,
+including:
+
+* a changed document;
+* a newer document version;
+* a concrete contradiction;
+* a new finding;
+* materially changed implementation evidence;
+* explicit reassessment.
 
 ---
 
@@ -147,6 +171,8 @@ The assistant must not close the session automatically.
 
 The user must explicitly approve the closure.
 
+A completed phase or checkpoint is a valid session stopping point.
+
 ---
 
 ## 7. CHECKPOINT UPDATE PROTOCOL
@@ -172,13 +198,13 @@ repository has been successfully written and reread.
 Primary restoration artifacts:
 
 * `ELR Architectural Work State — Handoff`
-  → `ELR Architectural Work State - Handoff 6.0.0.txt`
+  → `ELR Architectural Work State - Handoff 6.1.0.txt`
 * `ELR Continuity Package`
-  → `ELR Continuity Package 2.0.0.txt`
+  → `ELR Continuity Package 2.1.0.txt`
 * `ELR Roadmap`
   → `ELR Roadmap 1.2.1.txt`
 * `ELR Session Prompt`
-  → `ELR Session Prompt 1.1.0.txt`
+  → `ELR Session Prompt 1.2.0.txt`
 
 The **canonical name** identifies the logical continuity artifact.
 
@@ -196,10 +222,10 @@ Current canonical-to-file mapping:
 
 | Canonical name                           | Current repository file                            |
 | ---------------------------------------- | -------------------------------------------------- |
-| `ELR Architectural Work State — Handoff` | `ELR Architectural Work State - Handoff 6.0.0.txt` |
-| `ELR Continuity Package`                 | `ELR Continuity Package 2.0.0.txt`                 |
+| `ELR Architectural Work State — Handoff` | `ELR Architectural Work State - Handoff 6.1.0.txt` |
+| `ELR Continuity Package`                 | `ELR Continuity Package 2.1.0.txt`                 |
 | `ELR Roadmap`                            | `ELR Roadmap 1.2.1.txt`                            |
-| `ELR Session Prompt`                     | `ELR Session Prompt 1.1.0.txt`                     |
+| `ELR Session Prompt`                     | `ELR Session Prompt 1.2.0.txt`                     |
 
 The Handoff records the current operational position.
 
@@ -217,17 +243,22 @@ No continuity artifact overrides the repository.
 
 A new session should:
 
-1. read this Handoff;
-2. read `ELR Continuity Package 2.0.0.txt`;
-3. read `ELR Roadmap 1.2.1.txt`;
-4. read `ELR Session Prompt 1.1.0.txt`;
+1. read the current Session Prompt;
+2. read the current Continuity Package;
+3. read this Handoff;
+4. read the current Roadmap;
 5. verify the repository state;
 6. determine the current phase from the Roadmap and verified repository state;
-7. begin the Implementation Readiness Review;
-8. record the resulting Implementation Readiness Checkpoint.
+7. read only the specialist documents relevant to the current phase;
+8. begin the next authorized activity.
+
+The current phase must not be reconstructed from conversational memory.
 
 Do not ask the user to reconstruct previously documented architectural
 decisions.
+
+Do not repeat a completed checkpoint unless new evidence requires its
+reopening.
 
 ---
 
@@ -245,7 +276,8 @@ decisions.
 * specifications must remain consistent with approved architectural
   decisions;
 * continuity artifacts must not become alternative sources of architectural
-  authority.
+  authority;
+* completed checkpoints must not be repeated without new evidence.
 
 ---
 
@@ -257,19 +289,26 @@ The specification consistency checkpoint is:
 
 **GO**
 
+The Implementation Readiness Checkpoint is:
+
+**GO**
+
 The conditions for session closure are satisfied:
 
 * the specification consistency review is complete;
 * 15 documents were verified;
 * the final findings were corrected and reverified;
 * finding aperti: 0;
-* the Roadmap 1.2.1 records the completed Fase 7 and the next Fase 8;
+* Fase 8 — Implementation Readiness Review is complete;
+* the Implementation Readiness Checkpoint is GO;
 * the next authorized action is explicitly recorded;
-* the session can be restored from repository evidence.
+* the session can be restored from repository evidence;
+* the continuity artifacts identify the current versions required for
+  restoration.
 
 The next session should resume with:
 
-**Fase 8 — Implementation Readiness Review**
+**Fase 9 — Derived Learning Systems**
 
 ---
 
