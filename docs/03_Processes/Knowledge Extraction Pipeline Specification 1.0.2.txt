@@ -1825,7 +1825,8 @@ tipo CREATE.
 Change Classification
 ================================================================================
 
-La KEP propone una classificazione iniziale della modifica in una delle seguenti categorie:
+La KEP propone una classificazione iniziale della modifica in una delle seguenti
+categorie:
 
 
 CREATE
@@ -1834,7 +1835,6 @@ MERGE
 
 UPDATE
 
-SPLIT
 
 La classificazione è una decisione del processo KEP e non una decisione
 architetturale.
@@ -1853,8 +1853,8 @@ Non modifica:
 La classificazione può essere modificata durante la Learning Review senza
 modificare la validità del Knowledge Candidate originario.
 
-La classificazione proposta dalla KEP può essere modificata
-durante la Learning Review.
+La classificazione proposta dalla KEP può essere modificata durante la
+Learning Review.
 
 ================================================================================
 CREATE
@@ -1975,32 +1975,7 @@ Esempi:
 L'identità del Learning Object rimane invariata.
 
 ================================================================================
-SPLIT
-================================================================================
-
-SPLIT viene utilizzato quando un Learning Object esistente rappresenta
-più conoscenze indipendenti che dovrebbero essere modellate separatamente.
-
-Lo SPLIT non introduce nuova conoscenza.
-
-Riorganizza la rappresentazione della conoscenza già presente nel repository.
-
-Uno SPLIT può essere necessario quando un Learning Object:
-
-• contiene Anchor indipendenti;
-
-• contiene Knowledge Statement verificabili separatamente;
-
-• rappresenta più concetti linguistici distinti;
-
-• impedisce una valutazione accurata della Mastery.
-
-Il risultato di uno SPLIT è la proposta di sostituire un singolo Learning
-Object con due o più Learning Object atomici.
-
-
-================================================================================
-Distinzione CREATE / MERGE / UPDATE / SPLIT
+Distinzione CREATE / MERGE / UPDATE
 ================================================================================
 
 La distinzione principale è:
@@ -2010,24 +1985,17 @@ CREATE:
 Introduce una nuova identità conoscitiva.
 Viene proposta una nuova conoscenza non rappresentata nel repository.
 
-
 MERGE:
 
 Conserva una identità conoscitiva esistente.
-Una nuova evidenza viene integrata in un Learning Object esistente senza modificarne l'identità.
-
+Una nuova evidenza viene integrata in un Learning Object esistente senza
+modificarne l'identità.
 
 UPDATE:
 
 Conserva una identità conoscitiva esistente migliorandone la rappresentazione.
-Viene migliorata o corretta la rappresentazione di un Learning Object mantenendo invariata la conoscenza fondamentale.
-
-SPLIT:
-
-Sostituisce una rappresentazione non atomica con più identità conoscitive indipendenti.
-Un Learning Object esistente viene suddiviso perché rappresenta più conoscenze indipendenti.
-
-
+Viene migliorata o corretta la rappresentazione di un Learning Object
+mantenendo invariata la conoscenza fondamentale.
 
 
 Esempio: CREATE
