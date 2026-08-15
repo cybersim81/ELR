@@ -2,7 +2,7 @@
 
 ## Continuity Package
 
-**Version:** 2.2.0
+**Version:** 2.3.0
 **Status:** ACTIVE
 **Document Type:** Session Continuity and Architectural Recovery Package
 
@@ -78,10 +78,10 @@ Current canonical-to-file mapping:
 
 | Canonical name                           | Current repository file                            |
 | ---------------------------------------- | -------------------------------------------------- |
-| `ELR Architectural Work State — Handoff` | `ELR Architectural Work State - Handoff 6.2.0.txt` |
-| `ELR Continuity Package`                 | `ELR Continuity Package 2.2.0.txt`                 |
-| `ELR Roadmap`                            | `ELR Roadmap 1.2.3.txt`                            |
-| `ELR Session Prompt`                     | `ELR Session Prompt 1.3.0.txt`                     |
+| `ELR Architectural Work State — Handoff` | `ELR Architectural Work State - Handoff 6.3.0.txt` |
+| `ELR Continuity Package`                 | `ELR Continuity Package 2.3.0.txt`                 |
+| `ELR Roadmap`                            | `ELR Roadmap 1.3.0.txt`                            |
+| `ELR Session Prompt`                     | `ELR Session Prompt 1.4.0.txt`                     |
 
 Resolution rule:
 
@@ -126,7 +126,7 @@ Canonical name:
 
 Current file:
 
-`ELR Session Prompt 1.3.0.txt`
+`ELR Session Prompt 1.4.0.txt`
 
 Responsibility:
 
@@ -142,7 +142,7 @@ Canonical name:
 
 Current file:
 
-`ELR Continuity Package 2.2.0.txt`
+`ELR Continuity Package 2.3.0.txt`
 
 Responsibility:
 
@@ -158,7 +158,7 @@ Canonical name:
 
 Current file:
 
-`ELR Architectural Work State - Handoff 6.2.0.txt`
+`ELR Architectural Work State - Handoff 6.3.0.txt`
 
 Responsibility:
 
@@ -175,7 +175,7 @@ Canonical name:
 
 Current file:
 
-`ELR Roadmap 1.2.3.txt`
+`ELR Roadmap 1.3.0.txt`
 
 Responsibility:
 
@@ -217,6 +217,33 @@ The specification consistency checkpoint is:
 The consolidated specifications are considered frozen with respect to the
 architectural boundaries and decisions verified during this checkpoint.
 
+The Derived Learning Systems checkpoint has subsequently been completed.
+
+Fase 9 — Derived Learning Systems:
+
+**COMPLETE / PASS**
+
+Adaptive Review Specification 1.0.0:
+
+**APPROVED / CLOSED**
+
+The Adaptive Review Specification was cross-checked against the
+Architecture Consistency Matrix and the relevant process specifications.
+
+The Architecture Consistency Matrix now records Adaptive Review as a
+Process Model with:
+
+`Adaptive Review Specification`
+
+as its owner document.
+
+Final Adaptive Review findings:
+
+**Finding aperti: 0**
+
+The repository therefore records a clean checkpoint between Fase 9 and
+Fase 10.
+
 ---
 
 # 8. CURRENT ROADMAP POSITION
@@ -232,42 +259,44 @@ Completed phases:
 * Fase 6 — Learning Activity and Exercise Systems
 * Fase 7 — Document Consistency Consolidation
 * Fase 8 — Implementation Readiness Review
+* Fase 9 — Derived Learning Systems
 
 Current phase:
 
-**Fase 9 — Derived Learning Systems**
+**Fase 10 — Interaction Layer**
 
-Fase 8 has been completed and its Implementation Readiness Checkpoint has
-been passed.
+Fase 9 è stata completata con esito PASS.
 
-Fase 9 is therefore the next authorized roadmap position.
+La Adaptive Review Specification 1.0.0 è stata approvata e chiusa.
 
-The completion of Fase 8 does not imply that implementation work is complete.
-Implementation may proceed according to the existing implementation plan
-where authorized.
-
+Fase 10 è pertanto la nuova posizione autorizzata della Roadmap.
 ---
 
-# 9. CURRENT NEXT ACTION
+## Current Next Action
 
-The next authorized activity is:
+**Fase 9 — Derived Learning Systems: COMPLETE**
 
-**Fase 9 — Derived Learning Systems**
+La Fase 9 è stata completata con esito PASS.
 
-The implementation-readiness work for ELR Core Repository v0.1 has been
-completed.
+La Adaptive Review Specification 1.0.0 è stata:
 
-The existing implementation plan remains the authoritative source for the
-implementation sequence:
+- verificata;
+- cross-checkata contro la Architecture Consistency Matrix;
+- sottoposta a REVIEW;
+- APPROVED;
+- chiusa con continuity check PASS.
 
-`docs/06_System/ELR Core Repository Implementation Plan 0.1.0.txt`
+Finding aperti:
 
-The completion of the Implementation Readiness Checkpoint does not replace
-the implementation plan and does not constitute implementation completion.
+**0**
 
-The expected next architectural position is:
+La Fase 9 non richiede ulteriori azioni operative.
 
-**Phase 9 — Derived Learning Systems**
+La prossima azione autorizzata è:
+
+**Fase 10 — Interaction Layer**
+
+La Fase 10 non è ancora iniziata.
 
 ---
 
@@ -275,10 +304,10 @@ The expected next architectural position is:
 
 A new session must read, in this order:
 
-1. `ELR Session Prompt 1.3.0.txt`
-2. `ELR Continuity Package 2.2.0.txt`
-3. `ELR Architectural Work State - Handoff 6.2.0.txt`
-4. `ELR Roadmap 1.2.3.txt`
+1. `ELR Session Prompt 1.4.0.txt`
+2. `ELR Continuity Package 2.3.0.txt`
+3. `ELR Architectural Work State - Handoff 6.3.0.txt`
+4. `ELR Roadmap 1.3.0.txt`
 
 The session must then:
 
@@ -292,18 +321,6 @@ The session must then:
 The current phase must not be reconstructed from conversational memory.
 
 A completed checkpoint must not be repeated automatically.
-
-Before reopening a completed checkpoint, verify whether:
-
-* a relevant document has changed;
-* a newer document version exists;
-* a contradiction has appeared;
-* a new finding has appeared;
-* implementation evidence has materially changed;
-* explicit reassessment has been requested.
-
-Without such evidence, use the recorded checkpoint result and continue from
-the next authorized position.
 
 ---
 
@@ -342,6 +359,20 @@ When a document is changed:
 7. verify canonical name, filename and version consistency.
 
 Propagation must be controlled.
+
+When continuity artifacts are versioned as part of a checkpoint transition,
+the propagation order is:
+
+1. Session Prompt;
+2. Continuity Package;
+3. Handoff;
+4. Roadmap.
+
+Each artifact must be verified in the repository before the next artifact is
+versioned.
+
+A new versioned filename must not be treated as current until the file exists
+in the repository and its internal version is verified.
 
 Do not update unrelated documents merely because they mention the same
 concept.
@@ -401,6 +432,12 @@ A real contradiction may trigger a controlled reopening.
 Completion of the Implementation Readiness Review does not by itself reopen
 the frozen specification set.
 
+The Adaptive Review Specification 1.0.0 was subsequently approved and
+closed during Fase 9.
+
+Its verified architectural boundaries are therefore also frozen unless a
+real contradiction triggers a controlled reopening.
+
 ---
 
 # 16. IMPLEMENTATION READINESS RULE
@@ -447,6 +484,14 @@ A session may propose closure when:
 * continuity artifacts are internally consistent;
 * canonical names resolve to current versioned filenames;
 * no unresolved documentation finding remains.
+
+A phase-transition checkpoint must additionally record:
+
+* the completed phase;
+* the completed phase result;
+* the newly authorized phase;
+* the absence or presence of unresolved findings;
+* the continuity artifact update required for the next session.
 
 The assistant must explicitly state when a clean checkpoint has been reached.
 
@@ -634,39 +679,37 @@ Together they form the ELR continuity system.
 
 ---
 
-# 21. END STATE
+## End State
 
-At the current checkpoint:
+The current architectural state is:
 
-**Architecture consolidation → COMPLETE**
+- Fase 0 — Fondazioni Architetturali: COMPLETE
+- Fase 1 — ELR Knowledge Model: COMPLETE
+- Fase 2 — Knowledge Extraction Architecture: COMPLETE
+- Fase 3 — Evidence Architecture: COMPLETE
+- Fase 4 — Mastery Architecture: COMPLETE
+- Fase 5 — Human Learning Control: COMPLETE
+- Fase 6 — Learning Activity and Exercise Systems: COMPLETE
+- Fase 7 — Document Consistency Consolidation: COMPLETE
+- Fase 8 — Implementation Readiness Review: COMPLETE
+- Fase 9 — Derived Learning Systems: COMPLETE
 
-**Specification consistency → GO**
+Adaptive Review Specification 1.0.0:
 
-**Finding aperti → 0**
+- APPROVED
+- CLOSED
+- Finding aperti: 0
 
-**Fase 8 — Implementation Readiness Review → COMPLETE**
+Current roadmap position:
 
-**Implementation Readiness Checkpoint → GO**
+**Fase 10 — Interaction Layer**
 
-**Core Domain Implementation Propagation Checkpoint → COMPLETE**
+Fase 10 is authorized but not yet started.
 
-**Blocking architectural decisions → 0**
+The repository is at a clean architectural checkpoint between Phase 9 and
+Phase 10.
 
-**New specifications required → 0**
-
-**New matrices required → 0**
-
-**Current roadmap position → Fase 9 — Derived Learning Systems**
-
-**Session Prompt → 1.3.0**
-
-**Continuity Package → 2.2.0**
-
-**Handoff → 6.2.0**
-
-**Roadmap → 1.2.3**
-
-**Continuity system → canonical naming and version resolution defined**
+No Phase 9 activity remains pending.
 
 ---
 
