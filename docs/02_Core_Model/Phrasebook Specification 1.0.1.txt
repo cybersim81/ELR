@@ -3,7 +3,7 @@ English Learning Repository (ELR)
 
 Phrasebook Specification
 
-Version: 1.0.0
+Version: 1.0.1
 Status: DRAFT
 =============
 
@@ -15,7 +15,7 @@ Phrasebook Specification
 
 Document Version:
 
-1.0.0
+1.0.1
 
 Status:
 
@@ -23,19 +23,16 @@ DRAFT
 
 Dependencies:
 
-* ELR Architecture Specification
+- ELR Architecture Specification
+- ELR Domain Model Specification
+- ELR Taxonomy
+- Anchor Specification
+- Learning Object Specification
 
-* ELR Domain Model Specification
+References:
 
-* ELR Taxonomy
-
-* Anchor Specification
-
-* Learning Object Specification
-
-* Knowledge Extraction Pipeline Specification
-
-* Evidence Model Specification
+- KEP Specification
+- Evidence Model Specification
 
 ================================================================================
 Scopo
@@ -504,6 +501,6 @@ English Learning Repository (ELR)
 
 Phrasebook Specification
 
-Version: 1.0.0
+Version: 1.0.1
 
 ================================================================================
