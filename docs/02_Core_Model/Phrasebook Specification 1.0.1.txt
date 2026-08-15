@@ -4,7 +4,7 @@ English Learning Repository (ELR)
 Phrasebook Specification
 
 Version: 1.0.1
-Status: REVIEW
+Status: APPROVED
 =============
 
 # Document Identity
@@ -19,7 +19,7 @@ Document Version:
 
 Status:
 
-REVIEW
+APPROVED
 
 Dependencies:
 
