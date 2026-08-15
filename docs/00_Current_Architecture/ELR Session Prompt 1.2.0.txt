@@ -643,10 +643,10 @@ Esempio:
 
 | Canonical name                           | Current repository file                            |
 | ---------------------------------------- | -------------------------------------------------- |
-| `ELR Roadmap`                            | `ELR Roadmap 1.2.1.txt`                            |
+| `ELR Roadmap`                            | `ELR Roadmap 1.2.2.txt`                            |
 | `ELR Session Prompt`                     | `ELR Session Prompt 1.2.0.txt`                     |
-| `ELR Continuity Package`                 | `ELR Continuity Package 2.0.0.txt`                 |
-| `ELR Architectural Work State — Handoff` | `ELR Architectural Work State - Handoff 6.0.0.txt` |
+| `ELR Continuity Package`                 | `ELR Continuity Package 2.1.0.txt`                 |
+| `ELR Architectural Work State — Handoff` | `ELR Architectural Work State - Handoff 6.1.0.txt` |
 
 Regola operativa:
 
