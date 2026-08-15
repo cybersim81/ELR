@@ -41,54 +41,10 @@ quando tali decisioni possono essere verificate nel repository.
 
 All'inizio di una nuova sessione:
 
-### Step 1 — Leggi questo documento
-
-Recupera il **current versioned filename** di:
-
-`ELR Session Prompt`
-
-Il file corrente è:
-
-`ELR Session Prompt 1.4.0.txt`
-
-tramite la regola di `Canonical Naming and Version Resolution` definita
-in §13.
-
-### Step 2 — Leggi il Continuity Package
-
-Recupera il **current versioned filename** di:
-
-`ELR Continuity Package`
-
-Il file corrente è:
-
-`ELR Continuity Package 2.3.0.txt`
-
-tramite la regola di `Canonical Naming and Version Resolution`.
-
-### Step 3 — Leggi l'Handoff
-
-Recupera il **current versioned filename** di:
-
-`ELR Architectural Work State - Handoff`
-
-Il file corrente è:
-
-`ELR Architectural Work State - Handoff 6.3.0.txt`
-
-tramite la regola di `Canonical Naming and Version Resolution`.
-
-### Step 4 — Leggi la Roadmap
-
-Recupera il **current versioned filename** di:
-
-`ELR Roadmap`
-
-Il file corrente è:
-
-`ELR Roadmap 1.3.0.txt`
-
-tramite la regola di `Canonical Naming and Version Resolution`.
+1. Read the current `ELR Session Prompt`.
+2. Read the current `ELR Continuity Package`.
+3. Read the current `ELR Architectural Work State — Handoff`.
+4. Read the current `ELR Roadmap`.
 
 La Roadmap determina la posizione corrente del lavoro e le attività
 successive autorizzate.
@@ -97,13 +53,12 @@ successive autorizzate.
 
 The current continuity artifact chain is:
 
-`ELR Session Prompt 1.5.0.txt`
-→ `ELR Continuity Package 2.4.0.txt`
-→ `ELR Architectural Work State - Handoff 6.4.0.txt`
-→ `ELR Roadmap 1.4.0.txt`
+`ELR Session Prompt`
+→ `ELR Continuity Package`
+→ `ELR Architectural Work State - Handoff`
+→ `ELR Roadmap`
 
-These filenames represent the currently verified physical versions
-of the four bootstrap continuity artifacts.
+These filenames represent the canonical name; the current versioned filename must be looked up at repository.
 
 The chain must not be considered valid unless all four files:
 
