@@ -2,7 +2,7 @@
 
 # Architectural Roadmap
 
-**Version:** 1.3.0
+**Version:** 1.4.0
 **Status:** ACTIVE
 
 ---
@@ -15,7 +15,7 @@ ELR Architectural Roadmap
 
 **Document Version:**
 
-1.3.0
+1.4.0
 
 **Status:**
 
@@ -679,35 +679,47 @@ controllate alle specifiche già approvate.
 
 ## Stato:
 
-**Corrente / Prossima fase autorizzata.**
+**Completata.**
 
-## Obiettivo:
+## Completion:
 
-Evolvere le modalità di interazione con l'utente.
+**100%**
 
-Documento principale:
+## Risultato:
 
-* Learning Interaction Language Specification
+**COMPLETE / PASS**
 
-Responsabilità:
+## Finding aperti:
 
-* comandi espliciti;
-* shortcut;
-* interazioni didattiche strutturate;
-* realizzazione delle interazioni attraverso Learning Activity e sistemi
-  che le implementano.
+**0**
 
-Estensioni future:
+## Finding chiusi:
 
-* speaking;
-* pronunciation;
-* audio;
-* input multimodale.
+**F10-01 — CLOSED**
 
-La Fase 10 costituisce la nuova posizione corrente della Roadmap.
+La fase ha verificato:
 
-Il lavoro della Fase 10 non deve riaprire automaticamente le fasi
-architetturali precedenti.
+* Learning Interaction Language ownership;
+* LIL → KEP boundary;
+* Interaction Layer → Learning Activity boundary;
+* Learning Activity → Exercise System boundary;
+* Exercise System → User Interaction → Evidence boundary;
+* Adaptive Review → Learning Activity boundary;
+* copertura delle responsabilità definite dalla Roadmap;
+* coerenza con la Architecture Consistency Matrix.
+
+Documenti verificati:
+
+* Learning Interaction Language Specification 1.0.0;
+* Learning Activity Specification 1.0.0;
+* Adaptive Review Specification 1.0.0;
+* Exercise System Specification 1.0.0.
+
+L'Exercise System Specification rimane DRAFT, ma non costituisce un
+blocco per il consistency gate della Fase 10.
+
+La Fase 10 è pertanto considerata completata a livello di verifica
+architetturale.
 
 ---
 
@@ -834,27 +846,39 @@ L'architettura ELR sarà considerata stabile quando:
 
 ---
 
-# Current Roadmap Position
+# CURRENT ROADMAP POSITION
 
-**Current Phase:**
+Completed phases:
 
-Fase 10 — Interaction Layer
+* Fase 0 — Fondazioni Architetturali
+* Fase 1 — ELR Knowledge Model
+* Fase 2 — Knowledge Extraction Architecture
+* Fase 3 — Evidence Architecture
+* Fase 4 — Mastery Architecture
+* Fase 5 — Human Learning Control
+* Fase 6 — Learning Activity and Exercise Systems
+* Fase 7 — Document Consistency Consolidation
+* Fase 8 — Implementation Readiness Review
+* Fase 9 — Derived Learning Systems
+* Fase 10 — Interaction Layer
 
-**Previous Completed Phase:**
+Current phase:
 
-Fase 9 — Derived Learning Systems
+**Fase 10 — Interaction Layer — COMPLETE / PASS**
 
-**Previous Checkpoint:**
+Current completion:
 
-Adaptive Review Specification 1.0.0 — APPROVED / CLOSED
+**100%**
 
-**Phase 9 Result:**
+Finding aperti:
 
-Fase 9 — Derived Learning Systems — COMPLETE
+**0**
 
-**Next Authorized Action:**
+The current Roadmap does not define a subsequent numbered phase.
 
-Fase 10 — Interaction Layer
+Next action:
+
+**Determine the next Roadmap gate from repository evidence.**
 
 ---
 
@@ -880,4 +904,4 @@ session.
 
 ELR Architectural Roadmap
 
-Versione 1.3.0
+Versione 1.4.0
