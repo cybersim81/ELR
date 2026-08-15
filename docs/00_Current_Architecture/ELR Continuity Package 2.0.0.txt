@@ -416,6 +416,53 @@ The user must explicitly approve closure.
 
 ---
 
+## 17A. VISIBILITÀ DEL PROGRESSO DI FASE
+
+Il workflow di continuità comprende una mappa sintetica del progresso della
+fase utilizzata durante le sessioni di lavoro attive.
+
+La mappa di progresso registra lo stato operativo della fase corrente usando:
+
+* `[ ]` non iniziato;
+* `[~]` in elaborazione;
+* `[x]` verificato/completato.
+
+La mappa deve identificare:
+
+* la fase corrente;
+* i principali punti di lavoro;
+* il lavoro completato;
+* il lavoro attualmente in elaborazione;
+* il lavoro pianificato;
+* il checkpoint o gate previsto.
+
+La mappa di progresso non costituisce autorità architetturale e non sostituisce
+le Specification, gli ADR, la Architecture Consistency Matrix, la Roadmap o
+altri documenti autorevoli.
+
+Il suo scopo è fornire visibilità operativa e supportare la gestione dei
+checkpoint.
+
+In prossimità di un checkpoint, la sessione deve rendere espliciti:
+
+* gli elementi verificati;
+* gli elementi ancora aperti;
+* le decisioni che si sono rese necessarie;
+* le apparenti decisioni risolte mediante documenti autorevoli già esistenti;
+* la prossima azione autorizzata;
+* l'eventuale necessità di aggiornare gli artefatti di continuità.
+
+Questo meccanismo costituisce inoltre una base leggera per valutare
+l'efficienza del workflow alla chiusura della sessione.
+
+Un punto della mappa può essere marcato `[x]` solamente quando il lavoro
+sottostante è stato verificato secondo le regole di verifica del repository.
+
+La mappa di progresso, da sola, non costituisce evidenza del completamento di
+un checkpoint.
+
+---
+
 # 18. CHECKPOINT VERIFICATION
 
 Before declaring a continuity checkpoint complete, verify:
