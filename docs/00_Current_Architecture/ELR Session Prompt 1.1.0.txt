@@ -218,13 +218,33 @@ come contenuto completo del documento.
 
 Se il recupero di un documento è incompleto:
 
-* riconoscere esplicitamente il limite di lettura;
-* non dedurre l'assenza di informazioni dalla parte non visualizzata;
-* utilizzare il repository per individuare il file e le eventuali sezioni
-  recuperabili;
-* se necessario, recuperare il contenuto in modo segmentato;
-* formulare conclusioni soltanto sulla base delle parti effettivamente
-  verificate.
+1. non considerare il contenuto recuperato come rappresentazione completa
+   del documento;
+
+2. determinare se il documento può essere recuperato tramite segmenti o
+   intervalli di righe;
+
+3. se il documento è segmentabile, recuperarlo attraverso blocchi
+   consecutivi sufficientemente piccoli da garantire un contenuto integro;
+
+4. verificare che i blocchi coprano l'intero documento necessario
+   all'analisi;
+
+5. utilizzare il contenuto aggregato dei blocchi come base per la verifica;
+
+6. se anche il recupero segmentato non consente di ottenere il contenuto
+   necessario, dichiarare esplicitamente la limitazione e non formulare
+   conclusioni basate su contenuto non verificato.
+
+Un documento lungo non deve essere considerato non recuperabile solo perché
+un recupero completo viene troncato.
+
+Il recupero segmentato costituisce una modalità ordinaria di verifica per
+documenti lunghi.
+
+Quando un documento viene utilizzato per una decisione o una modifica,
+deve essere verificato nella misura necessaria a escludere che le sezioni
+non ancora lette contengano informazioni rilevanti o contraddittorie.
 
 ### Regola di navigazione gerarchica
 
@@ -278,6 +298,48 @@ La conclusione deve distinguere esplicitamente tra:
 * **concetto presente ma non ancora verificato**;
 * **documento presente ma non completamente recuperato**;
 * **contraddizione documentale reale**.
+
+---
+
+## 6B. REPOSITORY MODIFICATION PROTOCOL
+
+L'assistente non deve modificare direttamente il repository quando il lavoro
+richiede una modifica documentale concordata con l'utente.
+
+La modalità standard di modifica è:
+
+1. verificare il documento corrente nel repository;
+
+2. identificare con precisione la sezione da modificare;
+
+3. formulare il contenuto della modifica come blocco copiabile;
+
+4. indicare il path del file;
+
+5. indicare se il blocco deve essere inserito, sostituito o eliminato;
+
+6. indicare il punto preciso di inserimento o sostituzione;
+
+7. attendere che l'utente applichi la modifica nel proprio ambiente;
+
+8. verificare successivamente il risultato nel repository;
+
+9. non considerare una modifica completata finché il contenuto effettivo
+   del repository non è stato verificato.
+
+L'assistente non deve modificare autonomamente un documento per propria
+iniziativa, anche quando ritiene che una modifica sia tecnicamente
+necessaria.
+
+La proposta di modifica e l'applicazione della modifica sono attività
+distinte.
+
+Una modifica non verificata nel repository non deve essere presentata come
+completata.
+
+Quando una modifica coinvolge più documenti, ogni documento deve essere
+verificato separatamente prima di considerare completato il relativo
+checkpoint.
 
 ---
 
