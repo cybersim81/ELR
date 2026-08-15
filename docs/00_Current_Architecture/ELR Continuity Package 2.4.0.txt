@@ -365,36 +365,26 @@ context.
 
 ---
 
-# 12. DOCUMENT PROPAGATION RULE
+# 12. CHECKPOINT UPDATE ORDER
 
-When a document is changed:
+When closing a checkpoint and updating the bootstrap continuity artifacts,
+the artifacts must be versioned and updated in the following order:
 
-1. identify its canonical identity;
-2. identify its current versioned filename;
-3. identify all dependent continuity artifacts;
-4. update only references affected by the version/path change;
-5. preserve canonical identity;
-6. reread the modified documents;
-7. verify canonical name, filename and version consistency.
+1. ELR Continuity Package;
+2. ELR Architectural Work State — Handoff;
+3. ELR Roadmap;
+4. ELR Session Prompt.
 
-Propagation must be controlled.
+Each artifact must be applied and verified in the repository before the next
+artifact is versioned.
 
-When continuity artifacts are versioned as part of a checkpoint transition,
-the propagation order is:
+The Session Prompt must always be the last bootstrap artifact updated.
 
-1. Session Prompt;
-2. Continuity Package;
-3. Handoff;
-4. Roadmap.
+This checkpoint update order does not define or alter bootstrap execution.
 
-Each artifact must be verified in the repository before the next artifact is
-versioned.
+The bootstrap execution order remains:
 
-A new versioned filename must not be treated as current until the file exists
-in the repository and its internal version is verified.
-
-Do not update unrelated documents merely because they mention the same
-concept.
+Session Prompt → Continuity Package → Handoff → Roadmap.
 
 ---
 
