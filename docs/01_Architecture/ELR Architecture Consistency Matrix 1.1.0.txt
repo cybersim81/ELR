@@ -233,6 +233,8 @@ Esempi:
 
 - Learning Activity Specification;
 
+- Adaptive Review Specification;
+
 - Phrasebook Specification;
 
 - Exercise System Specification.
