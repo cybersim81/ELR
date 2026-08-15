@@ -193,7 +193,7 @@ Primary restoration artifacts:
 * `ELR Architectural Work State — Handoff`
   → `ELR Architectural Work State - Handoff 6.4.0.txt`
 * `ELR Roadmap`
-  → `ELR Roadmap 1.5.0.txt`
+  → `ELR Roadmap 1.4.0.txt`
 
 The **canonical name** identifies the logical continuity artifact.
 
@@ -207,24 +207,20 @@ When restoring a session:
 3. read the current version;
 4. never assume that a previous versioned filename remains current.
 
-Current canonical-to-file mapping:
+### Current canonical-to-file mapping
 
-| Canonical name                           | Current repository file                            |
-| ---------------------------------------- | -------------------------------------------------- |
-| `ELR Session Prompt`                     | `ELR Session Prompt 1.4.0.txt`                     |
-| `ELR Continuity Package`                 | `ELR Continuity Package 2.3.0.txt`                 |
-| `ELR Architectural Work State — Handoff` | `ELR Architectural Work State - Handoff 6.3.0.txt` |
-| `ELR Roadmap`                            | `ELR Roadmap 1.3.0.txt`                            |
+| Canonical name | Current repository file |
+|---|---|
+| `ELR Session Prompt` | `ELR Session Prompt 1.5.0.txt` |
+| `ELR Continuity Package` | `ELR Continuity Package 2.4.0.txt` |
+| `ELR Architectural Work State — Handoff` | `ELR Architectural Work State - Handoff 6.4.0.txt` |
+| `ELR Roadmap` | `ELR Roadmap 1.4.0.txt` |
 
-The Session Prompt provides the bootstrap procedure.
+The mapping above represents the current verified physical files in the
+repository.
 
-The Continuity Package records the broader continuity rules.
-
-The Handoff records the current operational position.
-
-The Roadmap records phase ownership and sequencing.
-
-No continuity artifact overrides the repository.
+No previous or future version may be used as the current continuity
+artifact.
 
 ---
 
