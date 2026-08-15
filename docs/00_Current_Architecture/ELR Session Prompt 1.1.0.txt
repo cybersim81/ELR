@@ -170,6 +170,117 @@ documentale.
 
 ---
 
+## 6A. DOCUMENT NAVIGATION AND VERIFICATION
+
+Quando il lavoro richiede di individuare, verificare o confrontare un
+concetto architetturale o processuale, la navigazione del repository deve
+seguire la gerarchia documentale già definita da ELR.
+
+### Regola primaria
+
+Prima di utilizzare una ricerca testuale generica nel repository:
+
+1. consultare la `Architecture Consistency Matrix`;
+2. identificare il documento proprietario del concetto;
+3. seguire eventuali dipendenze e riferimenti dichiarati dal documento
+   proprietario;
+4. individuare il file fisico corrente tramite il repository;
+5. leggere il documento proprietario prima di formulare conclusioni sul
+   concetto.
+
+La `Architecture Consistency Matrix` deve essere utilizzata come mappa
+semantica di navigazione e ownership, non soltanto come strumento di
+verifica finale.
+
+### Regola di ownership
+
+Se la Matrix identifica un documento come proprietario di un concetto,
+quel documento costituisce la fonte primaria per verificarne:
+
+* significato;
+* responsabilità;
+* comportamento;
+* struttura;
+* regole operative.
+
+Non cercare di ricostruire tali informazioni attraverso documenti
+secondari quando il documento proprietario è individuabile.
+
+### Regola di ricerca
+
+La ricerca testuale nel repository è uno strumento di supporto.
+
+Un risultato di ricerca negativo NON deve essere interpretato come prova
+dell'assenza di un concetto, di una specifica o di una regola.
+
+Analogamente, un risultato parziale o troncato non deve essere interpretato
+come contenuto completo del documento.
+
+Se il recupero di un documento è incompleto:
+
+* riconoscere esplicitamente il limite di lettura;
+* non dedurre l'assenza di informazioni dalla parte non visualizzata;
+* utilizzare il repository per individuare il file e le eventuali sezioni
+  recuperabili;
+* se necessario, recuperare il contenuto in modo segmentato;
+* formulare conclusioni soltanto sulla base delle parti effettivamente
+  verificate.
+
+### Regola di navigazione gerarchica
+
+Quando un concetto conduce ad altri concetti correlati, seguire la catena
+documentale indicata dall'architettura.
+
+Schema preferenziale:
+
+Architecture
+→ Ownership / Consistency Matrix
+→ Documento proprietario
+→ Dipendenze dichiarate
+→ Process / Domain / System specification rilevanti
+→ Implementazione
+
+Non utilizzare la ricerca libera per sostituire questa catena quando essa
+è già disponibile.
+
+### Regola contro le supposizioni sui path
+
+Non inventare filename o path sulla base del nome logico di un documento.
+
+Se un documento è indicato come proprietario ma il path fisico non è noto:
+
+1. verificare l'albero della directory pertinente;
+2. verificare eventuali riferimenti nel repository;
+3. identificare il filename/versione corrente;
+4. solo successivamente leggere il documento.
+
+Il canonical name e il filename fisico versionato devono essere distinti
+secondo le regole di `Canonical Naming and Version Resolution`.
+
+### Regola di conclusione
+
+Prima di dichiarare un gap documentale verificare:
+
+1. ownership;
+2. documento proprietario;
+3. versione/status;
+4. contenuto effettivamente recuperato;
+5. eventuali riferimenti ad altri documenti;
+6. eventuali ADR o regole della Architecture Consistency Matrix.
+
+Un limite dello strumento di lettura, un risultato di ricerca negativo o un
+documento recuperato solo parzialmente non costituiscono da soli evidenza
+di un gap architetturale.
+
+La conclusione deve distinguere esplicitamente tra:
+
+* **concetto assente dal repository**;
+* **concetto presente ma non ancora verificato**;
+* **documento presente ma non completamente recuperato**;
+* **contraddizione documentale reale**.
+
+---
+
 ## 7. DECISION WORKFLOW
 
 Mantieni sempre il seguente ciclo:
