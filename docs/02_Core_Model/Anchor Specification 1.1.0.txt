@@ -3,7 +3,7 @@ English Learning Repository (ELR)
 
 Anchor Specification
 
-Version: 1.0.0
+Version: 1.1.0
 Status: APPROVED
 =============
 
@@ -15,7 +15,7 @@ Anchor Specification
 
 Document Version:
 
-1.0.0
+1.1.0
 
 Status:
 
@@ -131,6 +131,47 @@ L'Anchor identifica l'unità linguistica responsabile della conoscenza.
 L'Anchor non contiene il significato della conoscenza.
 La conoscenza è rappresentata dal Knowledge Statement associato.
 
+================================================================================
+1.1. IPA Representation
+=======================
+
+Un Anchor può contenere una rappresentazione fonetica della propria forma
+linguistica mediante l'International Phonetic Alphabet (IPA).
+
+La proprietà è:
+
+ipa
+
+La proprietà `ipa`:
+
+* è opzionale;
+* contiene una trascrizione IPA dell'Anchor;
+* utilizza caratteri Unicode compatibili con l'International Phonetic Alphabet;
+* non costituisce parte dell'identità dell'Anchor;
+* non modifica la semantica dell'Anchor;
+* non rappresenta una conoscenza separata;
+* non introduce un'entità `Pronunciation`.
+
+Un Anchor può quindi essere valido anche quando la proprietà `ipa` non è
+disponibile.
+
+Valori ammessi:
+
+* `ipa` assente o nullo: trascrizione non disponibile o non fornita;
+* `ipa` valorizzato: trascrizione fonetica IPA dell'Anchor.
+
+Una stringa vuota o composta esclusivamente da spazi non costituisce una
+trascrizione IPA valida.
+
+La validazione della correttezza fonetica della trascrizione IPA non appartiene
+alla responsabilità strutturale dell'Anchor Domain Model.
+
+La proprietà `ipa` rappresenta esclusivamente un attributo descrittivo della
+forma linguistica dell'Anchor.
+
+La modifica della trascrizione IPA non comporta la creazione di un nuovo Anchor.
+
+================================================================================
 ================================================================================
 2. Anchor Boundary
 ==================
@@ -585,6 +626,6 @@ English Learning Repository (ELR)
 
 Anchor Specification
 
-Version: 1.0.0
+Version: 1.1.0
 
 ================================================================================
