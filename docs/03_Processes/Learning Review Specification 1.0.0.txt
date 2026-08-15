@@ -457,6 +457,74 @@ REQUEST REVISION
 
 La proposta necessita di modifica prima della valutazione finale.
 
+REQUEST REVISION non costituisce una decisione terminale.
+
+La Change Proposal sottoposta a revisione deve essere modificata prima
+di una nuova valutazione della Learning Review.
+
+La revisione deve mantenere il riferimento alla Change Proposal precedente
+e alla Review Decision Trace che ha generato la richiesta di revisione.
+
+La proposta revisionata costituisce una nuova versione della Change Proposal
+ai fini della valutazione.
+
+La revisione non richiede la riesecuzione automatica della KEP.
+
+La Learning Review deve valutare nuovamente la Change Proposal revisionata
+prima che possa essere applicata all'ELR.
+
+Una nuova Learning Review produce una nuova Review Decision Trace.
+
+================================================================================
+REQUEST REVISION Lifecycle
+================================================================================
+
+Il lifecycle di una proposta sottoposta a REQUEST REVISION è:
+
+Change Proposal
+        |
+        v
+Learning Review
+        |
+        v
+REQUEST REVISION
+        |
+        v
+Revisione della Change Proposal
+        |
+        v
+Nuova versione della Change Proposal
+        |
+        v
+Nuova Learning Review
+        |
+        +-------------------+
+        |                   |
+        v                   v
+     APPROVE             REJECT
+        |                   |
+        v                   v
+      ELR                terminale
+
+
+La revisione deve preservare:
+
+• riferimento alla Change Proposal precedente;
+
+• riferimento alla Review Decision Trace precedente;
+
+• continuità della provenance della proposta;
+
+• distinzione tra la versione precedente e la versione revisionata.
+
+Ogni nuova valutazione della Learning Review produce una nuova
+Review Decision Trace.
+
+Una Change Proposal revisionata può essere sottoposta a ulteriori
+REQUEST REVISION.
+
+Il numero di revisioni non è limitato dalla presente specifica.
+
 
 ================================================================================
 CREATE Review
