@@ -577,44 +577,43 @@ re-executing the entire checkpoint.
 
 Checkpoint:
 
-**Core Domain Implementation Propagation Checkpoint**
+**Phase 9 — Derived Learning Systems Completion Checkpoint**
 
 Result:
 
-**COMPLETE**
+**COMPLETE / PASS**
 
 Previous checkpoint:
 
 **Implementation Readiness Checkpoint — GO**
 
-Fase 8:
+Previous completed phase:
 
-**COMPLETED**
+**Fase 8 — Implementation Readiness Review**
 
-Current roadmap position:
+Current completed phase:
 
 **Fase 9 — Derived Learning Systems**
 
-Verified propagation scope:
+Phase 9 result:
 
-* Anchor Specification 1.1.0;
-* ELR Domain Model Specification 1.1.0;
-* ELR Persistence Mapping Specification 0.2.0;
-* `app/domain/entities/anchor.py`;
-* `app/persistence/models/anchor_model.py`;
-* `tests/domain/test_anchor.py`;
-* `tests/persistence/models/test_anchor_model.py`.
+**COMPLETE / PASS**
 
-Verified extension:
+Verified Phase 9 scope:
 
-**Anchor.ipa**
+* Phrasebook Specification 1.0.0;
+* Learning Review Specification 1.0.0;
+* Learning Activity Specification 1.0.0;
+* Mastery Engine Specification 1.0.0;
+* Evidence Model Specification 1.0.1;
+* Adaptive Review Specification 1.0.0.
 
-The Anchor supports an optional IPA phonetic transcription.
+Adaptive Review Specification 1.0.0:
 
-The property does not contribute to Anchor identity and does not introduce
-a new Domain entity.
+**APPROVED / CLOSED**
 
-No audio representation has been introduced.
+Adaptive Review was cross-checked against the Architecture Consistency
+Matrix and the relevant process specifications.
 
 Open findings:
 
@@ -632,29 +631,50 @@ New matrices required:
 
 **0**
 
+Phase 9 activity remaining:
+
+**NONE**
+
+Current roadmap position:
+
+**Fase 10 — Interaction Layer**
+
+Next authorized action:
+
+**Fase 10 — Interaction Layer**
+
+Fase 10 has not yet started.
+
 Current Roadmap:
 
-**ELR Roadmap 1.2.3.txt**
+**ELR Roadmap 1.3.0.txt**
 
 Current Handoff:
 
-**ELR Architectural Work State - Handoff 6.2.0.txt**
+**ELR Architectural Work State - Handoff 6.3.0.txt**
 
 Current Session Prompt:
 
-**ELR Session Prompt 1.3.0.txt**
+**ELR Session Prompt 1.4.0.txt**
 
 Current Continuity Package:
 
 **ELR Continuity Package 2.3.0.txt**
 
-Current phase:
+The current continuity chain is therefore:
 
-**Fase 9 — Derived Learning Systems**
+**Session Prompt 1.4.0
+→ Continuity Package 2.3.0
+→ Handoff 6.3.0
+→ Roadmap 1.3.0**
 
-Next authorized action:
+The repository is the source of truth for all current versions and states.
 
-**Fase 9 — Derived Learning Systems**
+The previous Core Domain Implementation Propagation Checkpoint is historical
+context and is not the current checkpoint.
+
+No Phase 9 work should be repeated unless new repository evidence requires
+reopening the completed checkpoint.
 
 ---
 
