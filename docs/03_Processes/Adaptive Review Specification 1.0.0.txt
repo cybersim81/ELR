@@ -634,17 +634,270 @@ Quando una decisione richiede una nuova responsabilità di dominio o di
 processo, tale responsabilità deve essere assegnata al componente ELR
 appropriato invece di essere assorbita dalla Adaptive Review Policy.
 
+================================================================================
+23. Persistence Boundary
+================================================================================
+
+Adaptive Review può produrre decisioni di selezione e scheduling come
+artefatti di processo.
+
+Tali artefatti possono essere persistiti quando richiesto dal sistema.
+
+La persistenza di una decisione di Adaptive Review non la trasforma in:
+
+- conoscenza ELR;
+- Mastery State;
+- Evidence;
+- Learning Activity;
+- Source of Truth indipendente.
+
+
+Qualsiasi modello persistente necessario alla registrazione delle decisioni
+deve appartenere al componente ELR responsabile della relativa persistenza.
+
 
 ================================================================================
-Principio conclusivo
+24. Review Decision Record
 ================================================================================
 
-Adaptive Review è un processo derivato che collega lo stato di apprendimento
-alla selezione e allo scheduling delle Learning Activity.
+Quando una decisione di Adaptive Review viene registrata, il record dovrebbe
+essere riconducibile almeno a:
 
-Non introduce una nuova Source of Truth.
+- Learning Activity selezionata;
+- timestamp della decisione;
+- policy/configurazione utilizzata;
+- segnali principali considerati;
+- priorità assegnata, quando presente;
+- scheduling prodotto, quando presente.
 
-Non assume ownership della conoscenza, della Mastery o delle Learning Activity.
+
+Il record deve consentire di ricostruire il motivo della decisione senza
+duplicare o ridefinire i dati proprietari dei componenti sorgente.
+
+
+================================================================================
+25. Auditability
+================================================================================
+
+Le decisioni adattive significative devono essere auditabili.
+
+L'audit deve consentire di determinare:
+
+- quali input sono stati utilizzati;
+- quale configurazione era attiva;
+- quale decisione è stata prodotta;
+- quando la decisione è stata prodotta;
+- quale Learning Activity è stata selezionata o schedulata.
+
+
+L'audit non deve richiedere la duplicazione integrale dei dati proprietari
+degli altri componenti.
+
+
+================================================================================
+26. Configuration Versioning
+================================================================================
+
+Una decisione adattiva deve essere associabile alla versione della policy
+o configurazione che l'ha prodotta.
+
+Una modifica della configurazione non deve retroattivamente modificare
+il significato storico delle decisioni già registrate.
+
+
+Decisioni prodotte con configurazioni differenti devono rimanere
+distinguibili quando tale distinzione è necessaria per audit o riproducibilità.
+
+
+================================================================================
+27. Failure Handling
+================================================================================
+
+Adaptive Review deve gestire esplicitamente i casi in cui gli input
+necessari non siano disponibili, validi o sufficientemente aggiornati.
+
+
+Quando un input critico non è disponibile, Adaptive Review deve:
+
+- evitare di inventare il valore mancante;
+- evitare di modificare il componente proprietario dell'input;
+- applicare, quando prevista, una strategia di fallback autorizzata;
+- oppure non produrre una decisione adattiva.
+
+
+Un fallback non deve essere interpretato come una nuova misura di Mastery.
+
+
+================================================================================
+28. Invalid or Stale Inputs
+================================================================================
+
+Un input può essere considerato non utilizzabile quando:
+
+- è formalmente invalido;
+- è incompatibile con la versione attesa;
+- è temporalmente obsoleto oltre i limiti autorizzati;
+- è incoerente con i vincoli del sistema.
+
+
+Adaptive Review non deve correggere autonomamente un input proprietario di
+un altro componente.
+
+L'input deve essere rigettato, ignorato o gestito attraverso un fallback
+esplicitamente autorizzato.
+
+
+================================================================================
+29. No Eligible Activity
+================================================================================
+
+Quando nessuna Learning Activity soddisfa i criteri di eleggibilità,
+Adaptive Review non deve produrre una selezione artificiale.
+
+
+Il risultato può essere:
+
+- nessuna attività selezionata;
+- richiesta di rivalutazione futura;
+- fallback esplicitamente configurato.
+
+
+L'assenza di una selezione è un risultato valido del processo.
+
+
+================================================================================
+30. Conflicting Signals
+================================================================================
+
+Quando segnali autorizzati producono indicazioni divergenti, Adaptive Review
+deve applicare una priorità determinata dalla policy configurata.
+
+
+Adaptive Review non deve risolvere il conflitto modificando:
+
+- Mastery State;
+- Evidence;
+- Learning Activity;
+- Knowledge Object.
+
+
+Il conflitto deve rimanere spiegabile attraverso i criteri applicati.
+
+
+================================================================================
+31. Reproducibility
+================================================================================
+
+Una decisione storica deve poter essere interpretata rispetto alla policy,
+alla configurazione e agli input disponibili al momento della decisione.
+
+
+La riproduzione di una decisione non richiede necessariamente la riproduzione
+dell'intero sistema ELR, ma deve utilizzare gli stessi input e la stessa
+configurazione rilevanti per la decisione.
+
+
+Quando gli input storici non sono più disponibili, il sistema deve distinguere
+tra:
+
+- decisione storicamente registrata;
+- decisione attualmente ricalcolabile.
+
+
+Le due condizioni non devono essere confuse.
+
+
+================================================================================
+32. Idempotency
+================================================================================
+
+La ripetizione della stessa richiesta di Adaptive Review con gli stessi input,
+la stessa configurazione e lo stesso contesto non deve produrre duplicazioni
+indesiderate di decisioni o scheduling.
+
+
+Quando il sistema richiede esplicitamente una nuova rivalutazione, questa
+deve essere distinguibile dalla ripetizione della stessa richiesta.
+
+
+================================================================================
+33. Safety Boundary
+================================================================================
+
+Adaptive Review non deve eseguire automaticamente operazioni che modifichino
+la Source of Truth di altri componenti.
+
+
+In particolare, una decisione Adaptive Review non può:
+
+- modificare Learning Object;
+- modificare Mastery State;
+- modificare Evidence;
+- modificare Learning Activity;
+- creare conoscenza persistente.
+
+
+Qualsiasi modifica necessaria deve essere eseguita dal componente owner
+attraverso il relativo processo autorizzato.
+
+
+================================================================================
+34. Normative Rules
+================================================================================
+
+Le seguenti regole sono normative per Adaptive Review:
+
+AR-001:
+Adaptive Review seleziona e schedula Learning Activity.
+
+AR-002:
+Adaptive Review non calcola né modifica Mastery.
+
+AR-003:
+Adaptive Review non crea né modifica Evidence.
+
+AR-004:
+Adaptive Review non modifica la definizione delle Learning Activity.
+
+AR-005:
+Adaptive Review non introduce una nuova Source of Truth.
+
+AR-006:
+Una decisione adattiva deve essere riconducibile agli input e alla policy
+che l'hanno prodotta.
+
+AR-007:
+L'assenza di una Learning Activity eleggibile è un risultato valido.
+
+AR-008:
+Gli input mancanti o invalidi non devono essere inventati o corretti
+da Adaptive Review.
+
+AR-009:
+Le decisioni storiche devono rimanere distinguibili dalle rivalutazioni
+successive.
+
+AR-010:
+Una modifica della policy non deve alterare retroattivamente il significato
+delle decisioni già registrate.
+
+
+================================================================================
+Principi conclusivi
+================================================================================
+
+Adaptive Review è un processo derivato che utilizza segnali autorizzati
+dall'ELR per selezionare e schedulare Learning Activity.
+
+La sua responsabilità termina nella decisione di revisione.
+
+Non assume ownership della conoscenza, della Mastery, dell'Evidence,
+delle Learning Activity o degli esercizi.
+
+Le decisioni Adaptive Review devono rimanere spiegabili, auditabili e
+riproducibili entro i limiti degli input e della configurazione disponibili.
+
+Adaptive Review non introduce una nuova Source of Truth.
 
 
 ================================================================================
