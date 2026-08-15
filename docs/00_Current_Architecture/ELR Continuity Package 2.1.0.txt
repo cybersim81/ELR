@@ -2,7 +2,7 @@
 
 ## Continuity Package
 
-**Version:** 2.0.0
+**Version:** 2.1.0
 **Status:** ACTIVE
 **Document Type:** Session Continuity and Architectural Recovery Package
 
@@ -79,9 +79,9 @@ Current canonical-to-file mapping:
 | Canonical name                           | Current repository file                            |
 | ---------------------------------------- | -------------------------------------------------- |
 | `ELR Architectural Work State — Handoff` | `ELR Architectural Work State - Handoff 6.0.0.txt` |
-| `ELR Continuity Package`                 | `ELR Continuity Package 2.0.0.txt`                 |
+| `ELR Continuity Package`                 | `ELR Continuity Package 2.1.0.txt`                 |
 | `ELR Roadmap`                            | `ELR Roadmap 1.2.1.txt`                            |
-| `ELR Session Prompt`                     | `ELR Session Prompt 1.1.0.txt`                     |
+| `ELR Session Prompt`                     | `ELR Session Prompt 1.2.0.txt`                     |
 
 Resolution rule:
 
@@ -126,7 +126,7 @@ Canonical name:
 
 Current file:
 
-`ELR Session Prompt 1.1.0.txt`
+`ELR Session Prompt 1.2.0.txt`
 
 Responsibility:
 
@@ -142,7 +142,7 @@ Canonical name:
 
 Current file:
 
-`ELR Continuity Package 2.0.0.txt`
+`ELR Continuity Package 2.1.0.txt`
 
 Responsibility:
 
@@ -231,17 +231,20 @@ Completed phases:
 * Fase 5 — Human Learning Control
 * Fase 6 — Learning Activity and Exercise Systems
 * Fase 7 — Document Consistency Consolidation
+* Fase 8 — Implementation Readiness Review
 
 Current phase:
 
-**Fase 8 — Implementation Readiness Review**
-
-Next phase:
-
 **Fase 9 — Derived Learning Systems**
 
-Fase 9 must not begin until Fase 8 has been completed and its checkpoint
-has been passed.
+Fase 8 has been completed and its Implementation Readiness Checkpoint has
+been passed.
+
+Fase 9 is therefore the next authorized roadmap position.
+
+The completion of Fase 8 does not imply that implementation work is complete.
+Implementation may proceed according to the existing implementation plan
+where authorized.
 
 ---
 
@@ -249,20 +252,22 @@ has been passed.
 
 The next authorized activity is:
 
-**Implementation Readiness Review**
+**Fase 9 — Derived Learning Systems**
 
-The review must verify:
+The implementation-readiness work for ELR Core Repository v0.1 has been
+completed.
 
-* completeness of implementation responsibilities;
-* contracts between Domain, Application, Persistence, Event, Security and API;
-* traceability between specifications and implementation components;
-* remaining technical decisions;
-* implementation sequencing;
-* initial tests and contract checks.
+The existing implementation plan remains the authoritative source for the
+implementation sequence:
 
-The expected output is:
+`docs/06_System/ELR Core Repository Implementation Plan 0.1.0.txt`
 
-**Implementation Readiness Checkpoint**
+The completion of the Implementation Readiness Checkpoint does not replace
+the implementation plan and does not constitute implementation completion.
+
+The expected next architectural position is:
+
+**Phase 9 — Derived Learning Systems**
 
 ---
 
@@ -270,8 +275,8 @@ The expected output is:
 
 A new session must read, in this order:
 
-1. `ELR Session Prompt 1.1.0.txt`
-2. `ELR Continuity Package 2.0.0.txt`
+1. `ELR Session Prompt 1.2.0.txt`
+2. `ELR Continuity Package 2.1.0.txt`
 3. `ELR Architectural Work State - Handoff 6.0.0.txt`
 4. `ELR Roadmap 1.2.1.txt`
 
@@ -285,6 +290,20 @@ The session must then:
 6. begin the next authorized activity.
 
 The current phase must not be reconstructed from conversational memory.
+
+A completed checkpoint must not be repeated automatically.
+
+Before reopening a completed checkpoint, verify whether:
+
+* a relevant document has changed;
+* a newer document version exists;
+* a contradiction has appeared;
+* a new finding has appeared;
+* implementation evidence has materially changed;
+* explicit reassessment has been requested.
+
+Without such evidence, use the recorded checkpoint result and continue from
+the next authorized position.
 
 ---
 
@@ -304,6 +323,9 @@ Use the following sequence:
 
 A proposal is not an applied change until the repository has been reread and
 the modified content has been verified.
+
+Completed checkpoints should not be re-executed merely to reconstruct
+context.
 
 ---
 
@@ -376,23 +398,41 @@ They must not be reopened merely to:
 
 A real contradiction may trigger a controlled reopening.
 
+Completion of the Implementation Readiness Review does not by itself reopen
+the frozen specification set.
+
 ---
 
 # 16. IMPLEMENTATION READINESS RULE
 
-Fase 8 exists to determine whether the frozen specifications are sufficiently
-precise for implementation.
+Fase 8 existed to determine whether the frozen specifications were
+sufficiently precise for implementation.
 
-The review must not silently introduce architecture.
+The review verified:
 
-Any unresolved item must be classified as either:
+* completeness of implementation responsibilities;
+* contracts between Domain, Application, Persistence, Event, Security and API;
+* traceability between specifications and implementation components;
+* remaining technical decisions;
+* implementation sequencing;
+* initial tests and contract checks.
+
+The Implementation Readiness Checkpoint has been completed.
+
+Result:
+
+**GO**
+
+The review did not silently introduce architecture.
+
+Any future unresolved item must still be classified as either:
 
 * already defined by an authoritative Specification;
 * an implementation/technical decision;
 * an architectural decision requiring explicit approval.
 
-The Implementation Readiness Checkpoint is the gate between the frozen
-specification set and implementation work.
+The Implementation Readiness Checkpoint is therefore a completed gate between
+the frozen specification set and implementation work.
 
 ---
 
@@ -413,6 +453,8 @@ The assistant must explicitly state when a clean checkpoint has been reached.
 The assistant must not close the session automatically.
 
 The user must explicitly approve closure.
+
+A completed phase or checkpoint is a valid session stopping point.
 
 ---
 
@@ -480,23 +522,51 @@ Before declaring a continuity checkpoint complete, verify:
 
 The final verification result must be reported explicitly.
 
+For a checkpoint already recorded as completed, verification should confirm
+whether the recorded state remains current rather than automatically
+re-executing the entire checkpoint.
+
 ---
 
 # 19. CURRENT CHECKPOINT
 
 Checkpoint:
 
-**Specification Consistency**
+**Implementation Readiness Checkpoint**
 
 Result:
 
 **GO**
 
-Verified corpus:
+Fase 8:
 
-**15 documents**
+**COMPLETED**
+
+Verified readiness scope:
+
+* implementation responsibilities;
+* Domain ↔ Application ↔ Persistence contracts;
+* Event contracts;
+* Security contracts;
+* API contracts;
+* specification → implementation traceability;
+* remaining technical decisions;
+* implementation sequence;
+* initial contract checks.
 
 Open findings:
+
+**0**
+
+Blocking architectural decisions remaining:
+
+**0**
+
+New specifications required:
+
+**0**
+
+New matrices required:
 
 **0**
 
@@ -510,19 +580,19 @@ Current Handoff:
 
 Current Session Prompt:
 
-**ELR Session Prompt 1.1.0.txt**
+**ELR Session Prompt 1.2.0.txt**
 
 Current Continuity Package:
 
-**ELR Continuity Package 2.0.0.txt**
+**ELR Continuity Package 2.1.0.txt**
+
+Current phase:
+
+**Fase 9 — Derived Learning Systems**
 
 Next authorized action:
 
-**Fase 8 — Implementation Readiness Review**
-
-Next gate:
-
-**Implementation Readiness Checkpoint**
+**Fase 9 — Derived Learning Systems**
 
 ---
 
@@ -557,11 +627,25 @@ At the current checkpoint:
 
 **Finding aperti → 0**
 
+**Fase 8 — Implementation Readiness Review → COMPLETE**
+
+**Implementation Readiness Checkpoint → GO**
+
+**Blocking architectural decisions → 0**
+
+**New specifications required → 0**
+
+**New matrices required → 0**
+
+**Current roadmap position → Fase 9 — Derived Learning Systems**
+
+**Session Prompt → 1.2.0**
+
+**Continuity Package → 2.1.0**
+
+**Handoff → 6.0.0**
+
 **Roadmap → 1.2.1**
-
-**Current phase → Fase 8 — Implementation Readiness Review**
-
-**Next gate → Implementation Readiness Checkpoint**
 
 **Continuity system → canonical naming and version resolution defined**
 
