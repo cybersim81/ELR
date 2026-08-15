@@ -2,7 +2,7 @@
 
 # Architectural Roadmap
 
-**Version:** 1.2.3
+**Version:** 1.3.0
 **Status:** ACTIVE
 
 ---
@@ -15,7 +15,7 @@ ELR Architectural Roadmap
 
 **Document Version:**
 
-1.2.3
+1.3.0
 
 **Status:**
 
@@ -682,14 +682,14 @@ La Fase 9 rimane la posizione corrente della Roadmap.
 
 ## Stato:
 
-**Corrente / Prossima fase autorizzata.**
+**Completata.**
 
 ## Obiettivo:
 
 Costruire sistemi derivati basati sull'ELR come unica sorgente, mantenendo
 separata la selezione dell'intervento didattico dalla sua realizzazione.
 
-Sistemi previsti:
+Sistemi completati:
 
 ## Phrasebook Specification
 
@@ -701,7 +701,7 @@ Responsabilità:
 
 ## Adaptive Review Specification
 
-Responsabilità previste:
+Responsabilità:
 
 * selezione delle Learning Activity;
 * scheduling;
@@ -710,23 +710,31 @@ Responsabilità previste:
 
 Adaptive Review non sostituisce la Learning Activity.
 
-Costituisce una futura policy/processo di selezione e scheduling.
+La Adaptive Review Specification 1.0.0 è stata verificata, sottoposta a
+Review, approvata e chiusa.
 
-## Reporting Specification
+## Risultato Fase 9
 
-Responsabilità previste:
+✓ Phrasebook Specification verificata;
 
-* reporting;
-* visualizzazioni derivate;
-* analisi aggregate.
+✓ Adaptive Review Specification 1.0.0 APPROVED;
 
-I sistemi derivati non costituiscono una nuova Source of Truth della
-conoscenza linguistica.
+✓ Adaptive Review registrata nella Architecture Consistency Matrix;
 
-La Fase 9 costituisce la posizione corrente della Roadmap.
+✓ ownership di Adaptive Review consolidata nel Process Model;
 
-Il lavoro della Fase 9 non deve riaprire automaticamente le fasi
-architetturali precedenti.
+✓ cross-document consistency verificata;
+
+✓ continuity check completato;
+
+✓ finding aperti: 0.
+
+La Fase 9 è considerata completata a livello architetturale.
+
+La Fase 9 non deve essere riaperta automaticamente.
+
+Eventuali modifiche successive devono essere trattate come modifiche
+controllate alle specifiche già approvate.
 
 ---
 
@@ -734,7 +742,7 @@ architetturali precedenti.
 
 ## Stato:
 
-Da definire.
+**Corrente / Prossima fase autorizzata.**
 
 ## Obiettivo:
 
@@ -758,6 +766,11 @@ Estensioni future:
 * pronunciation;
 * audio;
 * input multimodale.
+
+La Fase 10 costituisce la nuova posizione corrente della Roadmap.
+
+Il lavoro della Fase 10 non deve riaprire automaticamente le fasi
+architetturali precedenti.
 
 ---
 
@@ -888,47 +901,41 @@ L'architettura ELR sarà considerata stabile quando:
 
 **Current Phase:**
 
-Fase 9 — Derived Learning Systems
+Fase 10 — Interaction Layer
 
 **Previous Completed Phase:**
 
-Fase 8 — Implementation Readiness Review
+Fase 9 — Derived Learning Systems
 
 **Previous Checkpoint:**
 
-Core Domain Implementation Propagation Checkpoint — COMPLETE
+Adaptive Review Specification 1.0.0 — APPROVED / CLOSED
 
-**Open Findings:**
+**Phase 9 Result:**
 
-0
+Fase 9 — Derived Learning Systems — COMPLETE
 
-**Blocking Architectural Decisions:**
+**Next Authorized Action:**
 
-0
-
-**Next Authorized Work:**
-
-Fase 9 — Derived Learning Systems
+Fase 10 — Interaction Layer
 
 ---
 
 # Continuity References
 
-**ELR Session Prompt:**
+The current continuity chain is:
 
-ELR Session Prompt 1.3.0.txt
+1. `ELR Roadmap 1.3.0.txt`
+2. `ELR Continuity Package 2.3.0.txt`
+3. `ELR Architectural Work State - Handoff 6.3.0.txt`
+4. `ELR Session Prompt 1.4.0.txt`
 
-**ELR Continuity Package:**
+These files form the current bootstrap continuity chain.
 
-ELR Continuity Package 2.2.0.txt
+The versioned filenames above are the expected current repository files.
 
-**ELR Architectural Work State — Handoff:**
-
-ELR Architectural Work State - Handoff 6.2.0.txt
-
-**ELR Roadmap:**
-
-ELR Roadmap 1.2.3.txt
+The chain must be verified against the repository before beginning a new
+session.
 
 ---
 
@@ -936,4 +943,4 @@ ELR Roadmap 1.2.3.txt
 
 ELR Architectural Roadmap
 
-Versione 1.2.3
+Versione 1.3.0
