@@ -41,10 +41,10 @@ quando tali decisioni possono essere verificate nel repository.
 
 All'inizio di una nuova sessione:
 
-1. Read the current `ELR Session Prompt`.
-2. Read the current `ELR Continuity Package`.
-3. Read the current `ELR Architectural Work State — Handoff`.
-4. Read the current `ELR Roadmap`.
+1. Resolve and read the current `ELR Session Prompt`.
+2. Resolve and read the current `ELR Continuity Package`.
+3. Resolve and read the current `ELR Architectural Work State — Handoff`.
+4. Resolve and read the current `ELR Roadmap`.
 
 La Roadmap determina la posizione corrente del lavoro e le attività
 successive autorizzate.
@@ -58,7 +58,13 @@ The current continuity artifact chain is:
 → `ELR Architectural Work State - Handoff`
 → `ELR Roadmap`
 
-These filenames represent the canonical name; the current versioned filename must be looked up at repository.
+These entries represent the canonical names of the four continuity
+artifacts.
+
+The current physical filename, including its version, must be resolved
+from repository evidence.
+
+Canonical names and physical versioned filenames must not be conflated.
 
 The chain must not be considered valid unless all four files:
 
@@ -71,6 +77,37 @@ The Session Prompt is updated last in the continuity versioning sequence.
 
 A new Session Prompt version must not reference continuity artifact
 versions that have not already been applied and verified in the repository.
+
+### Bootstrap Read Order
+
+The bootstrap read order is mandatory:
+
+1. ELR Session Prompt;
+2. ELR Continuity Package;
+3. ELR Architectural Work State — Handoff;
+4. ELR Roadmap.
+
+The Session Prompt is the bootstrap entry point and is therefore always
+read first.
+
+The bootstrap read order is independent from continuity artifact
+versioning and checkpoint update order.
+
+The current versioned filename of each artifact must be resolved from
+repository evidence before reading that artifact.
+
+The bootstrap read order must not be changed when continuity artifacts
+are versioned or updated.
+
+**Read order:**
+
+Session Prompt → Continuity Package → Handoff → Roadmap
+
+**Checkpoint update order:**
+
+Continuity Package → Handoff → Roadmap → Session Prompt
+
+The distinction between read order and update order is mandatory.
 
 ### Step 5 — Verifica il repository
 
@@ -126,6 +163,24 @@ Per ciascun artifact verifica:
 4. presenza effettiva del file nel repository;
 5. riferimenti agli altri continuity artifact.
 
+Per i riferimenti fisici versionati, verifica inoltre che ogni filename
+referenziato corrisponda al filename fisico effettivamente presente nel
+repository.
+
+Un riferimento a una versione precedente è considerato stale quando
+compare in una sezione che descrive:
+
+* il current bootstrap;
+* la current continuity chain;
+* il current artifact mapping;
+* la current repository state;
+* la procedura corrente di bootstrap;
+* la procedura corrente di checkpoint update.
+
+Un riferimento a una versione precedente può essere mantenuto solo quando
+è esplicitamente utilizzato per descrivere uno stato storico, un checkpoint
+precedente o una migrazione documentale.
+
 Una referenza a un filename futuro, assente dal repository, deve essere
 considerata una continuità non ancora materializzata e non deve essere
 trattata come file corrente verificato.
@@ -172,6 +227,56 @@ been verified.
 
 If any earlier artifact has not yet been applied or verified, the Session
 Prompt must remain on its previous version.
+
+The update order applies only to checkpoint materialization.
+
+It does not change the bootstrap read order.
+
+Therefore:
+
+**Bootstrap read order:**
+
+Session Prompt → Continuity Package → Handoff → Roadmap
+
+**Checkpoint update order:**
+
+Continuity Package → Handoff → Roadmap → Session Prompt
+
+### Step 5C — Cross-Reference Consistency Check
+
+Before accepting a continuity chain as verified, inspect all four bootstrap
+artifacts for references to the other continuity artifacts.
+
+For each reference determine whether it is:
+
+1. a canonical name;
+2. a current physical versioned filename;
+3. a historical versioned filename;
+4. a stale versioned filename.
+
+Current bootstrap references must resolve to the currently verified
+repository files.
+
+Historical references are allowed only when their historical context is
+explicit.
+
+No stale versioned filename may remain in the current bootstrap chain.
+
+The check must cover all four artifacts:
+
+* Session Prompt;
+* Continuity Package;
+* Architectural Work State — Handoff;
+* Roadmap.
+
+A continuity chain is **PASS** only when:
+
+* all four current files exist;
+* their declared versions match their physical filenames;
+* current cross-references resolve to existing current files;
+* no stale versioned filename remains in the current bootstrap chain;
+* historical references, if present, are explicitly historical;
+* the four artifacts describe the same verified continuity state.
 
 ### Step 6 — Determina la fase corrente
 
