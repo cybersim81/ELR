@@ -226,7 +226,7 @@ creazione di una nuova Baseline.
 Principio conclusivo
 ====================
 
-La ELR Architecture Baseline rappresenta il punto di riferimento ufficiale
+L'ELR Architecture Baseline rappresenta il punto di riferimento ufficiale
 dell'architettura del sistema in una determinata fase della sua evoluzione.
 
 Le singole specifiche descrivono i componenti.
