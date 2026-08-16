@@ -1,150 +1,137 @@
 # 00_Bootstrap_Pack_Index.txt
 
-## Bootstrap Pack — Index
+## ELR Bootstrap Pack
 
 ### Purpose
 
-This directory is the session-entry and continuity package for ELR.
+This Bootstrap Pack establishes the consolidated starting state for implementation work on ELR.
 
-The Bootstrap Pack does not replace or supersede the authoritative architecture and specification documents. It records the current consolidated state required to resume work without reconstructing prior session context.
+It is a continuity and orientation package.
 
-### Mandatory Reading Order
+It does not replace the authoritative normative specifications, architecture documents, ADRs, or repository source code.
 
-A new session MUST read all documents in this directory before beginning implementation work, architectural reinterpretation, or roadmap changes.
+Where a conflict exists, the authoritative normative source prevails and this Bootstrap Pack must be updated accordingly.
 
-1. `00_Bootstrap_Pack_Index.txt`
-2. `01_Normative_Baseline_State.txt`
-3. `02_Implementation_Baseline_Inventory.txt`
-4. `03_Implementation_Finding_Register.txt`
-5. `04_End_to_End_Gap_Map.txt`
-6. `05_Implementation_Alignment_Roadmap.txt`
-7. `06_Session_Continuity_State.txt`
-8. `07_Session_Prompt.txt`
+---
 
-### Authority Rule
+## Bootstrap Pack Contents
 
-The Bootstrap Pack is a continuity artifact.
+The Bootstrap Pack consists of:
 
-It MUST NOT redefine normative architecture.
+1. `01_Normative_Baseline_State.txt`
+2. `02_Implementation_Baseline_Inventory.txt`
+3. `03_Implementation_Finding_Register.txt`
+4. `04_End_to_End_Gap_Map.txt`
+5. `05_Implementation_Alignment_Roadmap.txt`
+6. `06_Session_Continuity_State.txt`
+7. `07_Session_Prompt.txt`
 
-Normative meaning remains governed by the authoritative specification documents, Authority Matrix, Architecture Consistency Matrix, and applicable Architecture Decision Records.
+The files are intentionally ordered from normative baseline through implementation inventory, findings, end-to-end gaps, roadmap, continuity state, and session operating instructions.
 
-Where this Pack summarizes a normative decision, the corresponding authoritative document remains the source of truth.
+---
 
-### Current Session State
+## Authority Order
 
-* Specification Propagation: `M0.3.2 — COMPLETE`
-* Normative baseline: `CONSOLIDATED`
-* Implementation Baseline Inventory: `COMPLETE`
-* End-to-End Gap Map: `COMPLETE`
-* Implementation Alignment: `NEXT`
-* Persistent End-to-End Gate: `PENDING`
+The authority hierarchy is:
 
-### Current Resumption Point
+1. Authoritative normative specifications and ADRs
+2. Repository source code and tests as implementation evidence
+3. This Bootstrap Pack as consolidated continuity state
+4. Session-specific working notes
 
-The next work package is:
+The Bootstrap Pack must never be used to override an authoritative specification.
 
-**Implementation Alignment**
+---
 
-The immediate objective is to reconcile the confirmed implementation deviations with the consolidated normative baseline before implementing the missing persistent end-to-end path.
+## Current Consolidated State
 
-## Legacy Bootstrap Lineage
+### Normative Baseline
 
-The current Bootstrap Pack supersedes the previous session-continuity/bootstrap mechanism while preserving its documentary lineage.
+`M0.3.2 — Specification Propagation: COMPLETE`
 
-The previous bootstrap baseline consisted of the following four documents under:
+The normative baseline has been consolidated sufficiently to proceed with implementation alignment.
 
-`docs/00_Current_Architecture/`
+---
 
-### Legacy Bootstrap Document 1
+## IA-01 — Domain Semantic Alignment
 
-`ELR Architectural Work State - Handoff 6.4.0.txt`
+`COMPLETE`
 
-**Role:** Operational architectural work-state handoff and session-closure checkpoint.
+The following eight findings have been resolved:
 
-This document recorded the last verified architectural working position, roadmap position, next authorized action, and session-closure conditions.
+### IA-001 — LearningObject Statement Representation
 
-### Legacy Bootstrap Document 2
+`RESOLVED`
 
-`ELR Continuity Package 2.4.0.txt`
+LearningObject represents KnowledgeStatement explicitly as an immutable aggregate member / knowledge value.
 
-**Role:** Session continuity and architectural recovery package.
+### IA-002 — KnowledgeStatement Identity Semantics
 
-This document established the previous mechanism for reconstructing ELR working state across separate sessions without relying on conversational memory.
+`RESOLVED`
 
-### Legacy Bootstrap Document 3
+KnowledgeStatement has no autonomous identity, lifecycle, repository, or versioning boundary.
 
-`ELR Implementation Baseline Assessment 1.0.0.txt`
+### IA-003 — Generic Version Entity
 
-**Role:** Repository implementation baseline assessment.
+`RESOLVED`
 
-This document established the previous implementation-baseline view used to assess the state of the repository implementation.
+Version identity is explicitly scoped to LearningObject through `learning_object_id`.
 
-### Legacy Bootstrap Document 4
+### IA-005 — LearningObject Version Number
 
-`ELR Implementation Status 1.0.0.txt`
+`RESOLVED`
 
-**Role:** Current implementation-state record.
+LearningObject no longer stores mutable Version state.
 
-This document recorded the implementation status used by the previous continuity/bootstrap process.
+Immutable Version history represents historical knowledge state.
 
-### Lineage Rule
+### IA-010 — Generic VersionRepository History
 
-These four documents are retained in `docs/00_Current_Architecture/` as historical bootstrap material.
+`RESOLVED`
 
-They are not deleted, rewritten, or silently treated as if they had never existed.
+Version history is retrieved using `learning_object_id`.
 
-The current Bootstrap Pack in:
+### IA-017 — Version Snapshot Representation
 
-`docs/00_Bootstrap/`
+`RESOLVED`
 
-is the successor continuity mechanism.
+Version snapshots preserve the structured KnowledgeStatement value.
 
-Its documents consolidate and supersede the session-state, implementation-baseline, finding, E2E, roadmap, and continuity functions previously distributed across the legacy bootstrap set.
+### IA-018 — Application / Repository Version Boundary
 
-### Authority Relationship
+`RESOLVED`
 
-The legacy bootstrap documents are historical continuity sources.
+Application and repository Version history semantics are aligned around LearningObject.
 
-They are NOT normative authority.
+### IA-019 — Version Snapshot Test Coverage
 
-They MUST NOT override:
+`RESOLVED`
 
-* Specification Authority Matrix;
-* Architecture Consistency Matrix;
-* Architecture Decision Log;
-* authoritative Domain Model specifications;
-* authoritative Anchor specifications;
-* authoritative Data and Evidence specifications;
-* other applicable normative specifications.
+Application tests verify Version creation, Version numbering, snapshot content, preservation of previous Versions, and resulting LearningObject state.
 
-### Bootstrap Evolution
+---
 
-The continuity mechanism has therefore evolved as follows:
+## IA-01 Closure Rule
+
+The eight IA-01 findings listed above are closed.
+
+They must not be reopened merely because later implementation work introduces persistence, infrastructure, or integration gaps.
+
+They may only be reopened if new repository evidence demonstrates a direct contradiction with the authoritative normative corpus.
+
+Any such contradiction must first be identified against the authoritative source before changing the Bootstrap Pack.
+
+---
+
+## Current LearningObject Lifecycle
+
+The normative LearningObject lifecycle is:
 
 ```text
-Legacy Bootstrap Set
-        │
-        ├── Architectural Work State / Handoff
-        ├── Continuity Package
-        ├── Implementation Baseline Assessment
-        └── Implementation Status
-        │
-        ▼
-Normative Consolidation
-        │
-        ▼
-Implementation Baseline Inventory
-        │
-        ▼
-E2E Gap Map
-        │
-        ▼
-Current Bootstrap Pack
-        │
-        └── docs/00_Bootstrap/
-```
-
-The current Bootstrap Pack is therefore not an unrelated replacement.
-
-It is the consolidated successor to the previous four-document continuity mechanism.
+Candidate
+    ↓
+Proposed
+    ↓
+Active
+    ↓
+Retired
