@@ -242,7 +242,6 @@ Demonstrate the complete persistent LearningObject lifecycle.
 
 ### Required Flow
 
-```text
 Anchor
   ↓
 LearningObject
@@ -323,7 +322,6 @@ Status: `PENDING`
 
 # Current Roadmap Position
 
-```text
 M0.3.2 Specification Propagation
         │
         ▼
