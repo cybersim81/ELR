@@ -1,5 +1,5 @@
 ================================================================================
-English Learning Repository (ELR)
+Educational Learning Repository (ELR)
 
 Anchor Specification
 
@@ -42,7 +42,7 @@ Scopo
 =====
 
 La Anchor Specification definisce il modello dell'Anchor all'interno
-dell'English Learning Repository (ELR).
+dell'Educational Learning Repository (ELR).
 
 L'Anchor rappresenta l'unità linguistica osservabile a cui viene associata una
 conoscenza persistente.
@@ -172,7 +172,6 @@ forma linguistica dell'Anchor.
 La modifica della trascrizione IPA non comporta la creazione di un nuovo Anchor.
 
 ================================================================================
-================================================================================
 2. Anchor Boundary
 ==================
 
@@ -184,7 +183,7 @@ Learning Object
 
     |
 
-    | contiene
+    | è associato a
 
     v
 
@@ -536,17 +535,33 @@ L'Anchor rimane l'unità linguistica di riferimento.
 11. Anchor Persistence Rules
 ============================
 
-Un Anchor può essere persistito nell'ELR solo quando:
+Un Anchor può essere persistito quando costituisce un riferimento linguistico
+valido associato ad almeno un Learning Object persistente.
 
-* è associato a una conoscenza valida;
+La persistenza dell'Anchor richiede che:
 
-* il Knowledge Statement è definito;
+• la forma linguistica dell'Anchor sia definita;
 
-* la conoscenza è riutilizzabile;
+• l'Anchor sia associato ad almeno un Learning Object valido;
 
-* il Learning Object è approvato.
+• la relazione tra Anchor e Learning Object sia coerente con il Domain Model;
 
-Un Anchor isolato non costituisce conoscenza persistente.
+• l'Anchor possa essere identificato e riutilizzato come riferimento
+linguistico condivisibile.
+
+La persistenza dell'Anchor non implica che l'Anchor appartenga all'aggregate
+del Learning Object.
+
+L'Anchor non eredita il lifecycle del Learning Object.
+
+La modifica dello stato del Learning Object non determina automaticamente la
+creazione, modifica o cancellazione dell'Anchor.
+
+La rimozione dell'associazione con un singolo Learning Object non implica
+automaticamente la cancellazione dell'Anchor, qualora l'Anchor sia ancora
+associato ad altri Learning Object o sia altrimenti mantenuto come riferimento
+linguistico persistente.
+
 
 ================================================================================
 12. Anchor Identity
@@ -622,7 +637,7 @@ persistente.
 ================================================================================
 Fine documento
 
-English Learning Repository (ELR)
+Educational Learning Repository (ELR)
 
 Anchor Specification
 
