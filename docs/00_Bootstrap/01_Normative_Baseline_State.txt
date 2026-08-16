@@ -58,9 +58,17 @@ Version history must not become a generic mechanism for autonomous versioning of
 
 The LearningObject lifecycle is normative and must reject invalid transitions.
 
-The currently implemented lifecycle flow is:
+The current LearningObject lifecycle flow is:
 
-`Candidate → Proposed → Reviewed → Active`
+`Candidate → Proposed → Active → Retired`
+
+`Reviewed`, `Approved`, and `Rejected` are not LearningObject lifecycle states.
+
+They belong to the Change Proposal review lifecycle.
+
+A modification to an Active LearningObject does not introduce an `Updated` state.
+
+The modification is represented through a new immutable Version while the LearningObject remains in its appropriate lifecycle state.
 
 The existence of a working lifecycle implementation does not by itself establish full normative conformance of persistence or version semantics.
 
@@ -114,4 +122,6 @@ The next phase MUST NOT silently weaken, reinterpret, or generalize these bounda
 
 **SPECIFICATION PROPAGATION: COMPLETE**
 
-**IMPLEMENTATION ALIGNMENT: NOT YET COMPLETE**
+**IMPLEMENTATION ALIGNMENT: IA-01 COMPLETE**
+
+**CURRENT IMPLEMENTATION ALIGNMENT GATE: IA-02**
