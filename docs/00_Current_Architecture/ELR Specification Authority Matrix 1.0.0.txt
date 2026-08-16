@@ -477,11 +477,14 @@ docs/02_Core_Model/Anchor Specification 1.1.0.txt
 
 Domain Role:
 
-Aggregate member / reference anchor
+CONFLICT — aggregate member in Domain Model; shared reference in Versioning
+Model
 
 Autonomous Identity:
 
-NO, within LearningObject aggregate semantics
+CONFLICT — Domain Model treats Anchor as an aggregate member without an
+autonomous lifecycle; Versioning Model treats Anchor as a shared entity with
+its own identity
 
 Autonomous Versioning:
 
@@ -489,26 +492,35 @@ NO
 
 Persistence:
 
-YES, as part of LearningObject representation
+CONFLICT — Domain Model describes Anchor as part of LearningObject
+representation; Persistence/Versioning models allow shared Anchor persistence
 
 Current Status:
 
-PARTIAL CONFLICT
+UNRESOLVED CROSS-SPECIFICATION CONFLICT
 
 Notes:
 
-Anchor belongs to the LearningObject.
+The current specifications do not yet provide a single consistent definition
+of the Anchor boundary.
 
-An Anchor change is evaluated as part of LearningObject evolution.
+The Domain Model Specification 1.1.0 currently defines Anchor as an element of
+the Learning Object aggregate.
 
-It must not be treated as an independently versioned knowledge entity merely
-because the persistence representation may store its value separately.
+The Versioning Model Specification 1.0.0 currently defines Anchor as an
+associated and potentially shared entity.
 
+These interpretations are not equivalent and must not be silently reconciled
+by a subordinate specification.
+
+The authoritative boundary must be resolved before the Anchor Specification
+and dependent specifications are considered aligned.
 
 Required Action:
 
-Review Versioning Model references that list Anchor as an independently
-versioned entity.
+Resolve the Anchor boundary at the Domain Model / architectural authority
+level, then propagate the resulting decision to Anchor, Data, Persistence and
+Versioning specifications.
 
 
 --------------------------------------------------------------------------------
@@ -769,7 +781,7 @@ YES
 
 Current Status:
 
-PARTIAL CONFLICT
+CONSISTENT WITH VERSIONING MODEL; MATRIX REQUIRES PROPAGATION UPDATE
 
 Notes:
 
@@ -777,18 +789,22 @@ Version belongs to a Stable Identity.
 
 Version itself is immutable.
 
-The Versioning Model currently lists internal aggregate components such as
-Anchor and Knowledge Statement as independently versioned entities.
+The current Versioning Model defines LearningObject as the primary unit of
+knowledge versioning.
 
-That interpretation conflicts with the aggregate model.
+It does not autonomously version Knowledge Statement or Anchor.
 
+The Versioning Model also distinguishes LearningObject content versioning
+from taxonomy, schema and API contract versioning.
 
 Required Action:
 
-Revise the Versioning Model so that LearningObject content evolution is
-represented by LearningObject Versions.
+Update the Authority Matrix so that the current Versioning Model is reflected
+accurately.
 
-Clarify separately the versioning of taxonomy/schema/reference structures.
+Any remaining conflict concerning Anchor identity or aggregate membership
+must be tracked under the Anchor concept and resolved at the authoritative
+Domain Model level.
 
 
 --------------------------------------------------------------------------------
