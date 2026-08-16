@@ -1,0 +1,340 @@
+# 03_Implementation_Finding_Register.txt
+
+## Implementation Finding Register
+
+### Purpose
+
+This document records the implementation findings established during the Implementation Baseline Inventory.
+
+A finding does not redefine the normative architecture.
+
+Each finding must be resolved against the authoritative normative corpus before the corresponding implementation is considered conformant.
+
+### Status Vocabulary
+
+* `CONFIRMED DEVIATION` — implementation contradicts an established normative boundary.
+* `COVERAGE GAP` — behavior may exist, but the required conformance is not demonstrated by tests.
+* `PERSISTENCE GAP` — required persistent implementation is absent.
+* `ALIGNMENT REQUIRED` — implementation exists but requires semantic or structural alignment.
+* `PRELIMINARILY CONSISTENT` — inspected evidence is currently consistent with the baseline.
+* `OPEN` — requires further verification or an explicit implementation decision.
+
+---
+
+## IA-001 — LearningObject Statement Representation
+
+**Area:** Domain Model
+
+**Finding:** LearningObject currently stores `statement` as `str`.
+
+**Normative expectation:** KnowledgeStatement is an aggregate member / knowledge value.
+
+**Impact:** The implementation does not explicitly represent the normative KnowledgeStatement concept inside the LearningObject aggregate.
+
+**Status:** `CONFIRMED DEVIATION`
+
+**Required action:** Align the LearningObject representation with the normative KnowledgeStatement semantics without introducing an autonomous KnowledgeStatement aggregate.
+
+---
+
+## IA-002 — KnowledgeStatement Identity Semantics
+
+**Area:** Domain Model
+
+**Finding:** KnowledgeStatement is implemented as an immutable object with its own `id` and `created_at`.
+
+**Counter-evidence:** No autonomous KnowledgeStatement repository was found.
+
+**Impact:** The object is entity-like in representation, although there is no evidence of an autonomous persistence boundary.
+
+**Status:** `ALIGNMENT REQUIRED`
+
+**Required action:** Verify and align its identity/value semantics with the normative aggregate-member definition.
+
+---
+
+## IA-003 — Generic Version Entity
+
+**Area:** Domain Model
+
+**Finding:** Version contains a generic `entity_id`.
+
+**Normative expectation:** LearningObject is the primary unit of knowledge versioning.
+
+**Impact:** The current domain type permits a generic versioning interpretation.
+
+**Status:** `CONFIRMED DEVIATION`
+
+**Required action:** Align Version semantics with LearningObject-centered versioning.
+
+---
+
+## IA-004 — Version Persistence
+
+**Area:** Persistence
+
+**Finding:** Version creation exists in the application layer, but no verified Version persistence model exists under `app/persistence/models/`.
+
+**Impact:** Immutable Version history cannot currently be demonstrated as production-persistent.
+
+**Status:** `PERSISTENCE GAP`
+
+---
+
+## IA-005 — LearningObject Version Number
+
+**Area:** Domain Model
+
+**Finding:** LearningObject contains a mutable `version: int`.
+
+**Impact:** The current representation may conflate current aggregate state with immutable Version history.
+
+**Status:** `ALIGNMENT REQUIRED`
+
+**Required action:** Reconcile the current version number with the normative Stable Identity + immutable Versions model.
+
+---
+
+## IA-009 — LearningObject Delete Capability
+
+**Area:** Repository / Lifecycle
+
+**Finding:** LearningObjectRepository exposes `delete()`, and the in-memory implementation supports it.
+
+**Impact:** Physical deletion semantics have not yet been reconciled with lifecycle and persistence requirements.
+
+**Status:** `OPEN`
+
+**Required action:** Establish whether deletion is an allowed domain operation, an administrative/infrastructure operation, or must be removed from the effective repository contract.
+
+---
+
+## IA-010 — Generic VersionRepository History
+
+**Area:** Repository Layer
+
+**Finding:** VersionRepository exposes `get_history(entity_id)` and the in-memory implementation filters Version records by generic `entity_id`.
+
+**Impact:** Generic version history is concretely implemented in the test infrastructure.
+
+**Status:** `CONFIRMED DEVIATION`
+
+**Required action:** Restrict Version history semantics to the normative LearningObject versioning boundary.
+
+---
+
+## IA-011 — Anchor Repository Boundary
+
+**Area:** Repository Layer
+
+**Finding:** Anchor has a dedicated repository independent of LearningObjectRepository.
+
+**Impact:** This supports the normative Anchor boundary.
+
+**Status:** `PRELIMINARILY CONSISTENT`
+
+---
+
+## IA-012 — Anchor Persistence
+
+**Area:** Persistence
+
+**Finding:** AnchorModel exists as a separate persistence model.
+
+**Impact:** Anchor has an independently materialized persistence boundary.
+
+**Status:** `PRELIMINARILY CONSISTENT`
+
+---
+
+## IA-013 — LearningObject Persistence Missing
+
+**Area:** Persistence
+
+**Finding:** No verified LearningObject persistence model exists.
+
+**Impact:** LearningObject cannot currently be demonstrated as production-persistent.
+
+**Status:** `PERSISTENCE GAP`
+
+---
+
+## IA-014 — KnowledgeStatement Persistence Missing
+
+**Area:** Persistence
+
+**Finding:** No verified KnowledgeStatement persistence model exists.
+
+**Impact:** The aggregate-member representation cannot yet be demonstrated through a persistent LearningObject representation.
+
+**Status:** `PERSISTENCE GAP`
+
+**Note:** This does not imply that KnowledgeStatement requires an autonomous persistence repository.
+
+---
+
+## IA-015 — Version Persistence Missing
+
+**Area:** Persistence
+
+**Finding:** No verified Version persistence model exists.
+
+**Impact:** Version history is currently materialized only in-memory.
+
+**Status:** `PERSISTENCE GAP`
+
+---
+
+## IA-016 — Lifecycle Application Orchestration
+
+**Area:** Application
+
+**Finding:** LearningObjectService implements the lifecycle progression and rejects invalid transitions through the domain model.
+
+**Impact:** The application lifecycle skeleton is operational.
+
+**Status:** `PRELIMINARILY CONSISTENT`
+
+---
+
+## IA-017 — Version Snapshot Representation
+
+**Area:** Application / Versioning
+
+**Finding:** The Version snapshot created by LearningObjectService contains `statement` as a string together with Anchor/category/state data.
+
+**Impact:** The Version snapshot inherits the LearningObject statement-representation deviation.
+
+**Status:** `CONFIRMED DEVIATION`
+
+**Required action:** Align the snapshot with the corrected LearningObject/KnowledgeStatement semantics.
+
+---
+
+## IA-018 — Application Version History Boundary
+
+**Area:** Application / Repository
+
+**Finding:** The application service requests Version history using a LearningObject ID, despite the repository contract remaining generic.
+
+**Impact:** Application behavior is already LearningObject-centered, while the repository abstraction remains generic.
+
+**Status:** `ALIGNMENT REQUIRED`
+
+**Required action:** Align the repository contract with the actual normative/application boundary.
+
+---
+
+## IA-019 — Version Snapshot Test Coverage
+
+**Area:** Tests
+
+**Finding:** Application tests verify that a Version is created and returned from history, but do not verify semantic correctness of its snapshot.
+
+**Impact:** Incorrect Version content could pass the current test suite.
+
+**Status:** `COVERAGE GAP`
+
+---
+
+## IA-020 — Persistence Test Coverage
+
+**Area:** Tests
+
+**Finding:** Persistence tests cover AnchorModel only.
+
+**Impact:** No persistent conformance is demonstrated for LearningObject, Version, KnowledgeStatement, or AuditRecord.
+
+**Status:** `COVERAGE GAP`
+
+---
+
+## IA-021 — Concrete Repository Coverage
+
+**Area:** Persistence / Infrastructure
+
+**Finding:** No verified concrete production repositories for LearningObject or Version were identified in the inspected persistence tree.
+
+**Impact:** The application workflow currently relies on in-memory repository implementations for tested execution.
+
+**Status:** `PERSISTENCE GAP`
+
+---
+
+## IA-022 — Persistent End-to-End Flow
+
+**Area:** End-to-End
+
+**Finding:** No verified test demonstrates Application → Repository → Persistence Model → Database → Reload for the complete LearningObject lifecycle.
+
+**Impact:** Persistent end-to-end conformance is not established.
+
+**Status:** `PERSISTENCE GAP`
+
+---
+
+## IA-023 — Audit In-Memory Semantics
+
+**Area:** Audit
+
+**Finding:** AuditRecord is immutable and the in-memory repository preserves records as append-only history.
+
+**Impact:** Current operational-history semantics are consistent at the in-memory level.
+
+**Status:** `PRELIMINARILY CONSISTENT`
+
+**Open point:** Production persistence remains absent.
+
+---
+
+## Finding Summary
+
+### Confirmed deviations
+
+* IA-001
+* IA-003
+* IA-010
+* IA-017
+
+### Alignment required
+
+* IA-002
+* IA-005
+* IA-018
+
+### Persistence gaps
+
+* IA-004
+* IA-013
+* IA-014
+* IA-015
+* IA-021
+* IA-022
+
+### Test coverage gaps
+
+* IA-019
+* IA-020
+
+### Open decisions
+
+* IA-009
+
+### Preliminarily consistent
+
+* IA-011
+* IA-012
+* IA-016
+* IA-023
+
+### Current conclusion
+
+The implementation baseline is not yet conformant with the consolidated normative baseline.
+
+The primary structural gap is the absence of a persistent LearningObject / Version / Audit path.
+
+The primary semantic deviations concern KnowledgeStatement representation and LearningObject-centered versioning.
+
+The next work package is:
+
+**IMPLEMENTATION ALIGNMENT**
