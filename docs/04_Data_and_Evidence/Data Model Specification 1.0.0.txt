@@ -135,39 +135,53 @@ Le principali entità persistenti dell'ELR sono:
 
 Learning Object
 
-```
-    |
-
-    | contiene
-
-    v
-```
+|
+| contiene
+v
 
 Anchor
 
-```
-    |
 
-    | descrive
+|
+| appartiene al Learning Object
+v
 
-    v
-```
 
 Knowledge Statement
 
+|
+| classificato da
+v
+
+
+Knowledge Category
+
+
 Learning Object
 
-```
-    |
+|
+| associato a User
+v
 
-    | associato a
-
-    v
-```
 
 Learning State
 
+
+Il Learning Object è l'unità minima persistente della conoscenza.
+
+Anchor, Knowledge Statement e Knowledge Category partecipano alla struttura
+persistente del Learning Object secondo i rispettivi confini del Domain Model.
+
+Il Knowledge Statement non costituisce una entità persistente autonoma.
+
+Il Learning State è persistente e User-specific, ma non costituisce conoscenza
+linguistica.
+
 Le Evidence non appartengono al repository della conoscenza.
+
+Sono gestite secondo l'Evidence Model e i processi dedicati.
+
+
 
 Sono gestite nel Process Layer.
 
@@ -221,24 +235,34 @@ Un Anchor non rappresenta:
 * spiegazione metalinguistica.
 
 ================================================================================
-4. Knowledge Statement Entity
-=============================
+4. Knowledge Statement
+======================
 
-Il Knowledge Statement rappresenta la conoscenza associata all'Anchor.
+Il Knowledge Statement rappresenta la conoscenza associata all'Anchor
+all'interno del Learning Object.
+
+Il Knowledge Statement è una componente del Learning Object e non costituisce
+una entità persistente autonoma.
 
 Un Knowledge Statement deve essere:
 
 * atomico;
-
 * positivo;
-
 * riutilizzabile;
-
 * comprensibile.
 
 Un Learning Object contiene una conoscenza principale.
 
 Eventuali spiegazioni estese appartengono a livelli descrittivi separati.
+
+Il Knowledge Statement non possiede:
+
+* identità persistente indipendente;
+* ciclo di vita autonomo;
+* versionamento indipendente.
+
+La sua persistenza e la sua evoluzione sono gestite attraverso il Learning
+Object al quale appartiene.
 
 ================================================================================
 5. Knowledge Category Entity
@@ -293,11 +317,13 @@ Learning Object
 
 Anchor
 
+
 Learning Object
 
 1 --- 1
 
 Knowledge Statement
+
 
 Learning Object
 
@@ -315,6 +341,20 @@ Learning State
 * --- 1
 
 Learning Object
+
+
+Le relazioni tra Learning Object e Anchor, Knowledge Statement e Knowledge
+Category rappresentano composizione o associazione interna alla struttura
+persistente del Learning Object.
+
+Non devono essere interpretate come relazioni tra entità di conoscenza tutte
+dotate di ciclo di vita persistente autonomo.
+
+Il Knowledge Statement appartiene al Learning Object.
+
+La Knowledge Category classifica il Learning Object e non costituisce
+conoscenza autonoma.
+
 
 Un Anchor può essere associato a più Learning Object quando rappresenta
 conoscenze indipendenti.
@@ -417,15 +457,19 @@ Il Data Model riceve solo dati approvati.
 10. Versioning
 ==============
 
-Le entità persistenti devono supportare evoluzione controllata.
+Le strutture persistenti devono supportare evoluzione controllata.
 
 Il versioning deve consentire:
 
-* modifica delle formulazioni;
-
-* evoluzione dei Knowledge Statement;
-
+* modifica delle formulazioni del Learning Object;
+* evoluzione del contenuto del Knowledge Statement attraverso il Learning
+  Object;
 * tracciabilità delle modifiche.
+
+Il Knowledge Statement non possiede un versionamento indipendente.
+
+Qualsiasi modifica sostanziale al Knowledge Statement deve essere trattata
+come evoluzione del Learning Object al quale appartiene.
 
 La storia delle modifiche non sostituisce l'identità del Learning Object.
 
@@ -445,9 +489,14 @@ Il Data Model non conserva il processo che ha generato la conoscenza.
 
 Il Learning Object è l'unità minima persistente della conoscenza.
 
-## DATA-004 — Anchor centered persistence
+## DATA-004 — Learning Object centered persistence
 
-La struttura del repository è organizzata intorno all'Anchor.
+La struttura della persistenza della conoscenza è organizzata intorno al
+Learning Object.
+
+L'Anchor identifica l'unità linguistica associata alla conoscenza e può essere
+condiviso da più Learning Object indipendenti.
+
 
 ================================================================================
 Principio conclusivo
