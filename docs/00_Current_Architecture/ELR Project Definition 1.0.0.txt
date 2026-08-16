@@ -1,0 +1,579 @@
+# Educational Learning Repository (ELR)
+
+# Project Definition
+
+**Version:** 1.0.0
+**Status:** ACTIVE
+**Document Type:** Product Definition and Project North Star
+
+---
+
+# 1. PURPOSE
+
+This document defines the identity, purpose, scope and completion target of
+the Educational Learning Repository (ELR).
+
+It exists to provide a stable project-level reference across architectural
+design, implementation and future development.
+
+This document answers:
+
+* What is ELR?
+* What problem is ELR intended to solve?
+* What is the relationship between conversation, learning and the repository?
+* What principles must remain stable during implementation?
+* What does ELR explicitly not attempt to be?
+* When can the ELR project be considered complete?
+
+This document is a project-level definition.
+
+It does not replace:
+
+* Architecture Specification;
+* Architecture Decision Log;
+* Architecture Consistency Matrix;
+* Domain Specifications;
+* Process Specifications;
+* Data and Evidence Specifications;
+* Interaction Specifications;
+* System and Implementation Specifications;
+* Product & Implementation Roadmap;
+* Continuity artifacts.
+
+Those documents retain authority over their respective responsibilities.
+
+---
+
+# 2. PROJECT IDENTITY
+
+**Project Name:**
+
+Educational Learning Repository
+
+**Acronym:**
+
+ELR
+
+**Repository:**
+
+https://github.com/cybersim81/ELR
+
+The historical project identity was:
+
+**English Learning Repository**
+
+The current project identity recorded by the repository is:
+
+**Educational Learning Repository**
+
+The change in project name does not by itself alter the already established
+architectural model.
+
+The original English-learning use case remains part of the project's history
+and primary motivating context.
+
+The current name reflects the broader architectural direction of ELR and its
+intended agnostic use beyond a single language, interface or learning
+technology.
+
+---
+
+# 3. PROJECT PURPOSE
+
+ELR is a personal repository and learning system for representing, evolving
+and using the knowledge acquired by a learner.
+
+The system is intended to transform learning evidence originating from
+interactions and learning activities into persistent, reviewable and
+versioned knowledge.
+
+The repository then becomes the authoritative source from which future
+learning activities, exercises, reviews, derived views and learning-state
+representations can be produced.
+
+The fundamental cycle is:
+
+Conversation / Learning Activity
+→ Evidence / Candidate Knowledge
+→ Change Proposal
+→ Human Learning Review
+→ ELR Knowledge
+→ Learning State / Mastery
+→ Learning Activity
+→ Exercise / Interaction
+→ Evidence
+→ updated ELR learning state
+
+ELR therefore represents not only a static collection of things learned, but
+a persistent learning knowledge system capable of supporting the learner's
+future learning.
+
+---
+
+# 4. CORE PRODUCT IDEA
+
+The original product idea can be expressed as:
+
+> When a learner learns something through interaction, the useful result of
+> that learning should not disappear when the interaction ends.
+
+ELR provides the persistent layer that allows knowledge acquired during
+learning to become part of the learner's long-term repository.
+
+The system therefore separates:
+
+* the interaction through which learning occurred;
+* the evidence produced by that interaction;
+* the proposed knowledge change;
+* the learner's decision to accept or reject the change;
+* the resulting authoritative repository state;
+* the subsequent use of that knowledge for learning.
+
+The conversation is not the repository.
+
+The repository is not a transcript of the conversation.
+
+The repository contains the learner's consolidated knowledge and the
+persistent learning state defined by the ELR architecture.
+
+---
+
+# 5. CORE ARCHITECTURAL PRINCIPLE
+
+The ELR repository is the authoritative source of learning knowledge.
+
+Derived systems must consume the repository rather than becoming competing
+sources of truth.
+
+The architectural direction is therefore:
+
+ELR Knowledge
+→ derived views
+→ learning activities
+→ exercises
+→ review
+→ interaction
+
+and not:
+
+multiple independent stores
+→ competing learning states
+→ duplicated sources of truth.
+
+---
+
+# 6. HUMAN CONTROL
+
+ELR is designed around human-controlled learning state.
+
+Knowledge does not become authoritative merely because an LLM or another
+automated process proposed it.
+
+The intended flow is:
+
+Knowledge Extraction
+→ ELR Change Proposal
+→ Learning Review
+→ learner decision
+→ authoritative ELR state.
+
+The learner remains the authority over what becomes part of the repository.
+
+Automation may propose, classify, transform or select.
+
+Automation does not silently redefine the learner's authoritative knowledge.
+
+---
+
+# 7. AGNOSTICISM
+
+ELR must remain independent from any single:
+
+* LLM provider;
+* model;
+* conversational application;
+* user interface;
+* exercise presentation technology;
+* storage client;
+* integration mechanism.
+
+The ELR core must expose stable domain and system contracts that allow
+different clients and learning technologies to interact with the same
+repository.
+
+The architecture must therefore distinguish between:
+
+* ELR core knowledge and state;
+* processes operating on that knowledge;
+* interaction mechanisms;
+* external AI systems;
+* derived systems;
+* implementation technologies.
+
+A particular LLM or interface may be an ELR client.
+
+It must not become the architectural definition of ELR itself.
+
+---
+
+# 8. PORTABILITY AND OWNERSHIP
+
+The learner's accumulated knowledge is the primary long-term asset of ELR.
+
+The project therefore treats portability as a product concern, not merely an
+implementation convenience.
+
+A completed ELR system must provide mechanisms for:
+
+* persistence;
+* versioning;
+* backup;
+* export;
+* import;
+* migration;
+* use through different clients.
+
+The learner must not be required to remain permanently coupled to a single
+LLM, interface or implementation environment in order to retain access to
+the repository.
+
+---
+
+# 9. PRODUCT LAYERS
+
+The ELR product can be understood through the following layers.
+
+## 9.1 Knowledge Layer
+
+Represents what the learner knows.
+
+Includes the authoritative ELR knowledge model and its persistent learning
+state.
+
+## 9.2 Evidence and Learning State Layer
+
+Represents evidence and the resulting state of learning and mastery.
+
+## 9.3 Learning Process Layer
+
+Defines extraction, review, mastery, activities, exercises and adaptive
+learning processes.
+
+## 9.4 Interaction Layer
+
+Defines how learners and AI-assisted systems interact with ELR and its
+learning processes.
+
+## 9.5 System Layer
+
+Provides persistence, APIs, events, security, lifecycle management,
+import/export and other infrastructure required to operate ELR as software.
+
+## 9.6 Derived Systems
+
+Provides representations and services derived from the authoritative ELR
+repository, including phrasebook, review, reporting, dashboards and other
+future views.
+
+---
+
+# 10. WHAT ELR IS NOT
+
+ELR is not primarily:
+
+* a chat history database;
+* a simple vocabulary database;
+* a collection of LLM outputs;
+* a conventional LMS;
+* a single-purpose exercise application;
+* a reporting application;
+* a UI-specific application;
+* an LLM-specific memory store.
+
+These may be interfaces, clients or derived systems around ELR.
+
+They do not define the ELR core.
+
+---
+
+# 11. END-TO-END PRODUCT MODEL
+
+The completed product must support the complete learning loop:
+
+    LEARN
+      ↓
+    CAPTURE EVIDENCE
+      ↓
+    EXTRACT / PROPOSE KNOWLEDGE
+      ↓
+    REVIEW
+      ↓
+    ACCEPT INTO ELR
+      ↓
+    STORE / VERSION
+      ↓
+    REPRESENT LEARNING STATE
+      ↓
+    SELECT LEARNING ACTIVITY
+      ↓
+    PERFORM EXERCISE / INTERACTION
+      ↓
+    PRODUCE EVIDENCE
+      ↓
+    UPDATE LEARNING STATE
+      ↓
+    CONTINUE LEARNING
+
+This loop is the principal product-level definition of ELR.
+
+A component is not considered complete merely because its internal
+implementation works.
+
+It must participate correctly in the end-to-end learning system where its
+architectural responsibility requires it.
+
+---
+
+# 12. PRODUCT COMPLETION PRINCIPLE
+
+The ELR project is not complete when:
+
+* the architecture is complete;
+* the specifications are complete;
+* Implementation Readiness is GO;
+* the Core Repository exists;
+* the API exists;
+* individual components pass unit tests.
+
+Those are intermediate milestones.
+
+The project is complete only when the complete ELR system is usable by the
+intended learner.
+
+---
+
+# 13. FINAL USER-READY DEFINITION OF DONE
+
+ELR is considered fully complete when a user can, through supported client
+interfaces:
+
+1. connect to an operational ELR repository;
+2. interact with a learning-capable client or AI system;
+3. generate or capture learning evidence;
+4. extract candidate knowledge;
+5. receive an ELR Change Proposal;
+6. review the proposal;
+7. accept, reject or revise it;
+8. persist the resulting authoritative knowledge;
+9. retrieve and inspect that knowledge later;
+10. maintain versioned knowledge over time;
+11. represent and update learning state;
+12. use the repository to select or support learning activities;
+13. perform exercises or other learning interactions;
+14. produce new evidence through those activities;
+15. update learning or mastery state from valid evidence;
+16. continue the cycle across multiple learning sessions;
+17. use derived systems such as phrasebook, review or reporting where
+    specified;
+18. export the repository;
+19. restore/import the repository;
+20. operate without architectural dependence on a single LLM, client or UI.
+
+In addition, the completed system must satisfy the applicable:
+
+* validation requirements;
+* security requirements;
+* persistence requirements;
+* lifecycle requirements;
+* event requirements;
+* API contracts;
+* integration tests;
+* operational requirements;
+* documentation requirements.
+
+The final project gate is therefore:
+
+**FULL ELR USER-READY**
+
+not merely:
+
+**IMPLEMENTATION READY**.
+
+---
+
+# 14. RELATIONSHIP TO THE ARCHITECTURAL ROADMAP
+
+The existing ELR Architectural Roadmap records the architectural evolution
+through the completion of Fase 10.
+
+Fase 10 completion means:
+
+**architectural design and consolidation complete for the verified scope.**
+
+It does not mean:
+
+**ELR product complete.**
+
+The transition after Fase 10 is therefore:
+
+Architecture Complete
+→ Implementation Roadmap
+→ Product Completion
+→ Full ELR User-Ready.
+
+The Product & Implementation Roadmap is the authoritative planning artifact
+for this post-architecture progression.
+
+---
+
+# 15. RELATIONSHIP TO IMPLEMENTATION DOCUMENTS
+
+Implementation work must remain traceable to the architectural corpus.
+
+Implementation must follow:
+
+* Implementation Architecture Specification;
+* Core Repository Implementation Plan;
+* Core Domain Implementation Specification;
+* Persistence Implementation Specification;
+* Application Service Implementation Specification;
+* API Implementation Specification;
+* Event Implementation Specification;
+* Security Implementation Specification;
+* other approved implementation specifications.
+
+Implementation may refine technical details without silently changing
+architectural responsibilities.
+
+An implementation discrepancy must be classified as:
+
+* implementation defect;
+* technical decision;
+* documentation inconsistency;
+* architectural contradiction.
+
+It must not be resolved by silently changing the architecture.
+
+---
+
+# 16. PROJECT COMPLETION GATE
+
+The final ELR completion gate must verify both:
+
+## Technical completeness
+
+The required system components are implemented, integrated, tested and
+operational.
+
+## Product completeness
+
+The end-to-end learner workflow is usable and satisfies the Final
+User-Ready Definition of Done.
+
+Both conditions are required.
+
+Technical completeness without user usability does not constitute project
+completion.
+
+User-facing functionality without architectural integrity does not constitute
+project completion.
+
+---
+
+# 17. NORTH STAR
+
+The ELR project can be summarized as:
+
+> Build a persistent, learner-controlled, portable and technology-agnostic
+> repository of educational knowledge that can turn learning interactions
+> into durable knowledge and use that knowledge to support future learning.
+
+The implementation roadmap must always move toward this objective.
+
+When a proposed feature, component or implementation decision does not clearly
+contribute to this objective, its role must be explicitly justified before it
+becomes part of the product roadmap.
+
+---
+
+# 18. AUTHORITATIVE SOURCES
+
+This document is a project-level definition and must be interpreted together
+with the authoritative ELR documentation corpus.
+
+Primary architectural sources include:
+
+* ELR Architecture Baseline;
+* ELR Architecture Specification;
+* ELR Architecture Decision Log;
+* ELR Architecture Consistency Matrix;
+* ELR Architectural Roadmap.
+
+Primary implementation sources include:
+
+* ELR Implementation Architecture Specification;
+* ELR Core Repository Implementation Plan;
+* ELR Core Domain Implementation Specification;
+* ELR Persistence Implementation Specification;
+* ELR Application Service Implementation Specification;
+* ELR API Implementation Specification;
+* ELR Event Implementation Specification;
+* ELR Security Implementation Specification.
+
+Primary continuity sources include:
+
+* ELR Session Prompt;
+* ELR Continuity Package;
+* ELR Architectural Work State — Handoff;
+* ELR Product & Implementation Roadmap;
+* ELR Implementation Status.
+
+The repository remains the ultimate source of truth for the actual current
+state.
+
+---
+
+# 19. DOCUMENT AUTHORITY
+
+This document owns:
+
+* project identity;
+* project purpose;
+* product-level scope;
+* product-level completion definition;
+* North Star;
+* distinction between architecture completion and product completion.
+
+It does not own:
+
+* detailed domain semantics;
+* process semantics;
+* persistence schema;
+* API contracts;
+* event contracts;
+* security policy;
+* implementation details.
+
+Those remain owned by their respective authoritative documents.
+
+---
+
+# 20. CHANGE CONTROL
+
+Changes to this document must preserve consistency with the established
+architectural model.
+
+A change that alters:
+
+* project scope;
+* architectural agnosticism;
+* human control;
+* repository authority;
+* product completion criteria;
+* final user-ready definition
+
+must be explicitly reviewed before acceptance.
+
+---
+
+**END OF DOCUMENT**
