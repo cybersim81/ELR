@@ -921,7 +921,11 @@ Required Action:
 
 No ownership action required.
 
-The remaining work is specification propagation and implementation alignment.
+Specification propagation for M0.3.2 is complete.
+
+Remaining work belongs to the subsequent implementation alignment phase and
+must preserve the distinction between event semantics, transactional event
+persistence and external event publication.
 
 
 --------------------------------------------------------------------------------
@@ -1312,10 +1316,23 @@ GAP-004
 
 Status:
 
-OPEN — SPECIFICATION PROPAGATION
+RESOLVED
 
-The Architecture Consistency Matrix and related architecture documentation
-must be updated to reflect the consolidated ownership and versioning model.
+Resolution:
+
+The ELR Architecture Consistency Matrix 1.1.0 has been reviewed and aligned
+with the consolidated authority, ownership and versioning model.
+
+The ELR Architecture Decision Log 1.0.0 has also been reviewed.
+
+No additional architectural decision or new ADR is required for the
+propagation completed by M0.3.2.
+
+The architecture documentation is therefore consistent with the propagated
+specification baseline.
+
+No further specification propagation action is required for this gap.
+
 
 
 ================================================================================
@@ -1415,8 +1432,9 @@ This status does not mean these documents are globally complete.
 It means that no unresolved M0.3.2 specification contradiction has currently
 been established against their principal responsibilities.
 
-Remaining M0.3.2 work concerns architecture propagation and subsequent
-implementation alignment.
+M0.3.2 specification propagation is complete.
+
+Remaining work belongs to the subsequent Implementation Alignment phase.
 
 
 ================================================================================
