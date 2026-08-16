@@ -8,7 +8,9 @@ This document defines the gap between the current implementation baseline and th
 
 It is a continuity artifact and does not replace the authoritative specifications.
 
-### IA-01 Closure Mapping
+---
+
+## IA-01 Closure Mapping
 
 The following IA-01 findings are reflected in the current E2E baseline:
 
@@ -25,7 +27,9 @@ All eight findings are:
 
 `RESOLVED`
 
-### Target End-to-End Flow
+---
+
+## Target End-to-End Flow
 
 The target flow is:
 
