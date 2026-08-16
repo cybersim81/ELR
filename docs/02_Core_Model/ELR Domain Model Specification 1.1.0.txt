@@ -557,7 +557,7 @@ specifica conoscenza persistente.
 L'Anchor costituisce il punto di riferimento attraverso cui una conoscenza
 linguistica può essere riconosciuta, recuperata e riutilizzata.
 
-Ogni Learning Object possiede esattamente un Anchor.
+Ogni Learning Object è associato ad un solo Anchor.
 
 L'Anchor può includere una trascrizione fonetica opzionale della propria
 forma linguistica mediante l'International Phonetic Alphabet (IPA).
