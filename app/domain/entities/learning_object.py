@@ -4,17 +4,15 @@ from enum import Enum
 from uuid import UUID, uuid4
 
 from .example import Example
+from .knowledge_statement import KnowledgeStatement
 from .note import Note
 
 
 class LearningObjectState(str, Enum):
     CANDIDATE = "Candidate"
     PROPOSED = "Proposed"
-    REVIEWED = "Reviewed"
     ACTIVE = "Active"
-    UPDATED = "Updated"
     RETIRED = "Retired"
-    REJECTED = "Rejected"
 
 
 class InvalidStateTransition(Exception):
@@ -24,18 +22,14 @@ class InvalidStateTransition(Exception):
 @dataclass
 class LearningObject:
     """
-    Core domain entity representing an ELR Learning Object.
+    Aggregate root representing persistent ELR knowledge.
 
-    This entity contains domain rules only.
-    It has no dependency on:
-    - database
-    - API
-    - framework
-    - external services
+    KnowledgeStatement is owned by this aggregate.
+    Lifecycle state belongs to the LearningObject.
     """
 
     anchor_id: UUID
-    statement: str
+    statement: KnowledgeStatement
     category_id: UUID
 
     examples: set[Example] = field(default_factory=set)
@@ -43,8 +37,6 @@ class LearningObject:
 
     id: UUID = field(default_factory=uuid4)
     state: LearningObjectState = LearningObjectState.CANDIDATE
-
-    version: int = 1
 
     created_at: datetime = field(
         default_factory=lambda: datetime.now(timezone.utc)
@@ -63,83 +55,61 @@ class LearningObject:
             LearningObjectState.PROPOSED,
             allowed=[
                 LearningObjectState.CANDIDATE
-            ]
-        )
-
-    def mark_reviewed(self) -> None:
-        """
-        Proposed -> Reviewed
-        """
-
-        self._transition(
-            LearningObjectState.REVIEWED,
-            allowed=[
-                LearningObjectState.PROPOSED
-            ]
+            ],
         )
 
     def approve(self) -> None:
         """
-        Reviewed -> Active
+        Proposed -> Active
+
+        Review decision belongs to the application/review process.
+        The LearningObject lifecycle itself has no Reviewed state.
         """
 
         self._transition(
             LearningObjectState.ACTIVE,
             allowed=[
-                LearningObjectState.REVIEWED
-            ]
+                LearningObjectState.PROPOSED
+            ],
         )
-
-    def reject(self) -> None:
-        """
-        Proposed/Reviewed -> Rejected
-        """
-
-        self._transition(
-            LearningObjectState.REJECTED,
-            allowed=[
-                LearningObjectState.PROPOSED,
-                LearningObjectState.REVIEWED
-            ]
-        )
-
-    def update_version(self) -> None:
-        """
-        Creates a new version.
-
-        Previous history must be preserved
-        by persistence layer.
-        """
-
-        if self.state not in [
-            LearningObjectState.ACTIVE,
-            LearningObjectState.UPDATED
-        ]:
-            raise InvalidStateTransition(
-                "Only active objects can be updated"
-            )
-
-        self.version += 1
-        self.state = LearningObjectState.UPDATED
-        self.updated_at = datetime.now(timezone.utc)
 
     def retire(self) -> None:
         """
-        Active/Updated -> Retired
+        Active -> Retired
         """
 
         self._transition(
             LearningObjectState.RETIRED,
             allowed=[
-                LearningObjectState.ACTIVE,
-                LearningObjectState.UPDATED
-            ]
+                LearningObjectState.ACTIVE
+            ],
         )
+
+    def update_knowledge(
+        self,
+        statement: KnowledgeStatement,
+    ) -> None:
+        """
+        Replace the aggregate's current knowledge value.
+
+        Version creation/history preservation is handled by the
+        versioning/application boundary.
+
+        Lifecycle state remains Active.
+        """
+
+        if self.state != LearningObjectState.ACTIVE:
+            raise InvalidStateTransition(
+                "Only active Learning Objects can be updated"
+            )
+
+        self.statement = statement
+        self.updated_at = datetime.now(timezone.utc)
 
     def _transition(
         self,
         target: LearningObjectState,
-        allowed: list[LearningObjectState]
+        allowed: list[LearningObjectState],
     ) -> None:
 
         if self.state not in allowed:
