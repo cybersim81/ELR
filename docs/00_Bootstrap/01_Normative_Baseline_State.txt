@@ -94,6 +94,76 @@ Learning State is persistent and user-specific, but it does not constitute lingu
 
 It is distinct from the knowledge repository and from the LearningObject aggregate.
 
+### IA-01 Domain Semantic Alignment Closure
+
+The following implementation-alignment findings are explicitly closed by the current implementation state.
+
+#### IA-001 — LearningObject Statement Representation
+
+KnowledgeStatement is represented as an explicit aggregate member / knowledge value of LearningObject.
+
+Status:
+
+`RESOLVED`
+
+#### IA-002 — KnowledgeStatement Identity Semantics
+
+KnowledgeStatement has no autonomous identity, lifecycle, repository, or versioning boundary.
+
+Status:
+
+`RESOLVED`
+
+#### IA-003 — Generic Version Entity
+
+Version identity is explicitly scoped to LearningObject through `learning_object_id`.
+
+Status:
+
+`RESOLVED`
+
+#### IA-005 — LearningObject Version Number
+
+LearningObject no longer carries mutable Version state.
+
+Immutable Version history is represented separately.
+
+Status:
+
+`RESOLVED`
+
+#### IA-010 — Generic VersionRepository History
+
+Version history is explicitly retrieved through `learning_object_id`.
+
+Status:
+
+`RESOLVED`
+
+#### IA-017 — Version Snapshot Representation
+
+Version snapshots preserve the structured KnowledgeStatement value.
+
+Status:
+
+`RESOLVED`
+
+#### IA-018 — Application / Repository Version Boundary
+
+Application and repository layers use the same LearningObject-centered Version history boundary.
+
+Status:
+
+`RESOLVED`
+
+#### IA-019 — Version Snapshot Test Coverage
+
+Application tests verify Version creation, Version history, snapshot content, Version numbering, and preservation of previous Versions.
+
+Status:
+
+`RESOLVED`
+
 ### Authority Boundary
 
 The following remain authoritative over this summary:
@@ -116,11 +186,31 @@ The implementation must be aligned to the normative baseline above.
 
 The next phase MUST NOT silently weaken, reinterpret, or generalize these boundaries merely because the current implementation uses a different representation.
 
+IA-01 is closed.
+
+The next implementation phase is IA-02 and must not reopen the resolved IA-01 findings unless new repository evidence establishes a direct contradiction with the authoritative corpus.
+
 ### Current Normative Status
 
 **BASELINE STATUS: CONSOLIDATED**
 
 **SPECIFICATION PROPAGATION: COMPLETE**
+
+**IA-001: RESOLVED**
+
+**IA-002: RESOLVED**
+
+**IA-003: RESOLVED**
+
+**IA-005: RESOLVED**
+
+**IA-010: RESOLVED**
+
+**IA-017: RESOLVED**
+
+**IA-018: RESOLVED**
+
+**IA-019: RESOLVED**
 
 **IMPLEMENTATION ALIGNMENT: IA-01 COMPLETE**
 
