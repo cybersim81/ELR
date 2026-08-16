@@ -1,5 +1,5 @@
 ================================================================================
-English Learning Repository (ELR)
+Educational Learning Repository (ELR)
 
 Architecture Baseline
 
@@ -36,7 +36,7 @@ Scopo
 =====
 
 La ELR Architecture Baseline identifica l'insieme delle specifiche che
-costituiscono la base architetturale ufficiale dell'English Learning Repository
+costituiscono la base architetturale ufficiale dell'Educational Learning Repository
 (ELR).
 
 Questo documento non introduce nuovi requisiti architetturali.
@@ -66,6 +66,8 @@ Ogni modifica successiva dovrà preservare la coerenza dell'intero insieme.
 
 La Baseline non sostituisce i singoli documenti, ma ne certifica la compatibilità
 reciproca.
+
+La Architecture Consistency Matrix definisce e verifica i confini di ownership e coerenza tra le specifiche.
 
 ================================================================================
 Documenti inclusi nella Baseline 1.0
@@ -231,7 +233,7 @@ compatibile e utilizzabile come fondamento per lo sviluppo futuro.
 ================================================================================
 Fine documento
 
-English Learning Repository (ELR)
+Educational Learning Repository (ELR)
 
 Architecture Baseline
 
