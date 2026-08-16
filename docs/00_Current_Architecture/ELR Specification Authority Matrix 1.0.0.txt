@@ -1182,15 +1182,21 @@ Concept:
 
 Transactional Event Boundary
 
-Problem:
+Status:
 
-Event Model defines event publication and consumption but does not fully
-define durable transactional event persistence.
+RESOLVED
 
-Required Resolution:
+Resolution:
 
-Add the Transactional Event Record concept and its relationship to the
-transaction boundary.
+The ELR Event Model Specification defines the semantic meaning of ELR Events.
+
+The ELR Event Implementation Specification defines the Transactional Event
+Record and its persistence within the transactional boundary.
+
+Transactional event persistence and external event publication are therefore
+distinct concerns with defined specification ownership.
+
+No further ownership action is required.
 
 
 ================================================================================
@@ -1199,19 +1205,41 @@ transaction boundary.
 
 GAP-001
 
-Audit Record has implementation evidence but no clearly identified normative
-document owner.
+Status:
+
+RESOLVED
+
+Audit Record ownership is defined by:
+
+ELR Security and Access Model Specification 1.0.0
+
+with implementation integration defined by:
+
+ELR Security Implementation Specification 0.1.0
 
 
 GAP-002
 
-Transactional Event Record has been established as a consolidation decision
-but requires formal ownership and specification placement.
+Status:
+
+RESOLVED
+
+Transactional Event Record ownership is defined by:
+
+ELR Event Implementation Specification 0.1.0
+
+with normative conceptual context provided by:
+
+ELR Event Model Specification 1.0.0
 
 
 GAP-003
 
-Versioning Model requires explicit distinction between:
+Status:
+
+OPEN — SPECIFICATION PROPAGATION
+
+The Versioning Model requires explicit distinction between:
 
 * LearningObject content versioning;
 * taxonomy versioning;
@@ -1219,11 +1247,22 @@ Versioning Model requires explicit distinction between:
 * API contract versioning.
 
 
+GAP-004
+
+Status:
+
+OPEN — SPECIFICATION PROPAGATION
+
+The Architecture Consistency Matrix and related architecture documentation
+must be updated to reflect the consolidated ownership and versioning model.
+
+
 ================================================================================
 # 9. Documents Requiring Revision
 ================================================================================
 
-The following documents are candidates for revision after the ownership audit.
+The following documents require revision as part of specification
+propagation.
 
 
 Priority 1 — Mandatory
@@ -1256,42 +1295,24 @@ Reason:
 
 Anchor and KnowledgeStatement are listed as independently versioned entities.
 
+The specification must also explicitly distinguish LearningObject
+versioning from taxonomy, schema and API contract versioning.
 
-Priority 2 — Required Integration
+
+Priority 2 — Architecture Propagation
 
 
 4.
-
-docs/06_System/ELR Event Model Specification 1.0.0.txt
-
-Reason:
-
-Transactional Event Record boundary is not yet explicitly defined.
-
-
-5.
-
-Appropriate Audit-owning specification
-
-Reason:
-
-AuditRecord ownership must be established.
-
-
-Priority 3 — Consistency Review
-
-
-6.
 
 docs/01_Architecture/ELR Architecture Consistency Matrix 1.1.0.txt
 
 Reason:
 
-The newly confirmed conflicts and decisions must eventually be reflected in
-the architecture consistency view.
+The newly confirmed ownership resolutions and specification conflicts must be
+reflected in the architecture consistency view.
 
 
-7.
+5.
 
 docs/01_Architecture/ELR Architecture Decision Log 1.0.0.txt
 
@@ -1299,6 +1320,31 @@ Reason:
 
 M0.2 decisions and any new architectural decisions requiring formal ADR
 treatment must be recorded there.
+
+
+Priority 3 — Verification
+
+
+6.
+
+Implementation and test baseline
+
+Relevant areas include:
+
+* app/domain/entities/
+* app/domain/repositories/
+* app/persistence/
+* app/application/
+* tests/
+
+Reason:
+
+After specification propagation, implementation must be compared against the
+consolidated normative model.
+
+
+No new Audit or Transactional Event specification is required as part of this
+propagation.
 
 
 ================================================================================
@@ -1418,7 +1464,7 @@ M0.3.1 — Specification Authority Audit
 
 STATUS:
 
-SUBSTANTIALLY COMPLETE
+COMPLETE
 
 
 Confirmed:
@@ -1430,22 +1476,43 @@ Confirmed:
 * KnowledgeStatement aggregate role;
 * Anchor aggregate role;
 * Taxonomy ownership;
+* Learning State ownership;
+* Mastery State ownership;
 * Evidence ownership;
 * Versioning ownership;
-* Event ownership.
+* Event ownership;
+* Transactional Event Record ownership;
+* Audit Record ownership.
 
 
 Open:
 
-* Audit ownership;
-* Transactional Event Record ownership;
-* final propagation of conflicts into specifications.
+* propagation of confirmed domain/persistence/versioning conflicts;
+* propagation of consolidated ownership into architecture consistency
+  documentation;
+* implementation alignment after specification propagation.
 
 
 M0.3.1 overall:
 
-READY FOR PROPAGATION
+COMPLETE — READY FOR SPECIFICATION PROPAGATION
 
+
+M0.3.2 — Specification Propagation
+
+STATUS:
+
+NEXT
+
+
+M0.3.2 will propagate the confirmed authority and domain decisions into the
+affected specifications.
+
+M0.3.2 is an implementation-independent documentation consolidation phase.
+
+No implementation change should be made solely to compensate for a
+specification conflict before the affected specifications have been
+reconciled.
 
 ================================================================================
 # 14. Next Work Package
@@ -1458,26 +1525,28 @@ M0.3.2 — Specification Propagation
 
 M0.3.2 shall:
 
-1. Update the Architecture Decision Log where required.
+1. Update the ELR Persistence Model Specification.
 
-2. Correct the Persistence Model.
+2. Update the Data Model Specification.
 
-3. Correct the Data Model.
+3. Update the ELR Versioning Model Specification.
 
-4. Correct the Versioning Model.
+4. Update the Architecture Consistency Matrix.
 
-5. Integrate Transactional Event Record semantics into the appropriate
-   specification.
+5. Update the Architecture Decision Log where a formal architectural decision
+   is required.
 
-6. Resolve Audit Record ownership.
+6. Re-run the specification authority audit after propagation.
 
-7. Update the Architecture Consistency Matrix.
+7. Compare the resulting normative model against the implementation baseline.
 
-8. Re-run the authority audit after propagation.
+8. Record implementation deviations separately from specification conflicts.
 
 
-No implementation change should be made before the relevant normative
-specifications have been updated.
+Completion of M0.3.2 does not imply implementation completion.
+
+It establishes a consolidated normative specification baseline from which
+implementation alignment can proceed.
 
 
 ================================================================================
