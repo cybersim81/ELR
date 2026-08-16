@@ -45,23 +45,28 @@ gaps and required consolidation actions.
 # 2. Context
 ================================================================================
 
-This matrix was created as part of:
+This matrix was created to establish and maintain normative ownership,
+authority boundaries and specification consistency across the ELR corpus.
 
-M0.3 — Specification Propagation and Documentation Alignment
-
-It follows:
-
-M0.1 — Repository Implementation Baseline Assessment
-
-and:
-
-M0.2 — Specification Consolidation
+It follows the architectural baseline established through Fase 10 and
+supports the transition from architectural completion to the Product and
+Implementation Roadmap.
 
 The matrix is based on inspection of the current repository documentation and
 implementation baseline.
 
-The purpose is to prevent multiple documents from independently defining the
+Its purpose is to prevent multiple documents from independently defining the
 same concept and to preserve the ELR principle of Single Document Ownership.
+
+Specification consistency findings recorded in this matrix are documentation
+and authority findings.
+
+They do not by themselves constitute implementation milestone transitions.
+
+The current product and implementation milestone is defined by the
+ELR Product and Implementation Roadmap and the ELR Implementation Status
+document.
+
 
 
 ================================================================================
