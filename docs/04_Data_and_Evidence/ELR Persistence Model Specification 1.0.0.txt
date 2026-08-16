@@ -141,68 +141,64 @@ stabile.
 1. Persistence Boundary
 ================================================================================
 
-Il confine della persistenza ELR è:
+Il confine della persistenza ELR distingue tra:
 
+- conoscenza persistente del Repository;
+- stato didattico associato alla conoscenza;
+- componenti appartenenti agli aggregate del modello;
+- dati infrastrutturali necessari alla tracciabilità e all'integrazione.
 
-Persistente:
+Persistente nel Repository:
 
 - Learning Object;
-
 - Anchor;
-
-- Knowledge Statement;
-
 - Knowledge Category;
-
 - Learning State;
-
 - relazioni approvate;
+- metadati evolutivi;
+- Knowledge Statement come componente del Learning Object.
 
-- metadati evolutivi.
+Il Knowledge Statement non costituisce una entità persistente autonoma.
 
-
-Non persistente nel Repository:
+Non persistente come conoscenza del Repository:
 
 - Conversation Episode;
-
 - Trigger;
-
 - Knowledge Candidate;
-
 - Change Proposal non approvate;
-
 - spiegazioni temporanee;
+- dati operativi transitori.
 
-- eventi operativi.
+Gli eventi non costituiscono conoscenza del Repository.
+
+Gli ELR Event possono tuttavia essere registrati in forma persistente come
+Transactional Event Record secondo la ELR Event Implementation Specification.
+
+Il Transactional Event Record appartiene alla persistenza transazionale e
+infrastrutturale e non costituisce una entità del Domain Model né conoscenza
+persistente del Repository.
 
 
 ================================================================================
 2. Repository Conceptual Model
 ================================================================================
 
+La struttura concettuale della persistenza deve riflettere i confini del
+modello di dominio.
 
-La struttura concettuale è:
-
-
-                                        Anchor
-
-                       |
-                       v
-
-              Learning Object
-
-                       |
-                       v
-
-          Knowledge Statement
+Learning Object
+|
++-- Anchor
+|
++-- Knowledge Statement
+|
++-- Knowledge Category
 
 
 User
  |
  | 1 --- *
  v
-
-Learning State
 
 Learning State
  |
@@ -212,8 +208,32 @@ Learning State
 Learning Object
 
 
+Il Learning Object costituisce l'unità principale di conoscenza persistente.
 
-Le Evidence e gli eventi appartengono ai processi esterni.
+Il Knowledge Statement è una componente del Learning Object e non possiede
+un ciclo di vita persistente autonomo.
+
+La Knowledge Category è metadato classificatorio della conoscenza e non
+costituisce conoscenza autonoma.
+
+Il Learning State è User-specific e mantiene la propria identità e
+persistenza secondo il modello di stato didattico.
+
+Evidence e Repository knowledge rimangono concettualmente separati.
+
+Gli ELR Event rappresentano fatti storici di integrazione e non costituiscono
+conoscenza del Repository.
+
+Quando richiesto dal modello transazionale, un ELR Event può essere
+persistito come Transactional Event Record secondo:
+
+ELR Event Model Specification 1.0.0
+
+e
+
+ELR Event Implementation Specification 0.1.0
+
+Il Transactional Event Record non appartiene al Domain Model del Repository.
 
 
 ================================================================================
@@ -291,25 +311,32 @@ Un Learning Object rappresenta una conoscenza atomica.
 
 Il Knowledge Statement rappresenta il contenuto cognitivo del Learning Object.
 
+Il Knowledge Statement è una componente del Learning Object.
+
+Non costituisce una entità persistente autonoma e non possiede un ciclo di
+vita indipendente dal Learning Object.
 
 Deve essere:
 
-
 - positivo;
-
 - atomico;
-
 - riutilizzabile.
-
 
 Non deve contenere:
 
-
 - cronologia conversazionale;
-
 - errori dell'utente;
-
 - istruzioni temporanee.
+
+La persistenza del Knowledge Statement avviene attraverso la persistenza del
+Learning Object al quale appartiene.
+
+Qualsiasi modifica sostanziale del Knowledge Statement deve quindi essere
+gestita attraverso il ciclo di vita e il versionamento del Learning Object,
+secondo le regole normative applicabili.
+
+Non deve esistere una persistenza indipendente del Knowledge Statement che
+possa produrre un ciclo di vita divergente da quello del Learning Object.
 
 
 ================================================================================
