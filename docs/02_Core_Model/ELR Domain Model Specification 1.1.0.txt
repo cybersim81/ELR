@@ -1,5 +1,5 @@
 ================================================================================
-English Learning Repository (ELR)
+Educational Learning Repository (ELR)
 
 Domain Model Specification
 ================================================================================
@@ -10,7 +10,7 @@ Document Identity
 
 Document Name:
 
-English Learning Repository (ELR) Domain Model Specification
+Educational Learning Repository (ELR) Domain Model Specification
 
 
 Document Version:
@@ -20,12 +20,12 @@ Document Version:
 
 Status:
 
-DRAFT
+CONSOLIDATED
 
 
 Last Updated:
 
-2026-08-15
+2026-08-16
 
 
 Dependencies:
@@ -41,7 +41,13 @@ Purpose
 ================================================================================
 
 Il presente documento definisce il modello concettuale persistente
-dell'English Learning Repository (ELR).
+dell'Educational Learning Repository (ELR).
+
+Il Domain Model costituisce l'autorità per la definizione dei confini,
+delle responsabilità e delle relazioni del modello di dominio persistente.
+
+Le specifiche specialistiche di Data, Persistence, Versioning e System
+devono rispettare tali confini e non possono ridefinirli autonomamente.
 
 Il Domain Model descrive le entità che costituiscono il repository,
 le loro responsabilità, le relazioni reciproche e i vincoli
