@@ -51,9 +51,8 @@ Dependencies:
 Scopo
 ================================================================================
 
-La ELR Versioning Model Specification definisce i principi con cui l'Educational
+La Versioning Model Specification definisce i principi con cui l'Educational
 Learning Repository gestisce l'evoluzione delle proprie entità nel tempo.
-
 
 Il Versioning Model garantisce che le modifiche alla conoscenza siano:
 
@@ -644,7 +643,7 @@ L'evoluzione del Repository deve essere governata.
 Principio conclusivo
 ================================================================================
 
-La ELR Versioning Model Specification garantisce che il Repository possa
+La Versioning Model Specification garantisce che il Repository possa
 evolvere senza perdere:
 
 
