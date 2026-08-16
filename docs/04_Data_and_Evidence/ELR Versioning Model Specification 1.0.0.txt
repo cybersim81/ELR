@@ -51,7 +51,7 @@ Dependencies:
 Scopo
 ================================================================================
 
-La ELR Versioning Model Specification definisce i principi con cui l'English
+La ELR Versioning Model Specification definisce i principi con cui l'Educational
 Learning Repository gestisce l'evoluzione delle proprie entità nel tempo.
 
 
