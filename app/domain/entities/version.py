@@ -6,10 +6,10 @@ from uuid import UUID, uuid4
 @dataclass(frozen=True)
 class Version:
     """
-    Immutable historical snapshot.
+    Immutable historical snapshot of a LearningObject.
     """
 
-    entity_id: UUID
+    learning_object_id: UUID
     number: int
     snapshot: dict
 
