@@ -143,7 +143,9 @@ Le principali entità persistenti dell'ELR sono:
 Learning Object
 
 |
-| contiene
+
+| associato a
+
 v
 
 Anchor
@@ -176,13 +178,16 @@ Learning State
 
 Il Learning Object è l'unità minima persistente della conoscenza.
 
-Anchor e Knowledge Statement partecipano alla struttura persistente del
-Learning Object secondo i rispettivi confini del Domain Model.
+L'Anchor identifica l'unità linguistica associata al Learning Object e può
+essere condiviso da più Learning Object indipendenti.
+
+Il Knowledge Statement partecipa alla struttura persistente del Learning
+Object secondo i confini definiti dal Domain Model.
+
+Il Knowledge Statement non costituisce una entità persistente autonoma.
 
 La Knowledge Category è un elemento classificatorio del Data Model e non
 costituisce un membro dell'aggregate Learning Object.
-
-Il Knowledge Statement non costituisce una entità persistente autonoma.
 
 Il Learning State è persistente e User-specific, ma non costituisce conoscenza
 linguistica.
