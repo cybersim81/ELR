@@ -3,6 +3,7 @@ from uuid import uuid4
 from app.application.services.learning_object_service import (
     LearningObjectService,
 )
+from app.domain.entities.knowledge_statement import KnowledgeStatement
 from tests.fixtures.repositories import (
     InMemoryAuditRepository,
     InMemoryLearningObjectRepository,
@@ -10,8 +11,16 @@ from tests.fixtures.repositories import (
 )
 
 
-def create_service():
+def create_statement(
+    text: str = "Example statement",
+) -> KnowledgeStatement:
+    return KnowledgeStatement(
+        text=text,
+        language="en",
+    )
 
+
+def create_service():
     return LearningObjectService(
         learning_object_repository=(
             InMemoryLearningObjectRepository()
@@ -25,30 +34,61 @@ def create_service():
     )
 
 
+def create_candidate(
+    service: LearningObjectService,
+):
+    return service.create_candidate(
+        anchor_id=uuid4(),
+        statement=create_statement(),
+        category_id=uuid4(),
+        actor="test-user",
+    )
+
+
+def approve_candidate(
+    service: LearningObjectService,
+):
+    learning_object = create_candidate(service)
+
+    service.submit_for_review(
+        learning_object.id,
+        actor="producer",
+    )
+
+    service.approve(
+        learning_object.id,
+        actor="reviewer",
+    )
+
+    return learning_object
+
+
 def test_create_candidate():
 
     service = create_service()
 
     learning_object = service.create_candidate(
         anchor_id=uuid4(),
-        statement="The present perfect connects past and present.",
+        statement=create_statement(
+            "The present perfect connects past and present."
+        ),
         category_id=uuid4(),
         actor="test-user",
     )
 
     assert learning_object.state.value == "Candidate"
+    assert (
+        learning_object.statement.text
+        == "The present perfect connects past and present."
+    )
+    assert learning_object.statement.language == "en"
 
 
 def test_submit_for_review():
 
     service = create_service()
 
-    learning_object = service.create_candidate(
-        anchor_id=uuid4(),
-        statement="Example statement",
-        category_id=uuid4(),
-        actor="test-user",
-    )
+    learning_object = create_candidate(service)
 
     service.submit_for_review(
         learning_object.id,
@@ -58,49 +98,15 @@ def test_submit_for_review():
     assert learning_object.state.value == "Proposed"
 
 
-def test_mark_reviewed():
-
-    service = create_service()
-
-    learning_object = service.create_candidate(
-        anchor_id=uuid4(),
-        statement="Example statement",
-        category_id=uuid4(),
-        actor="producer",
-    )
-
-    service.submit_for_review(
-        learning_object.id,
-        actor="producer",
-    )
-
-    service.mark_reviewed(
-        learning_object.id,
-        actor="reviewer",
-    )
-
-    assert learning_object.state.value == "Reviewed"
-
-
 def test_review_and_approve():
 
     service = create_service()
 
-    learning_object = service.create_candidate(
-        anchor_id=uuid4(),
-        statement="Example statement",
-        category_id=uuid4(),
-        actor="producer",
-    )
+    learning_object = create_candidate(service)
 
     service.submit_for_review(
         learning_object.id,
         actor="producer",
-    )
-
-    service.mark_reviewed(
-        learning_object.id,
-        actor="reviewer",
     )
 
     service.approve(
@@ -125,21 +131,11 @@ def test_approval_creates_version():
         ),
     )
 
-    learning_object = service.create_candidate(
-        anchor_id=uuid4(),
-        statement="Example statement",
-        category_id=uuid4(),
-        actor="producer",
-    )
+    learning_object = create_candidate(service)
 
     service.submit_for_review(
         learning_object.id,
         actor="producer",
-    )
-
-    service.mark_reviewed(
-        learning_object.id,
-        actor="reviewer",
     )
 
     service.approve(
@@ -153,6 +149,102 @@ def test_approval_creates_version():
 
     assert len(history) == 1
     assert history[0].number == 1
+    assert (
+        history[0].learning_object_id
+        == learning_object.id
+    )
+
+    assert history[0].snapshot["statement"] == {
+        "text": "Example statement",
+        "language": "en",
+    }
+
+
+def test_update_creates_second_version():
+
+    version_repository = InMemoryVersionRepository()
+
+    service = LearningObjectService(
+        learning_object_repository=(
+            InMemoryLearningObjectRepository()
+        ),
+        version_repository=version_repository,
+        audit_repository=(
+            InMemoryAuditRepository()
+        ),
+    )
+
+    learning_object = approve_candidate(service)
+
+    service.update_knowledge(
+        learning_object.id,
+        statement=create_statement(
+            "Updated example statement"
+        ),
+        actor="reviewer",
+    )
+
+    history = service.get_history(
+        learning_object.id
+    )
+
+    assert len(history) == 2
+    assert history[0].number == 1
+    assert history[1].number == 2
+
+    assert (
+        history[0].snapshot["statement"]["text"]
+        == "Example statement"
+    )
+
+    assert (
+        history[1].snapshot["statement"]["text"]
+        == "Updated example statement"
+    )
+
+    assert learning_object.state.value == "Active"
+
+
+def test_update_preserves_previous_version():
+
+    version_repository = InMemoryVersionRepository()
+
+    service = LearningObjectService(
+        learning_object_repository=(
+            InMemoryLearningObjectRepository()
+        ),
+        version_repository=version_repository,
+        audit_repository=(
+            InMemoryAuditRepository()
+        ),
+    )
+
+    learning_object = approve_candidate(service)
+
+    original_history = service.get_history(
+        learning_object.id
+    )
+
+    original_version = original_history[0]
+
+    service.update_knowledge(
+        learning_object.id,
+        statement=create_statement(
+            "Updated example statement"
+        ),
+        actor="reviewer",
+    )
+
+    history = service.get_history(
+        learning_object.id
+    )
+
+    assert history[0] is original_version
+    assert history[0].number == 1
+    assert (
+        history[0].snapshot["statement"]["text"]
+        == "Example statement"
+    )
 
 
 def test_operations_create_audit_records():
@@ -169,21 +261,11 @@ def test_operations_create_audit_records():
         audit_repository=audit_repository,
     )
 
-    learning_object = service.create_candidate(
-        anchor_id=uuid4(),
-        statement="Example statement",
-        category_id=uuid4(),
-        actor="producer",
-    )
+    learning_object = create_candidate(service)
 
     service.submit_for_review(
         learning_object.id,
         actor="producer",
-    )
-
-    service.mark_reviewed(
-        learning_object.id,
-        actor="reviewer",
     )
 
     service.approve(
@@ -197,7 +279,7 @@ def test_operations_create_audit_records():
         )
     )
 
-    assert len(audit_records) == 4
+    assert len(audit_records) == 3
 
     assert [
         record.event_type
@@ -205,6 +287,19 @@ def test_operations_create_audit_records():
     ] == [
         "LearningObjectCreated",
         "LearningObjectSubmitted",
-        "LearningObjectReviewed",
         "LearningObjectApproved",
     ]
+
+
+def test_retire():
+
+    service = create_service()
+
+    learning_object = approve_candidate(service)
+
+    service.retire(
+        learning_object.id,
+        actor="reviewer",
+    )
+
+    assert learning_object.state.value == "Retired"
