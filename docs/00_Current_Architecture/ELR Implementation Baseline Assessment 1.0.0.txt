@@ -806,16 +806,15 @@ The next implementation sequence is:
 
 M0.1 Repository and Implementation Baseline Inspection:
 
-COMPLETE FOR CURRENTLY INSPECTED AREAS
+COMPLETE
 
-The repository baseline is sufficiently understood to identify:
+The repository structure and the currently implemented domain,
+application, persistence and test areas have been inspected sufficiently
+to establish the implementation baseline.
 
-* existing implementation;
-* major implementation gaps;
-* current domain divergences;
-* persistence gaps;
-* documentation conflicts;
-* required consolidation work.
+The assessment identifies the principal implementation gaps,
+implementation/specification divergences and documentation conflicts
+that must be resolved before affected implementation areas are extended.
 
 
 M0.1 does not imply that the implementation itself is complete.
