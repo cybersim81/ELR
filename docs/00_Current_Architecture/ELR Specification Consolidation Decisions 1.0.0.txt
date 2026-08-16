@@ -1,0 +1,684 @@
+================================================================================
+Educational Learning Repository (ELR)
+
+Specification Consolidation Decisions
+
+Version: 1.0.0
+Status: ACTIVE
+Document Type: Specification Consolidation Decision Record
+================================================================================
+
+
+# 1. Document Identity
+================================================================================
+
+Document Name:
+
+ELR Specification Consolidation Decisions
+
+Document Version:
+
+1.0.0
+
+Status:
+
+ACTIVE
+
+Document Type:
+
+Specification Consolidation Decision Record
+
+Current Consolidation Milestone:
+
+M0.2 — Specification Consolidation and Implementation Baseline Alignment
+
+
+================================================================================
+# 2. Purpose
+================================================================================
+
+This document records the decisions made during M0.2 to resolve identified
+differences, ambiguities and inconsistencies between the current ELR
+specifications and the existing implementation baseline.
+
+The purpose of this document is to establish an explicit decision record
+before the affected specifications and implementation are modified.
+
+This document does not replace the authoritative specifications.
+
+Instead, it records the decisions that must subsequently be propagated into
+the affected specifications and implementation.
+
+No implementation change is authorized merely by the existence of a decision
+in this document.
+
+
+================================================================================
+# 3. Context
+================================================================================
+
+The ELR project has completed its architectural design phase through Phase 10.
+
+The repository has subsequently been inspected to establish the actual
+implementation baseline.
+
+The implementation baseline demonstrates substantial existing work in:
+
+* Domain entities
+* Domain repository abstractions
+* Application services
+* Automated tests
+* Initial persistence models
+
+However, the implementation is incomplete and contains several divergences
+from the current specifications.
+
+M0.2 exists to resolve the most consequential specification-level issues
+before further implementation work is performed.
+
+
+================================================================================
+# 4. Consolidation Principles
+================================================================================
+
+The following principles govern the decisions recorded in this document.
+
+1. Domain semantics take precedence over accidental implementation structure.
+
+2. Stable Identity must be distinguished from Version Identity.
+
+3. Aggregate membership must be distinguished from autonomous Domain Entity
+   status.
+
+4. Lifecycle state must be distinguished from process outcome, review
+   decision and mutation operation.
+
+5. Persistence representation must not introduce Domain semantics that do not
+   exist in the Domain Model.
+
+6. Historical information must remain recoverable.
+
+7. Transactional consistency must be preserved between domain mutation,
+   Version, Audit Record and Transactional Event Record.
+
+8. The Domain Model must remain independent of specific infrastructure
+   technologies.
+
+9. Existing implementation must be reconciled with the consolidated model
+   rather than assumed to be authoritative merely because it exists.
+
+10. Decisions must be recorded before implementation changes are made in the
+    affected areas.
+
+
+================================================================================
+# 5. M0.2 Decision Status
+================================================================================
+
+M0.2.1 — Learning Object Lifecycle
+STATUS: DECIDED
+
+M0.2.2 — KnowledgeStatement Domain Representation
+STATUS: DECIDED
+
+M0.2.3 — KnowledgeStatement Persistence Mapping
+STATUS: DECIDED
+
+M0.2.4 — Versioning Semantics
+STATUS: DECIDED
+
+M0.2.5 — Transactional Event Boundary
+STATUS: DECIDED
+
+
+================================================================================
+# 6. M0.2.1 — Learning Object Lifecycle
+================================================================================
+
+Decision ID:
+
+M0.2.1
+
+
+Decision:
+
+The persistent Learning Object lifecycle consists exclusively of:
+
+* Candidate
+* Proposed
+* Active
+* Retired
+
+Review outcomes, approval decisions and update operations are process-level
+or versioning-level concepts and are not persistent Learning Object lifecycle
+states.
+
+
+Rationale:
+
+This separates aggregate lifecycle from process outcomes and versioning
+operations, avoiding the conflation of state, decision and mutation.
+
+
+Implementation consequence:
+
+The existing lifecycle implementation must eventually be reconciled with
+this model.
+
+No implementation change is made during M0.2.1.
+
+
+================================================================================
+# 7. M0.2.2 — KnowledgeStatement Domain Representation
+================================================================================
+
+Decision ID:
+
+M0.2.2
+
+
+Decision:
+
+KnowledgeStatement is part of the LearningObject aggregate and is not an
+autonomous Domain Entity.
+
+KnowledgeStatement has no independent Stable Identity, no independent
+repository and no independent lifecycle.
+
+A change to the KnowledgeStatement of an existing LearningObject does not
+create a new LearningObject identity.
+
+
+Rationale:
+
+KnowledgeStatement describes the knowledge represented by the LearningObject
+and has no independent existence within the ELR Domain Model.
+
+
+Implementation consequence:
+
+The existing autonomous KnowledgeStatement domain entity is considered
+legacy/divergent implementation and must be reconciled with the consolidated
+Domain Model before the Core Domain implementation is finalized.
+
+No implementation change is made during M0.2.2.
+
+
+================================================================================
+# 8. M0.2.3 — KnowledgeStatement Persistence Mapping
+================================================================================
+
+Decision ID:
+
+M0.2.3
+
+
+Decision:
+
+KnowledgeStatement is persisted as part of the LearningObject persistence
+representation.
+
+The canonical persistence representation stores the KnowledgeStatement value
+within the LearningObject record.
+
+No independent knowledge_statements persistence entity is required.
+
+KnowledgeStatement does not receive an independent persistence identity that
+is exposed as a Domain Identity.
+
+
+Rationale:
+
+KnowledgeStatement is an element of the LearningObject aggregate and has no
+independent Domain identity, lifecycle or repository.
+
+Keeping its persistence representation within LearningObject preserves the
+aggregate boundary and avoids introducing an artificial persistence entity.
+
+
+Implementation consequence:
+
+The current knowledge_statements persistence design described in older
+implementation material is considered superseded.
+
+The existing app/domain/entities/knowledge_statement.py implementation is
+legacy/divergent and must eventually be removed or transformed into an
+appropriate value representation.
+
+No implementation change is made during M0.2.3.
+
+
+================================================================================
+# 9. M0.2.4 — Versioning Semantics
+================================================================================
+
+Decision ID:
+
+M0.2.4
+
+
+Decision:
+
+A LearningObject maintains its Stable Identity throughout its complete
+lifecycle.
+
+Changes to the knowledge represented by an existing LearningObject do not
+create a new LearningObject identity when the underlying knowledge remains
+conceptually the same.
+
+Each persisted evolution of the LearningObject representation produces a new
+immutable Version.
+
+A Version represents a historical snapshot of the LearningObject
+representation at a specific point in its evolution.
+
+The current representation of a LearningObject is the latest valid Version
+associated with its Stable Identity.
+
+Versions are immutable.
+
+Historical Versions must remain recoverable after subsequent updates.
+
+
+Rationale:
+
+ELR must preserve both the current usable representation of knowledge and its
+historical evolution.
+
+This formalizes the original repository concept of applying changes to a
+persistent knowledge base while providing explicit identity, versioning and
+audit semantics.
+
+
+Implementation consequence:
+
+The persistence layer must distinguish:
+
+* LearningObject Stable Identity;
+* current representation;
+* immutable historical Versions;
+* audit records.
+
+Updating a LearningObject must never overwrite or destroy the historical
+representation required for Version recovery.
+
+A change proposal or patch may be used as an operational mechanism for
+describing a proposed change, but a patch is not itself the canonical
+persistence representation of the LearningObject.
+
+The canonical persistent representation consists of the LearningObject Stable
+Identity together with its Version History.
+
+No implementation change is made during M0.2.4.
+
+
+================================================================================
+# 10. M0.2.5 — Transactional Event Boundary
+================================================================================
+
+Decision ID:
+
+M0.2.5
+
+
+Decision:
+
+A persistent LearningObject mutation is treated as a single transactional
+operation.
+
+When a mutation produces a new Version, the following persistence operations
+must belong to the same transaction:
+
+* LearningObject state mutation;
+* creation of the new immutable Version;
+* creation of the corresponding Audit Record;
+* creation of the corresponding Transactional Event Record.
+
+The transaction must either commit all required records or roll back the
+complete operation.
+
+A Transactional Event Record represents the durable fact that the domain
+mutation occurred.
+
+The Event Record is persisted before the surrounding transaction commits.
+
+Event publication to an external transport or consumer is a separate concern
+from transactional event persistence.
+
+Failure to publish an event externally after the database transaction has
+committed must not invalidate the already committed domain mutation.
+
+The Transactional Event Record therefore acts as the durable handoff between
+the ELR transactional core and any external event delivery mechanism.
+
+
+Rationale:
+
+ELR requires consistency between current state, historical Version, audit
+history and the recorded domain event.
+
+Persisting these records independently could produce states in which a
+LearningObject has changed without a corresponding Version, Audit Record or
+Event Record, or in which an event exists for a mutation that was rolled back.
+
+Separating transactional event persistence from external event publication
+also preserves technology agnosticism and prevents the domain model from
+depending on a specific messaging infrastructure.
+
+
+Implementation consequence:
+
+The persistence/application infrastructure must provide a transaction
+boundary capable of atomically committing:
+
+LearningObject mutation
++
+Version
++
+Audit Record
++
+Transactional Event Record
+
+Concrete event publication mechanisms must operate outside the domain model
+and must not determine the success or failure of the domain mutation after
+the transactional record has been committed.
+
+No implementation change is made during M0.2.5.
+
+
+================================================================================
+# 11. Consolidated Domain Model Consequences
+================================================================================
+
+The decisions above establish the following conceptual structure:
+
+
+LearningObject
+|
++-- Stable Identity
+|
++-- KnowledgeStatement
+|
++-- Anchor
+|
++-- KnowledgeCategory
+|
++-- Examples
+|
++-- Notes
+|
++-- Lifecycle State
+|
++-- Version History
+|
++-- Audit History
+|
++-- Transactional Event History
+
+
+KnowledgeStatement:
+
+* Aggregate member
+* No independent Domain Identity
+* No independent lifecycle
+* No independent repository
+
+
+Version:
+
+* Historical representation
+* Immutable
+* Associated with one LearningObject Stable Identity
+* Recoverable after subsequent mutations
+
+
+Lifecycle:
+
+* Candidate
+* Proposed
+* Active
+* Retired
+
+
+Review / Approval / Update:
+
+* Process or mutation concepts
+* Not persistent LearningObject lifecycle states
+
+
+================================================================================
+# 12. Consolidated Persistence Consequences
+================================================================================
+
+The persistence architecture must distinguish between:
+
+* LearningObject Stable Identity
+* Current representation
+* Version History
+* Audit Records
+* Transactional Event Records
+
+
+KnowledgeStatement is persisted as part of the LearningObject representation
+and does not require an independent domain-level persistence identity.
+
+
+A LearningObject mutation must preserve the historical representation needed
+to reconstruct previous Versions.
+
+
+The persistence transaction must atomically coordinate:
+
+* LearningObject mutation
+* Version creation
+* Audit creation
+* Transactional Event Record creation
+
+
+External event publication is not part of the domain transaction.
+
+
+================================================================================
+# 13. Consequences for the Existing Implementation
+================================================================================
+
+The following existing implementation areas are known to require
+reconciliation with these decisions:
+
+* LearningObject lifecycle implementation
+* KnowledgeStatement domain entity
+* KnowledgeStatement persistence representation
+* LearningObject persistence model
+* Version persistence model
+* Audit persistence model
+* Repository transaction boundaries
+* Event persistence
+
+
+The existing implementation must not be treated as authoritative where it
+conflicts with these consolidated decisions.
+
+
+No implementation changes are performed as part of the creation of this
+decision record.
+
+
+================================================================================
+# 14. Documents Requiring Subsequent Consolidation
+================================================================================
+
+After M0.2 is formally closed, the following documentation areas must be
+reviewed and updated as applicable:
+
+01_Architecture/
+
+* Architecture Specification
+* Architecture Consistency Matrix
+* Architecture Decision Log
+* Architecture Baseline
+
+
+02_Core_Model/
+
+* ELR Domain Model Specification
+* Learning Object Specification
+* Learning State Specification
+* Persistence Mapping Specification
+* Core Model Discrepancy Matrix
+
+
+03_Processes/
+
+* Learning Activity Specification
+* Learning Review Specification
+* Knowledge Extraction Pipeline Specification
+* Mastery Engine Specification
+* Evidence Model Specification
+* Adaptive Review Specification
+* Exercise System Specification
+
+
+04_Data_and_Evidence/
+
+* Data Model Specification
+* ELR Persistence Model Specification
+* ELR Validation Rules Specification
+* ELR Versioning Model Specification
+
+
+06_System/
+
+* ELR Event Model Specification
+* ELR Persistence Implementation Specification
+* ELR Core Repository Implementation Plan
+* ELR Persistence Implementation Specification
+* ELR Event Implementation Specification
+
+
+The exact list of affected documents will be determined during the
+subsequent specification propagation pass.
+
+
+================================================================================
+# 15. Implementation Rule
+================================================================================
+
+The decisions recorded here are normative for the subsequent specification
+consolidation pass.
+
+Implementation must not proceed by independently interpreting older
+documents where they conflict with these decisions.
+
+If a subsequent review discovers a contradiction with another authoritative
+architectural decision, the contradiction must be recorded and resolved
+before implementation is changed.
+
+
+================================================================================
+# 16. M0.2 Completion Criteria
+================================================================================
+
+M0.2 may be considered complete when:
+
+1. All five decisions in this document are accepted.
+
+2. The affected authoritative specifications have been identified.
+
+3. Contradictory specification statements have been identified.
+
+4. The Architecture Decision Log has been updated where required.
+
+5. The current implementation baseline has been mapped against the
+   consolidated model.
+
+6. A concrete specification propagation plan exists.
+
+M0.2 completion does not imply implementation completion.
+
+
+================================================================================
+# 17. Current Status
+================================================================================
+
+M0.2.1 — Learning Object Lifecycle
+DECIDED
+
+M0.2.2 — KnowledgeStatement Domain Representation
+DECIDED
+
+M0.2.3 — KnowledgeStatement Persistence Mapping
+DECIDED
+
+M0.2.4 — Versioning Semantics
+DECIDED
+
+M0.2.5 — Transactional Event Boundary
+DECIDED
+
+
+M0.2 overall decision status:
+
+DECISIONS COMPLETE
+
+M0.2 specification propagation:
+
+PENDING
+
+Implementation alignment:
+
+PENDING
+
+
+================================================================================
+# 18. Next Work Package
+================================================================================
+
+The next work package is:
+
+M0.3 — Specification Propagation and Documentation Alignment
+
+
+M0.3 will:
+
+* identify authoritative specifications;
+* update contradictory statements;
+* update the Architecture Decision Log;
+* update consistency matrices;
+* reconcile version references;
+* identify obsolete specifications or superseded statements;
+* establish the final specification baseline for implementation.
+
+
+Only after M0.3 is complete should affected implementation areas be modified.
+
+
+================================================================================
+# 19. Final M0.2 Statement
+================================================================================
+
+M0.2 has converted the principal implementation-blocking conceptual
+ambiguities identified during the repository baseline assessment into explicit
+decisions.
+
+The decisions establish:
+
+* LearningObject as the stable aggregate identity;
+* KnowledgeStatement as an aggregate value;
+* a four-state persistent LearningObject lifecycle;
+* immutable Version history;
+* explicit audit history;
+* transactional event persistence;
+* separation between transactional persistence and external event publication.
+
+These decisions provide the conceptual bridge between the architectural
+design and the implementation phase.
+
+They do not constitute implementation completion.
+
+The next required activity is specification propagation and documentation
+alignment.
+
+
+================================================================================
+END OF DOCUMENT
+================================================================================
