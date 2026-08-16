@@ -355,9 +355,13 @@ IA-07 E2E-GATE-01
         ▼
 IA-08 Implementation Conformance
 
-Current Gate
+Last Completed Gate
 
 IA-01 — COMPLETE
+
+Current Work Package
+
+IA-02 — CONTRACT AND LIFECYCLE ALIGNMENT
 
 Next Action
 
