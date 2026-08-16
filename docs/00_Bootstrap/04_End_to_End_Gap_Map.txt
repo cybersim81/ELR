@@ -90,11 +90,13 @@ Represent KnowledgeStatement according to its aggregate-member/value semantics i
 
 ### Current State
 
-KnowledgeStatement exists as a domain object, but LearningObject currently stores `statement: str`.
+KnowledgeStatement is represented as an immutable domain value object owned by LearningObject.
+
+It has no autonomous repository, lifecycle, or versioning boundary.
 
 ### Status
 
-`ALIGNMENT REQUIRED`
+`COMPLETE`
 
 ---
 
@@ -104,13 +106,17 @@ KnowledgeStatement exists as a domain object, but LearningObject currently store
 
 Execute:
 
-`Candidate → Proposed → Reviewed → Active`
+`Candidate → Proposed → Active → Retired`
 
 while rejecting invalid transitions.
+
+Change Proposal review decisions remain separate from LearningObject lifecycle state.
 
 ### Current State
 
 Domain transitions, application orchestration, and tests exist.
+
+The LearningObject does not use `Reviewed`, `Approved`, `Rejected`, or `Updated` as lifecycle states.
 
 ### Status
 
@@ -128,13 +134,15 @@ Create an immutable Version representing the appropriate LearningObject state.
 
 Version creation exists in the application layer and is tested through the in-memory repository.
 
-The snapshot currently inherits the `statement: str` representation.
+The Version snapshot contains the structured KnowledgeStatement representation.
 
-The Version repository remains generic.
+The Version repository is explicitly LearningObject-centered.
+
+Production Version persistence remains absent.
 
 ### Status
 
-`FUNCTIONAL / CONFORMANCE GAP`
+`APPLICATION COMPLETE / PERSISTENCE GAP`
 
 ---
 
@@ -284,14 +292,14 @@ The first decisive end-to-end implementation gate is:
 
 ### Gate prerequisites
 
-1. KnowledgeStatement representation aligned.
-2. Version boundary aligned.
-3. LearningObject persistence implemented.
-4. Version persistence implemented.
-5. Audit persistence implemented.
-6. Concrete repositories implemented.
-7. Database wiring implemented.
-8. Persistent integration tests implemented.
+1. KnowledgeStatement representation aligned.          COMPLETE
+2. Version boundary aligned.                           COMPLETE
+3. LearningObject persistence implemented.             PENDING
+4. Version persistence implemented.                    PENDING
+5. Audit persistence implemented.                      PENDING
+6. Concrete repositories implemented.                   PENDING
+7. Database wiring implemented.                         PENDING
+8. Persistent integration tests implemented.            PENDING
 
 ### Gate status
 
