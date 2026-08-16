@@ -1,0 +1,1477 @@
+================================================================================
+Educational Learning Repository (ELR)
+
+Specification Authority Matrix
+
+Version: 1.0.0
+Status: ACTIVE
+Document Type: Specification Authority and Ownership Matrix
+================================================================================
+
+
+# 1. Document Identity
+================================================================================
+
+Document Name:
+
+ELR Specification Authority Matrix
+
+Document Version:
+
+1.0.0
+
+Status:
+
+ACTIVE
+
+Document Type:
+
+Specification Authority and Ownership Matrix
+
+Purpose:
+
+This document establishes the normative ownership, authority boundaries and
+current consistency status of the principal ELR concepts and specifications.
+
+It is an audit and coordination document.
+
+It does not replace the specifications listed below.
+
+It identifies which document owns each concept and identifies conflicts,
+gaps and required consolidation actions.
+
+
+================================================================================
+# 2. Context
+================================================================================
+
+This matrix was created as part of:
+
+M0.3 — Specification Propagation and Documentation Alignment
+
+It follows:
+
+M0.1 — Repository Implementation Baseline Assessment
+
+and:
+
+M0.2 — Specification Consolidation
+
+The matrix is based on inspection of the current repository documentation and
+implementation baseline.
+
+The purpose is to prevent multiple documents from independently defining the
+same concept and to preserve the ELR principle of Single Document Ownership.
+
+
+================================================================================
+# 3. Normative Authority Principles
+================================================================================
+
+The following rules apply to this matrix.
+
+
+--------------------------------------------------------------------------------
+AUTH-001 — Architecture Decision Authority
+--------------------------------------------------------------------------------
+
+The ELR Architecture Decision Log is the authoritative source for approved
+architectural decisions.
+
+Architectural specifications describe and organize the architecture derived
+from those decisions.
+
+
+--------------------------------------------------------------------------------
+AUTH-002 — Domain Model Authority
+--------------------------------------------------------------------------------
+
+Core Domain Model specifications are authoritative for domain concepts,
+aggregate boundaries, domain identity and domain semantics.
+
+
+--------------------------------------------------------------------------------
+AUTH-003 — Process Specification Authority
+--------------------------------------------------------------------------------
+
+Process specifications are authoritative for workflows and behavioural
+processes operating on the Domain Model.
+
+
+--------------------------------------------------------------------------------
+AUTH-004 — Data and Persistence Authority
+--------------------------------------------------------------------------------
+
+Data and Persistence specifications are authoritative for canonical data and
+persistence representation, subject to the constraints established by the
+Domain Model.
+
+
+--------------------------------------------------------------------------------
+AUTH-005 — Interaction Authority
+--------------------------------------------------------------------------------
+
+Interaction specifications are authoritative for human-AI interaction
+semantics and interaction protocols.
+
+
+--------------------------------------------------------------------------------
+AUTH-006 — System Specification Authority
+--------------------------------------------------------------------------------
+
+System specifications define technology-facing contracts and implementation
+boundaries.
+
+They must not redefine Domain Model semantics.
+
+
+--------------------------------------------------------------------------------
+AUTH-007 — Implementation Is Not Normative Authority
+--------------------------------------------------------------------------------
+
+Implementation code and automated tests describe the current implementation
+baseline.
+
+They provide evidence of implementation state.
+
+They do not override contradictory normative specifications.
+
+
+--------------------------------------------------------------------------------
+AUTH-008 — Single Document Ownership
+--------------------------------------------------------------------------------
+
+Each architectural or domain concept must have one primary owner document.
+
+Other documents may reference the concept.
+
+Other documents must not independently redefine the concept unless explicitly
+authorized by the architecture.
+
+
+================================================================================
+# 4. Authority Layers
+================================================================================
+
+The ELR documentation architecture is treated as a layered normative system.
+
+
+Layer 1 — Architecture
+
+Directory:
+
+docs/01_Architecture/
+
+Responsibility:
+
+* architectural decisions;
+* architectural constraints;
+* architectural structure;
+* documentation architecture.
+
+
+Layer 2 — Core Domain Model
+
+Directory:
+
+docs/02_Core_Model/
+
+Responsibility:
+
+* domain concepts;
+* aggregate boundaries;
+* domain identity;
+* core domain semantics.
+
+
+Layer 3 — Processes
+
+Directory:
+
+docs/03_Processes/
+
+Responsibility:
+
+* learning processes;
+* evidence processes;
+* review;
+* extraction;
+* mastery;
+* adaptive behaviour.
+
+
+Layer 4 — Data and Evidence
+
+Directory:
+
+docs/04_Data_and_Evidence/
+
+Responsibility:
+
+* canonical data representation;
+* persistence model;
+* validation;
+* versioning;
+* evidence semantics.
+
+
+Layer 5 — Interaction
+
+Directory:
+
+docs/05_Interaction/
+
+Responsibility:
+
+* human-AI interaction;
+* interaction language;
+* collaboration rules.
+
+
+Layer 6 — System
+
+Directory:
+
+docs/06_System/
+
+Responsibility:
+
+* APIs;
+* events;
+* lifecycle system integration;
+* implementation contracts;
+* persistence implementation;
+* security implementation;
+* import/export.
+
+
+Layer 7 — Implementation
+
+Directories:
+
+app/
+tests/
+
+Responsibility:
+
+* executable implementation;
+* implementation verification;
+* implementation evidence.
+
+
+================================================================================
+# 5. Concept Authority Matrix
+================================================================================
+
+
+--------------------------------------------------------------------------------
+5.1 Learning Object
+--------------------------------------------------------------------------------
+
+Concept:
+
+Learning Object
+
+Primary Owner:
+
+ELR Learning Object Specification 1.0.0
+
+Location:
+
+docs/02_Core_Model/Learning Object Specification 1.0.0.txt
+
+Domain Role:
+
+Aggregate Root / persistent knowledge unit
+
+Autonomous Identity:
+
+YES
+
+Autonomous Versioning:
+
+YES
+
+Persistence:
+
+YES
+
+Current Status:
+
+CONSISTENT
+
+Notes:
+
+LearningObject maintains Stable Identity across its evolution.
+
+A new Version represents a new historical representation of the same
+LearningObject.
+
+A genuinely distinct conceptual knowledge unit may receive a new identity.
+
+
+--------------------------------------------------------------------------------
+5.2 Learning Object Aggregate Boundary
+--------------------------------------------------------------------------------
+
+Concept:
+
+Learning Object Aggregate
+
+Primary Owner:
+
+ELR Domain Model Specification 1.1.0
+
+Location:
+
+docs/02_Core_Model/ELR Domain Model Specification 1.1.0.txt
+
+Domain Role:
+
+Aggregate boundary
+
+Autonomous Identity:
+
+YES, through LearningObject
+
+Autonomous Versioning:
+
+YES, through LearningObject Version History
+
+Persistence:
+
+YES
+
+Current Status:
+
+CONSISTENT
+
+Notes:
+
+The LearningObject is the aggregate root.
+
+Internal aggregate members do not automatically become independent domain
+entities.
+
+
+--------------------------------------------------------------------------------
+5.3 Learning Object Lifecycle
+--------------------------------------------------------------------------------
+
+Concept:
+
+Learning Object Lifecycle
+
+Primary Owner:
+
+ELR Lifecycle Specification 1.0.0
+
+Location:
+
+docs/06_System/ELR Lifecycle Specification 1.0.0.txt
+
+Domain Role:
+
+Persistent lifecycle state
+
+Autonomous Identity:
+
+NO
+
+Autonomous Versioning:
+
+NO
+
+Persistence:
+
+YES, as LearningObject lifecycle state
+
+Current Status:
+
+CONSISTENT
+
+Canonical States:
+
+* Candidate
+* Proposed
+* Active
+* Retired
+
+Notes:
+
+Review decisions such as Approved and Rejected are not LearningObject
+lifecycle states.
+
+Updated is not a lifecycle state.
+
+
+--------------------------------------------------------------------------------
+5.4 Knowledge Statement
+--------------------------------------------------------------------------------
+
+Concept:
+
+Knowledge Statement
+
+Primary Owner:
+
+ELR Domain Model Specification 1.1.0
+
+Supporting Owner:
+
+ELR Learning Object Specification 1.0.0
+
+Domain Role:
+
+Aggregate member / knowledge value
+
+Autonomous Identity:
+
+NO
+
+Autonomous Versioning:
+
+NO
+
+Persistence:
+
+YES, as part of LearningObject representation
+
+Current Status:
+
+CONFLICT IN DATA/PERSISTENCE SPECIFICATIONS
+
+Notes:
+
+KnowledgeStatement does not possess an independent domain lifecycle.
+
+KnowledgeStatement does not have an independent repository.
+
+KnowledgeStatement does not constitute an independently versioned Domain
+Entity.
+
+Its evolution occurs through evolution of the owning LearningObject.
+
+
+Required Action:
+
+Remove or replace specifications that model KnowledgeStatement as an
+independent persistent entity or independently versioned entity.
+
+
+--------------------------------------------------------------------------------
+5.5 Anchor
+--------------------------------------------------------------------------------
+
+Concept:
+
+Anchor
+
+Primary Owner:
+
+ELR Anchor Specification 1.1.0
+
+Location:
+
+docs/02_Core_Model/Anchor Specification 1.1.0.txt
+
+Domain Role:
+
+Aggregate member / reference anchor
+
+Autonomous Identity:
+
+NO, within LearningObject aggregate semantics
+
+Autonomous Versioning:
+
+NO
+
+Persistence:
+
+YES, as part of LearningObject representation
+
+Current Status:
+
+PARTIAL CONFLICT
+
+Notes:
+
+Anchor belongs to the LearningObject.
+
+An Anchor change is evaluated as part of LearningObject evolution.
+
+It must not be treated as an independently versioned knowledge entity merely
+because the persistence representation may store its value separately.
+
+
+Required Action:
+
+Review Versioning Model references that list Anchor as an independently
+versioned entity.
+
+
+--------------------------------------------------------------------------------
+5.6 Knowledge Category
+--------------------------------------------------------------------------------
+
+Concept:
+
+Knowledge Category
+
+Primary Owner:
+
+ELR Taxonomy 0.4
+
+Supporting Domain Context:
+
+ELR Domain Model Specification 1.1.0
+
+Domain Role:
+
+Classification / taxonomy reference
+
+Autonomous Identity:
+
+YES AS TAXONOMY CONCEPT, NOT AS LEARNINGOBJECT CONTENT
+
+Autonomous Versioning:
+
+NOT AS A LEARNINGOBJECT VERSION
+
+Persistence:
+
+YES, where required by the taxonomy and LearningObject representation
+
+Current Status:
+
+PARTIAL / REQUIRES CLARIFICATION
+
+Notes:
+
+KnowledgeCategory classifies knowledge.
+
+It must not be interpreted as an independently versioned copy of the
+LearningObject's knowledge content.
+
+Taxonomy evolution and LearningObject Version evolution are distinct
+concerns.
+
+
+Required Action:
+
+Clarify in the Versioning Model that taxonomy/schema versioning is distinct
+from LearningObject content versioning.
+
+
+--------------------------------------------------------------------------------
+5.7 Taxonomy
+--------------------------------------------------------------------------------
+
+Concept:
+
+ELR Taxonomy
+
+Primary Owner:
+
+ELR Taxonomy 0.4
+
+Location:
+
+docs/02_Core_Model/ELR Taxonomy 0.4.txt
+
+Domain Role:
+
+Classification model
+
+Autonomous Identity:
+
+YES, at taxonomy level
+
+Autonomous Versioning:
+
+YES, as taxonomy/schema evolution
+
+Persistence:
+
+YES
+
+Current Status:
+
+GENERALLY CONSISTENT
+
+Notes:
+
+Taxonomy versioning must not be conflated with LearningObject Versioning.
+
+
+--------------------------------------------------------------------------------
+5.8 Learning State
+--------------------------------------------------------------------------------
+
+Concept:
+
+Learning State
+
+Primary Owner:
+
+ELR Learning State Specification 1.0.0
+
+Location:
+
+docs/02_Core_Model/Learning State Specification 1.0.0.txt
+
+Domain Role:
+
+User-specific learning state
+
+Autonomous Identity:
+
+YES, in the context of learner/state ownership
+
+Autonomous Versioning:
+
+SEPARATE FROM LEARNINGOBJECT VERSIONING
+
+Persistence:
+
+YES
+
+Current Status:
+
+SEPARATE CONCERN / NO M0.2 CONFLICT
+
+Notes:
+
+Learning State is not a historical Version of the LearningObject.
+
+It represents the learner's state relative to learning content.
+
+
+--------------------------------------------------------------------------------
+5.9 Mastery State
+--------------------------------------------------------------------------------
+
+Concept:
+
+Mastery State
+
+Primary Owner:
+
+ELR Mastery State Specification 1.0.0
+
+Location:
+
+docs/02_Core_Model/Mastery State Specification 1.0.0.txt
+
+Domain Role:
+
+Learner mastery representation
+
+Autonomous Identity:
+
+YES, in learner context
+
+Autonomous Versioning:
+
+SEPARATE FROM LEARNINGOBJECT VERSIONING
+
+Persistence:
+
+YES
+
+Current Status:
+
+SEPARATE CONCERN / NO M0.2 CONFLICT
+
+Notes:
+
+Mastery State is produced and evolved through Mastery processes.
+
+It is not a Version of the LearningObject.
+
+
+--------------------------------------------------------------------------------
+5.10 Evidence
+--------------------------------------------------------------------------------
+
+Concept:
+
+Evidence
+
+Primary Owner:
+
+ELR Evidence Model Specification 1.0.1
+
+Location:
+
+docs/03_Processes/Evidence Model Specification 1.0.1.txt
+
+Domain Role:
+
+Learning / assessment evidence
+
+Autonomous Identity:
+
+YES AS EVIDENCE RECORD
+
+Autonomous Versioning:
+
+NO AS LEARNINGOBJECT VERSION
+
+Persistence:
+
+YES, according to Evidence Model
+
+Current Status:
+
+CONSISTENT
+
+Notes:
+
+Evidence is distinct from persistent linguistic knowledge.
+
+Evidence may influence learning and mastery processes without becoming
+LearningObject content automatically.
+
+
+--------------------------------------------------------------------------------
+5.11 Version
+--------------------------------------------------------------------------------
+
+Concept:
+
+Version
+
+Primary Owner:
+
+ELR Versioning Model Specification 1.0.0
+
+Location:
+
+docs/04_Data_and_Evidence/ELR Versioning Model Specification 1.0.0.txt
+
+Domain Role:
+
+Immutable historical representation
+
+Autonomous Identity:
+
+YES AS VERSION RECORD
+
+Autonomous Versioning:
+
+NO
+
+Persistence:
+
+YES
+
+Current Status:
+
+PARTIAL CONFLICT
+
+Notes:
+
+Version belongs to a Stable Identity.
+
+Version itself is immutable.
+
+The Versioning Model currently lists internal aggregate components such as
+Anchor and Knowledge Statement as independently versioned entities.
+
+That interpretation conflicts with the aggregate model.
+
+
+Required Action:
+
+Revise the Versioning Model so that LearningObject content evolution is
+represented by LearningObject Versions.
+
+Clarify separately the versioning of taxonomy/schema/reference structures.
+
+
+--------------------------------------------------------------------------------
+5.12 Audit Record
+--------------------------------------------------------------------------------
+
+Concept:
+
+Audit Record
+
+Primary Owner:
+
+UNRESOLVED
+
+Implementation Evidence:
+
+app/domain/entities/audit_record.py
+
+Implementation Repository:
+
+app/domain/repositories/audit_repository.py
+
+Domain Role:
+
+Immutable operational trace
+
+Autonomous Identity:
+
+YES AS AUDIT RECORD
+
+Autonomous Versioning:
+
+NO
+
+Persistence:
+
+YES
+
+Current Status:
+
+DOCUMENTATION GAP
+
+Notes:
+
+The current implementation defines AuditRecord as an immutable trace of a
+significant operation.
+
+The concept has not yet been assigned a clear normative specification owner.
+
+Required Action:
+
+Determine the authoritative document owner for Audit Record during M0.3.
+
+
+--------------------------------------------------------------------------------
+5.13 Event
+--------------------------------------------------------------------------------
+
+Concept:
+
+ELR Event
+
+Primary Owner:
+
+ELR Event Model Specification 1.0.0
+
+Location:
+
+docs/06_System/ELR Event Model Specification 1.0.0.txt
+
+Domain Role:
+
+Historical integration fact
+
+Autonomous Identity:
+
+YES AS EVENT
+
+Autonomous Versioning:
+
+NO
+
+Persistence:
+
+EVENT PERSISTENCE TO BE DISTINGUISHED FROM EXTERNAL PUBLICATION
+
+Current Status:
+
+PARTIAL GAP
+
+Notes:
+
+Events represent historical facts.
+
+Events are immutable.
+
+Events do not represent persistent knowledge.
+
+The Event Model currently defines publication and consumption but does not
+fully distinguish transactional event persistence from external event
+publication.
+
+
+Required Action:
+
+Extend the Event Model to define the Transactional Event Record boundary
+without coupling the Domain Model to a specific messaging technology.
+
+
+--------------------------------------------------------------------------------
+5.14 Transactional Event Record
+--------------------------------------------------------------------------------
+
+Concept:
+
+Transactional Event Record
+
+Primary Owner:
+
+CURRENTLY UNRESOLVED BETWEEN EVENT MODEL AND PERSISTENCE/SYSTEM MODEL
+
+Domain Role:
+
+Durable transactional record of a domain fact
+
+Autonomous Identity:
+
+YES AS EVENT RECORD
+
+Autonomous Versioning:
+
+NO
+
+Persistence:
+
+YES
+
+Current Status:
+
+NEW CONSOLIDATED CONCEPT / OWNER TO BE FORMALIZED
+
+Notes:
+
+The Transactional Event Record is persisted within the same transaction as
+the associated domain mutation, Version and Audit Record.
+
+External event publication occurs after transactional persistence and is a
+separate concern.
+
+
+--------------------------------------------------------------------------------
+5.15 API
+--------------------------------------------------------------------------------
+
+Concept:
+
+ELR API
+
+Primary Owner:
+
+ELR API Specification 1.0.0
+
+Location:
+
+docs/06_System/ELR API Specification 1.0.0.txt
+
+Domain Role:
+
+System interface
+
+Autonomous Identity:
+
+NOT APPLICABLE
+
+Autonomous Versioning:
+
+API CONTRACT VERSIONING
+
+Persistence:
+
+NOT APPLICABLE
+
+Current Status:
+
+SEPARATE SYSTEM CONCERN
+
+Notes:
+
+The API exposes capabilities.
+
+It must not redefine Domain Model semantics.
+
+
+================================================================================
+# 6. Versioning Classification
+================================================================================
+
+The following classification is normative for the consolidation process.
+
+
+--------------------------------------------------------------------------------
+6.1 Independently Versioned Domain Object
+--------------------------------------------------------------------------------
+
+LearningObject
+
+
+--------------------------------------------------------------------------------
+6.2 Versioned Historical Representation
+--------------------------------------------------------------------------------
+
+LearningObject Version
+
+
+--------------------------------------------------------------------------------
+6.3 Aggregate Members
+--------------------------------------------------------------------------------
+
+* Anchor
+* KnowledgeStatement
+* Examples
+* Notes
+* other LearningObject-owned content values
+
+These evolve through LearningObject Versioning.
+
+They are not independently versioned Domain Entities merely because their
+values may be represented separately in persistence.
+
+
+--------------------------------------------------------------------------------
+6.4 Separately Versioned Reference / Structural Models
+--------------------------------------------------------------------------------
+
+Potential examples:
+
+* Taxonomy
+* Repository Schema
+* API Contract
+
+Their versioning is structurally distinct from LearningObject Versioning.
+
+
+--------------------------------------------------------------------------------
+6.5 Process / Learner State
+--------------------------------------------------------------------------------
+
+* Learning State
+* Mastery State
+* Evidence
+
+These evolve according to their own process semantics.
+
+They are not LearningObject Versions.
+
+
+--------------------------------------------------------------------------------
+6.6 Historical / Operational Records
+--------------------------------------------------------------------------------
+
+* Audit Record
+* Transactional Event Record
+* Published Event
+
+These preserve operational history.
+
+They are not LearningObject Versions.
+
+
+================================================================================
+# 7. Confirmed Conflicts
+================================================================================
+
+The following conflicts are currently confirmed.
+
+
+CONFLICT-001
+
+Concept:
+
+KnowledgeStatement Persistence
+
+Problem:
+
+Data and Persistence specifications model KnowledgeStatement as an
+independent persistent entity.
+
+Required Resolution:
+
+Represent KnowledgeStatement as part of LearningObject persistence
+representation.
+
+
+CONFLICT-002
+
+Concept:
+
+KnowledgeStatement Versioning
+
+Problem:
+
+Versioning Model lists KnowledgeStatement as independently versioned.
+
+Required Resolution:
+
+Remove KnowledgeStatement from autonomous Versioned Entities.
+
+
+CONFLICT-003
+
+Concept:
+
+Anchor Versioning
+
+Problem:
+
+Versioning Model lists Anchor as independently versioned.
+
+Required Resolution:
+
+Clarify Anchor as LearningObject aggregate content whose evolution is captured
+by LearningObject Versioning.
+
+
+CONFLICT-004
+
+Concept:
+
+KnowledgeCategory Versioning
+
+Problem:
+
+Taxonomy classification and LearningObject content versioning are not clearly
+separated in the Versioning Model.
+
+Required Resolution:
+
+Distinguish taxonomy/schema evolution from LearningObject Version evolution.
+
+
+CONFLICT-005
+
+Concept:
+
+Transactional Event Boundary
+
+Problem:
+
+Event Model defines event publication and consumption but does not fully
+define durable transactional event persistence.
+
+Required Resolution:
+
+Add the Transactional Event Record concept and its relationship to the
+transaction boundary.
+
+
+================================================================================
+# 8. Documentation Gaps
+================================================================================
+
+GAP-001
+
+Audit Record has implementation evidence but no clearly identified normative
+document owner.
+
+
+GAP-002
+
+Transactional Event Record has been established as a consolidation decision
+but requires formal ownership and specification placement.
+
+
+GAP-003
+
+Versioning Model requires explicit distinction between:
+
+* LearningObject content versioning;
+* taxonomy versioning;
+* schema versioning;
+* API contract versioning.
+
+
+================================================================================
+# 9. Documents Requiring Revision
+================================================================================
+
+The following documents are candidates for revision after the ownership audit.
+
+
+Priority 1 — Mandatory
+
+
+1.
+
+docs/04_Data_and_Evidence/ELR Persistence Model Specification 1.0.0.txt
+
+Reason:
+
+KnowledgeStatement persistence representation conflicts with consolidated
+aggregate semantics.
+
+
+2.
+
+docs/04_Data_and_Evidence/Data Model Specification 1.0.0.txt
+
+Reason:
+
+KnowledgeStatement is modelled as an autonomous persistent entity.
+
+
+3.
+
+docs/04_Data_and_Evidence/ELR Versioning Model Specification 1.0.0.txt
+
+Reason:
+
+Anchor and KnowledgeStatement are listed as independently versioned entities.
+
+
+Priority 2 — Required Integration
+
+
+4.
+
+docs/06_System/ELR Event Model Specification 1.0.0.txt
+
+Reason:
+
+Transactional Event Record boundary is not yet explicitly defined.
+
+
+5.
+
+Appropriate Audit-owning specification
+
+Reason:
+
+AuditRecord ownership must be established.
+
+
+Priority 3 — Consistency Review
+
+
+6.
+
+docs/01_Architecture/ELR Architecture Consistency Matrix 1.1.0.txt
+
+Reason:
+
+The newly confirmed conflicts and decisions must eventually be reflected in
+the architecture consistency view.
+
+
+7.
+
+docs/01_Architecture/ELR Architecture Decision Log 1.0.0.txt
+
+Reason:
+
+M0.2 decisions and any new architectural decisions requiring formal ADR
+treatment must be recorded there.
+
+
+================================================================================
+# 10. Documents Currently Considered Consistent
+================================================================================
+
+The following areas are not currently identified as requiring modification
+for the M0.2 consolidation decisions:
+
+
+* ELR Lifecycle Specification 1.0.0
+* ELR Evidence Model Specification 1.0.1
+* ELR Domain Model Specification 1.1.0
+* ELR Anchor Specification 1.1.0
+* ELR Learning Object Specification 1.0.0
+
+
+This status does not mean these documents are globally complete.
+
+It means that no M0.2 contradiction has currently been established against
+their principal responsibilities.
+
+
+================================================================================
+# 11. Implementation Alignment
+================================================================================
+
+The current implementation baseline must eventually be compared against this
+authority matrix.
+
+Known implementation areas requiring review include:
+
+
+Domain:
+
+* app/domain/entities/learning_object.py
+* app/domain/entities/knowledge_statement.py
+* app/domain/entities/anchor.py
+* app/domain/entities/audit_record.py
+* app/domain/entities/version.py
+
+
+Repositories:
+
+* app/domain/repositories/learning_object_repository.py
+* app/domain/repositories/anchor_repository.py
+* app/domain/repositories/audit_repository.py
+* app/domain/repositories/version_repository.py
+
+
+Persistence:
+
+* app/persistence/models/anchor_model.py
+* app/persistence/models/base.py
+
+
+Application:
+
+* app/application/services/learning_object_service.py
+
+
+The implementation review must occur only after the relevant specifications
+have been consolidated.
+
+
+================================================================================
+# 12. Consolidation Rules
+================================================================================
+
+Rule 1:
+
+Do not modify implementation to compensate for contradictory specifications
+before the specifications are reconciled.
+
+
+Rule 2:
+
+Do not modify a document merely because another document uses different
+terminology.
+
+First determine whether the difference is semantic or terminological.
+
+
+Rule 3:
+
+When a genuine contradiction exists, update the document that does not own
+the concept.
+
+
+Rule 4:
+
+When ownership is unclear, resolve ownership before modifying content.
+
+
+Rule 5:
+
+Do not create a new specification merely to avoid updating an existing
+authoritative specification.
+
+
+Rule 6:
+
+Do not allow implementation structure to create artificial domain concepts.
+
+
+Rule 7:
+
+Tests should verify the consolidated model after implementation alignment;
+they should not define the model independently.
+
+
+================================================================================
+# 13. M0.3 Status
+================================================================================
+
+M0.3.1 — Specification Authority Audit
+
+STATUS:
+
+SUBSTANTIALLY COMPLETE
+
+
+Confirmed:
+
+* architectural authority hierarchy;
+* single document ownership principle;
+* LearningObject ownership;
+* Lifecycle ownership;
+* KnowledgeStatement aggregate role;
+* Anchor aggregate role;
+* Taxonomy ownership;
+* Evidence ownership;
+* Versioning ownership;
+* Event ownership.
+
+
+Open:
+
+* Audit ownership;
+* Transactional Event Record ownership;
+* final propagation of conflicts into specifications.
+
+
+M0.3.1 overall:
+
+READY FOR PROPAGATION
+
+
+================================================================================
+# 14. Next Work Package
+================================================================================
+
+Next:
+
+M0.3.2 — Specification Propagation
+
+
+M0.3.2 shall:
+
+1. Update the Architecture Decision Log where required.
+
+2. Correct the Persistence Model.
+
+3. Correct the Data Model.
+
+4. Correct the Versioning Model.
+
+5. Integrate Transactional Event Record semantics into the appropriate
+   specification.
+
+6. Resolve Audit Record ownership.
+
+7. Update the Architecture Consistency Matrix.
+
+8. Re-run the authority audit after propagation.
+
+
+No implementation change should be made before the relevant normative
+specifications have been updated.
+
+
+================================================================================
+# 15. Final Statement
+================================================================================
+
+The ELR documentation set contains a substantial and coherent architectural
+foundation.
+
+The principal issue identified by M0.3 is not the absence of architecture.
+
+The principal issue is inconsistent propagation of architectural and domain
+decisions into lower-level specifications.
+
+The most significant current inconsistency concerns the treatment of
+LearningObject aggregate members as independently persistent or versioned
+entities.
+
+The consolidation direction is therefore:
+
+LearningObject Stable Identity
++
+Immutable LearningObject Versions
++
+Aggregate-owned KnowledgeStatement and Anchor
++
+Separate taxonomy/reference versioning
++
+Separate learner/process state
++
+Immutable Audit Records
++
+Transactional Event Records
++
+Technology-agnostic external event publication
+
+
+This matrix becomes the working authority map for the subsequent
+Specification Propagation phase.
+
+
+================================================================================
+END OF DOCUMENT
+================================================================================
