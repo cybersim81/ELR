@@ -542,23 +542,24 @@ YES, where required by the taxonomy and LearningObject representation
 
 Current Status:
 
-PARTIAL / REQUIRES CLARIFICATION
+CONSISTENT
 
 Notes:
 
 KnowledgeCategory classifies knowledge.
 
-It must not be interpreted as an independently versioned copy of the
-LearningObject's knowledge content.
+It is not an independently versioned copy of the LearningObject's knowledge
+content.
 
 Taxonomy evolution and LearningObject Version evolution are distinct
 concerns.
 
+The Versioning Model explicitly distinguishes taxonomy/schema versioning from
+LearningObject content versioning.
 
 Required Action:
 
-Clarify in the Versioning Model that taxonomy/schema versioning is distinct
-from LearningObject content versioning.
+No further specification propagation action is required for this distinction.
 
 
 --------------------------------------------------------------------------------
@@ -1260,14 +1261,21 @@ GAP-003
 
 Status:
 
-OPEN — SPECIFICATION PROPAGATION
+RESOLVED
 
-The Versioning Model requires explicit distinction between:
+Resolution:
 
-* LearningObject content versioning;
-* taxonomy versioning;
-* schema versioning;
-* API contract versioning.
+The ELR Versioning Model explicitly distinguishes:
+
+LearningObject content versioning;
+taxonomy versioning;
+repository schema versioning;
+API contract versioning.
+
+These forms of evolution are structurally distinct from LearningObject
+Version evolution.
+
+No further specification propagation action is required for this gap.
 
 
 GAP-004
@@ -1603,19 +1611,21 @@ entities.
 The consolidation direction is therefore:
 
 LearningObject Stable Identity
-+
+*
 Immutable LearningObject Versions
-+
-Aggregate-owned KnowledgeStatement and Anchor
-+
+*
+Aggregate-owned KnowledgeStatement and other LearningObject-owned content
+*
+Associated shared linguistic Anchor outside the LearningObject aggregate
+*
 Separate taxonomy/reference versioning
-+
+*
 Separate learner/process state
-+
+*
 Immutable Audit Records
-+
+*
 Transactional Event Records
-+
+*
 Technology-agnostic external event publication
 
 
