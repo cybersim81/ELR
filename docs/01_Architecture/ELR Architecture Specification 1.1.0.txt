@@ -1,5 +1,5 @@
 ================================================================================
-English Learning Repository (ELR)
+Educational Learning Repository (ELR)
 
 Architecture Specification (AS)
 
@@ -13,7 +13,7 @@ Document Identity
 
 Document Name:
 
-English Learning Repository (ELR) Architecture Specification
+Educational Learning Repository (ELR) Architecture Specification
 
 
 Document Version:
@@ -40,7 +40,7 @@ None (Root Architecture Document)
 Scopo
 ================================================================================
 
-L'English Learning Repository (ELR) è il repository personale della conoscenza
+L'Educational Learning Repository (ELR) è il repository personale della conoscenza
 linguistica dell'utente.
 
 Il repository rappresenta esclusivamente la conoscenza linguistica acquisita,
@@ -85,7 +85,7 @@ Ruolo del documento
 ================================================================================
 
 Questa Architecture Specification descrive l'architettura corrente
-dell'English Learning Repository.
+dell'Educational Learning Repository.
 
 Il documento definisce:
 
@@ -177,6 +177,15 @@ Anchor-centric Knowledge
 
 Ogni Learning Object è associato ad un Anchor che rappresenta l'unità
 linguistica osservabile da acquisire.
+
+L'Anchor costituisce il riferimento linguistico osservabile attorno al quale
+la conoscenza viene organizzata.
+
+Il Learning Object costituisce invece l'unità persistente, identitaria e
+versionata della conoscenza.
+
+Anchor-centric Knowledge non implica quindi che l'Anchor possieda un ciclo di
+vita, una persistenza o un versionamento autonomi.
 
 
 -------------------------------------------------------------------------------
@@ -401,7 +410,7 @@ Riferimento ADR:
 ================================================================================
 Fine documento
 
-English Learning Repository (ELR)
+Educational Learning Repository (ELR)
 
 Architecture Specification (AS)
 
