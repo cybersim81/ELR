@@ -182,9 +182,6 @@ Le Evidence non appartengono al repository della conoscenza.
 Sono gestite secondo l'Evidence Model e i processi dedicati.
 
 
-
-Sono gestite nel Process Layer.
-
 ================================================================================
 2. Learning Object Entity
 =========================
