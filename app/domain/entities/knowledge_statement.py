@@ -1,6 +1,4 @@
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from uuid import UUID, uuid4
+from dataclasses import dataclass
 
 
 class InvalidKnowledgeStatement(Exception):
@@ -10,21 +8,23 @@ class InvalidKnowledgeStatement(Exception):
 @dataclass(frozen=True)
 class KnowledgeStatement:
     """
-    Cognitive content associated with a Learning Object.
+    Immutable knowledge value owned by a LearningObject.
+
+    KnowledgeStatement is an aggregate member/value.
+    It has no independent identity, lifecycle, repository,
+    or version history.
     """
 
     text: str
     language: str
 
-    id: UUID = field(default_factory=uuid4)
-
-    created_at: datetime = field(
-        default_factory=lambda: datetime.now(timezone.utc)
-    )
-
-    def __post_init__(self):
-
+    def __post_init__(self) -> None:
         if not self.text.strip():
             raise InvalidKnowledgeStatement(
                 "Statement text cannot be empty"
+            )
+
+        if not self.language.strip():
+            raise InvalidKnowledgeStatement(
+                "Statement language cannot be empty"
             )
