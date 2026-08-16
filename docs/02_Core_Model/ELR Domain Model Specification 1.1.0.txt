@@ -169,16 +169,23 @@ persistente contenuta nel repository.
 
 Il principale elemento del modello è il Learning Object.
 
-Il Learning Object è composto concettualmente da:
+Il Learning Object è associato concettualmente a:
 
 • Anchor;
+
 • Knowledge Statement;
+
 • Knowledge Category;
+
 • Examples;
+
 • Notes.
 
-Questi elementi costituiscono la rappresentazione persistente della
-conoscenza linguistica.
+L'Anchor costituisce il riferimento linguistico osservabile associato alla
+conoscenza rappresentata dal Learning Object.
+
+Knowledge Statement, Knowledge Category, Examples e Notes costituiscono gli
+elementi che descrivono la conoscenza rappresentata dal Learning Object.
 
 Lo stato di apprendimento e lo stato di padronanza dell'utente non
 costituiscono elementi posseduti dal Learning Object.
@@ -192,13 +199,21 @@ Il Learning Object costituisce l'aggregate root della rappresentazione
 persistente della conoscenza linguistica.
 
 L'aggregate Learning Object comprende esclusivamente gli elementi necessari
-alla rappresentazione coerente della conoscenza:
+alla rappresentazione coerente della conoscenza che appartengono alla
+rappresentazione del Learning Object:
 
-• Anchor;
 • Knowledge Statement;
+
 • Knowledge Category;
+
 • Examples;
+
 • Notes.
+
+L'Anchor non appartiene all'aggregate boundary del Learning Object.
+
+L'Anchor è un riferimento linguistico associato al Learning Object e può
+essere condiviso da più Learning Object indipendenti.
 
 Learning State e Mastery State non appartengono all'aggregate boundary del
 Learning Object.
@@ -208,7 +223,6 @@ User rispetto a uno specifico Learning Object.
 
 La semantica e l'evoluzione del Mastery State sono definite dalla Mastery
 Engine Specification e dalla Mastery State Specification.
-
 
 ================================================================================
 Separation of Knowledge and User State
@@ -244,22 +258,30 @@ descrivono una specifica conoscenza linguistica.
 
 Il Learning Object garantisce che siano sempre rispettati:
 
-• un solo Anchor;
-
 • un solo Knowledge Statement;
 
 • una sola Knowledge Category;
 
 • Examples e Notes coerenti con la conoscenza rappresentata.
 
+L'Anchor è associato al Learning Object ma non è posseduto dal Learning Object.
+
+Uno stesso Anchor può essere associato a più Learning Object quando
+rappresentano conoscenze atomiche differenti relative allo stesso elemento
+linguistico.
+
 L'Anchor può includere una trascrizione fonetica IPA opzionale della propria
 forma linguistica.
 
 La presenza o modifica della trascrizione IPA non altera l'identità
-dell'Anchor né la coerenza dell'aggregate Learning Object.
+dell'Anchor né la coerenza del Learning Object.
 
-Le entità appartenenti all'aggregate non possiedono un ciclo di vita autonomo
-rispetto al Learning Object.
+Le entità e i riferimenti che appartengono alla rappresentazione interna
+dell'aggregate non possiedono un ciclo di vita autonomo rispetto al Learning
+Object.
+
+L'Anchor non è soggetto al ciclo di vita del Learning Object.
+
 
 ================================================================================
 Entity Specifications
@@ -348,12 +370,9 @@ persistente di una conoscenza linguistica.
 
 Sono elementi fondamentali:
 
-• Anchor;
-
 • Knowledge Statement;
 
-• Knowledge Category;
-
+• Knowledge Category.
 
 Possono essere presenti elementi descrittivi complementari:
 
@@ -361,29 +380,38 @@ Possono essere presenti elementi descrittivi complementari:
 
 • Notes.
 
+L'Anchor costituisce il riferimento linguistico associato al Learning Object
+e non costituisce un elemento contenuto nell'aggregate.
+
 
 ================================================================================
 Rappresentazione concettuale
 ================================================================================
 
-                    Learning Object
-                           |
-        +------------------+------------------+
-        |                  |                  |
-        v                  v                  v
+```
+                Learning Object
+                       |
+    +------------------+------------------+
+    |                  |                  |
+    v                  v                  v
+```
 
-     Anchor      Knowledge Statement     Knowledge Category
+Knowledge Statement   Knowledge Category   Anchor reference
 
-        |
-        +------------------+
-        |                  |
-        v                  v
+```
+    |
+    +------------------+
+    |                  |
+    v                  v
 
-     Examples           Notes
+ Examples           Notes
+```
 
-
-Il Learning Object costituisce il punto di aggregazione logica di tutte le
+Il Learning Object costituisce il punto di aggregazione logica delle
 informazioni relative ad una singola conoscenza linguistica.
+
+L'Anchor costituisce un riferimento associato al Learning Object e può essere
+condiviso da più Learning Object indipendenti.
 
 
 ================================================================================
@@ -469,7 +497,7 @@ Relazioni
 
 Ogni Learning Object:
 
-possiede esattamente un Anchor;
+è associato ad un Anchor;
 
 possiede esattamente un Knowledge Statement;
 
@@ -587,37 +615,17 @@ componenti del sistema.
 Relazione con il Learning Object
 ================================================================================
 
-Ogni Learning Object possiede un solo Anchor.
+Ogni Learning Object è associato ad un Anchor.
 
 Uno stesso Anchor può essere condiviso da più Learning Object quando
 rappresentano conoscenze atomiche differenti relative allo stesso elemento
 linguistico.
 
-Esempio:
+La relazione con l'Anchor non implica appartenenza dell'Anchor
+all'aggregate boundary del Learning Object.
 
-Anchor
-
-tell
-
-↓
-
-Learning Object A
-
-Il passato di tell è told.
-
-↓
-
-Learning Object B
-
-Tell richiede un destinatario diretto.
-
-↓
-
-Learning Object C
-
-Tell non richiede una preposizione prima del destinatario.
-
-L'Anchor rimane unico mentre le conoscenze restano indipendenti.
+L'Anchor mantiene la propria identità indipendentemente dalle identità dei
+Learning Object ai quali è associato.
 
 
 ================================================================================
