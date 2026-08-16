@@ -35,7 +35,7 @@ Resolve:
 * IA-018 — application/repository Version boundary;
 * IA-019 — Version snapshot test coverage.
 
-### Completed result
+### Completed Result
 
 The domain and repository contracts now express LearningObject-centered knowledge versioning.
 
@@ -53,7 +53,7 @@ Application and repository Version history contracts are aligned.
 
 Status: `COMPLETE`
 
-### Closure evidence
+### Closure Evidence
 
 * Domain entities aligned;
 * VersionRepository contract aligned;
@@ -62,7 +62,7 @@ Status: `COMPLETE`
 * Version snapshot semantics tested;
 * no autonomous KnowledgeStatement repository introduced.
 
-### Remaining work outside IA-01
+### Remaining Work Outside IA-01
 
 Production persistence and repository integration remain pending and belong to subsequent implementation-alignment phases.
 
@@ -72,7 +72,7 @@ Production persistence and repository integration remain pending and belong to s
 
 ### Objective
 
-Resolve remaining repository/lifecycle ambiguities before persistence.
+Resolve remaining repository and lifecycle ambiguities before persistence.
 
 ### Scope
 
@@ -81,15 +81,26 @@ Primarily:
 * IA-009 — LearningObject delete capability;
 * repository ownership boundaries;
 * Version history ownership;
-* Audit history boundary.
+* Audit history boundary;
+* lifecycle contract consistency.
 
-### Required result
+### Required Result
 
 Every repository capability must have an explicit normative purpose.
 
+The LearningObject lifecycle must remain:
+
+`Candidate → Proposed → Active → Retired`
+
+Change Proposal review decisions must remain outside the LearningObject lifecycle state.
+
+Version history must remain LearningObject-centered.
+
+Audit history must remain distinct from immutable Version history.
+
 ### Gate
 
-`IA-02 CONTRACT ALIGNMENT`
+`IA-02 CONTRACT AND LIFECYCLE ALIGNMENT`
 
 Status: `PENDING`
 
@@ -111,9 +122,13 @@ Implement and verify persistence for:
 * required KnowledgeStatement representation;
 * Anchor relationships.
 
-### Required result
+### Required Result
 
-Persistence models represent the aligned domain semantics rather than the current pre-alignment implementation.
+Persistence models represent the aligned domain semantics rather than the pre-alignment implementation.
+
+KnowledgeStatement must remain an aggregate member/value representation and must not acquire an autonomous persistence or repository boundary merely as a consequence of persistence implementation.
+
+Version persistence must preserve the LearningObject-centered immutable Version boundary.
 
 ### Gate
 
@@ -138,9 +153,11 @@ Implement concrete repositories for:
 * Audit;
 * Anchor where required by the final persistence architecture.
 
-### Required result
+### Required Result
 
 Application services operate against domain repository contracts while production execution uses concrete persistence implementations.
+
+Repository capabilities must remain consistent with the lifecycle and aggregate boundaries established by IA-02.
 
 ### Gate
 
@@ -167,9 +184,17 @@ Establish:
 * repository lifecycle;
 * transaction behavior.
 
-### Required result
+### Required Result
 
 A fresh runtime can create and persist the required domain state.
+
+The database representation must preserve:
+
+* LearningObject identity;
+* KnowledgeStatement aggregate-member semantics;
+* immutable Version history;
+* Audit history;
+* Anchor references.
 
 ### Gate
 
@@ -197,6 +222,10 @@ Tests for:
 * Version history recovery;
 * Audit history recovery.
 
+### Required Result
+
+Persistent tests must demonstrate that the semantic boundaries already resolved by IA-01 survive storage and reload.
+
 ### Gate
 
 `IA-06 PERSISTENCE TEST CONFORMANCE`
@@ -211,24 +240,26 @@ Status: `PENDING`
 
 Demonstrate the complete persistent LearningObject lifecycle.
 
-### Required flow
+### Required Flow
 
 ```text
 Anchor
   ↓
 LearningObject
   ↓
+KnowledgeStatement
+  ↓
 Candidate
   ↓
 Proposed
   ↓
-Reviewed
-  ↓
 Active
   ↓
-Version
+Retired
   ↓
-Audit
+Immutable Version
+  ↓
+Audit Record
   ↓
 Database
   ↓
@@ -237,15 +268,26 @@ Reload
 Version History
   ↓
 Audit History
-```
 
-### Gate condition
+Change Proposal review decisions such as Reviewed, Approved, and Rejected are not LearningObject lifecycle states and must not appear in this lifecycle flow.
 
-The complete flow must succeed without semantic loss or violation of the established lifecycle/versioning boundaries.
+Gate Condition
 
-### Status
+The complete flow must succeed without semantic loss or violation of the established lifecycle, aggregate, Version, and Audit boundaries.
 
-`PENDING`
+IA-01 Preconditions
+IA-001 — RESOLVED
+IA-002 — RESOLVED
+IA-003 — RESOLVED
+IA-005 — RESOLVED
+IA-010 — RESOLVED
+IA-017 — RESOLVED
+IA-018 — RESOLVED
+IA-019 — RESOLVED
+
+Status
+
+PENDING
 
 ---
 
@@ -255,11 +297,21 @@ The complete flow must succeed without semantic loss or violation of the establi
 
 Compare the resulting implementation against the authoritative normative corpus.
 
-### Required result
+### Required Result
 
 All confirmed deviations must be resolved or explicitly documented as authorized exceptions.
 
 All critical persistence and E2E gaps must be closed.
+
+The final implementation must preserve:
+
+* LearningObject as the primary knowledge aggregate;
+* KnowledgeStatement as an aggregate member/value;
+* LearningObject-centered immutable Version history;
+* the normative LearningObject lifecycle;
+* separation between Change Proposal review decisions and LearningObject lifecycle;
+* separation between Version history and Audit history;
+* independent Anchor identity and persistence boundary.
 
 ### Gate
 
@@ -305,10 +357,16 @@ IA-07 E2E-GATE-01
         ▼
 IA-08 Implementation Conformance
 
-### Current Gate
+Current Gate
 
-NEXT ACTION: IA-02 CONTRACT AND LIFECYCLE ALIGNMENT
+IA-01 — COMPLETE
+
+Next Action
+
+IA-02 — CONTRACT AND LIFECYCLE ALIGNMENT
 
 IA-01 is complete.
+
+The eight IA-01 findings must not be reopened unless new authoritative evidence establishes a direct contradiction with the normative corpus.
 
 No production persistence schema should be treated as final before the remaining contract and lifecycle ambiguities are resolved.
