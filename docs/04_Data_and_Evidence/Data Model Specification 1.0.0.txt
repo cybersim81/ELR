@@ -355,13 +355,6 @@ Domain Model.
 La Knowledge Category è un elemento classificatorio associato al Learning
 Object e non costituisce un membro dell'aggregate Learning Object.
 
-Le relazioni tra Learning Object, Anchor e Knowledge Statement rappresentano
-la struttura persistente del Learning Object secondo i confini definiti dal
-Domain Model.
-
-La Knowledge Category è un elemento classificatorio associato al Learning
-Object e non costituisce un membro dell'aggregate Learning Object.
-
 Le relazioni del Data Model non implicano che tutte le entità coinvolte
 possiedano un ciclo di vita persistente autonomo.
 
