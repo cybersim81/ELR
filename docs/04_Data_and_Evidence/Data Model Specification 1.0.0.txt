@@ -205,11 +205,12 @@ Un Learning Object contiene:
 
 * identificativo unico;
 
-* Anchor associato;
-
 * Knowledge Statement;
 
 * metadati di gestione.
+
+Un Learning Object è associato a un Anchor, che può essere condiviso da più
+Learning Object indipendenti.
 
 Il Learning State non appartiene al Learning Object.
 
