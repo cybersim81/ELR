@@ -477,50 +477,30 @@ docs/02_Core_Model/Anchor Specification 1.1.0.txt
 
 Domain Role:
 
-CONFLICT — aggregate member in Domain Model; shared reference in Versioning
-Model
+Associated shared linguistic reference; not a LearningObject aggregate member
 
-Autonomous Identity:
+Autonomous Identity: YES
 
-CONFLICT — Domain Model treats Anchor as an aggregate member without an
-autonomous lifecycle; Versioning Model treats Anchor as a shared entity with
-its own identity
+Autonomous Versioning: NO
 
-Autonomous Versioning:
+Persistence: YES
 
-NO
+Current Status: RESOLVED / CONSISTENT
 
-Persistence:
+Normative interpretation:
 
-CONFLICT — Domain Model describes Anchor as part of LearningObject
-representation; Persistence/Versioning models allow shared Anchor persistence
+* ADR-007 defines the Learning Object as associated with an Anchor.
+* Anchor is outside the LearningObject aggregate boundary.
+* Association does not imply containment or ownership.
+* One Anchor may be associated with multiple independent Learning Objects.
+* Anchor identity is independent of the identities of associated Learning Objects.
+* Anchor is not independently versioned as a LearningObject Version.
 
-Current Status:
+Resolution:
 
-UNRESOLVED CROSS-SPECIFICATION CONFLICT
-
-Notes:
-
-The current specifications do not yet provide a single consistent definition
-of the Anchor boundary.
-
-The Domain Model Specification 1.1.0 currently defines Anchor as an element of
-the Learning Object aggregate.
-
-The Versioning Model Specification 1.0.0 currently defines Anchor as an
-associated and potentially shared entity.
-
-These interpretations are not equivalent and must not be silently reconciled
-by a subordinate specification.
-
-The authoritative boundary must be resolved before the Anchor Specification
-and dependent specifications are considered aligned.
-
-Required Action:
-
-Resolve the Anchor boundary at the Domain Model / architectural authority
-level, then propagate the resulting decision to Anchor, Data, Persistence and
-Versioning specifications.
+The previous conflict between Domain Model, Anchor, Data Model, Persistence
+Model and Versioning Model interpretations has been resolved by propagating
+ADR-007 into the Domain Model and dependent specifications.
 
 
 --------------------------------------------------------------------------------
@@ -1160,20 +1140,35 @@ Required Resolution:
 Remove KnowledgeStatement from autonomous Versioned Entities.
 
 
-CONFLICT-003
-
+CONFLICT-003 
 Concept:
 
-Anchor Versioning
+Anchor Boundary / Versioning
 
-Problem:
+Status:
 
-Versioning Model lists Anchor as independently versioned.
+RESOLVED
 
-Required Resolution:
+Resolution:
 
-Clarify Anchor as LearningObject aggregate content whose evolution is captured
-by LearningObject Versioning.
+ADR-007, Domain Model 1.1.0, Anchor Specification 1.1.0, Data Model 1.0.0,
+Persistence Model 1.0.0 and Versioning Model 1.0.0 now use the same semantic
+boundary.
+
+The Learning Object is associated with an Anchor.
+
+The Anchor:
+
+* is outside the LearningObject aggregate boundary;
+* is not owned by the Learning Object;
+* may be associated with multiple independent Learning Objects;
+* has its own persistent identity;
+* is not independently versioned as a LearningObject Version.
+
+The previous cross-specification inconsistency is therefore closed.
+
+No Anchor-specific contradiction remains in the verified specification chain.
+
 
 
 CONFLICT-004
