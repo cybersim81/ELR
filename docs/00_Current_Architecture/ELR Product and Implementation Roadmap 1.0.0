@@ -1,0 +1,981 @@
+================================================================================
+Educational Learning Repository (ELR)
+
+Product & Implementation Roadmap
+
+Version: 1.0.0
+Status: ACTIVE
+Document Type: Product Completion and Implementation Roadmap
+================================================================================
+
+
+# 1. Document Identity
+
+Document Name:
+
+ELR Product & Implementation Roadmap
+
+Document Version:
+
+1.0.0
+
+Status:
+
+ACTIVE
+
+Document Type:
+
+Product Completion and Implementation Roadmap
+
+
+================================================================================
+# 2. Purpose
+================================================================================
+
+This document defines the implementation and product-completion path of the
+Educational Learning Repository (ELR) from the current implementation-ready
+state to a fully usable end-to-end learning system.
+
+It exists to answer one question:
+
+> What remains to be built before ELR is a complete and genuinely usable
+> product for the intended learner?
+
+This document extends the architectural roadmap.
+
+It does not replace the ELR Architectural Roadmap.
+
+The Architectural Roadmap defines the evolution and consolidation of the
+ELR architecture.
+
+This roadmap defines what must subsequently be implemented, integrated,
+validated and delivered until the final user-ready state is reached.
+
+
+================================================================================
+# 3. Fundamental Planning Rule
+================================================================================
+
+The completion of the architectural roadmap does NOT constitute completion
+of the ELR project.
+
+The completion of Fase 10 represents the completion of the architectural
+scope covered by the current Architectural Roadmap.
+
+The resulting state is:
+
+ARCHITECTURE COMPLETE
+        ↓
+IMPLEMENTATION READY
+        ↓
+PRODUCT IMPLEMENTATION
+        ↓
+INTEGRATED LEARNING SYSTEM
+        ↓
+FULL ELR USER-READY
+
+The ELR project is complete only when the final User-Ready Definition of Done
+defined by the ELR Project Definition has been satisfied.
+
+
+================================================================================
+# 4. Product North Star
+================================================================================
+
+ELR is a persistent, learner-controlled, portable and technology-agnostic
+repository of educational knowledge.
+
+Its purpose is to transform learning interactions and learning activities
+into durable knowledge and learning state, and to use that knowledge to
+support future learning.
+
+The fundamental product loop is:
+
+LEARN
+  ↓
+CAPTURE EVIDENCE
+  ↓
+EXTRACT / PROPOSE KNOWLEDGE
+  ↓
+REVIEW
+  ↓
+ACCEPT INTO ELR
+  ↓
+STORE / VERSION
+  ↓
+REPRESENT LEARNING STATE
+  ↓
+SELECT LEARNING ACTIVITY
+  ↓
+PERFORM EXERCISE / INTERACTION
+  ↓
+PRODUCE EVIDENCE
+  ↓
+UPDATE LEARNING STATE
+  ↓
+CONTINUE LEARNING
+
+
+================================================================================
+# 5. Planning Principles
+================================================================================
+
+## 5.1 Repository First
+
+The ELR Repository remains the authoritative source of learning knowledge.
+
+Derived systems must consume repository state rather than creating
+independent competing sources of truth.
+
+
+## 5.2 Domain First
+
+Implementation follows the domain model.
+
+Infrastructure, API and UI must not redefine domain semantics.
+
+
+## 5.3 Human Learning Control
+
+Automated systems may propose knowledge changes.
+
+The learner remains the authority for accepting knowledge into the Repository
+where the architecture requires human review.
+
+
+## 5.4 Technology Agnosticism
+
+The ELR core must not become dependent on:
+
+* one LLM provider;
+* one model;
+* one conversational application;
+* one UI;
+* one exercise presentation technology;
+* one external integration.
+
+
+## 5.5 Portability
+
+The learner's accumulated knowledge is a primary long-term asset.
+
+Import, export, backup, migration and recovery therefore form part of the
+product completion path.
+
+
+## 5.6 End-to-End Verification
+
+A milestone is not complete merely because its internal code exists.
+
+Where applicable, completion requires verification of its integration into the
+complete ELR learning loop.
+
+
+## 5.7 Traceable Evolution
+
+Every implementation milestone must be traceable to:
+
+* architectural sources;
+* implementation specifications;
+* product capabilities;
+* verification criteria.
+
+
+================================================================================
+# 6. Source Hierarchy
+================================================================================
+
+The roadmap is derived from the following documentation hierarchy.
+
+--------------------------------------------------------------------------------
+6.1 Project Definition
+--------------------------------------------------------------------------------
+
+Primary project-level authority:
+
+ELR Project Definition 1.0.0
+
+Defines:
+
+* project identity;
+* project purpose;
+* product scope;
+* architectural principles;
+* final User-Ready Definition of Done.
+
+
+--------------------------------------------------------------------------------
+6.2 Architectural Authority
+--------------------------------------------------------------------------------
+
+Primary architectural sources:
+
+* ELR Architecture Baseline;
+* ELR Architecture Specification;
+* ELR Architecture Decision Log;
+* ELR Architecture Consistency Matrix;
+* ELR Architectural Roadmap.
+
+
+--------------------------------------------------------------------------------
+6.3 Domain and Process Authority
+--------------------------------------------------------------------------------
+
+Relevant sources include:
+
+* Core Domain Model;
+* Learning Object Specification;
+* Anchor Specification;
+* Learning State Specification;
+* Mastery State Specification;
+* ELR Taxonomy;
+* Knowledge Extraction Pipeline Specification;
+* Evidence Model Specification;
+* Learning Review Specification;
+* Mastery Engine Specification;
+* Learning Activity Specification;
+* Exercise System Specification;
+* Adaptive Review Specification;
+* Phrasebook Specification.
+
+
+--------------------------------------------------------------------------------
+6.4 System Authority
+--------------------------------------------------------------------------------
+
+Relevant system sources include:
+
+* ELR Implementation Architecture Specification;
+* ELR Lifecycle Specification;
+* ELR API Specification;
+* ELR Event Model Specification;
+* ELR Import Export Specification;
+* ELR Security and Access Model Specification.
+
+
+--------------------------------------------------------------------------------
+6.5 Implementation Authority
+--------------------------------------------------------------------------------
+
+Relevant implementation sources include:
+
+* ELR Core Repository Implementation Plan;
+* ELR Core Domain Implementation Specification;
+* ELR Persistence Implementation Specification;
+* ELR Application Service Implementation Specification;
+* ELR API Implementation Specification;
+* ELR Event Implementation Specification;
+* ELR Security Implementation Specification.
+
+
+================================================================================
+# 7. Relationship with the Previous Architectural Roadmap
+================================================================================
+
+The previous ELR Architectural Roadmap remains valid as the historical and
+architectural record of the project.
+
+Its completed phases are not discarded.
+
+In particular:
+
+Fase 0 — Architectural Foundations
+Fase 1 — ELR Knowledge Model
+Fase 2 — Knowledge Extraction Architecture
+Fase 3 — Evidence Architecture
+Fase 4 — Mastery Architecture
+Fase 5 — Human Learning Control
+Fase 6 — Learning Activity and Exercise Systems
+Fase 7 — Document Consistency Consolidation
+Fase 8 — Implementation Readiness Review
+Fase 9 — Derived Learning Systems
+Fase 10 — Interaction Layer
+
+represent architectural consolidation and readiness work.
+
+The completion of those phases establishes the architectural baseline from
+which this roadmap proceeds.
+
+This roadmap must therefore NOT restart architectural design unless a
+controlled architectural change is explicitly required.
+
+
+================================================================================
+# 8. Implementation Roadmap Overview
+================================================================================
+
+The product-completion path is divided into the following milestones:
+
+M0 — Project Alignment and Implementation Baseline
+M1 — Core Repository
+M2 — Knowledge Acquisition and KEP Integration
+M3 — Evidence and Mastery
+M4 — Learning Activities and Exercise System
+M5 — Learning Interaction Layer
+M6 — Derived Learning Systems
+M7 — Import, Export, Portability and Recovery
+M8 — Production Integration and Hardening
+M9 — Full ELR User-Ready
+
+These milestones are product milestones.
+
+Each milestone may contain multiple implementation work packages.
+
+The milestone numbering is intentionally distinct from the previous
+architectural Fase numbering.
+
+
+================================================================================
+# 9. M0 — Project Alignment and Implementation Baseline
+================================================================================
+
+Status:
+
+NEXT / FOUNDATION
+
+Purpose:
+
+Establish the implementation control point following completion of the
+architectural roadmap.
+
+Objectives:
+
+* establish the Project Definition as the product North Star;
+* establish this roadmap as the product-completion planning authority;
+* establish Implementation Status as the operational state authority;
+* verify the implementation repository against the approved implementation
+  specifications;
+* identify implementation gaps without silently modifying architecture;
+* establish reproducible development and test environment;
+* establish the initial implementation baseline.
+
+
+Inputs:
+
+* ELR Project Definition;
+* ELR Architectural Roadmap;
+* ELR Implementation Architecture Specification;
+* ELR Core Repository Implementation Plan;
+* implementation specifications.
+
+
+Exit Criteria:
+
+* project identity and scope are unambiguous;
+* implementation authority is identified;
+* current code state is recorded;
+* implementation environment is reproducible;
+* first implementation milestone is explicitly identified;
+* bootstrap and continuity documents reference this roadmap.
+
+
+================================================================================
+# 10. M1 — Core Repository
+================================================================================
+
+Purpose:
+
+Implement the first operational ELR Repository.
+
+This milestone corresponds to the Core Repository v0.1 implementation plan.
+
+
+Capabilities:
+
+* create Learning Object;
+* maintain lifecycle;
+* maintain versioning;
+* persist knowledge;
+* preserve historical versions;
+* maintain audit;
+* persist transactional event records;
+* expose core API;
+* apply initial security controls;
+* execute the corresponding integration tests.
+
+
+Implementation sequence:
+
+1. Domain Model
+2. Persistence
+3. Application Services
+4. API
+5. Events
+6. Security
+7. Integration Testing
+
+
+Primary implementation sources:
+
+* Core Domain Implementation Specification;
+* Persistence Implementation Specification;
+* Application Service Implementation Specification;
+* API Implementation Specification;
+* Event Implementation Specification;
+* Security Implementation Specification;
+* Core Repository Implementation Plan.
+
+
+Product capability after completion:
+
+The learner or authorized client can create, review, approve, retrieve and
+version authoritative ELR knowledge through the supported system interfaces.
+
+
+Exit Criteria:
+
+* Core Repository v0.1 Definition of Done satisfied;
+* end-to-end create → lifecycle → version → retrieve flow verified;
+* audit verified;
+* event flow verified;
+* security boundary verified;
+* integration tests pass.
+
+
+================================================================================
+# 11. M2 — Knowledge Acquisition and KEP Integration
+================================================================================
+
+Purpose:
+
+Connect learning interactions to the ELR Repository.
+
+This milestone implements the core idea that learning occurring outside the
+Repository can become durable ELR knowledge through a controlled process.
+
+
+Capabilities:
+
+Conversation / learning input
+→ Trigger
+→ Knowledge Candidate
+→ Anchor Resolution
+→ Knowledge Extraction
+→ CREATE / MERGE / UPDATE classification
+→ Change Evidence
+→ ELR Change Proposal
+→ Learning Review
+→ approved ELR state
+
+
+Primary sources:
+
+* Knowledge Extraction Pipeline Specification;
+* Evidence Model Specification;
+* Learning Review Specification;
+* Learning Object Specification;
+* Application Service Specification;
+* API Specification;
+* Event Model Specification;
+* relevant implementation specifications.
+
+
+Product capability after completion:
+
+A supported learning interaction can produce a reviewable knowledge proposal
+which, after learner decision, becomes authoritative ELR knowledge.
+
+
+Exit Criteria:
+
+* extraction pipeline operates end-to-end;
+* CREATE / MERGE / UPDATE behavior is verified;
+* Change Proposal is persisted correctly;
+* Change Evidence is preserved according to the model;
+* learner approval/rejection is enforced;
+* approved knowledge reaches authoritative ELR state;
+* the complete interaction is auditable and tested.
+
+
+================================================================================
+# 12. M3 — Evidence and Mastery
+================================================================================
+
+Purpose:
+
+Make ELR capable of representing and updating the learner's learning state
+and mastery from valid evidence.
+
+
+Capabilities:
+
+* Evidence handling;
+* Mastery Evidence;
+* Mastery Engine integration;
+* Mastery State persistence;
+* learning-state updates;
+* traceable relationship between evidence and resulting state.
+
+
+Primary sources:
+
+* Evidence Model Specification;
+* Mastery Engine Specification;
+* Mastery State Specification;
+* Learning State Specification;
+* relevant Domain, Application, Persistence and Event specifications.
+
+
+Product capability after completion:
+
+ELR can represent not only what the learner knows, but the supported state
+of learning and mastery associated with that knowledge.
+
+
+Exit Criteria:
+
+* valid Evidence can be associated with its intended process;
+* Mastery Evidence reaches the Mastery Engine;
+* Mastery State is updated according to the approved rules;
+* source evidence remains traceable;
+* invalid or unauthorized updates are rejected;
+* integration tests verify the complete evidence → mastery flow.
+
+
+================================================================================
+# 13. M4 — Learning Activities and Exercise System
+================================================================================
+
+Purpose:
+
+Use ELR knowledge and learning state to produce actual learning activities
+and exercises.
+
+
+Capabilities:
+
+ELR Knowledge
++
+Learning State / Mastery
+→ Learning Activity
+→ Exercise
+→ User Interaction
+→ Result
+→ Evidence
+
+
+Primary sources:
+
+* Learning Activity Specification;
+* Exercise System Specification;
+* Evidence Model Specification;
+* Mastery Engine Specification;
+* Adaptive Review Specification where applicable.
+
+
+Product capability after completion:
+
+A learner can use the knowledge already present in ELR to perform meaningful
+learning activities and exercises whose results can produce valid Evidence.
+
+
+Exit Criteria:
+
+* Learning Activity selection is implemented;
+* Exercise System can realize supported activities;
+* user interaction can be completed;
+* exercise results produce the correct Evidence;
+* Evidence can update the appropriate learning state;
+* end-to-end learning activity flow passes integration/system tests.
+
+
+================================================================================
+# 14. M5 — Learning Interaction Layer
+================================================================================
+
+Purpose:
+
+Make ELR usable through a coherent interaction model rather than requiring
+the learner to understand internal domain and process structures.
+
+
+Capabilities:
+
+* Human / AI collaboration;
+* Learning Interaction Language;
+* repository interaction;
+* review interaction;
+* learning activity interaction;
+* exercise interaction;
+* controlled error and recovery behavior.
+
+
+Primary sources:
+
+* Human-AI Collaboration Specification;
+* Learning Interaction Language Specification;
+* API Specification;
+* relevant process specifications;
+* Security Model;
+* Event Model.
+
+
+Product capability after completion:
+
+The learner can operate the principal ELR workflows through supported
+interaction mechanisms without directly manipulating internal ELR structures.
+
+
+Exit Criteria:
+
+* supported intents map correctly to ELR capabilities;
+* interaction does not bypass human control;
+* interaction does not bypass Application/Domain rules;
+* authentication and authorization are preserved;
+* review and learning flows are usable end-to-end;
+* interaction tests pass.
+
+
+================================================================================
+# 15. M6 — Derived Learning Systems
+================================================================================
+
+Purpose:
+
+Complete the major systems derived from authoritative ELR state.
+
+
+Systems include, as applicable:
+
+* Phrasebook;
+* Adaptive Review;
+* reporting;
+* progress views;
+* dashboards;
+* other approved derived learning systems.
+
+
+Principle:
+
+Derived systems must remain projections or consumers of ELR state.
+
+They must not create competing authoritative learning state.
+
+
+Product capability after completion:
+
+The learner can inspect and use meaningful derived representations of their
+knowledge and learning progress.
+
+
+Exit Criteria:
+
+* derived systems consume authoritative ELR state;
+* no competing source of truth is introduced;
+* Adaptive Review integrates with Learning Activity;
+* reporting reflects repository and learning-state data;
+* derived-system behavior is verified against source-of-truth data.
+
+
+================================================================================
+# 16. M7 — Import, Export, Portability and Recovery
+================================================================================
+
+Purpose:
+
+Make the learner's ELR knowledge portable and recoverable.
+
+
+Capabilities:
+
+* export knowledge;
+* import knowledge;
+* validate imported data;
+* preserve identity;
+* preserve relationships;
+* preserve version history;
+* preserve authorized learning state;
+* resolve controlled conflicts;
+* support migration;
+* support backup and restoration.
+
+
+Primary source:
+
+ELR Import Export Specification 1.0.0
+
+
+Principles:
+
+* preserve knowledge meaning;
+* validate before persistence;
+* preserve identity;
+* respect security boundaries;
+* preserve historical continuity;
+* never turn process data or raw conversation into authoritative knowledge.
+
+
+Product capability after completion:
+
+The learner can retain and move their ELR knowledge independently of a
+specific deployment, client or LLM.
+
+
+Exit Criteria:
+
+* valid repository can be exported;
+* exported repository can be validated;
+* repository can be restored;
+* identity and version continuity are preserved;
+* invalid imports are rejected;
+* security/privacy rules are enforced;
+* migration and recovery tests pass.
+
+
+================================================================================
+# 17. M8 — Production Integration and Hardening
+================================================================================
+
+Purpose:
+
+Transform the integrated ELR implementation into a reliable operational
+system.
+
+
+Areas:
+
+* complete security;
+* configuration;
+* database migrations;
+* transaction integrity;
+* error handling;
+* validation;
+* observability;
+* logging;
+* operational diagnostics;
+* backup/recovery;
+* performance;
+* reliability;
+* test automation;
+* documentation;
+* deployment;
+* upgrade procedures.
+
+
+Product capability after completion:
+
+ELR can be operated repeatedly and reliably rather than merely demonstrated
+as a development prototype.
+
+
+Exit Criteria:
+
+* production deployment procedure exists;
+* database migration procedure exists;
+* backup/recovery procedure verified;
+* security controls verified;
+* operational failures are diagnosable;
+* regression suite passes;
+* deployment can be reproduced;
+* upgrade path is documented and tested.
+
+
+================================================================================
+# 18. M9 — Full ELR User-Ready
+================================================================================
+
+Purpose:
+
+Complete the ELR project as a usable end-to-end product.
+
+
+This is the FINAL PRODUCT MILESTONE.
+
+
+The milestone is complete only when a user can:
+
+1. start or access an operational ELR instance;
+2. connect through a supported client or learning interface;
+3. participate in a learning interaction;
+4. generate or capture learning evidence;
+5. extract candidate knowledge;
+6. receive a Change Proposal;
+7. review the proposal;
+8. accept, reject or revise it;
+9. persist the resulting authoritative knowledge;
+10. retrieve the knowledge later;
+11. maintain its versions;
+12. inspect learning state;
+13. perform learning activities;
+14. perform exercises;
+15. generate new Evidence;
+16. update learning or mastery state;
+17. use derived systems;
+18. continue the cycle in later sessions;
+19. export the repository;
+20. restore/import the repository;
+21. operate without dependence on one specific LLM or UI.
+
+
+Final Technical Gate:
+
+All applicable:
+
+* domain tests;
+* persistence tests;
+* application tests;
+* API tests;
+* event tests;
+* security tests;
+* integration tests;
+* system tests;
+* import/export tests;
+* operational tests
+
+must pass.
+
+
+Final Product Gate:
+
+The complete learning loop must be demonstrated successfully by a real
+user through the supported user-facing system.
+
+
+Final Architecture Gate:
+
+No unresolved architectural contradiction may remain.
+
+
+Final Documentation Gate:
+
+The bootstrap, continuity, roadmap, status and implementation documentation
+must accurately describe the released system.
+
+
+Final Decision:
+
+FULL ELR USER-READY
+
+
+================================================================================
+# 19. Mapping to Previous Implementation Versions
+================================================================================
+
+The original Core Repository Implementation Plan defines:
+
+v0.1 — Core Repository
+v0.2 — Knowledge Extraction Integration
+v0.3 — Mastery and Evidence Integration
+v0.4 — Learning Interaction Layer
+v1.0 — Complete ELR Platform
+
+This roadmap retains that evolution but expands it into explicit product
+completion milestones.
+
+Mapping:
+
+v0.1
+→ M1 Core Repository
+
+v0.2
+→ M2 Knowledge Acquisition and KEP Integration
+
+v0.3
+→ M3 Evidence and Mastery
+
+v0.4
+→ M4 + M5
+
+v1.0
+→ M6 + M7 + M8 + M9
+
+This mapping is intentional.
+
+The former v1.0 label represented a broad platform target.
+
+This roadmap makes the contents of that target explicit and therefore
+prevents "v1.0" from being interpreted as an undefined end state.
+
+
+================================================================================
+# 20. Milestone Completion Model
+================================================================================
+
+Every milestone must record:
+
+* Status;
+* Scope;
+* Architectural sources;
+* Implementation sources;
+* Product capability;
+* Dependencies;
+* Implementation work packages;
+* Tests;
+* Exit Criteria;
+* Known deviations;
+* Open blockers.
+
+
+A milestone is COMPLETE only when its Exit Criteria are satisfied.
+
+A milestone may not be considered complete solely because implementation
+code exists.
+
+
+================================================================================
+# 21. Change Control
+================================================================================
+
+Changes to the roadmap must distinguish between:
+
+* implementation refinement;
+* technical decision;
+* product-scope change;
+* architectural change.
+
+An architectural change must be processed through the ELR architectural
+decision and documentation mechanisms.
+
+A product-scope change must update this roadmap and, where necessary, the
+ELR Project Definition.
+
+
+================================================================================
+# 22. Current Position
+================================================================================
+
+Current architectural position:
+
+ARCHITECTURE COMPLETE THROUGH FASE 10
+
+Current architectural readiness:
+
+IMPLEMENTATION READY
+
+Current product-completion position:
+
+M0 — PROJECT ALIGNMENT / IMPLEMENTATION BASELINE
+
+Next implementation milestone:
+
+M1 — CORE REPOSITORY
+
+
+================================================================================
+# 23. Final Project Statement
+================================================================================
+
+The ELR project does not end when the architecture is complete.
+
+It does not end when the Core Repository works.
+
+It does not end when the API works.
+
+It does not end when KEP, Mastery or Interaction components exist
+individually.
+
+It ends when those components form a coherent, secure, portable and
+technology-agnostic learning system that a learner can use continuously.
+
+The final destination of this roadmap is therefore:
+
+                    FULL ELR USER-READY
+
+not merely:
+
+                    IMPLEMENTATION READY
+
+
+================================================================================
+END OF DOCUMENT
+================================================================================
