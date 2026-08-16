@@ -1,10 +1,10 @@
 ================================================================================
-English Learning Repository (ELR)
+Educational Learning Repository (ELR)
 
 Data Model Specification
 
 Version: 1.0.0
-Status: DRAFT
+Status: CONSOLIDATED
 =============
 
 # Document Identity
@@ -19,7 +19,7 @@ Document Version:
 
 Status:
 
-DRAFT
+CONSOLIDATED
 
 Dependencies:
 
@@ -42,7 +42,7 @@ Scopo
 =====
 
 La ELR Data Model Specification definisce il modello strutturale dei dati
-persistenti utilizzati dall'English Learning Repository (ELR).
+persistenti utilizzati dall'Educational Learning Repository (ELR).
 
 Il Data Model rappresenta il livello attraverso cui i concetti definiti nel
 Domain Model vengono trasformati in entità persistenti.
@@ -109,6 +109,13 @@ conoscenza
 con
 
 processo che l'ha generata.
+
+Il Data Model rappresenta i concetti persistenti definiti dal Domain Model.
+
+Il Domain Model costituisce l'autorità per i confini, le responsabilità e le
+relazioni del modello di dominio.
+
+Il Data Model non può ridefinire autonomamente tali confini o responsabilità.
 
 Il repository conserva:
 
@@ -283,7 +290,14 @@ Categorie definite:
 
 La categoria supporta ricerca e organizzazione.
 
+La Knowledge Category è un elemento classificatorio del Data Model e non
+costituisce un membro dell'aggregate Learning Object definito dal Domain Model.
+
+La Knowledge Category non possiede un lifecycle derivato dal Learning Object
+e non modifica i confini dell'aggregate.
+
 Non determina automaticamente la struttura del Learning Object.
+
 
 ================================================================================
 6. Learning State Entity
@@ -514,7 +528,7 @@ L'ELR conserva conoscenza linguistica evolutiva.
 ================================================================================
 Fine documento
 
-English Learning Repository (ELR)
+Educational Learning Repository (ELR)
 
 Data Model Specification
 
