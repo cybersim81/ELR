@@ -1,0 +1,117 @@
+# 01_Normative_Baseline_State.txt
+
+## Normative Baseline State
+
+### Purpose
+
+This document records the consolidated normative baseline at the point where the Bootstrap Pack was established.
+
+It is a continuity summary only. The authoritative specifications and ADRs remain the source of truth.
+
+### Specification Propagation
+
+`M0.3.2 — Specification Propagation: COMPLETE`
+
+The normative specification baseline has been consolidated sufficiently to begin implementation alignment.
+
+No implementation change should redefine an architectural concept that has already been established by the authoritative corpus.
+
+### Consolidated Architectural Principles
+
+The current baseline establishes the following principles relevant to the implementation alignment phase.
+
+#### LearningObject
+
+LearningObject is the primary domain aggregate and the primary unit of knowledge lifecycle and knowledge versioning.
+
+Its stable identity persists across its immutable versions.
+
+#### KnowledgeStatement
+
+KnowledgeStatement is an aggregate member / knowledge value.
+
+It does not constitute an autonomous aggregate.
+
+It does not possess autonomous lifecycle or autonomous versioning semantics.
+
+Its representation must therefore remain subordinate to the LearningObject aggregate.
+
+#### Anchor
+
+Anchor is a shared semantic reference.
+
+It has its own stable identity and persistence boundary.
+
+It is not part of the LearningObject aggregate.
+
+LearningObject references Anchor rather than owning its lifecycle.
+
+#### Version
+
+LearningObject versioning is based on immutable historical versions.
+
+Stable LearningObject identity and immutable Version history are distinct concepts.
+
+Version history must not become a generic mechanism for autonomous versioning of arbitrary domain entities.
+
+#### Lifecycle
+
+The LearningObject lifecycle is normative and must reject invalid transitions.
+
+The currently implemented lifecycle flow is:
+
+`Candidate → Proposed → Reviewed → Active`
+
+The existence of a working lifecycle implementation does not by itself establish full normative conformance of persistence or version semantics.
+
+#### Audit
+
+Audit records represent operational history.
+
+Audit history is distinct from immutable knowledge Version history.
+
+Audit records must not be used as a substitute for Version persistence.
+
+#### Evidence
+
+Evidence is separate from the knowledge repository.
+
+Evidence belongs to the Evidence Model and its dedicated processes.
+
+It must not be conflated with LearningObject knowledge persistence or Version history.
+
+#### Learning State
+
+Learning State is persistent and user-specific, but it does not constitute linguistic knowledge.
+
+It is distinct from the knowledge repository and from the LearningObject aggregate.
+
+### Authority Boundary
+
+The following remain authoritative over this summary:
+
+* Specification Authority Matrix
+* Architecture Consistency Matrix
+* Architecture Decision Log
+* Domain Model Specification
+* Anchor Specification
+* Data Model Specification
+* Lifecycle-related specifications
+* Evidence-related specifications
+* other applicable normative specifications and ADRs
+
+If this summary conflicts with an authoritative source, the authoritative source prevails and this Bootstrap Pack MUST be updated.
+
+### Implementation Alignment Rule
+
+The implementation must be aligned to the normative baseline above.
+
+The next phase MUST NOT silently weaken, reinterpret, or generalize these boundaries merely because the current implementation uses a different representation.
+
+### Current Normative Status
+
+**BASELINE STATUS: CONSOLIDATED**
+
+**SPECIFICATION PROPAGATION: COMPLETE**
+
+**IMPLEMENTATION ALIGNMENT: NOT YET COMPLETE**

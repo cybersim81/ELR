@@ -1,0 +1,203 @@
+# 07_Session_Prompt.txt
+
+## ELR Session Bootstrap Prompt
+
+### Session Entry Rule
+
+You are resuming work on the ELR repository.
+
+Before performing analysis, proposing implementation changes, modifying documents, modifying code, or changing the roadmap, you MUST reconstruct the current project state from the complete Bootstrap Pack.
+
+The Bootstrap Pack is located at:
+
+`docs/00_Bootstrap/`
+
+### Mandatory Pack Read
+
+Read ALL documents in `docs/00_Bootstrap/` in the following order:
+
+1. `00_Bootstrap_Pack_Index.txt`
+2. `01_Normative_Baseline_State.txt`
+3. `02_Implementation_Baseline_Inventory.txt`
+4. `03_Implementation_Finding_Register.txt`
+5. `04_End_to_End_Gap_Map.txt`
+6. `05_Implementation_Alignment_Roadmap.txt`
+7. `06_Session_Continuity_State.txt`
+8. Read this document again after the preceding documents have been loaded.
+
+Do not assume that the previous conversational session is available.
+
+Do not infer missing state from memory.
+
+The Bootstrap Pack is the session continuity source.
+
+### Repository Authority
+
+The Bootstrap Pack is a continuity and handoff artifact.
+
+It is NOT the architectural authority.
+
+For normative questions, consult the authoritative repository documents identified by the Pack, including the relevant:
+
+* Specification Authority Matrix;
+* Architecture Consistency Matrix;
+* Architecture Decision Log;
+* Domain Model specifications;
+* Anchor specification;
+* Data Model specification;
+* Evidence specifications;
+* lifecycle specifications;
+* other applicable authoritative documents.
+
+If a Bootstrap Pack summary conflicts with an authoritative specification or ADR, STOP and resolve the conflict against the authoritative source before proceeding.
+
+### Current Project Position
+
+The following state is already established:
+
+`M0.3.2 Specification Propagation → COMPLETE`
+
+`Implementation Baseline Inventory → COMPLETE`
+
+`E2E Gap Map → COMPLETE`
+
+`Implementation Alignment → NEXT`
+
+`E2E-GATE-01 → PENDING`
+
+### Current Implementation Characterization
+
+The repository currently contains:
+
+* a domain/application skeleton;
+* a tested LearningObject lifecycle;
+* Version creation in the application layer;
+* AuditRecord creation in the application layer;
+* in-memory repositories used by the application tests;
+* an independently materialized Anchor persistence model.
+
+The persistent end-to-end LearningObject lifecycle is NOT yet implemented.
+
+### Current Known Deviations
+
+The currently confirmed implementation deviations are:
+
+* `IA-001`
+* `IA-003`
+* `IA-010`
+* `IA-017`
+
+Additional alignment items and persistence gaps are recorded in:
+
+`03_Implementation_Finding_Register.txt`
+
+Do not silently reinterpret or discard these findings.
+
+### Immediate Objective
+
+Resume at:
+
+**IA-01 — Domain Semantic Alignment**
+
+The immediate task is to align the domain and repository semantics with the consolidated normative baseline before encoding those semantics into production persistence.
+
+### Required Working Sequence
+
+Proceed in this order:
+
+1. Read the complete Bootstrap Pack.
+2. Reconcile the current state against the relevant authoritative documents.
+3. Confirm whether the recorded findings remain valid.
+4. Resolve IA-01.
+5. Update affected authoritative implementation/specification documents as required.
+6. Update the Finding Register.
+7. Update the E2E Gap Map if the resolution changes an E2E dependency.
+8. Update the Roadmap if the gate position changes.
+9. Keep `06_Session_Continuity_State.txt` synchronized.
+10. Only then proceed to the next implementation gate.
+
+### Persistence Rule
+
+Do NOT materialize production persistence schemas for semantics that remain unresolved under IA-01.
+
+The intended sequence is:
+
+`Domain Semantic Alignment`
+→ `Contract Alignment`
+→ `Persistence Model`
+→ `Concrete Repository`
+→ `Database Integration`
+→ `Persistence Tests`
+→ `E2E-GATE-01`
+
+### End-to-End Objective
+
+The final implementation objective is to demonstrate:
+
+`Anchor`
+→ `LearningObject`
+→ `KnowledgeStatement`
+→ normative lifecycle
+→ immutable Version
+→ Audit
+→ persistent storage
+→ reload
+→ Version history
+→ Audit history
+
+without semantic loss or violation of established architectural boundaries.
+
+### Continuity Rule
+
+This session MUST preserve continuity.
+
+Do not restart completed inventory work merely because a new session has begun.
+
+Do not create parallel interpretations of established architectural decisions.
+
+When new evidence changes the state, update the Bootstrap Pack so the next session receives the corrected state.
+
+### Session Completion Rule
+
+Before ending the session:
+
+1. update the current gate;
+2. update finding statuses;
+3. update E2E status;
+4. update roadmap position;
+5. update `06_Session_Continuity_State.txt`;
+6. ensure `00_Bootstrap_Pack_Index.txt` still correctly describes the Pack;
+7. ensure this Session Prompt still references the complete Pack.
+
+The next session must be able to begin from `07_Session_Prompt.txt` alone and autonomously discover and read the complete Bootstrap Pack.
+
+### Legacy Bootstrap Context
+
+The current Bootstrap Pack is the successor to the previous ELR bootstrap and continuity mechanism.
+
+For lineage and historical context, the previous bootstrap set consisted of:
+
+* `docs/00_Current_Architecture/ELR Architectural Work State - Handoff 6.4.0.txt`
+* `docs/00_Current_Architecture/ELR Continuity Package 2.4.0.txt`
+* `docs/00_Current_Architecture/ELR Implementation Baseline Assessment 1.0.0.txt`
+* `docs/00_Current_Architecture/ELR Implementation Status 1.0.0.txt`
+
+These documents remain in the repository as historical bootstrap material.
+
+Do NOT treat them as the current session state.
+
+The current session state is defined by the complete:
+
+`docs/00_Bootstrap/`
+
+pack.
+
+If historical lineage becomes relevant, consult the legacy documents after the current Bootstrap Pack has been read and only when required to resolve a specific historical question.
+
+Do not allow historical bootstrap state to silently override the current consolidated state or any authoritative specification.
+
+### Final Resume Instruction
+
+**READ THE COMPLETE `docs/00_Bootstrap/` PACK FIRST.**
+
+**THEN RESUME AT IA-01 — DOMAIN SEMANTIC ALIGNMENT.**
