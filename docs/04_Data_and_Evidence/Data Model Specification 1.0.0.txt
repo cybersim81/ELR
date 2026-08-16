@@ -138,56 +138,43 @@ ma non conserva:
 1. Persistent Entity Model
    ================================================================================
 
-Le principali entità persistenti dell'ELR sono:
+### 1. Persistent Entity Model
+
+Il modello persistente rappresenta le entità e le relazioni necessarie alla
+persistenza della conoscenza linguistica.
+
+La struttura concettuale è:
 
 Learning Object
-
 |
-
-| associato a
-
+| associated with
 v
-
 Anchor
 
-
-|
-| appartiene al Learning Object
-v
-
-
-Knowledge Statement
-
-|
-| classificato da
-v
-
-
-Knowledge Category
-
-
 Learning Object
-
 |
-| associato a User
-v
++-- Knowledge Statement
+|
++-- Knowledge Category
+|
++-- Examples
+|
++-- Notes
 
+L'Anchor costituisce un riferimento linguistico associato al Learning Object.
 
-Learning State
+L'Anchor non appartiene all'aggregate boundary del Learning Object.
 
+Uno stesso Anchor può essere associato a più Learning Object indipendenti.
 
-Il Learning Object è l'unità minima persistente della conoscenza.
+La relazione tra Learning Object e Anchor non implica ownership dell'Anchor da
+parte del Learning Object.
 
-L'Anchor identifica l'unità linguistica associata al Learning Object e può
-essere condiviso da più Learning Object indipendenti.
+Knowledge Statement, Knowledge Category, Examples e Notes costituiscono gli
+elementi persistenti della rappresentazione del Learning Object.
 
-Il Knowledge Statement partecipa alla struttura persistente del Learning
-Object secondo i confini definiti dal Domain Model.
-
-Il Knowledge Statement non costituisce una entità persistente autonoma.
-
-La Knowledge Category è un elemento classificatorio del Data Model e non
-costituisce un membro dell'aggregate Learning Object.
+Learning State e Mastery State non appartengono al modello persistente della
+conoscenza del Learning Object.
 
 Il Learning State è persistente e User-specific, ma non costituisce conoscenza
 linguistica.
