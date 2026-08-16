@@ -48,12 +48,12 @@ class InMemoryVersionRepository:
 
     def get_history(
         self,
-        entity_id,
+        learning_object_id,
     ) -> list[Version]:
         return [
             version
             for version in self.items
-            if version.entity_id == entity_id
+            if version.learning_object_id == learning_object_id
         ]
 
 
