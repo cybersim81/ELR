@@ -49,27 +49,43 @@ The first decisive implementation gate is:
 
 ---
 
-## Confirmed Implementation Deviations
+## Resolved Implementation Alignment
 
-The current confirmed semantic deviations are:
+### IA-01 — Domain Semantic Alignment
+
+`COMPLETE`
+
+The following findings have been resolved:
 
 * `IA-001` — LearningObject statement representation;
+* `IA-002` — KnowledgeStatement identity/value semantics;
 * `IA-003` — generic Version entity;
+* `IA-005` — LearningObject version semantics;
 * `IA-010` — generic VersionRepository history;
-* `IA-017` — Version snapshot representation.
+* `IA-017` — Version snapshot representation;
+* `IA-018` — application/repository Version boundary;
+* `IA-019` — Version snapshot test coverage.
 
-These must be resolved against the normative baseline.
+The verified implementation now has:
+
+* immutable KnowledgeStatement aggregate-member semantics;
+* LearningObject-centered Version identity;
+* LearningObject-centered Version history;
+* immutable Version snapshots;
+* aligned application and repository contracts;
+* semantic Version snapshot test coverage.
+
+IA-01 does not include production persistence implementation.
 
 ---
 
-## Known Alignment Items
+## Known Remaining Alignment Items
 
-The following require explicit alignment:
+The following remain open for subsequent implementation phases:
 
-* `IA-002` — KnowledgeStatement identity/value semantics;
-* `IA-005` — LearningObject version semantics;
-* `IA-018` — application/repository Version boundary;
 * `IA-009` — LearningObject delete capability.
+
+Production persistence gaps remain separately tracked.
 
 ---
 
@@ -92,12 +108,13 @@ Production persistence is missing or unverified for:
 
 The current tests do not demonstrate:
 
-* semantic correctness of Version snapshots;
 * persistent LearningObject behavior;
 * persistent Version behavior;
 * persistent Audit behavior;
 * persistent reload;
 * persistent end-to-end lifecycle.
+
+Version snapshot semantic correctness is now covered.
 
 ---
 
@@ -115,9 +132,11 @@ The verified production persistence implementation reaches only the Anchor model
 
 The next action is:
 
-**IA-01 — Domain Semantic Alignment**
+**IA-02 — Contract and Lifecycle Alignment**
 
-The immediate purpose is to reconcile the domain representation with the normative LearningObject / KnowledgeStatement / Version model before production persistence is materialized.
+IA-01 — Domain Semantic Alignment is complete.
+
+The immediate purpose of IA-02 is to resolve remaining repository/lifecycle contract ambiguities before production persistence is materialized.
 
 ---
 
@@ -151,4 +170,4 @@ The Bootstrap Pack MUST remain internally consistent after such an update.
 
 ### Frozen Resume Point
 
-**RESUME AT: IA-01 DOMAIN SEMANTIC ALIGNMENT**
+**RESUME AT: IA-02 CONTRACT AND LIFECYCLE ALIGNMENT**
