@@ -801,7 +801,15 @@ Audit Record
 
 Primary Owner:
 
-UNRESOLVED
+ELR Security and Access Model Specification 1.0.0
+
+Location:
+
+docs/06_System/ELR Security and Access Model Specification 1.0.0.txt
+
+Implementation Owner:
+
+ELR Security Implementation Specification 0.1.0
 
 Implementation Evidence:
 
@@ -829,18 +837,29 @@ YES
 
 Current Status:
 
-DOCUMENTATION GAP
+RESOLVED
 
 Notes:
 
-The current implementation defines AuditRecord as an immutable trace of a
-significant operation.
+Audit Record represents an immutable trace of a significant operational
+action or state-changing operation.
 
-The concept has not yet been assigned a clear normative specification owner.
+The Security and Access Model Specification defines the conceptual
+responsibility for audit and traceability.
+
+The Security Implementation Specification defines the implementation
+integration of AuditRecord.
+
+Audit Record is operational history.
+
+It is not a LearningObject Version and it does not redefine Domain Model
+semantics.
 
 Required Action:
 
-Determine the authoritative document owner for Audit Record during M0.3.
+No ownership action required.
+
+Implementation alignment remains a later system verification task.
 
 
 --------------------------------------------------------------------------------
@@ -859,6 +878,10 @@ Location:
 
 docs/06_System/ELR Event Model Specification 1.0.0.txt
 
+Implementation Owner:
+
+ELR Event Implementation Specification 0.1.0
+
 Domain Role:
 
 Historical integration fact
@@ -873,29 +896,32 @@ NO
 
 Persistence:
 
-EVENT PERSISTENCE TO BE DISTINGUISHED FROM EXTERNAL PUBLICATION
+YES, through Transactional Event Record
 
 Current Status:
 
-PARTIAL GAP
+RESOLVED
 
 Notes:
 
-Events represent historical facts.
-
-Events are immutable.
+Events represent immutable historical facts.
 
 Events do not represent persistent knowledge.
 
-The Event Model currently defines publication and consumption but does not
-fully distinguish transactional event persistence from external event
-publication.
+The Event Model Specification defines the semantic meaning and lifecycle
+of ELR Events.
 
+The Event Implementation Specification defines the technology-facing
+persistence and publication implementation.
+
+Transactional Event Record persistence and external event publication are
+distinct concerns.
 
 Required Action:
 
-Extend the Event Model to define the Transactional Event Record boundary
-without coupling the Domain Model to a specific messaging technology.
+No ownership action required.
+
+The remaining work is specification propagation and implementation alignment.
 
 
 --------------------------------------------------------------------------------
@@ -908,11 +934,19 @@ Transactional Event Record
 
 Primary Owner:
 
-CURRENTLY UNRESOLVED BETWEEN EVENT MODEL AND PERSISTENCE/SYSTEM MODEL
+ELR Event Implementation Specification 0.1.0
+
+Location:
+
+docs/06_System/ELR Event Implementation Specification 0.1.0.txt
+
+Normative Conceptual Context:
+
+ELR Event Model Specification 1.0.0
 
 Domain Role:
 
-Durable transactional record of a domain fact
+Durable transactional record of a domain event
 
 Autonomous Identity:
 
@@ -928,15 +962,28 @@ YES
 
 Current Status:
 
-NEW CONSOLIDATED CONCEPT / OWNER TO BE FORMALIZED
+RESOLVED
 
 Notes:
 
-The Transactional Event Record is persisted within the same transaction as
-the associated domain mutation, Version and Audit Record.
+Transactional Event Record is the durable persistence representation of an
+ELR Event within the transactional boundary.
+
+It is created as part of the same transaction as the associated domain
+mutation.
 
 External event publication occurs after transactional persistence and is a
 separate concern.
+
+Transactional Event Record is not a LearningObject Version and is not a
+Domain Model entity.
+
+Required Action:
+
+No ownership action required.
+
+Future implementation work must preserve the distinction between
+transactional event persistence and external event publication.
 
 
 --------------------------------------------------------------------------------
