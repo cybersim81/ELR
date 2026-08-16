@@ -766,7 +766,7 @@ YES
 
 Current Status:
 
-CONSISTENT WITH VERSIONING MODEL; MATRIX REQUIRES PROPAGATION UPDATE
+CONSISTENT
 
 Notes:
 
@@ -777,20 +777,18 @@ Version itself is immutable.
 The current Versioning Model defines LearningObject as the primary unit of
 knowledge versioning.
 
-It does not autonomously version Knowledge Statement or Anchor.
+It does not autonomously version KnowledgeStatement or Anchor.
 
 The Versioning Model also distinguishes LearningObject content versioning
 from taxonomy, schema and API contract versioning.
 
 Required Action:
 
-Update the Authority Matrix so that the current Versioning Model is reflected
-accurately.
+No specification ownership action remains for the Versioning Model
+propagation covered by M0.3.2.
 
-Any remaining conflict concerning Anchor identity or aggregate membership
-must be tracked under the Anchor concept and resolved at the authoritative
-Domain Model level.
-
+Any future implementation discrepancy must be recorded separately as an
+implementation alignment finding.
 
 --------------------------------------------------------------------------------
 5.12 Audit Record
@@ -1055,7 +1053,6 @@ LearningObject Version
 6.3 Aggregate Members
 --------------------------------------------------------------------------------
 
-* Anchor
 * KnowledgeStatement
 * Examples
 * Notes
@@ -1065,6 +1062,16 @@ These evolve through LearningObject Versioning.
 
 They are not independently versioned Domain Entities merely because their
 values may be represented separately in persistence.
+
+Anchor is not an aggregate member.
+
+Anchor is an associated shared linguistic reference outside the
+LearningObject aggregate boundary.
+
+Anchor may be associated with multiple independent Learning Objects and has
+its own persistent identity.
+
+Anchor is not independently versioned as a LearningObject Version.
 
 
 --------------------------------------------------------------------------------
@@ -1277,69 +1284,67 @@ must be updated to reflect the consolidated ownership and versioning model.
 # 9. Documents Requiring Revision
 ================================================================================
 
-The following documents require revision as part of specification
-propagation.
+The following documents were identified as requiring revision as part of
+M0.3.2 specification propagation.
 
-
-Priority 1 — Mandatory
-
+The propagation work for the following documents has now been completed and
+verified:
 
 1.
 
 docs/04_Data_and_Evidence/ELR Persistence Model Specification 1.0.0.txt
 
-Reason:
+Status:
 
-KnowledgeStatement persistence representation conflicts with consolidated
-aggregate semantics.
-
+PROPAGATED / VERIFIED
 
 2.
 
 docs/04_Data_and_Evidence/Data Model Specification 1.0.0.txt
 
-Reason:
+Status:
 
-KnowledgeStatement is modelled as an autonomous persistent entity.
-
+PROPAGATED / VERIFIED
 
 3.
 
 docs/04_Data_and_Evidence/ELR Versioning Model Specification 1.0.0.txt
 
-Reason:
+Status:
 
-Anchor and KnowledgeStatement are listed as independently versioned entities.
+PROPAGATED / VERIFIED
 
-The specification must also explicitly distinguish LearningObject
-versioning from taxonomy, schema and API contract versioning.
+The following propagation work remains:
 
-
-Priority 2 — Architecture Propagation
-
+Priority 1 — Architecture Propagation
 
 4.
 
 docs/01_Architecture/ELR Architecture Consistency Matrix 1.1.0.txt
 
+Status:
+
+PENDING
+
 Reason:
 
-The newly confirmed ownership resolutions and specification conflicts must be
-reflected in the architecture consistency view.
-
+The consolidated ownership and versioning decisions must be reflected in the
+architecture consistency view.
 
 5.
 
 docs/01_Architecture/ELR Architecture Decision Log 1.0.0.txt
 
+Status:
+
+REVIEW REQUIRED
+
 Reason:
 
-M0.2 decisions and any new architectural decisions requiring formal ADR
-treatment must be recorded there.
+Review whether the confirmed propagation decisions require any additional
+formal architectural decision record.
 
-
-Priority 3 — Verification
-
+Priority 2 — Verification
 
 6.
 
@@ -1353,35 +1358,44 @@ Relevant areas include:
 * app/application/
 * tests/
 
+Status:
+
+PENDING
+
 Reason:
 
 After specification propagation, implementation must be compared against the
 consolidated normative model.
 
-
 No new Audit or Transactional Event specification is required as part of this
 propagation.
+
 
 
 ================================================================================
 # 10. Documents Currently Considered Consistent
 ================================================================================
 
-The following areas are not currently identified as requiring modification
-for the M0.2 consolidation decisions:
-
+The following documents have been reviewed against the consolidated
+M0.3.2 specification direction and are currently considered consistent with
+respect to the confirmed propagation decisions:
 
 * ELR Lifecycle Specification 1.0.0
 * ELR Evidence Model Specification 1.0.1
 * ELR Domain Model Specification 1.1.0
 * ELR Anchor Specification 1.1.0
 * ELR Learning Object Specification 1.0.0
-
+* ELR Data Model Specification 1.0.0
+* ELR Persistence Model Specification 1.0.0
+* ELR Versioning Model Specification 1.0.0
 
 This status does not mean these documents are globally complete.
 
-It means that no M0.2 contradiction has currently been established against
-their principal responsibilities.
+It means that no unresolved M0.3.2 specification contradiction has currently
+been established against their principal responsibilities.
+
+Remaining M0.3.2 work concerns architecture propagation and subsequent
+implementation alignment.
 
 
 ================================================================================
@@ -1476,12 +1490,17 @@ they should not define the model independently.
 # 13. M0.3 Status
 ================================================================================
 
+================================================================================
+
+# 13. M0.3 Status
+
+================================================================================
+
 M0.3.1 — Specification Authority Audit
 
 STATUS:
 
 COMPLETE
-
 
 Confirmed:
 
@@ -1490,7 +1509,7 @@ Confirmed:
 * LearningObject ownership;
 * Lifecycle ownership;
 * KnowledgeStatement aggregate role;
-* Anchor aggregate role;
+* Anchor authority and boundary;
 * Taxonomy ownership;
 * Learning State ownership;
 * Mastery State ownership;
@@ -1500,29 +1519,29 @@ Confirmed:
 * Transactional Event Record ownership;
 * Audit Record ownership.
 
-
-Open:
-
-* propagation of confirmed domain/persistence/versioning conflicts;
-* propagation of consolidated ownership into architecture consistency
-  documentation;
-* implementation alignment after specification propagation.
-
-
 M0.3.1 overall:
 
-COMPLETE — READY FOR SPECIFICATION PROPAGATION
-
+COMPLETE
 
 M0.3.2 — Specification Propagation
 
 STATUS:
 
-NEXT
+IN PROGRESS
 
+Completed propagation:
 
-M0.3.2 will propagate the confirmed authority and domain decisions into the
-affected specifications.
+* ELR Data Model Specification;
+* ELR Persistence Model Specification;
+* ELR Versioning Model Specification;
+* Anchor boundary and versioning interpretation across the verified
+  specification chain.
+
+Remaining propagation:
+
+* ELR Architecture Consistency Matrix;
+* review of ELR Architecture Decision Log;
+* final specification authority audit.
 
 M0.3.2 is an implementation-independent documentation consolidation phase.
 
@@ -1530,39 +1549,39 @@ No implementation change should be made solely to compensate for a
 specification conflict before the affected specifications have been
 reconciled.
 
+
 ================================================================================
 # 14. Next Work Package
 ================================================================================
 
-Next:
+Current:
 
 M0.3.2 — Specification Propagation
 
-
-M0.3.2 shall:
+Completed:
 
 1. Update the ELR Persistence Model Specification.
-
 2. Update the Data Model Specification.
-
 3. Update the ELR Versioning Model Specification.
+
+Remaining:
 
 4. Update the Architecture Consistency Matrix.
 
-5. Update the Architecture Decision Log where a formal architectural decision
-   is required.
+5. Review the Architecture Decision Log and determine whether any formal
+   architectural decision requires propagation or additional ADR treatment.
 
-6. Re-run the specification authority audit after propagation.
+6. Re-run the specification authority audit after the remaining propagation.
 
 7. Compare the resulting normative model against the implementation baseline.
 
 8. Record implementation deviations separately from specification conflicts.
 
-
 Completion of M0.3.2 does not imply implementation completion.
 
 It establishes a consolidated normative specification baseline from which
 implementation alignment can proceed.
+
 
 
 ================================================================================
