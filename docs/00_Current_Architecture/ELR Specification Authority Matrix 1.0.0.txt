@@ -1127,15 +1127,28 @@ Concept:
 
 KnowledgeStatement Persistence
 
-Problem:
+Status:
 
-Data and Persistence specifications model KnowledgeStatement as an
-independent persistent entity.
+RESOLVED
 
-Required Resolution:
+Resolution:
 
-Represent KnowledgeStatement as part of LearningObject persistence
+The ELR Data Model Specification and ELR Persistence Model Specification
+now represent KnowledgeStatement as part of the LearningObject persistence
 representation.
+
+KnowledgeStatement does not constitute an independently persisted domain
+entity.
+
+It does not possess an independent repository or autonomous persistent
+lifecycle.
+
+Its persistence is subordinate to the owning LearningObject and its
+versioned representation.
+
+The previous cross-specification inconsistency is therefore closed.
+
+No further specification propagation action is required for this conflict.
 
 
 CONFLICT-002
@@ -1144,16 +1157,31 @@ Concept:
 
 KnowledgeStatement Versioning
 
-Problem:
+Status:
 
-Versioning Model lists KnowledgeStatement as independently versioned.
+RESOLVED
 
-Required Resolution:
+Resolution:
 
-Remove KnowledgeStatement from autonomous Versioned Entities.
+The ELR Versioning Model Specification now defines LearningObject as the
+primary unit of knowledge versioning.
+
+KnowledgeStatement is not an independently versioned Domain Entity.
+
+Changes to KnowledgeStatement are represented through evolution of the
+owning LearningObject and its immutable Versions.
+
+KnowledgeStatement therefore does not possess an autonomous version history
+independent of the LearningObject.
+
+The previous cross-specification inconsistency is therefore closed.
+
+No further specification propagation action is required for this conflict.
 
 
-CONFLICT-003 
+
+CONFLICT-003
+
 Concept:
 
 Anchor Boundary / Versioning
