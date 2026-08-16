@@ -26,18 +26,17 @@ Current implementation includes:
 
 * stable `id`;
 * `anchor_id`;
-* `statement: str`;
+* explicit immutable `KnowledgeStatement` aggregate member;
 * `category_id`;
-* examples;
-* notes;
 * lifecycle `state`;
-* mutable `version: int`.
+* examples;
+* notes.
+
+Mutable Version state is no longer stored directly on LearningObject.
 
 Lifecycle transition behavior is implemented.
 
-The representation of `statement` and the version semantics are not yet aligned with the consolidated normative baseline.
-
-**Status: IMPLEMENTED / PARTIALLY NON-CONFORMANT**
+**Status: IMPLEMENTED / DOMAIN-ALIGNED**
 
 #### KnowledgeStatement
 
@@ -45,15 +44,19 @@ Present under:
 
 `app/domain/entities/knowledge_statement.py`
 
-The object is immutable.
+The object is immutable and represents the semantic value of a KnowledgeStatement.
 
-It currently has its own `id` and `created_at`.
+It has no autonomous:
 
-No autonomous KnowledgeStatement repository was found.
+* identity;
+* lifecycle;
+* repository;
+* versioning boundary.
 
-Its relationship to LearningObject nevertheless requires alignment because LearningObject currently stores `statement: str` rather than an explicit aggregate-member representation.
+It is owned by the LearningObject aggregate.
 
-**Status: IMPLEMENTED / SEMANTIC ALIGNMENT REQUIRED**
+**Status: IMPLEMENTED / DOMAIN-ALIGNED**
+
 
 #### Version
 
@@ -61,17 +64,15 @@ Present under:
 
 `app/domain/entities/version.py`
 
-The object is immutable.
+The object is immutable and contains:
 
-It currently contains:
-
-* `entity_id`;
+* `learning_object_id`;
 * `number`;
 * `snapshot`.
 
-The `entity_id` boundary is generic rather than explicitly LearningObject-specific.
+Version identity is explicitly scoped to LearningObject history.
 
-**Status: IMPLEMENTED / VERSIONING ALIGNMENT REQUIRED**
+**Status: IMPLEMENTED / DOMAIN-ALIGNED**
 
 #### Anchor
 
@@ -107,7 +108,9 @@ The concrete meaning and authorization of physical deletion require lifecycle/pe
 
 #### VersionRepository
 
-Present.
+Present under:
+
+`app/domain/repositories/version_repository.py`
 
 Current contract uses:
 
@@ -115,11 +118,11 @@ Current contract uses:
 
 and:
 
-`get_history(entity_id)`
+`get_history(learning_object_id)`
 
-The generic `entity_id` semantics are propagated into the in-memory implementation.
+The in-memory implementation follows the same LearningObject-centered boundary.
 
-**Status: IMPLEMENTED / NON-CONFORMANT VERSIONING BOUNDARY**
+**Status: IMPLEMENTED / DOMAIN-ALIGNED**
 
 #### AnchorRepository
 
@@ -143,13 +146,15 @@ The service implements:
 
 * LearningObject creation;
 * lifecycle progression;
-* Version creation on approval;
+* Version creation;
+* immutable Version history retrieval;
+* Version snapshot creation;
 * AuditRecord creation;
-* Version history retrieval.
+* knowledge update through new Version creation.
 
-The lifecycle/application workflow is covered by tests.
+The application workflow is covered by tests.
 
-**Status: IMPLEMENTED / PRELIMINARILY CONFORMANT**
+**Status: IMPLEMENTED / IA-01 ALIGNED**
 
 ### Persistence Layer
 
@@ -196,11 +201,9 @@ No persistent database round-trip test was identified for LearningObject, Versio
 * `InMemoryVersionRepository`;
 * `InMemoryAuditRepository`.
 
-The Version repository stores Version objects and retrieves history by generic `entity_id`.
+The Version repository stores Version objects and retrieves history by `learning_object_id`.
 
-This confirms that the generic Version boundary is implemented in the current test infrastructure, not merely declared in an interface.
-
-**Status: IMPLEMENTED / NON-CONFORMANT VERSIONING BOUNDARY**
+**Status: IMPLEMENTED / IA-01 ALIGNED**
 
 ### Current Implementation Boundary
 
