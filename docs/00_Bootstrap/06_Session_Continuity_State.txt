@@ -6,7 +6,7 @@
 
 This document freezes the current ELR working state for transfer to a future session.
 
-It is the final continuity checkpoint of the current Bootstrap Pack.
+It is the continuity checkpoint of the current Bootstrap Pack.
 
 A future session MUST use this state together with the complete Bootstrap Pack and the authoritative repository documents.
 
@@ -18,7 +18,7 @@ A future session MUST use this state together with the complete Bootstrap Pack a
 
 `M0.3.2 Specification Propagation: COMPLETE`
 
-The normative baseline has been consolidated sufficiently to begin implementation alignment.
+The normative baseline has been consolidated sufficiently to proceed with implementation alignment.
 
 The current task is no longer broad architectural discovery.
 
@@ -43,9 +43,11 @@ Production persistence is only partially materialized.
 
 The persistent end-to-end path is not yet implemented.
 
-The first decisive implementation gate is:
+The decisive end-to-end gate remains:
 
 `E2E-GATE-01 — Persistent LearningObject Lifecycle`
+
+E2E-GATE-01 is a later gate and is not the current implementation work package.
 
 ---
 
@@ -68,14 +70,26 @@ The following findings have been resolved:
 
 The verified implementation now has:
 
-* immutable KnowledgeStatement aggregate-member semantics;
+* immutable KnowledgeStatement aggregate-member/value semantics;
 * LearningObject-centered Version identity;
 * LearningObject-centered Version history;
 * immutable Version snapshots;
-* aligned application and repository contracts;
+* aligned application and repository Version contracts;
 * semantic Version snapshot test coverage.
 
 IA-01 does not include production persistence implementation.
+
+---
+
+## Current Implementation Alignment Gate
+
+The current gate is:
+
+`IA-02 — CONTRACT AND LIFECYCLE ALIGNMENT`
+
+IA-01 is closed.
+
+IA-02 must resolve remaining repository and lifecycle contract ambiguities before production persistence is materialized.
 
 ---
 
@@ -85,7 +99,7 @@ The following remain open for subsequent implementation phases:
 
 * `IA-009` — LearningObject delete capability.
 
-Production persistence gaps remain separately tracked.
+IA-009 must be resolved against the normative lifecycle and repository boundaries before the production repository contract is treated as final.
 
 ---
 
@@ -94,13 +108,15 @@ Production persistence gaps remain separately tracked.
 Production persistence is missing or unverified for:
 
 * LearningObject;
-* KnowledgeStatement representation;
+* KnowledgeStatement representation within persistent LearningObject state;
 * Version;
 * AuditRecord;
 * concrete production repositories;
 * persistent database round-trip;
 * persistent Version history;
 * persistent Audit history.
+
+These gaps belong to the post-IA-02 persistence phases.
 
 ---
 
@@ -114,7 +130,7 @@ The current tests do not demonstrate:
 * persistent reload;
 * persistent end-to-end lifecycle.
 
-Version snapshot semantic correctness is now covered.
+Version snapshot semantic correctness is now covered by application tests.
 
 ---
 
@@ -124,7 +140,33 @@ The verified implementation currently reaches:
 
 `Domain → Application → In-Memory Repository → Tests`
 
-The verified production persistence implementation reaches only the Anchor model boundary.
+The verified production persistence implementation currently reaches the Anchor model boundary.
+
+No complete persistent LearningObject / Version / Audit path is currently established.
+
+---
+
+## Lifecycle Boundary
+
+The normative LearningObject lifecycle remains:
+
+`Candidate → Proposed → Active → Retired`
+
+`Reviewed`, `Approved`, and `Rejected` are Change Proposal review decisions and are not LearningObject lifecycle states.
+
+The lifecycle state must not be extended merely to represent modification or review outcomes.
+
+---
+
+## Version Boundary
+
+LearningObject is the primary unit of knowledge versioning.
+
+KnowledgeStatement remains an aggregate member/value.
+
+Version history remains explicitly LearningObject-centered.
+
+Audit history remains operational history and must not replace immutable Version history.
 
 ---
 
@@ -132,26 +174,34 @@ The verified production persistence implementation reaches only the Anchor model
 
 The next action is:
 
-**IA-02 — Contract and Lifecycle Alignment**
+**IA-02 — CONTRACT AND LIFECYCLE ALIGNMENT**
 
-IA-01 — Domain Semantic Alignment is complete.
+The immediate purpose of IA-02 is to resolve remaining repository and lifecycle contract ambiguities before production persistence is materialized.
 
-The immediate purpose of IA-02 is to resolve remaining repository/lifecycle contract ambiguities before production persistence is materialized.
+The expected sequence after IA-02 is:
+
+`IA-03 Persistence Model`
+→ `IA-04 Repository Integration`
+→ `IA-05 Database Integration`
+→ `IA-06 Persistence Test Conformance`
+→ `IA-07 E2E-GATE-01`
+→ `IA-08 Implementation Conformance`
 
 ---
 
 ## Explicit Do-Not-Reopen Rule
 
-Unless new repository evidence reveals a direct contradiction, the next session MUST NOT restart:
+Unless new authoritative repository evidence reveals a direct contradiction, the next session MUST NOT restart:
 
-* the specification propagation review;
-* the complete implementation inventory;
-* the E2E gap discovery;
-* the previously consolidated architectural decisions.
+* specification propagation review;
+* complete implementation inventory;
+* E2E gap discovery;
+* IA-01 Domain Semantic Alignment;
+* previously consolidated architectural decisions.
 
 These activities are already represented in this Bootstrap Pack.
 
-If a contradiction is discovered, identify the authoritative source first and update the Bootstrap Pack only after the contradiction has been resolved.
+If a contradiction is discovered, identify the authoritative source first and update the Bootstrap Pack only after the contradiction has been established and resolved.
 
 ---
 
@@ -168,6 +218,12 @@ At the end of the next session, this document MUST be updated if any of the foll
 
 The Bootstrap Pack MUST remain internally consistent after such an update.
 
-### Frozen Resume Point
+---
+
+## Frozen Resume Point
 
 **RESUME AT: IA-02 CONTRACT AND LIFECYCLE ALIGNMENT**
+
+**IA-01 DOMAIN SEMANTIC ALIGNMENT: COMPLETE**
+
+**E2E-GATE-01: PENDING — LATER IMPLEMENTATION GATE**
