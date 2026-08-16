@@ -196,23 +196,60 @@ Ogni cambiamento deve essere riconducibile a un processo autorizzato.
 
 
 ================================================================================
-3. Versioned Entities
+3. Versioned Objects and Structures
 ================================================================================
 
-Le entità che possono avere versionamento includono:
+Il versionamento del Repository distingue tra evoluzione del contenuto del
+Learning Object ed evoluzione di strutture esterne al contenuto.
 
+--------------------------------------------------------------------------------
+3.1 Learning Object Content Versioning
+--------------------------------------------------------------------------------
 
-- Learning Object;
+Il Learning Object è l'unità primaria di versionamento della conoscenza.
 
-- Anchor;
+Una modifica a:
 
 - Knowledge Statement;
+- Anchor;
+- rappresentazione interna del Learning Object;
 
-- Knowledge Category;
+viene gestita attraverso una nuova versione del Learning Object quando la
+conoscenza rimane la stessa identità concettuale.
 
-- Taxonomy Elements;
+Knowledge Statement e Anchor non sono entità autonomamente versionate.
 
-- Repository Schema.
+--------------------------------------------------------------------------------
+3.2 Taxonomy Versioning
+--------------------------------------------------------------------------------
+
+La tassonomia può evolvere attraverso proprie versioni.
+
+La versione della tassonomia è distinta dalla versione del Learning Object.
+
+Una modifica a una Knowledge Category o ad altro elemento tassonomico non
+costituisce automaticamente una nuova versione del Learning Object.
+
+--------------------------------------------------------------------------------
+3.3 Repository Schema Versioning
+--------------------------------------------------------------------------------
+
+Il Repository Schema può evolvere attraverso versioni dello schema.
+
+Lo schema descrive la struttura dei dati persistenti e non costituisce una
+versione della conoscenza contenuta nel Repository.
+
+--------------------------------------------------------------------------------
+3.4 API Contract Versioning
+--------------------------------------------------------------------------------
+
+I contratti API possono avere una propria versione secondo le specifiche di
+sistema.
+
+L'API Contract Versioning è distinto dal Learning Object Versioning,
+Taxonomy Versioning e Repository Schema Versioning.
+
+L'API non ridefinisce la semantica del Domain Model.
 
 
 ================================================================================
@@ -249,44 +286,47 @@ appartiene a una specifica versione del Learning Object.
 
 Il modello ELR distingue:
 
-
 --------------------------------------------------------------------------------
 Minor Change
 --------------------------------------------------------------------------------
 
-Modifica della rappresentazione senza variazione della conoscenza.
-
+Modifica della rappresentazione senza variazione della conoscenza
+fondamentale.
 
 Esempi:
 
-
 - miglioramento linguistico del Knowledge Statement;
+- chiarimento di un esempio;
+- modifica della formulazione dell'Anchor all'interno del Learning Object.
 
-- chiarimento di un esempio.
-
+Quando tali modifiche riguardano il contenuto di un Learning Object, sono
+rappresentate come nuova versione dello stesso Learning Object.
 
 --------------------------------------------------------------------------------
 Major Change
 --------------------------------------------------------------------------------
 
-Modifica significativa della conoscenza rappresentata.
-
+Modifica significativa della conoscenza rappresentata dal Learning Object.
 
 Esempi:
 
-
-- cambiamento dell'Anchor;
-
 - ridefinizione della conoscenza fondamentale;
+- modifica sostanziale della relazione tra Anchor e Knowledge Statement;
+- fusione o ristrutturazione di conoscenze precedenti quando il processo di
+  revisione stabilisce la continuità della stessa identità.
 
-- fusione di conoscenze precedenti.
-
+Il cambiamento dell'Anchor non costituisce di per sé una versione autonoma
+dell'Anchor.
 
 --------------------------------------------------------------------------------
 Structural Change
 --------------------------------------------------------------------------------
 
-Modifica del modello dati o dello schema del Repository.
+Modifica del modello dati, dello schema del Repository o di altre strutture
+tecniche soggette a versionamento.
+
+Le modifiche strutturali sono versionate separatamente dal contenuto dei
+Learning Object.
 
 
 ================================================================================
@@ -343,23 +383,26 @@ La decisione finale appartiene ai processi di revisione.
 7. Version History
 ================================================================================
 
-Ogni entità versionata deve mantenere informazioni sulla propria storia.
+Ogni oggetto o struttura soggetto a versionamento deve mantenere informazioni
+sulla propria storia secondo il relativo modello di versionamento.
 
+Per il Learning Object la storia può includere:
 
-Può includere:
-
-
-- identificativo dell'entità;
-
+- identificativo stabile del Learning Object;
 - numero versione;
-
 - data modifica;
-
 - motivo modifica;
-
 - origine della modifica;
-
 - riferimento alla Change Proposal.
+
+La storia di una versione del Learning Object include l'evoluzione del suo
+contenuto, compresi eventuali cambiamenti al Knowledge Statement e all'Anchor.
+
+Taxonomy Versioning, Repository Schema Versioning e API Contract Versioning
+mantengono storie separate secondo i rispettivi modelli e contratti.
+
+Le storie di questi sistemi non devono essere confuse con la storia delle
+versioni del Learning Object.
 
 
 ================================================================================
@@ -511,10 +554,17 @@ Usare il versioning come misura della conoscenza dell'utente.
 14. Relationship with Other Specifications
 ================================================================================
 
-
 Learning Object Specification:
 
-definisce l'entità versionata.
+definisce il Learning Object come unità di conoscenza e ne definisce
+l'identità e il contenuto soggetto a evoluzione.
+
+
+Domain Model Specification:
+
+definisce i confini dell'aggregate e stabilisce che Anchor e Knowledge
+Statement sono membri del Learning Object e non entità autonomamente
+versionate.
 
 
 KEP Specification:
@@ -524,22 +574,31 @@ produce proposte di cambiamento.
 
 Learning Review:
 
-approva evoluzioni.
+approva evoluzioni della conoscenza.
 
 
 Persistence Model:
 
-conserva la storia.
+definisce come la storia e le rappresentazioni persistenti vengono conservate.
 
 
-Mastery Engine:
+Taxonomy:
 
-gestisce la padronanza indipendentemente.
+definisce la tassonomia e la propria evoluzione indipendentemente dal
+versionamento del Learning Object.
 
 
 Lifecycle Specification:
 
 definisce gli stati di vita delle entità.
+
+
+API Specification:
+
+definisce i contratti API.
+
+Il versionamento dei contratti API è distinto dal versionamento del contenuto
+dei Learning Object.
 
 
 ================================================================================
