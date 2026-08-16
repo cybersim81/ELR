@@ -133,6 +133,14 @@ Domain Model:
 - ELR Taxonomy
 
 
+Persistence and Data Governance:
+
+- ELR Persistence Model Specification
+
+- Data Model Specification
+
+- ELR Versioning Model Specification
+
 
 Process Model:
 
@@ -313,6 +321,12 @@ Una modifica architetturale è considerata coerente quando:
 - gli ADR descrivono motivazioni e conseguenze delle decisioni;
 
 - le Specification descrivono comportamento interno e dettagli operativi;
+
+- le specifiche di Persistence, Data Model e Versioning devono riflettere i
+  confini stabiliti dal Domain Model senza ridefinirli;
+
+- il versionamento del Learning Object deve rimanere distinto dal versionamento
+  della tassonomia, dello schema del Repository e dei contratti API;
 
 - i sistemi derivati dipendono esclusivamente dal repository ELR;
 
