@@ -25,15 +25,23 @@ Each finding must be resolved against the authoritative normative corpus before 
 
 **Area:** Domain Model
 
-**Finding:** LearningObject currently stores `statement` as `str`.
+**Finding:** LearningObject previously stored `statement` as `str`.
 
-**Normative expectation:** KnowledgeStatement is an aggregate member / knowledge value.
+**Normative expectation:** KnowledgeStatement is an aggregate member / knowledge value of LearningObject and does not constitute an autonomous aggregate.
 
-**Impact:** The implementation does not explicitly represent the normative KnowledgeStatement concept inside the LearningObject aggregate.
+**Resolution:** LearningObject now stores an explicit immutable `KnowledgeStatement` value object. KnowledgeStatement has no autonomous repository, lifecycle, or versioning boundary.
 
-**Status:** `CONFIRMED DEVIATION`
+**Evidence:**
 
-**Required action:** Align the LearningObject representation with the normative KnowledgeStatement semantics without introducing an autonomous KnowledgeStatement aggregate.
+* `app/domain/entities/knowledge_statement.py`
+* `app/domain/entities/learning_object.py`
+* `tests/domain/test_learning_object.py`
+* `tests/application/services/test_learning_object_service.py`
+
+**Status:** `RESOLVED`
+
+**Resolution note:** The implementation now explicitly represents the normative KnowledgeStatement semantics without introducing an autonomous KnowledgeStatement aggregate.
+
 
 ---
 
@@ -41,15 +49,20 @@ Each finding must be resolved against the authoritative normative corpus before 
 
 **Area:** Domain Model
 
-**Finding:** KnowledgeStatement is implemented as an immutable object with its own `id` and `created_at`.
+**Finding:** The previous implementation represented KnowledgeStatement with entity-like identity metadata.
 
-**Counter-evidence:** No autonomous KnowledgeStatement repository was found.
+**Normative expectation:** KnowledgeStatement is an aggregate member / knowledge value and has no autonomous identity, lifecycle, repository, or versioning boundary.
 
-**Impact:** The object is entity-like in representation, although there is no evidence of an autonomous persistence boundary.
+**Resolution:** KnowledgeStatement is now an immutable value object containing only its semantic value fields.
 
-**Status:** `ALIGNMENT REQUIRED`
+**Evidence:**
 
-**Required action:** Verify and align its identity/value semantics with the normative aggregate-member definition.
+* `app/domain/entities/knowledge_statement.py`
+* `tests/domain/test_learning_object.py`
+
+**Status:** `RESOLVED`
+
+**Resolution note:** No autonomous KnowledgeStatement repository or lifecycle exists.
 
 ---
 
@@ -57,15 +70,22 @@ Each finding must be resolved against the authoritative normative corpus before 
 
 **Area:** Domain Model
 
-**Finding:** Version contains a generic `entity_id`.
+**Finding:** Version previously contained a generic `entity_id`.
 
 **Normative expectation:** LearningObject is the primary unit of knowledge versioning.
 
-**Impact:** The current domain type permits a generic versioning interpretation.
+**Resolution:** Version now identifies its owning LearningObject explicitly through `learning_object_id`.
 
-**Status:** `CONFIRMED DEVIATION`
+**Evidence:**
 
-**Required action:** Align Version semantics with LearningObject-centered versioning.
+* `app/domain/entities/version.py`
+* `app/domain/repositories/version_repository.py`
+* `tests/fixtures/repositories.py`
+* `tests/application/services/test_learning_object_service.py`
+
+**Status:** `RESOLVED`
+
+**Resolution note:** The Version boundary is explicitly LearningObject-centered.
 
 ---
 
@@ -85,13 +105,22 @@ Each finding must be resolved against the authoritative normative corpus before 
 
 **Area:** Domain Model
 
-**Finding:** LearningObject contains a mutable `version: int`.
+**Finding:** LearningObject previously contained mutable `version: int`.
 
-**Impact:** The current representation may conflate current aggregate state with immutable Version history.
+**Normative expectation:** Stable LearningObject identity and immutable Version history are distinct concepts.
 
-**Status:** `ALIGNMENT REQUIRED`
+**Resolution:** The mutable version field has been removed from LearningObject. Version numbering is represented by immutable Version records owned by the LearningObject version history.
 
-**Required action:** Reconcile the current version number with the normative Stable Identity + immutable Versions model.
+**Evidence:**
+
+* `app/domain/entities/learning_object.py`
+* `app/domain/entities/version.py`
+* `app/application/services/learning_object_service.py`
+* `tests/application/services/test_learning_object_service.py`
+
+**Status:** `RESOLVED`
+
+**Resolution note:** LearningObject lifecycle state is no longer conflated with Version history.
 
 ---
 
@@ -113,13 +142,25 @@ Each finding must be resolved against the authoritative normative corpus before 
 
 **Area:** Repository Layer
 
-**Finding:** VersionRepository exposes `get_history(entity_id)` and the in-memory implementation filters Version records by generic `entity_id`.
+**Finding:** VersionRepository previously exposed generic `get_history(entity_id)` semantics.
 
-**Impact:** Generic version history is concretely implemented in the test infrastructure.
+**Normative expectation:** Version history belongs to the LearningObject versioning boundary.
 
-**Status:** `CONFIRMED DEVIATION`
+**Resolution:** VersionRepository now exposes:
 
-**Required action:** Restrict Version history semantics to the normative LearningObject versioning boundary.
+`get_history(learning_object_id)`
+
+and the in-memory implementation filters Version records using `learning_object_id`.
+
+**Evidence:**
+
+* `app/domain/repositories/version_repository.py`
+* `tests/fixtures/repositories.py`
+* `app/application/services/learning_object_service.py`
+
+**Status:** `RESOLVED`
+
+**Resolution note:** Generic entity version-history semantics have been removed.
 
 ---
 
@@ -201,13 +242,21 @@ Each finding must be resolved against the authoritative normative corpus before 
 
 **Area:** Application / Versioning
 
-**Finding:** The Version snapshot created by LearningObjectService contains `statement` as a string together with Anchor/category/state data.
+**Finding:** Version snapshots previously inherited the string-based LearningObject statement representation.
 
-**Impact:** The Version snapshot inherits the LearningObject statement-representation deviation.
+**Normative expectation:** Version snapshots preserve the semantic state of the LearningObject, including its KnowledgeStatement value.
 
-**Status:** `CONFIRMED DEVIATION`
+**Resolution:** Version snapshots now represent `statement` structurally with its `text` and `language` values.
 
-**Required action:** Align the snapshot with the corrected LearningObject/KnowledgeStatement semantics.
+**Evidence:**
+
+* `app/application/services/learning_object_service.py`
+* `tests/application/services/test_learning_object_service.py`
+
+**Status:** `RESOLVED`
+
+**Resolution note:** Both initial Version creation and subsequent Version creation use the corrected snapshot representation.
+
 
 ---
 
@@ -215,13 +264,19 @@ Each finding must be resolved against the authoritative normative corpus before 
 
 **Area:** Application / Repository
 
-**Finding:** The application service requests Version history using a LearningObject ID, despite the repository contract remaining generic.
+**Finding:** The application service was LearningObject-centered while the repository abstraction remained generic.
 
-**Impact:** Application behavior is already LearningObject-centered, while the repository abstraction remains generic.
+**Normative expectation:** Application and repository layers must express the same LearningObject-centered Version boundary.
 
-**Status:** `ALIGNMENT REQUIRED`
+**Resolution:** The application service and VersionRepository now both use `learning_object_id` for Version history.
 
-**Required action:** Align the repository contract with the actual normative/application boundary.
+**Evidence:**
+
+* `app/application/services/learning_object_service.py`
+* `app/domain/repositories/version_repository.py`
+* `tests/fixtures/repositories.py`
+
+**Status:** `RESOLVED`
 
 ---
 
@@ -229,11 +284,22 @@ Each finding must be resolved against the authoritative normative corpus before 
 
 **Area:** Tests
 
-**Finding:** Application tests verify that a Version is created and returned from history, but do not verify semantic correctness of its snapshot.
+**Finding:** Existing tests previously verified Version creation without verifying semantic snapshot contents.
 
-**Impact:** Incorrect Version content could pass the current test suite.
+**Resolution:** Application tests now verify:
 
-**Status:** `COVERAGE GAP`
+* Version 1 creation;
+* Version 2 creation;
+* Version numbering;
+* KnowledgeStatement snapshot content;
+* preservation of the previous Version;
+* LearningObject lifecycle state after update.
+
+**Evidence:**
+
+* `tests/application/services/test_learning_object_service.py`
+
+**Status:** `RESOLVED`
 
 ---
 
