@@ -1,0 +1,150 @@
+# 00_Bootstrap_Pack_Index.txt
+
+## Bootstrap Pack — Index
+
+### Purpose
+
+This directory is the session-entry and continuity package for ELR.
+
+The Bootstrap Pack does not replace or supersede the authoritative architecture and specification documents. It records the current consolidated state required to resume work without reconstructing prior session context.
+
+### Mandatory Reading Order
+
+A new session MUST read all documents in this directory before beginning implementation work, architectural reinterpretation, or roadmap changes.
+
+1. `00_Bootstrap_Pack_Index.txt`
+2. `01_Normative_Baseline_State.txt`
+3. `02_Implementation_Baseline_Inventory.txt`
+4. `03_Implementation_Finding_Register.txt`
+5. `04_End_to_End_Gap_Map.txt`
+6. `05_Implementation_Alignment_Roadmap.txt`
+7. `06_Session_Continuity_State.txt`
+8. `07_Session_Prompt.txt`
+
+### Authority Rule
+
+The Bootstrap Pack is a continuity artifact.
+
+It MUST NOT redefine normative architecture.
+
+Normative meaning remains governed by the authoritative specification documents, Authority Matrix, Architecture Consistency Matrix, and applicable Architecture Decision Records.
+
+Where this Pack summarizes a normative decision, the corresponding authoritative document remains the source of truth.
+
+### Current Session State
+
+* Specification Propagation: `M0.3.2 — COMPLETE`
+* Normative baseline: `CONSOLIDATED`
+* Implementation Baseline Inventory: `COMPLETE`
+* End-to-End Gap Map: `COMPLETE`
+* Implementation Alignment: `NEXT`
+* Persistent End-to-End Gate: `PENDING`
+
+### Current Resumption Point
+
+The next work package is:
+
+**Implementation Alignment**
+
+The immediate objective is to reconcile the confirmed implementation deviations with the consolidated normative baseline before implementing the missing persistent end-to-end path.
+
+## Legacy Bootstrap Lineage
+
+The current Bootstrap Pack supersedes the previous session-continuity/bootstrap mechanism while preserving its documentary lineage.
+
+The previous bootstrap baseline consisted of the following four documents under:
+
+`docs/00_Current_Architecture/`
+
+### Legacy Bootstrap Document 1
+
+`ELR Architectural Work State - Handoff 6.4.0.txt`
+
+**Role:** Operational architectural work-state handoff and session-closure checkpoint.
+
+This document recorded the last verified architectural working position, roadmap position, next authorized action, and session-closure conditions.
+
+### Legacy Bootstrap Document 2
+
+`ELR Continuity Package 2.4.0.txt`
+
+**Role:** Session continuity and architectural recovery package.
+
+This document established the previous mechanism for reconstructing ELR working state across separate sessions without relying on conversational memory.
+
+### Legacy Bootstrap Document 3
+
+`ELR Implementation Baseline Assessment 1.0.0.txt`
+
+**Role:** Repository implementation baseline assessment.
+
+This document established the previous implementation-baseline view used to assess the state of the repository implementation.
+
+### Legacy Bootstrap Document 4
+
+`ELR Implementation Status 1.0.0.txt`
+
+**Role:** Current implementation-state record.
+
+This document recorded the implementation status used by the previous continuity/bootstrap process.
+
+### Lineage Rule
+
+These four documents are retained in `docs/00_Current_Architecture/` as historical bootstrap material.
+
+They are not deleted, rewritten, or silently treated as if they had never existed.
+
+The current Bootstrap Pack in:
+
+`docs/00_Bootstrap/`
+
+is the successor continuity mechanism.
+
+Its documents consolidate and supersede the session-state, implementation-baseline, finding, E2E, roadmap, and continuity functions previously distributed across the legacy bootstrap set.
+
+### Authority Relationship
+
+The legacy bootstrap documents are historical continuity sources.
+
+They are NOT normative authority.
+
+They MUST NOT override:
+
+* Specification Authority Matrix;
+* Architecture Consistency Matrix;
+* Architecture Decision Log;
+* authoritative Domain Model specifications;
+* authoritative Anchor specifications;
+* authoritative Data and Evidence specifications;
+* other applicable normative specifications.
+
+### Bootstrap Evolution
+
+The continuity mechanism has therefore evolved as follows:
+
+```text
+Legacy Bootstrap Set
+        │
+        ├── Architectural Work State / Handoff
+        ├── Continuity Package
+        ├── Implementation Baseline Assessment
+        └── Implementation Status
+        │
+        ▼
+Normative Consolidation
+        │
+        ▼
+Implementation Baseline Inventory
+        │
+        ▼
+E2E Gap Map
+        │
+        ▼
+Current Bootstrap Pack
+        │
+        └── docs/00_Bootstrap/
+```
+
+The current Bootstrap Pack is therefore not an unrelated replacement.
+
+It is the consolidated successor to the previous four-document continuity mechanism.
