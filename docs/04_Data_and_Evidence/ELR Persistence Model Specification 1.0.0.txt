@@ -447,7 +447,22 @@ appartenenti a User differenti.
 Learning Object → Knowledge Statement
 --------------------------------------------------------------------------------
 
-Ogni Learning Object conserva il Knowledge Statement approvato.
+Il Knowledge Statement appartiene al Learning Object come componente interna
+del suo aggregate.
+
+Ogni Learning Object conserva il proprio Knowledge Statement approvato.
+
+La relazione non rappresenta una relazione tra due entità persistenti
+autonome.
+
+Il Knowledge Statement non possiede:
+
+- identità persistente indipendente;
+- ciclo di vita autonomo;
+- versionamento indipendente.
+
+Qualsiasi modifica sostanziale del Knowledge Statement deve essere gestita
+attraverso il ciclo di vita e il versionamento del Learning Object.
 
 
 ================================================================================
