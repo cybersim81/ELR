@@ -103,7 +103,7 @@ Core Model
 
 ---
 
-* ELR Domain Model Specification 1.0.0
+* ELR Domain Model Specification 1.1.0
 
 * ELR Taxonomy 0.4
 
