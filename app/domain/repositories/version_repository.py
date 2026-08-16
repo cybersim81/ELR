@@ -9,14 +9,13 @@ class VersionRepository(ABC):
     @abstractmethod
     def save(
         self,
-        version: Version
+        version: Version,
     ) -> None:
         pass
-
 
     @abstractmethod
     def get_history(
         self,
-        entity_id: UUID
+        learning_object_id: UUID,
     ) -> list[Version]:
         pass
