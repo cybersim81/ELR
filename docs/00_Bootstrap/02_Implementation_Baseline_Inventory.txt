@@ -57,7 +57,6 @@ It is owned by the LearningObject aggregate.
 
 **Status: IMPLEMENTED / DOMAIN-ALIGNED**
 
-
 #### Version
 
 Present under:
@@ -93,6 +92,56 @@ Present under:
 Audit records are immutable operational-history records.
 
 **Status: IMPLEMENTED / PRELIMINARILY CONFORMANT**
+
+### IA-01 Implementation Alignment Evidence
+
+#### IA-001 — LearningObject Statement Representation
+
+LearningObject uses an explicit immutable KnowledgeStatement aggregate member.
+
+**Status: RESOLVED**
+
+#### IA-002 — KnowledgeStatement Identity Semantics
+
+KnowledgeStatement is immutable and has no autonomous identity, lifecycle, repository, or versioning boundary.
+
+**Status: RESOLVED**
+
+#### IA-003 — Generic Version Entity
+
+Version uses `learning_object_id` rather than a generic `entity_id`.
+
+**Status: RESOLVED**
+
+#### IA-005 — LearningObject Version Number
+
+LearningObject no longer stores mutable Version state.
+
+**Status: RESOLVED**
+
+#### IA-010 — Generic VersionRepository History
+
+Version history is retrieved using `learning_object_id`.
+
+**Status: RESOLVED**
+
+#### IA-017 — Version Snapshot Representation
+
+Version snapshots contain the structured KnowledgeStatement representation.
+
+**Status: RESOLVED**
+
+#### IA-018 — Application / Repository Version Boundary
+
+Application and repository layers use the same LearningObject-centered Version boundary.
+
+**Status: RESOLVED**
+
+#### IA-019 — Version Snapshot Test Coverage
+
+Tests verify Version creation, Version history, Version numbering, snapshot contents, and preservation of previous Versions.
+
+**Status: RESOLVED**
 
 ### Domain Repository Layer
 
@@ -224,6 +273,22 @@ The current ELR implementation contains:
 **DOMAIN/APPLICATION SKELETON: PRESENT**
 
 **IN-MEMORY VERTICAL SLICE: PRESENT AND TESTED**
+
+**IA-001: RESOLVED**
+
+**IA-002: RESOLVED**
+
+**IA-003: RESOLVED**
+
+**IA-005: RESOLVED**
+
+**IA-010: RESOLVED**
+
+**IA-017: RESOLVED**
+
+**IA-018: RESOLVED**
+
+**IA-019: RESOLVED**
 
 **IA-01 DOMAIN SEMANTIC ALIGNMENT: COMPLETE**
 
