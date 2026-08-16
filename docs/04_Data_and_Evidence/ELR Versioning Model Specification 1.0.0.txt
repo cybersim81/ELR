@@ -1,10 +1,10 @@
 ================================================================================
-English Learning Repository (ELR)
+Educational Learning Repository (ELR)
 
 ELR Versioning Model Specification
 
 Version: 1.0.0
-Status: DRAFT
+Status: CONSOLIDATED
 ================================================================================
 
 
@@ -23,7 +23,7 @@ Document Version:
 
 Status:
 
-DRAFT
+CONSOLIDATED
 
 
 Dependencies:
@@ -208,16 +208,23 @@ Learning Object ed evoluzione di strutture esterne al contenuto.
 
 Il Learning Object è l'unità primaria di versionamento della conoscenza.
 
-Una modifica a:
+Una modifica al Knowledge Statement o alla rappresentazione interna del
+Learning Object viene gestita attraverso una nuova versione del Learning
+Object quando la conoscenza mantiene la stessa identità concettuale.
 
-- Knowledge Statement;
-- Anchor;
-- rappresentazione interna del Learning Object;
+Una modifica all'associazione tra Learning Object e Anchor può essere
+rappresentata attraverso una nuova versione del Learning Object quando la
+modifica riguarda la rappresentazione della stessa conoscenza.
 
-viene gestita attraverso una nuova versione del Learning Object quando la
-conoscenza rimane la stessa identità concettuale.
+L'Anchor è associato al Learning Object e può essere condiviso da più Learning
+Object indipendenti.
 
-Knowledge Statement e Anchor non sono entità autonomamente versionate.
+Una modifica dell'Anchor come entità condivisa non costituisce
+automaticamente una nuova versione del Learning Object.
+
+Knowledge Statement e Anchor non sono entità autonomamente versionate dal
+Learning Object Versioning Model.
+
 
 --------------------------------------------------------------------------------
 3.2 Taxonomy Versioning
@@ -388,15 +395,19 @@ sulla propria storia secondo il relativo modello di versionamento.
 
 Per il Learning Object la storia può includere:
 
-- identificativo stabile del Learning Object;
-- numero versione;
-- data modifica;
-- motivo modifica;
-- origine della modifica;
-- riferimento alla Change Proposal.
+* identificativo stabile del Learning Object;
+* numero versione;
+* data modifica;
+* motivo modifica;
+* origine della modifica;
+* riferimento alla Change Proposal.
 
 La storia di una versione del Learning Object include l'evoluzione del suo
-contenuto, compresi eventuali cambiamenti al Knowledge Statement e all'Anchor.
+contenuto e delle sue relazioni persistenti, compresi eventuali cambiamenti
+al Knowledge Statement o all'associazione con un Anchor.
+
+La modifica dell'Anchor come entità condivisa mantiene una storia distinta
+quando tale Anchor è soggetto a un proprio modello di evoluzione.
 
 Taxonomy Versioning, Repository Schema Versioning e API Contract Versioning
 mantengono storie separate secondo i rispettivi modelli e contratti.
@@ -562,9 +573,12 @@ l'identità e il contenuto soggetto a evoluzione.
 
 Domain Model Specification:
 
-definisce i confini dell'aggregate e stabilisce che Anchor e Knowledge
-Statement sono membri del Learning Object e non entità autonomamente
-versionate.
+definisce i confini dell'aggregate Learning Object e stabilisce che il
+Knowledge Statement è membro del Learning Object, mentre l'Anchor è associato
+al Learning Object e può essere condiviso da più Learning Object.
+
+Il Versioning Model non ridefinisce tali confini e non attribuisce all'Anchor
+un ciclo di vita o un versionamento derivato dal Learning Object.
 
 
 KEP Specification:
@@ -650,7 +664,7 @@ evoluta.
 ================================================================================
 Fine documento
 
-English Learning Repository (ELR)
+Educational Learning Repository (ELR)
 
 ELR Versioning Model Specification
 
