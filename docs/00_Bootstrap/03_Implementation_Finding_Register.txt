@@ -12,6 +12,7 @@ Each finding must be resolved against the authoritative normative corpus before 
 
 ### Status Vocabulary
 
+* `RESOLVED` — the identified implementation alignment issue has been resolved and verified.
 * `CONFIRMED DEVIATION` — implementation contradicts an established normative boundary.
 * `COVERAGE GAP` — behavior may exist, but the required conformance is not demonstrated by tests.
 * `PERSISTENCE GAP` — required persistent implementation is absent.
@@ -29,6 +30,8 @@ Each finding must be resolved against the authoritative normative corpus before 
 
 **Normative expectation:** KnowledgeStatement is an aggregate member / knowledge value of LearningObject and does not constitute an autonomous aggregate.
 
+**Required change:** Represent KnowledgeStatement explicitly as an immutable value owned by LearningObject without introducing an autonomous aggregate boundary.
+
 **Resolution:** LearningObject now stores an explicit immutable `KnowledgeStatement` value object. KnowledgeStatement has no autonomous repository, lifecycle, or versioning boundary.
 
 **Evidence:**
@@ -42,7 +45,6 @@ Each finding must be resolved against the authoritative normative corpus before 
 
 **Resolution note:** The implementation now explicitly represents the normative KnowledgeStatement semantics without introducing an autonomous KnowledgeStatement aggregate.
 
-
 ---
 
 ## IA-002 — KnowledgeStatement Identity Semantics
@@ -52,6 +54,8 @@ Each finding must be resolved against the authoritative normative corpus before 
 **Finding:** The previous implementation represented KnowledgeStatement with entity-like identity metadata.
 
 **Normative expectation:** KnowledgeStatement is an aggregate member / knowledge value and has no autonomous identity, lifecycle, repository, or versioning boundary.
+
+**Required change:** Remove autonomous identity semantics and represent KnowledgeStatement as an immutable value.
 
 **Resolution:** KnowledgeStatement is now an immutable value object containing only its semantic value fields.
 
@@ -73,6 +77,8 @@ Each finding must be resolved against the authoritative normative corpus before 
 **Finding:** Version previously contained a generic `entity_id`.
 
 **Normative expectation:** LearningObject is the primary unit of knowledge versioning.
+
+**Required change:** Version identity must explicitly reference the LearningObject whose history it represents.
 
 **Resolution:** Version now identifies its owning LearningObject explicitly through `learning_object_id`.
 
@@ -108,6 +114,8 @@ Each finding must be resolved against the authoritative normative corpus before 
 **Finding:** LearningObject previously contained mutable `version: int`.
 
 **Normative expectation:** Stable LearningObject identity and immutable Version history are distinct concepts.
+
+**Required change:** Remove mutable Version state from LearningObject and represent historical versions through immutable Version records.
 
 **Resolution:** The mutable version field has been removed from LearningObject. Version numbering is represented by immutable Version records owned by the LearningObject version history.
 
@@ -145,6 +153,8 @@ Each finding must be resolved against the authoritative normative corpus before 
 **Finding:** VersionRepository previously exposed generic `get_history(entity_id)` semantics.
 
 **Normative expectation:** Version history belongs to the LearningObject versioning boundary.
+
+**Required change:** Replace generic entity history semantics with LearningObject-centered history semantics.
 
 **Resolution:** VersionRepository now exposes:
 
@@ -246,6 +256,8 @@ and the in-memory implementation filters Version records using `learning_object_
 
 **Normative expectation:** Version snapshots preserve the semantic state of the LearningObject, including its KnowledgeStatement value.
 
+**Required change:** Preserve KnowledgeStatement semantics structurally inside the immutable Version snapshot.
+
 **Resolution:** Version snapshots now represent `statement` structurally with its `text` and `language` values.
 
 **Evidence:**
@@ -257,7 +269,6 @@ and the in-memory implementation filters Version records using `learning_object_
 
 **Resolution note:** Both initial Version creation and subsequent Version creation use the corrected snapshot representation.
 
-
 ---
 
 ## IA-018 — Application Version History Boundary
@@ -267,6 +278,8 @@ and the in-memory implementation filters Version records using `learning_object_
 **Finding:** The application service was LearningObject-centered while the repository abstraction remained generic.
 
 **Normative expectation:** Application and repository layers must express the same LearningObject-centered Version boundary.
+
+**Required change:** Align application and repository Version history operations around `learning_object_id`.
 
 **Resolution:** The application service and VersionRepository now both use `learning_object_id` for Version history.
 
@@ -285,6 +298,8 @@ and the in-memory implementation filters Version records using `learning_object_
 **Area:** Tests
 
 **Finding:** Existing tests previously verified Version creation without verifying semantic snapshot contents.
+
+**Required change:** Test Version creation, Version numbering, immutable history, and semantic KnowledgeStatement snapshot content.
 
 **Resolution:** Application tests now verify:
 
@@ -353,22 +368,28 @@ and the in-memory implementation filters Version records using `learning_object_
 
 ---
 
-## Finding Summary
+# Finding Summary
 
-### Confirmed deviations
+## IA-01 — RESOLVED
 
-* IA-001
-* IA-003
-* IA-010
-* IA-017
+The following eight findings are explicitly closed:
 
-### Alignment required
+* IA-001 — RESOLVED
+* IA-002 — RESOLVED
+* IA-003 — RESOLVED
+* IA-005 — RESOLVED
+* IA-010 — RESOLVED
+* IA-017 — RESOLVED
+* IA-018 — RESOLVED
+* IA-019 — RESOLVED
 
-* IA-002
-* IA-005
-* IA-018
+IA-01 is therefore considered complete.
 
-### Persistence gaps
+## Remaining Open Alignment
+
+* IA-009 — LearningObject Delete Capability
+
+## Persistence Gaps
 
 * IA-004
 * IA-013
@@ -377,30 +398,23 @@ and the in-memory implementation filters Version records using `learning_object_
 * IA-021
 * IA-022
 
-### Test coverage gaps
+## Test Coverage Gaps
 
-* IA-019
 * IA-020
 
-### Open decisions
-
-* IA-009
-
-### Preliminarily consistent
+## Preliminarily Consistent
 
 * IA-011
 * IA-012
 * IA-016
 * IA-023
 
-### Current conclusion
+## Current Conclusion
 
-The implementation baseline is not yet conformant with the consolidated normative baseline.
+IA-01 — Domain Semantic Alignment is RESOLVED.
 
-The primary structural gap is the absence of a persistent LearningObject / Version / Audit path.
-
-The primary semantic deviations concern KnowledgeStatement representation and LearningObject-centered versioning.
+The resolved IA-01 findings must not be reopened unless new repository evidence establishes a direct contradiction with the authoritative normative corpus.
 
 The next work package is:
 
-**IMPLEMENTATION ALIGNMENT**
+**IMPLEMENTATION ALIGNMENT — IA-02 CONTRACT AND LIFECYCLE ALIGNMENT**
