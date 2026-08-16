@@ -52,11 +52,11 @@ Matrice di consistenza architetturale
 ================================================================================
 
 
-| Concetto                         | AS | Process | Documento proprietario                    | Azione |
+| Concetto                         | AS | Process | Documento proprietario                     | Azione |
 |----------------------------------|----|---------|--------------------------------------------|--------|
 | Learning Object                  | R  | R       | Learning Object Specification              | Nessuna modifica |
 | Anchor                           | R  | R       | Anchor Specification                       | Nessuna modifica |
-| Knowledge Statement              | R  | R       | Learning Object Specification              | Nessuna modifica |
+| Knowledge Statement              | R  | R       | ELR Domain Model Specification             | Nessuna modifica |
 | Knowledge Category               | R  | R       | ELR Taxonomy                               | Nessuna modifica |
 | Learning State                   | R  | R       | Learning State Specification               | Nessuna modifica |
 | Mastery State                    | R  | R       | Mastery State Specification                | Nessuna modifica |
