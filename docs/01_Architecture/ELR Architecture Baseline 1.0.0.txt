@@ -69,6 +69,10 @@ reciproca.
 
 La Architecture Consistency Matrix definisce e verifica i confini di ownership e coerenza tra le specifiche.
 
+Le specifiche specialistiche di Data, Persistence, Versioning e System devono
+rispettare i confini e le responsabilità definiti dal Domain Model e non
+possono ridefinirli autonomamente.
+
 ================================================================================
 Documenti inclusi nella Baseline 1.0
 ====================================
