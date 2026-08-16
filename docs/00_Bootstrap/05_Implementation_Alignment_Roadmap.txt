@@ -32,17 +32,39 @@ Resolve:
 * IA-005 — LearningObject version semantics;
 * IA-010 — generic VersionRepository history;
 * IA-017 — Version snapshot representation;
-* IA-018 — application/repository Version boundary.
+* IA-018 — application/repository Version boundary;
+* IA-019 — Version snapshot test coverage.
 
-### Required result
+### Completed result
 
-The domain and repository contracts must express LearningObject-centered knowledge versioning without introducing autonomous KnowledgeStatement versioning.
+The domain and repository contracts now express LearningObject-centered knowledge versioning.
+
+KnowledgeStatement is represented as an immutable aggregate member/value and has no autonomous persistence or versioning boundary.
+
+Version history is explicitly scoped to LearningObject.
+
+Version snapshots preserve the structured KnowledgeStatement value.
+
+Application and repository Version history contracts are aligned.
 
 ### Gate
 
 `IA-01 DOMAIN ALIGNMENT`
 
-Status: `PENDING`
+Status: `COMPLETE`
+
+### Closure evidence
+
+* Domain entities aligned;
+* VersionRepository contract aligned;
+* Application service aligned;
+* in-memory Version repository aligned;
+* Version snapshot semantics tested;
+* no autonomous KnowledgeStatement repository introduced.
+
+### Remaining work outside IA-01
+
+Production persistence and repository integration remain pending and belong to subsequent implementation-alignment phases.
 
 ---
 
@@ -259,10 +281,11 @@ Implementation Baseline Inventory
 E2E Gap Map
         │
         ▼
-▶ IA-01 Domain Semantic Alignment
+IA-01 Domain Semantic Alignment
         │
+        │ COMPLETE
         ▼
-IA-02 Contract Alignment
+▶ IA-02 Contract and Lifecycle Alignment
         │
         ▼
 IA-03 Persistence Model
@@ -281,10 +304,11 @@ IA-07 E2E-GATE-01
         │
         ▼
 IA-08 Implementation Conformance
-```
 
 ### Current Gate
 
-**NEXT ACTION: IA-01 DOMAIN SEMANTIC ALIGNMENT**
+NEXT ACTION: IA-02 CONTRACT AND LIFECYCLE ALIGNMENT
 
-No production persistence schema should be treated as final before IA-01 is completed.
+IA-01 is complete.
+
+No production persistence schema should be treated as final before the remaining contract and lifecycle ambiguities are resolved.
