@@ -204,8 +204,6 @@ Un Learning Object contiene:
 
 * Knowledge Statement;
 
-* Knowledge Category;
-
 * metadati di gestione.
 
 Il Learning State non appartiene al Learning Object.
@@ -327,7 +325,7 @@ Relazioni principali:
 
 Learning Object
 
-1 --- 1
+* --- 1
 
 Anchor
 
