@@ -136,7 +136,7 @@ persistente.
 Domain Overview
 ================================================================================
 
-L'English Learning Repository rappresenta la conoscenza linguistica acquisita
+L'Educational Learning Repository rappresenta la conoscenza linguistica acquisita
 dall'utente come un insieme di Learning Object persistenti.
 
 Ogni Learning Object costituisce un'unità autonoma di conoscenza e rappresenta
