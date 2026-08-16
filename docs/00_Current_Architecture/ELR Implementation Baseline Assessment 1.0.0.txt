@@ -1,0 +1,917 @@
+================================================================================
+Educational Learning Repository (ELR)
+
+Implementation Baseline Assessment
+
+Version: 1.0.0
+Status: ACTIVE
+Document Type: Repository Implementation Baseline
+================================================================================
+
+
+# 1. Document Identity
+================================================================================
+
+Document Name:
+
+ELR Implementation Baseline Assessment
+
+Document Version:
+
+1.0.0
+
+Status:
+
+ACTIVE
+
+Document Type:
+
+Repository Implementation Baseline
+
+
+================================================================================
+# 2. Purpose
+================================================================================
+
+This document records the verified implementation baseline of the ELR
+repository at the transition from architectural completion to product
+implementation.
+
+It answers:
+
+* What implementation already exists?
+* Which parts are complete?
+* Which parts are partial?
+* Which parts are missing?
+* Which parts diverge from current specifications?
+* Which documentation conflicts must be resolved?
+* Which existing implementation should be preserved?
+* Which implementation work is required next?
+
+This document is an assessment of the repository as it exists.
+
+It is not an implementation plan.
+
+It is not an architectural specification.
+
+It is not a replacement for the Product and Implementation Roadmap.
+
+Its purpose is to provide a stable factual baseline for implementation work.
+
+
+================================================================================
+# 3. Assessment Context
+================================================================================
+
+Architectural position:
+
+ARCHITECTURE COMPLETE THROUGH FASE 10
+
+Architectural readiness:
+
+IMPLEMENTATION READY
+
+Current product milestone:
+
+M0 — Project Alignment and Implementation Baseline
+
+Current work package:
+
+M0.1 — Repository and Implementation Baseline Inspection
+
+Assessment objective:
+
+Determine the actual implementation state before further implementation work
+begins.
+
+
+================================================================================
+# 4. Assessment Sources
+================================================================================
+
+The assessment is based on the repository state and the following classes of
+authoritative project documentation:
+
+* ELR Project Definition
+* ELR Product and Implementation Roadmap
+* ELR Implementation Status
+* ELR Architectural specifications
+* ELR Core Model specifications
+* ELR Process specifications
+* ELR Data and Evidence specifications
+* ELR Interaction specifications
+* ELR System specifications
+* Existing source code
+* Existing tests
+
+
+================================================================================
+# 5. Repository Structure Observed
+================================================================================
+
+The current implementation contains the following principal areas:
+
+app/
+    application/
+    domain/
+    persistence/
+
+tests/
+    application/
+    domain/
+    fixtures/
+    persistence/
+
+docs/
+    00_Current_Architecture/
+    01_Architecture/
+    02_Core_Model/
+    03_Processes/
+    04_Data_and_Evidence/
+    05_Interaction/
+    06_System/
+
+The repository therefore already contains a non-trivial implementation
+baseline rather than an empty implementation skeleton.
+
+
+================================================================================
+# 6. Domain Implementation Baseline
+================================================================================
+
+Observed domain entities:
+
+* Anchor
+* AuditRecord
+* Example
+* KnowledgeCategory
+* KnowledgeStatement
+* LearningObject
+* Note
+* Version
+
+Observed repository interfaces:
+
+* AnchorRepository
+* AuditRepository
+* CategoryRepository
+* LearningObjectRepository
+* VersionRepository
+
+
+--------------------------------------------------------------------------------
+Domain Status
+--------------------------------------------------------------------------------
+
+Overall status:
+
+PARTIAL
+
+The domain layer is substantially implemented.
+
+The implementation demonstrates:
+
+* domain entities;
+* aggregate-oriented structure;
+* repository abstractions;
+* lifecycle behaviour;
+* version-related domain concepts;
+* audit-related domain concepts.
+
+The domain layer is technology-independent and does not directly depend on
+the database.
+
+
+--------------------------------------------------------------------------------
+Domain Independence
+--------------------------------------------------------------------------------
+
+Status:
+
+COMPLETE
+
+The domain implementation does not directly depend on SQLAlchemy, PostgreSQL,
+HTTP or other infrastructure technologies.
+
+
+--------------------------------------------------------------------------------
+Repository Abstraction
+--------------------------------------------------------------------------------
+
+Status:
+
+COMPLETE
+
+Repository contracts exist in the domain layer and separate domain behaviour
+from persistence implementation.
+
+
+--------------------------------------------------------------------------------
+Learning Object Aggregate
+--------------------------------------------------------------------------------
+
+Status:
+
+PARTIAL
+
+The existing LearningObject implementation contains the principal aggregate
+structure and includes:
+
+* anchor reference;
+* knowledge statement content;
+* category reference;
+* examples;
+* notes;
+* identity;
+* timestamps;
+* lifecycle behaviour.
+
+The aggregate should be preserved as the basis for further implementation,
+subject to conformance corrections identified below.
+
+
+================================================================================
+# 7. Domain Conformance Findings
+================================================================================
+
+
+--------------------------------------------------------------------------------
+D1 — Learning Object Lifecycle Divergence
+--------------------------------------------------------------------------------
+
+Status:
+
+DIVERGENT
+
+The current implementation contains lifecycle states including:
+
+* Candidate
+* Proposed
+* Reviewed
+* Active
+* Updated
+* Retired
+* Rejected
+
+The current domain model specification defines the persistent Learning Object
+lifecycle as:
+
+* Candidate
+* Proposed
+* Active
+* Retired
+
+Review outcomes and process states such as Reviewed, Approved, Rejected and
+Updated must not automatically be treated as persistent Learning Object
+lifecycle states.
+
+The existing implementation therefore reflects an earlier or divergent
+lifecycle model.
+
+Required action:
+
+Resolve the authoritative lifecycle model before modifying the lifecycle
+implementation.
+
+
+--------------------------------------------------------------------------------
+D2 — KnowledgeStatement Domain Representation Divergence
+--------------------------------------------------------------------------------
+
+Status:
+
+DIVERGENT
+
+The current implementation contains:
+
+app/domain/entities/knowledge_statement.py
+
+as an autonomous domain entity with its own identity and timestamps.
+
+The current domain model specification defines KnowledgeStatement as a value
+contained within LearningObject rather than as an autonomous domain Entity.
+
+Required action:
+
+Resolve the authoritative KnowledgeStatement representation before further
+domain or persistence implementation.
+
+
+--------------------------------------------------------------------------------
+D3 — Existing Domain Implementation Should Not Be Discarded
+--------------------------------------------------------------------------------
+
+Status:
+
+PRESERVE / REFACTOR AS REQUIRED
+
+Despite the divergences above, the current domain implementation contains
+substantial useful work.
+
+The implementation should therefore be treated as an existing baseline to be
+reconciled with the current specifications rather than discarded wholesale.
+
+
+================================================================================
+# 8. Application Layer Baseline
+================================================================================
+
+Observed implementation:
+
+app/application/services/learning_object_service.py
+
+The service already supports operations including:
+
+* creation of Candidate Learning Objects;
+* submission for review;
+* review;
+* approval;
+* retrieval;
+* version history;
+* audit-related behaviour.
+
+
+--------------------------------------------------------------------------------
+Application Status
+--------------------------------------------------------------------------------
+
+Overall status:
+
+PARTIAL
+
+
+--------------------------------------------------------------------------------
+Application Testing
+--------------------------------------------------------------------------------
+
+The application service has automated tests.
+
+The current tests use repository fixtures and in-memory repository behaviour
+rather than a complete production persistence implementation.
+
+Therefore application logic has meaningful test coverage, but end-to-end
+database-backed behaviour is not yet established.
+
+
+--------------------------------------------------------------------------------
+Application Gap
+--------------------------------------------------------------------------------
+
+The application layer currently lacks the complete infrastructure required
+for:
+
+* production persistence;
+* API exposure;
+* event recording;
+* security enforcement;
+* complete end-to-end workflows.
+
+
+================================================================================
+# 9. Persistence Baseline
+================================================================================
+
+Observed persistence models:
+
+app/persistence/models/base.py
+app/persistence/models/anchor_model.py
+
+
+--------------------------------------------------------------------------------
+Anchor Persistence
+--------------------------------------------------------------------------------
+
+Status:
+
+IMPLEMENTED / PARTIAL
+
+AnchorModel exists as a SQLAlchemy persistence model.
+
+It contains:
+
+* id;
+* content;
+* type;
+* ipa;
+* created_at.
+
+The model respects the architectural separation between domain and
+persistence.
+
+
+--------------------------------------------------------------------------------
+Remaining Persistence Models
+--------------------------------------------------------------------------------
+
+The following required persistence structures are not currently implemented
+in the observed repository:
+
+* LearningObjectModel
+* KnowledgeCategoryModel
+* VersionModel
+* AuditRecordModel
+* EventRecordModel
+
+KnowledgeStatement persistence representation also requires resolution due
+to the documentation conflict described below.
+
+
+--------------------------------------------------------------------------------
+Concrete Repository Implementations
+--------------------------------------------------------------------------------
+
+Status:
+
+MISSING
+
+The repository currently contains domain repository interfaces but does not
+contain the complete concrete SQLAlchemy repository implementation required
+by the persistence implementation specification.
+
+
+--------------------------------------------------------------------------------
+Database Infrastructure
+--------------------------------------------------------------------------------
+
+Status:
+
+MISSING
+
+The observed implementation does not yet contain the complete:
+
+* PostgreSQL configuration;
+* SQLAlchemy session infrastructure;
+* transaction infrastructure;
+* Alembic migration infrastructure.
+
+
+================================================================================
+# 10. Persistence Conformance Findings
+================================================================================
+
+
+--------------------------------------------------------------------------------
+P1 — KnowledgeStatement Persistence Representation Conflict
+--------------------------------------------------------------------------------
+
+Status:
+
+DOCUMENTATION CONFLICT
+
+The Persistence Mapping Specification treats KnowledgeStatement as a value
+inside LearningObject.
+
+The Persistence Implementation Specification defines a normalized
+knowledge_statements table while explicitly stating that the technical
+database identity must not become a domain identity.
+
+This is technically possible, but the authoritative mapping decision must be
+made explicit and consistent across specifications.
+
+Required action:
+
+Consolidate the mapping decision before implementing the persistence layer.
+
+
+--------------------------------------------------------------------------------
+P2 — Lifecycle Persistence Conflict
+--------------------------------------------------------------------------------
+
+Status:
+
+DOCUMENTATION CONFLICT
+
+The current Persistence Mapping Specification contains lifecycle terminology
+that includes process states such as Reviewed, Updated and Rejected.
+
+The newer domain and persistence model specifications define the persistent
+Learning Object lifecycle as:
+
+* Candidate
+* Proposed
+* Active
+* Retired
+
+Required action:
+
+Align persistence lifecycle mapping with the authoritative current domain
+lifecycle model.
+
+
+--------------------------------------------------------------------------------
+P3 — Historical Preservation
+--------------------------------------------------------------------------------
+
+Status:
+
+SPECIFIED / NOT IMPLEMENTED
+
+The persistence specifications require:
+
+* immutable historical versions;
+* explicit versioning;
+* audit traceability;
+* preservation of previous state.
+
+The current repository does not yet contain the complete implementation
+required to satisfy these requirements.
+
+
+--------------------------------------------------------------------------------
+P4 — Transactional Event Records
+--------------------------------------------------------------------------------
+
+Status:
+
+SPECIFIED / NOT IMPLEMENTED
+
+The persistence implementation specification requires Event Records to be
+created in the same transaction as the domain change which produces them.
+
+No corresponding implementation is currently present.
+
+
+================================================================================
+# 11. Test Baseline
+================================================================================
+
+Observed tests include:
+
+tests/application/services/test_learning_object_service.py
+
+tests/domain/test_anchor.py
+
+tests/domain/test_learning_object.py
+
+tests/fixtures/repositories.py
+
+tests/persistence/models/test_anchor_model.py
+
+
+--------------------------------------------------------------------------------
+Test Status
+--------------------------------------------------------------------------------
+
+Overall status:
+
+PARTIAL
+
+
+--------------------------------------------------------------------------------
+Covered Areas
+--------------------------------------------------------------------------------
+
+The current tests provide meaningful coverage for:
+
+* selected domain behaviour;
+* LearningObject lifecycle behaviour as currently implemented;
+* application service behaviour;
+* in-memory repository interactions;
+* Anchor persistence model.
+
+
+--------------------------------------------------------------------------------
+Missing Test Areas
+--------------------------------------------------------------------------------
+
+The repository does not yet demonstrate complete automated coverage for:
+
+* complete SQLAlchemy repositories;
+* complete persistence transactions;
+* database migrations;
+* historical immutability;
+* complete version persistence;
+* audit persistence;
+* transactional event records;
+* API;
+* security;
+* complete end-to-end workflows.
+
+
+================================================================================
+# 12. System Layer Baseline
+================================================================================
+
+The repository contains system-level implementation specifications for:
+
+* API;
+* application services;
+* events;
+* implementation architecture;
+* persistence;
+* security;
+* import/export;
+* lifecycle.
+
+However, the observed implementation does not yet contain complete concrete
+implementations for these system boundaries.
+
+
+--------------------------------------------------------------------------------
+API
+--------------------------------------------------------------------------------
+
+Status:
+
+MISSING
+
+
+--------------------------------------------------------------------------------
+Events
+--------------------------------------------------------------------------------
+
+Status:
+
+MISSING
+
+
+--------------------------------------------------------------------------------
+Security
+--------------------------------------------------------------------------------
+
+Status:
+
+MISSING
+
+
+--------------------------------------------------------------------------------
+Import / Export
+--------------------------------------------------------------------------------
+
+Status:
+
+MISSING
+
+
+--------------------------------------------------------------------------------
+Production Infrastructure
+--------------------------------------------------------------------------------
+
+Status:
+
+MISSING
+
+
+================================================================================
+# 13. Overall Implementation Baseline
+================================================================================
+
+The current ELR implementation is best classified as:
+
+EARLY CORE IMPLEMENTATION
+
+It is not:
+
+* an empty repository;
+* a complete Core Repository;
+* a user-ready ELR.
+
+The current implementation contains substantial domain and application work
+but lacks the infrastructure and system boundaries required for operational
+ELR use.
+
+
+================================================================================
+# 14. Consolidated Status Matrix
+================================================================================
+
+| Area | Status |
+|------|--------|
+| Project Definition | COMPLETE |
+| Product Roadmap | COMPLETE |
+| Implementation Status | COMPLETE |
+| Architectural baseline | COMPLETE |
+| Domain entities | PARTIAL |
+| Domain repository interfaces | COMPLETE |
+| Domain independence | COMPLETE |
+| LearningObject aggregate | PARTIAL |
+| LearningObject lifecycle | DIVERGENT |
+| KnowledgeStatement model | DIVERGENT |
+| Application service | PARTIAL |
+| Application tests | PARTIAL |
+| Anchor persistence model | PARTIAL |
+| Remaining persistence models | MISSING |
+| Concrete persistence repositories | MISSING |
+| Database infrastructure | MISSING |
+| Migrations | MISSING |
+| Version persistence | MISSING |
+| Audit persistence | MISSING |
+| Event persistence | MISSING |
+| API | MISSING |
+| Security | MISSING |
+| Import / Export | MISSING |
+| End-to-end system | MISSING |
+| User-ready product | NOT REACHED |
+
+
+================================================================================
+# 15. Required Documentation Consolidation
+================================================================================
+
+Before implementation work modifies the affected areas, the following
+documentation questions must be resolved:
+
+1. Authoritative Learning Object lifecycle states.
+
+2. Whether KnowledgeStatement is:
+   * a pure value inside LearningObject;
+   * or a persistence-normalized value representation with technical
+     identity only.
+
+3. Exact persistence mapping of LearningObject and its internal values.
+
+4. Exact relationship between lifecycle state, Review decisions and
+   versioning.
+
+5. Exact transaction boundary for:
+   * domain mutation;
+   * version creation;
+   * audit record;
+   * transactional event record.
+
+
+These are specification consolidation tasks, not coding tasks.
+
+
+================================================================================
+# 16. Existing Implementation to Preserve
+================================================================================
+
+The following implementation principles should be preserved unless a later
+approved specification explicitly changes them:
+
+* domain independence;
+* repository abstraction;
+* aggregate-oriented domain structure;
+* application service boundary;
+* separation between domain and persistence;
+* automated testing;
+* immutable historical version concept;
+* auditability;
+* technology agnosticism at the domain level.
+
+
+================================================================================
+# 17. Implementation Work Not Yet Authorized
+================================================================================
+
+The following should not be implemented merely to advance the roadmap until
+the corresponding specification conflicts are resolved:
+
+* final LearningObject lifecycle implementation;
+* final KnowledgeStatement persistence mapping;
+* complete version persistence;
+* complete lifecycle persistence;
+* complete transactional event persistence.
+
+
+This prevents implementation from hardening an inconsistent specification.
+
+
+================================================================================
+# 18. Recommended Next Sequence
+================================================================================
+
+The next implementation sequence is:
+
+1. Consolidate the identified documentation conflicts.
+
+2. Update the affected specifications where required.
+
+3. Record the decisions in the appropriate Architecture Decision Log or
+   implementation decision record.
+
+4. Reconcile the existing domain implementation with the consolidated model.
+
+5. Reconcile existing tests with the consolidated model.
+
+6. Complete the Core Domain implementation.
+
+7. Implement persistence models.
+
+8. Implement concrete repositories.
+
+9. Implement transactions and migrations.
+
+10. Implement audit and transactional event persistence.
+
+11. Re-run conformance testing.
+
+12. Continue M1 according to the Product and Implementation Roadmap.
+
+
+================================================================================
+# 19. M0.1 Assessment Result
+================================================================================
+
+M0.1 Repository and Implementation Baseline Inspection:
+
+COMPLETE FOR CURRENTLY INSPECTED AREAS
+
+The repository baseline is sufficiently understood to identify:
+
+* existing implementation;
+* major implementation gaps;
+* current domain divergences;
+* persistence gaps;
+* documentation conflicts;
+* required consolidation work.
+
+
+M0.1 does not imply that the implementation itself is complete.
+
+It means that the current implementation baseline has been sufficiently
+identified to proceed to specification consolidation.
+
+
+================================================================================
+# 20. Current Project Position After Assessment
+================================================================================
+
+Architectural status:
+
+ARCHITECTURE COMPLETE
+
+Implementation status:
+
+EARLY CORE IMPLEMENTATION
+
+Current milestone:
+
+M0 — Project Alignment and Implementation Baseline
+
+Current position:
+
+M0.1 ASSESSMENT COMPLETE
+
+Next work package:
+
+M0.2 — Specification Consolidation and Implementation Baseline Alignment
+
+
+================================================================================
+# 21. Important Continuity Rule
+================================================================================
+
+Future sessions must use this document to distinguish:
+
+* what ELR is supposed to be;
+* where ELR is supposed to go;
+* what ELR currently contains;
+* what is missing;
+* what is divergent;
+* what must be decided before implementation continues.
+
+
+The existence of implementation code must never be interpreted as proof of
+conformance with the current specifications.
+
+Likewise, the existence of a specification must never be interpreted as proof
+that the corresponding capability has been implemented.
+
+
+================================================================================
+# 22. Final Baseline Statement
+================================================================================
+
+The ELR repository has crossed the boundary from architectural design into
+implementation.
+
+The implementation is real but incomplete.
+
+The strongest existing foundation is the technology-independent Core Domain
+and its application service layer.
+
+The largest implementation gaps are persistence, transactional infrastructure,
+events, API, security, import/export and end-to-end user workflows.
+
+The most immediate risks are not missing code alone.
+
+They are unresolved differences between older implementation assumptions and
+the current specifications, especially:
+
+* Learning Object lifecycle;
+* KnowledgeStatement representation;
+* persistence mapping;
+* versioning semantics;
+* transactional event handling.
+
+These must be consolidated before the affected implementation areas are
+expanded.
+
+The project therefore proceeds from:
+
+ARCHITECTURE COMPLETE
+
+to:
+
+SPECIFICATION-CONSOLIDATED CORE IMPLEMENTATION
+
+and ultimately to:
+
+FULL ELR USER-READY.
+
+
+================================================================================
+END OF DOCUMENT
+================================================================================
