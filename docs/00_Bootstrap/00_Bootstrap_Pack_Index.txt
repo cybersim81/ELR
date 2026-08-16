@@ -127,7 +127,6 @@ Any such contradiction must first be identified against the authoritative source
 
 The normative LearningObject lifecycle is:
 
-```text
 Candidate
     ↓
 Proposed
@@ -135,3 +134,253 @@ Proposed
 Active
     ↓
 Retired
+
+`Reviewed`, `Approved`, and `Rejected` are not LearningObject lifecycle states.
+
+They belong to the Change Proposal review process and must not be introduced into the LearningObject lifecycle.
+
+---
+
+## Versioning Boundary
+
+LearningObject is the primary unit of knowledge versioning.
+
+KnowledgeStatement is an aggregate member / knowledge value.
+
+Version is immutable and explicitly belongs to LearningObject through `learning_object_id`.
+
+Version history is distinct from operational Audit history.
+
+Audit records must not be used as a substitute for immutable Version history.
+
+---
+
+## Current Implementation State
+
+The verified implementation contains:
+
+* LearningObject domain entity;
+* KnowledgeStatement immutable value;
+* Version immutable entity;
+* Anchor domain entity;
+* AuditRecord domain entity;
+* LearningObject application service;
+* LearningObjectRepository contract;
+* VersionRepository contract;
+* AnchorRepository contract;
+* in-memory repositories used by tests;
+* domain tests;
+* application tests;
+* Anchor persistence model and persistence test.
+
+The current implementation provides a tested in-memory vertical slice.
+
+Production persistence for the complete LearningObject / Version / Audit path remains incomplete.
+
+---
+
+## Current Persistence State
+
+The verified production persistence layer currently materializes the Anchor boundary.
+
+The following production persistence areas remain incomplete or unverified:
+
+* LearningObject persistence;
+* KnowledgeStatement representation in persistent LearningObject state;
+* Version persistence;
+* AuditRecord persistence;
+* concrete LearningObject repository;
+* concrete Version repository;
+* concrete Audit repository;
+* persistent database wiring;
+* persistent reload;
+* Version history;
+* Audit history.
+
+---
+
+## Current Open Findings
+
+The following findings remain open after IA-01 closure:
+
+### IA-009
+
+LearningObject delete capability requires explicit lifecycle / repository contract alignment.
+
+### Persistence Findings
+
+* IA-004 — Version persistence;
+* IA-013 — LearningObject persistence;
+* IA-014 — KnowledgeStatement persistence representation;
+* IA-015 — Version persistence;
+* IA-021 — Concrete repository coverage;
+* IA-022 — Persistent end-to-end flow.
+
+### Test Coverage
+
+* IA-020 — Persistent test coverage.
+
+These open findings do not reopen the resolved IA-01 findings.
+
+---
+
+## Current Roadmap Position
+
+The implementation roadmap is:
+
+M0.3.2 Specification Propagation
+        ↓
+Implementation Baseline Inventory
+        ↓
+E2E Gap Map
+        ↓
+IA-01 Domain Semantic Alignment
+        ↓
+IA-02 Contract and Lifecycle Alignment
+        ↓
+IA-03 Persistence Model
+        ↓
+IA-04 Repository Integration
+        ↓
+IA-05 Database Integration
+        ↓
+IA-06 Persistence Test Conformance
+        ↓
+IA-07 E2E-GATE-01
+        ↓
+IA-08 Implementation Conformance
+
+### Current Gate
+
+`IA-01 — COMPLETE`
+
+### Next Gate
+
+`IA-02 — CONTRACT AND LIFECYCLE ALIGNMENT`
+
+---
+
+## Current Resumption Point
+
+The next implementation session must resume at:
+
+**IA-02 — CONTRACT AND LIFECYCLE ALIGNMENT**
+
+The session must not restart the IA-01 semantic alignment work unless new authoritative evidence requires reopening it.
+
+---
+
+## Bootstrap Pack Reading Order
+
+A new session should read the Bootstrap Pack in this order:
+
+1. `01_Normative_Baseline_State.txt`
+2. `02_Implementation_Baseline_Inventory.txt`
+3. `03_Implementation_Finding_Register.txt`
+4. `04_End_to_End_Gap_Map.txt`
+5. `05_Implementation_Alignment_Roadmap.txt`
+6. `06_Session_Continuity_State.txt`
+7. `07_Session_Prompt.txt`
+
+The index provides orientation only.
+
+The individual files contain the detailed continuity state.
+
+---
+
+## Session Operating Rule
+
+A future session must:
+
+1. Read the complete `docs/00_Bootstrap/` directory.
+2. Treat the authoritative normative corpus as the final authority.
+3. Treat the Bootstrap Pack as the consolidated implementation continuity state.
+4. Verify repository evidence before declaring a finding resolved.
+5. Preserve the closure of IA-01 unless contradictory authoritative evidence is found.
+6. Resume at IA-02.
+7. Distinguish domain/application alignment from production persistence.
+8. Distinguish immutable Version history from operational Audit history.
+9. Keep LearningObject lifecycle states separate from Change Proposal review decisions.
+
+---
+
+## Repository Modification Rule
+
+The Bootstrap Pack is a documentation artifact.
+
+Reviewing, analyzing, or updating the Bootstrap Pack does not authorize automatic modification of repository source code.
+
+Implementation changes must be explicitly identified, reviewed, and applied as separate actions.
+
+---
+
+## Current Bootstrap Status
+
+NORMATIVE BASELINE
+        COMPLETE
+
+IMPLEMENTATION BASELINE
+        COMPLETE
+
+E2E GAP MAP
+        COMPLETE
+
+IA-01 DOMAIN SEMANTIC ALIGNMENT
+        COMPLETE
+
+IA-001
+        RESOLVED
+
+IA-002
+        RESOLVED
+
+IA-003
+        RESOLVED
+
+IA-005
+        RESOLVED
+
+IA-010
+        RESOLVED
+
+IA-017
+        RESOLVED
+
+IA-018
+        RESOLVED
+
+IA-019
+        RESOLVED
+
+PRODUCTION PERSISTENCE
+        PARTIAL
+
+PERSISTENT E2E FLOW
+        NOT IMPLEMENTED
+
+CURRENT GATE
+        IA-02
+
+CURRENT RESUMPTION POINT
+        IA-02 — CONTRACT AND LIFECYCLE ALIGNMENT
+
+---
+
+## Final Continuity Statement
+
+The ELR implementation has completed IA-01 Domain Semantic Alignment.
+
+The eight IA-01 findings are formally resolved:
+
+* IA-001
+* IA-002
+* IA-003
+* IA-005
+* IA-010
+* IA-017
+* IA-018
+* IA-019
+
+The next implementation objective is IA-02 — Contract and Lifecycle Alignment.
+
+No session should restart the completed IA-01 work without new authoritative evidence requiring such action.
