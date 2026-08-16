@@ -444,7 +444,7 @@ YES, as part of LearningObject representation
 
 Current Status:
 
-CONFLICT IN DATA/PERSISTENCE SPECIFICATIONS
+CONSISTENT
 
 Notes:
 
@@ -455,13 +455,13 @@ KnowledgeStatement does not have an independent repository.
 KnowledgeStatement does not constitute an independently versioned Domain
 Entity.
 
-Its evolution occurs through evolution of the owning LearningObject.
+Its evolution occurs through evolution of the owning LearningObject and its
+immutable Versions.
 
+Its persistence is subordinate to the owning LearningObject and its versioned
+representation.
 
-Required Action:
-
-Remove or replace specifications that model KnowledgeStatement as an
-independent persistent entity or independently versioned entity.
+No further specification propagation action is required for this concept.
 
 
 --------------------------------------------------------------------------------
@@ -1218,21 +1218,22 @@ Concept:
 
 KnowledgeCategory Versioning
 
-Problem:
+Status:
 
-Taxonomy classification and LearningObject content versioning are not clearly
-separated in the Versioning Model.
+RESOLVED
 
-Required Resolution:
+Resolution:
 
-Distinguish taxonomy/schema evolution from LearningObject Version evolution.
+The ELR Versioning Model explicitly distinguishes taxonomy and reference
+model evolution from LearningObject content version evolution.
 
+KnowledgeCategory is a taxonomy classification reference.
 
-CONFLICT-005
+Its taxonomy identity and evolution are not LearningObject Version history.
 
-Concept:
+No further specification propagation action is required for this conflict.
 
-Transactional Event Boundary
+GAP-004
 
 Status:
 
@@ -1240,15 +1241,16 @@ RESOLVED
 
 Resolution:
 
-The ELR Event Model Specification defines the semantic meaning of ELR Events.
+The ELR Architecture Consistency Matrix 1.1.0 has been reviewed and aligned
+with the consolidated authority, ownership and versioning model.
 
-The ELR Event Implementation Specification defines the Transactional Event
-Record and its persistence within the transactional boundary.
+The ELR Architecture Decision Log 1.0.0 has also been reviewed.
 
-Transactional event persistence and external event publication are therefore
-distinct concerns with defined specification ownership.
+No additional architectural decision or new ADR is required for the
+propagation completed by M0.3.2.
 
-No further ownership action is required.
+The architecture documentation is therefore consistent with the propagated
+specification baseline.
 
 
 ================================================================================
@@ -1323,8 +1325,7 @@ must be updated to reflect the consolidated ownership and versioning model.
 The following documents were identified as requiring revision as part of
 M0.3.2 specification propagation.
 
-The propagation work for the following documents has now been completed and
-verified:
+The following propagation work has now been completed and verified:
 
 1.
 
@@ -1350,22 +1351,13 @@ Status:
 
 PROPAGATED / VERIFIED
 
-The following propagation work remains:
-
-Priority 1 — Architecture Propagation
-
 4.
 
 docs/01_Architecture/ELR Architecture Consistency Matrix 1.1.0.txt
 
 Status:
 
-PENDING
-
-Reason:
-
-The consolidated ownership and versioning decisions must be reflected in the
-architecture consistency view.
+PROPAGATED / VERIFIED
 
 5.
 
@@ -1373,12 +1365,7 @@ docs/01_Architecture/ELR Architecture Decision Log 1.0.0.txt
 
 Status:
 
-REVIEW REQUIRED
-
-Reason:
-
-Review whether the confirmed propagation decisions require any additional
-formal architectural decision record.
+REVIEWED / NO PROPAGATION REQUIRED
 
 Priority 2 — Verification
 
@@ -1400,12 +1387,10 @@ PENDING
 
 Reason:
 
-After specification propagation, implementation must be compared against the
-consolidated normative model.
+Implementation alignment is a subsequent phase and is not part of the
+completion of M0.3.2 specification propagation.
 
-No new Audit or Transactional Event specification is required as part of this
-propagation.
-
+No further specification document revision is required for M0.3.2.
 
 
 ================================================================================
@@ -1526,36 +1511,9 @@ they should not define the model independently.
 # 13. M0.3 Status
 ================================================================================
 
-================================================================================
-
-# 13. M0.3 Status
-
-================================================================================
-
 M0.3.1 — Specification Authority Audit
 
 STATUS:
-
-COMPLETE
-
-Confirmed:
-
-* architectural authority hierarchy;
-* single document ownership principle;
-* LearningObject ownership;
-* Lifecycle ownership;
-* KnowledgeStatement aggregate role;
-* Anchor authority and boundary;
-* Taxonomy ownership;
-* Learning State ownership;
-* Mastery State ownership;
-* Evidence ownership;
-* Versioning ownership;
-* Event ownership;
-* Transactional Event Record ownership;
-* Audit Record ownership.
-
-M0.3.1 overall:
 
 COMPLETE
 
@@ -1563,27 +1521,32 @@ M0.3.2 — Specification Propagation
 
 STATUS:
 
-IN PROGRESS
+COMPLETE
 
 Completed propagation:
 
 * ELR Data Model Specification;
 * ELR Persistence Model Specification;
 * ELR Versioning Model Specification;
-* Anchor boundary and versioning interpretation across the verified
-  specification chain.
-
-Remaining propagation:
-
 * ELR Architecture Consistency Matrix;
-* review of ELR Architecture Decision Log;
-* final specification authority audit.
+* Anchor boundary and versioning interpretation;
+* KnowledgeStatement persistence and versioning interpretation;
+* KnowledgeCategory taxonomy/versioning distinction;
+* Architecture Decision Log review.
 
-M0.3.2 is an implementation-independent documentation consolidation phase.
+Final authority audit:
 
-No implementation change should be made solely to compensate for a
-specification conflict before the affected specifications have been
-reconciled.
+COMPLETE
+
+Result:
+
+The principal M0.3.2 ownership, boundary, persistence and versioning
+decisions are consistently propagated across the verified specification
+chain.
+
+M0.3.2 remains implementation-independent.
+
+Implementation alignment is a subsequent phase.
 
 
 ================================================================================
@@ -1592,31 +1555,36 @@ reconciled.
 
 Current:
 
-M0.3.2 — Specification Propagation
+Implementation Alignment
 
-Completed:
+Prerequisite:
 
-1. Update the ELR Persistence Model Specification.
-2. Update the Data Model Specification.
-3. Update the ELR Versioning Model Specification.
+M0.3.2 — Specification Propagation COMPLETE
 
-Remaining:
+Next actions:
 
-4. Update the Architecture Consistency Matrix.
+1. Compare the consolidated normative specification baseline against the
+   current implementation baseline.
 
-5. Review the Architecture Decision Log and determine whether any formal
-   architectural decision requires propagation or additional ADR treatment.
+2. Inspect identified implementation areas for deviations from the normative
+   model.
 
-6. Re-run the specification authority audit after the remaining propagation.
+3. Classify each finding as:
 
-7. Compare the resulting normative model against the implementation baseline.
+* specification conflict;
+* implementation deviation;
+* terminology difference;
+* test coverage gap.
 
-8. Record implementation deviations separately from specification conflicts.
+4. Do not modify implementation solely to compensate for a specification
+   contradiction.
 
-Completion of M0.3.2 does not imply implementation completion.
+5. Record implementation deviations separately from specification findings.
 
-It establishes a consolidated normative specification baseline from which
-implementation alignment can proceed.
+Completion of M0.3.2 establishes the consolidated normative specification
+baseline from which implementation alignment proceeds.
+
+M0.3.2 completion does not imply implementation completion.
 
 
 
@@ -1627,40 +1595,56 @@ implementation alignment can proceed.
 The ELR documentation set contains a substantial and coherent architectural
 foundation.
 
-The principal issue identified by M0.3 is not the absence of architecture.
+M0.3 has completed the authority audit and specification propagation required
+to establish a consolidated normative specification baseline.
 
-The principal issue is inconsistent propagation of architectural and domain
-decisions into lower-level specifications.
+The principal result is consistent propagation of architectural and domain
+decisions into the affected lower-level specifications.
 
-The most significant current inconsistency concerns the treatment of
-LearningObject aggregate members as independently persistent or versioned
-entities.
-
-The consolidation direction is therefore:
+The consolidated direction is therefore:
 
 LearningObject Stable Identity
+
 *
+
 Immutable LearningObject Versions
+
 *
+
 Aggregate-owned KnowledgeStatement and other LearningObject-owned content
+
 *
+
 Associated shared linguistic Anchor outside the LearningObject aggregate
+
 *
+
 Separate taxonomy/reference versioning
+
 *
+
 Separate learner/process state
+
 *
+
 Immutable Audit Records
+
 *
+
 Transactional Event Records
+
 *
+
 Technology-agnostic external event publication
 
+M0.3.2 specification propagation is COMPLETE.
 
-This matrix becomes the working authority map for the subsequent
-Specification Propagation phase.
+The resulting normative baseline is the authority for the subsequent
+Implementation Alignment phase.
 
 
 ================================================================================
 END OF DOCUMENT
 ================================================================================
+
+
