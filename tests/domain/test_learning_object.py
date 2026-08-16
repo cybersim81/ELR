@@ -1,30 +1,31 @@
 from uuid import uuid4
 
+from app.domain.entities.knowledge_statement import KnowledgeStatement
 from app.domain.entities.learning_object import (
+    InvalidStateTransition,
     LearningObject,
     LearningObjectState,
-    InvalidStateTransition,
 )
 
 
 def create_object():
-
     return LearningObject(
         anchor_id=uuid4(),
-        statement="Example knowledge statement",
+        statement=KnowledgeStatement(
+            text="Example knowledge statement",
+            language="en",
+        ),
         category_id=uuid4(),
     )
 
 
 def test_initial_state():
-
     obj = create_object()
 
     assert obj.state == LearningObjectState.CANDIDATE
 
 
 def test_submit_for_review():
-
     obj = create_object()
 
     obj.submit_for_review()
@@ -33,24 +34,72 @@ def test_submit_for_review():
 
 
 def test_invalid_transition():
-
     obj = create_object()
 
     try:
         obj.approve()
-
         assert False
-
     except InvalidStateTransition:
         assert True
 
 
 def test_full_approval_flow():
-
     obj = create_object()
 
     obj.submit_for_review()
-    obj.mark_reviewed()
     obj.approve()
 
     assert obj.state == LearningObjectState.ACTIVE
+
+
+def test_retire_active_object():
+    obj = create_object()
+
+    obj.submit_for_review()
+    obj.approve()
+    obj.retire()
+
+    assert obj.state == LearningObjectState.RETIRED
+
+
+def test_update_knowledge_keeps_active_state():
+    obj = create_object()
+
+    obj.submit_for_review()
+    obj.approve()
+
+    obj.update_knowledge(
+        KnowledgeStatement(
+            text="Updated knowledge statement",
+            language="en",
+        )
+    )
+
+    assert obj.state == LearningObjectState.ACTIVE
+    assert obj.statement.text == "Updated knowledge statement"
+    assert obj.statement.language == "en"
+
+
+def test_knowledge_statement_is_part_of_learning_object():
+    statement = KnowledgeStatement(
+        text="Example knowledge statement",
+        language="en",
+    )
+
+    obj = LearningObject(
+        anchor_id=uuid4(),
+        statement=statement,
+        category_id=uuid4(),
+    )
+
+    assert obj.statement is statement
+
+
+def test_knowledge_statement_has_no_independent_identity():
+    statement = KnowledgeStatement(
+        text="Example knowledge statement",
+        language="en",
+    )
+
+    assert not hasattr(statement, "id")
+    assert not hasattr(statement, "created_at")
