@@ -41,7 +41,7 @@ Dependencies:
 Scopo
 =====
 
-La ELR Data Model Specification definisce il modello strutturale dei dati
+La Data Model Specification definisce il modello strutturale dei dati
 persistenti utilizzati dall'Educational Learning Repository (ELR).
 
 Il Data Model rappresenta il livello attraverso cui i concetti definiti nel
@@ -176,8 +176,11 @@ Learning State
 
 Il Learning Object è l'unità minima persistente della conoscenza.
 
-Anchor, Knowledge Statement e Knowledge Category partecipano alla struttura
-persistente del Learning Object secondo i rispettivi confini del Domain Model.
+Anchor e Knowledge Statement partecipano alla struttura persistente del
+Learning Object secondo i rispettivi confini del Domain Model.
+
+La Knowledge Category è un elemento classificatorio del Data Model e non
+costituisce un membro dell'aggregate Learning Object.
 
 Il Knowledge Statement non costituisce una entità persistente autonoma.
 
