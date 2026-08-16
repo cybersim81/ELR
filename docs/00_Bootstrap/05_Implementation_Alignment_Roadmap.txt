@@ -1,0 +1,290 @@
+# 05_Implementation_Alignment_Roadmap.txt
+
+## Implementation Alignment Roadmap
+
+### Purpose
+
+This roadmap converts the Implementation Baseline Inventory and End-to-End Gap Map into an ordered implementation sequence.
+
+It is subordinate to the normative architecture.
+
+### Guiding Rule
+
+Resolve semantic deviations before materializing production persistence.
+
+Do not encode a currently non-conformant domain representation into database schemas and repositories and then attempt to correct it later.
+
+---
+
+## Phase IA-01 — Domain Semantic Alignment
+
+### Objective
+
+Bring the domain representation into explicit agreement with the consolidated normative baseline.
+
+### Scope
+
+Resolve:
+
+* IA-001 — LearningObject statement representation;
+* IA-002 — KnowledgeStatement identity/value semantics;
+* IA-003 — generic Version entity;
+* IA-005 — LearningObject version semantics;
+* IA-010 — generic VersionRepository history;
+* IA-017 — Version snapshot representation;
+* IA-018 — application/repository Version boundary.
+
+### Required result
+
+The domain and repository contracts must express LearningObject-centered knowledge versioning without introducing autonomous KnowledgeStatement versioning.
+
+### Gate
+
+`IA-01 DOMAIN ALIGNMENT`
+
+Status: `PENDING`
+
+---
+
+## Phase IA-02 — Contract and Lifecycle Alignment
+
+### Objective
+
+Resolve remaining repository/lifecycle ambiguities before persistence.
+
+### Scope
+
+Primarily:
+
+* IA-009 — LearningObject delete capability;
+* repository ownership boundaries;
+* Version history ownership;
+* Audit history boundary.
+
+### Required result
+
+Every repository capability must have an explicit normative purpose.
+
+### Gate
+
+`IA-02 CONTRACT ALIGNMENT`
+
+Status: `PENDING`
+
+---
+
+## Phase IA-03 — Persistence Model
+
+### Objective
+
+Materialize the aligned domain model in production persistence.
+
+### Scope
+
+Implement and verify persistence for:
+
+* LearningObject;
+* Version;
+* AuditRecord;
+* required KnowledgeStatement representation;
+* Anchor relationships.
+
+### Required result
+
+Persistence models represent the aligned domain semantics rather than the current pre-alignment implementation.
+
+### Gate
+
+`IA-03 PERSISTENCE MODEL ALIGNMENT`
+
+Status: `PENDING`
+
+---
+
+## Phase IA-04 — Concrete Repository Layer
+
+### Objective
+
+Connect domain repositories to production persistence.
+
+### Scope
+
+Implement concrete repositories for:
+
+* LearningObject;
+* Version;
+* Audit;
+* Anchor where required by the final persistence architecture.
+
+### Required result
+
+Application services operate against domain repository contracts while production execution uses concrete persistence implementations.
+
+### Gate
+
+`IA-04 REPOSITORY INTEGRATION`
+
+Status: `PENDING`
+
+---
+
+## Phase IA-05 — Database Wiring
+
+### Objective
+
+Make the persistent infrastructure executable.
+
+### Scope
+
+Establish:
+
+* database configuration;
+* session/unit-of-work boundary as required;
+* model metadata;
+* schema/migration mechanism as required;
+* repository lifecycle;
+* transaction behavior.
+
+### Required result
+
+A fresh runtime can create and persist the required domain state.
+
+### Gate
+
+`IA-05 DATABASE INTEGRATION`
+
+Status: `PENDING`
+
+---
+
+## Phase IA-06 — Persistent Integration Tests
+
+### Objective
+
+Prove persistence behavior rather than merely testing repository mocks or in-memory fixtures.
+
+### Scope
+
+Tests for:
+
+* LearningObject persistence;
+* Version persistence;
+* Audit persistence;
+* Anchor relationships;
+* reload behavior;
+* Version history recovery;
+* Audit history recovery.
+
+### Gate
+
+`IA-06 PERSISTENCE TEST CONFORMANCE`
+
+Status: `PENDING`
+
+---
+
+## Phase IA-07 — E2E-GATE-01
+
+### Objective
+
+Demonstrate the complete persistent LearningObject lifecycle.
+
+### Required flow
+
+```text
+Anchor
+  ↓
+LearningObject
+  ↓
+Candidate
+  ↓
+Proposed
+  ↓
+Reviewed
+  ↓
+Active
+  ↓
+Version
+  ↓
+Audit
+  ↓
+Database
+  ↓
+Reload
+  ↓
+Version History
+  ↓
+Audit History
+```
+
+### Gate condition
+
+The complete flow must succeed without semantic loss or violation of the established lifecycle/versioning boundaries.
+
+### Status
+
+`PENDING`
+
+---
+
+## Phase IA-08 — Implementation Conformance
+
+### Objective
+
+Compare the resulting implementation against the authoritative normative corpus.
+
+### Required result
+
+All confirmed deviations must be resolved or explicitly documented as authorized exceptions.
+
+All critical persistence and E2E gaps must be closed.
+
+### Gate
+
+`IMPLEMENTATION CONFORMANCE`
+
+Status: `PENDING`
+
+---
+
+# Current Roadmap Position
+
+```text
+M0.3.2 Specification Propagation
+        │
+        ▼
+Implementation Baseline Inventory
+        │
+        ▼
+E2E Gap Map
+        │
+        ▼
+▶ IA-01 Domain Semantic Alignment
+        │
+        ▼
+IA-02 Contract Alignment
+        │
+        ▼
+IA-03 Persistence Model
+        │
+        ▼
+IA-04 Repository Integration
+        │
+        ▼
+IA-05 Database Integration
+        │
+        ▼
+IA-06 Persistence Test Conformance
+        │
+        ▼
+IA-07 E2E-GATE-01
+        │
+        ▼
+IA-08 Implementation Conformance
+```
+
+### Current Gate
+
+**NEXT ACTION: IA-01 DOMAIN SEMANTIC ALIGNMENT**
+
+No production persistence schema should be treated as final before IA-01 is completed.
