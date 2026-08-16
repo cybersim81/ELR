@@ -1,10 +1,10 @@
 ================================================================================
-English Learning Repository (ELR)
+Educational Learning Repository (ELR)
 
 ELR Persistence Model Specification
 
 Version: 1.0.0
-Status: DRAFT
+Status: CONSOLIDATED
 ================================================================================
 
 
@@ -23,7 +23,7 @@ Document Version:
 
 Status:
 
-DRAFT
+CONSOLIDATED
 
 
 Dependencies:
@@ -51,8 +51,8 @@ Dependencies:
 Scopo
 ================================================================================
 
-La ELR Persistence Model Specification definisce il modello concettuale
-utilizzato per la persistenza delle informazioni all'interno dell'English
+L'ELR Persistence Model Specification definisce il modello concettuale
+utilizzato per la persistenza delle informazioni all'interno dell'Educational
 Learning Repository.
 
 
@@ -188,9 +188,17 @@ modello di dominio.
 
 Learning Object
 |
-+-- Anchor
-|
 +-- Knowledge Statement
+
+Learning Object
+|
++-- associated with
+|
++-- Anchor
+
+Learning Object
+|
++-- classified by
 |
 +-- Knowledge Category
 
@@ -207,14 +215,16 @@ Learning State
 
 Learning Object
 
-
 Il Learning Object costituisce l'unità principale di conoscenza persistente.
 
 Il Knowledge Statement è una componente del Learning Object e non possiede
 un ciclo di vita persistente autonomo.
 
-La Knowledge Category è metadato classificatorio della conoscenza e non
-costituisce conoscenza autonoma.
+L'Anchor è associato al Learning Object e può essere condiviso da più
+Learning Object indipendenti.
+
+La Knowledge Category è metadato classificatorio associato al Learning Object
+e non costituisce un membro dell'aggregate Learning Object.
 
 Il Learning State è User-specific e mantiene la propria identità e
 persistenza secondo il modello di stato didattico.
@@ -287,15 +297,15 @@ Il Learning Object rappresenta l'unità principale di conoscenza persistente.
 
 Un Learning Object contiene:
 
+* identità;
 
-- identità;
+* Knowledge Statement.
 
-- Anchor associato;
+Un Learning Object è associato a un Anchor, che può essere condiviso da più
+Learning Object indipendenti.
 
-- Knowledge Statement;
-
-- Knowledge Category.
-
+La Knowledge Category è un elemento classificatorio associato al Learning
+Object e non costituisce un membro dell'aggregate Learning Object.
 
 Il Learning State non appartiene al Learning Object.
 
@@ -732,7 +742,7 @@ Il Repository conserva conoscenza stabile.
 ================================================================================
 Fine documento
 
-English Learning Repository (ELR)
+Educational Learning Repository (ELR)
 
 ELR Persistence Model Specification
 
