@@ -376,6 +376,10 @@ The current implementation contains a tested in-memory vertical slice but does n
 
 IA-01 is complete and must not be reopened unless contradictory repository evidence is found.
 
+IA-02 — Contract and Lifecycle Alignment is technically resolved and must not be reopened unless contradictory repository evidence establishes a direct contract or lifecycle deviation.
+
+The remaining gaps are persistence, concrete repository infrastructure, database wiring, persistent reload, and persistent end-to-end test coverage.
+
 The next implementation objective is:
 
-**IA-02 → Contract and Lifecycle Alignment → Persistent Infrastructure → E2E-GATE-01**
+**Persistent Infrastructure → Persistent Reload → E2E-GATE-01**
