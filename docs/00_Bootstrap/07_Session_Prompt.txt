@@ -67,7 +67,9 @@ The following state is already established:
 
 `IA-01 Domain Semantic Alignment → COMPLETE`
 
-`IA-02 Contract and Lifecycle Alignment → IN PROGRESS — 55%`
+`IA-02 Contract and Lifecycle Alignment → COMPLETE — 100%`
+
+`IA-03 Persistence Model → NEXT`
 
 `E2E-GATE-01 → PENDING`
 
@@ -116,12 +118,22 @@ The remaining implementation alignment and persistence findings are recorded in:
 
 `03_Implementation_Finding_Register.txt`
 
-The previously identified IA-02 alignment findings have been resolved and verified:
+IA-02 Contract and Lifecycle Alignment has been technically resolved and verified.
 
-* `IA-009` — LearningObject delete capability — `RESOLVED`;
-* `IA-016` — Lifecycle Application Orchestration — `RESOLVED`.
+Verified IA-02 conditions include:
 
-The remaining IA-02 work concerns repository ownership boundaries, Version history ownership, Audit history boundary, and lifecycle contract consistency.
+* repository capability boundaries and purposes;
+* LearningObject Repository ownership;
+* LearningObject-centered Version history;
+* distinct Audit history boundary;
+* absence of LearningObject physical deletion from the Domain Repository contract;
+* normative lifecycle orchestration;
+* invalid lifecycle transition behavior;
+* separation of Change Proposal review decisions from LearningObject lifecycle state.
+
+The remaining implementation gaps are persistence, concrete repository integration, database wiring, persistent reload, and persistent end-to-end test coverage.
+
+These remaining gaps belong to subsequent implementation gates and MUST NOT be reclassified as IA-02 deviations without contradictory authoritative evidence.
 
 The principal remaining persistence gaps concern:
 
@@ -143,11 +155,13 @@ Do not silently reinterpret or discard these findings.
 
 Resume at:
 
-**IA-02 — Contract and Lifecycle Alignment**
+**IA-03 — Persistence Model**
 
-The immediate task is to complete the remaining Contract and Lifecycle Alignment work before materializing production persistence.
+IA-02 — Contract and Lifecycle Alignment is COMPLETE.
 
-Current IA-02 progress is `55%`.
+Current IA-02 progress is `100%`.
+
+The immediate task is to materialize the aligned domain model in production persistence without violating the contract, lifecycle, Version, Audit, or aggregate boundaries already verified under IA-02.
 
 Do NOT restart IA-01 unless new authoritative evidence establishes a contradiction with its closure.
 
@@ -340,4 +354,6 @@ Do not allow historical bootstrap state to silently override the current consoli
 
 **READ THE COMPLETE `docs/00_Bootstrap/` PACK FIRST.**
 
-**THEN RESUME AT IA-02 — CONTRACT AND LIFECYCLE ALIGNMENT — 55%.**
+**THEN RESUME AT IA-03 — PERSISTENCE MODEL.**
+
+**IA-02 — CONTRACT AND LIFECYCLE ALIGNMENT IS COMPLETE — 100%.**
