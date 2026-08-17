@@ -24,12 +24,6 @@ class InMemoryLearningObjectRepository:
     ) -> LearningObject | None:
         return self.items.get(object_id)
 
-    def delete(
-        self,
-        object_id,
-    ) -> None:
-        self.items.pop(object_id, None)
-
 
 class InMemoryVersionRepository:
     """
