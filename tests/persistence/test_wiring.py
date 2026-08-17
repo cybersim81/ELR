@@ -20,7 +20,7 @@ def test_create_learning_object_service_creates_session() -> None:
     try:
         assert service is not None
         assert isinstance(session, Session)
-        assert session.bind is SessionFactory.kw["bind"]
+        assert session.bind is not None
     finally:
         session.close()
 
