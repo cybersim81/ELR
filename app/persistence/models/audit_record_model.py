@@ -34,6 +34,7 @@ class AuditRecordModel(Base):
     )
 
     metadata_: Mapped[dict] = mapped_column(
+        "metadata",
         JSON,
         nullable=False,
     )
