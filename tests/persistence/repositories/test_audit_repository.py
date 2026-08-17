@@ -1,3 +1,4 @@
+from datetime import timezone
 from uuid import uuid4
 
 from sqlalchemy import create_engine
@@ -47,7 +48,7 @@ def test_audit_repository_record_persists_model() -> None:
     assert model.event_type == audit.event_type
     assert model.actor == audit.actor
     assert model.metadata_ == audit.metadata
-    assert model.timestamp == audit.timestamp
+    assert model.timestamp.replace(tzinfo=timezone.utc) == audit.timestamp
 
 
 def test_audit_repository_find_by_entity_returns_domain_records() -> None:
