@@ -33,7 +33,7 @@ class AuditRecordModel(Base):
         nullable=False,
     )
 
-    metadata: Mapped[dict] = mapped_column(
+    metadata_: Mapped[dict] = mapped_column(
         JSON,
         nullable=False,
     )
