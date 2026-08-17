@@ -11,7 +11,6 @@ class SQLAlchemyLearningObjectRepository(LearningObjectRepository):
     SQLAlchemy implementation of the LearningObject repository.
     """
 
-
     def __init__(self, session: Session) -> None:
         self._session = session
 
