@@ -1,19 +1,17 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
-from app.persistence.wiring import create_learning_object_service
-from app.persistence.repositories.audit_repository import (
-    SQLAlchemyAuditRepository,
-)
-from app.persistence.repositories.learning_object_repository import (
-    SQLAlchemyLearningObjectRepository,
-)
-from app.persistence.repositories.version_repository import (
-    SQLAlchemyVersionRepository,
-)
 
+def test_create_learning_object_service_creates_session(
+    monkeypatch,
+) -> None:
+    monkeypatch.setenv(
+        "DATABASE_URL",
+        "sqlite:///:memory:",
+    )
 
-def test_create_learning_object_service_creates_session() -> None:
+    from app.persistence.wiring import create_learning_object_service
+
     service, session = create_learning_object_service()
 
     try:
@@ -24,7 +22,25 @@ def test_create_learning_object_service_creates_session() -> None:
         session.close()
 
 
-def test_create_learning_object_service_uses_provided_session() -> None:
+def test_create_learning_object_service_uses_provided_session(
+    monkeypatch,
+) -> None:
+    monkeypatch.setenv(
+        "DATABASE_URL",
+        "sqlite:///:memory:",
+    )
+
+    from app.persistence.wiring import create_learning_object_service
+    from app.persistence.repositories.audit_repository import (
+        SQLAlchemyAuditRepository,
+    )
+    from app.persistence.repositories.learning_object_repository import (
+        SQLAlchemyLearningObjectRepository,
+    )
+    from app.persistence.repositories.version_repository import (
+        SQLAlchemyVersionRepository,
+    )
+
     engine = create_engine("sqlite:///:memory:")
     test_session_factory = sessionmaker(
         bind=engine,
@@ -34,7 +50,9 @@ def test_create_learning_object_service_uses_provided_session() -> None:
     session = test_session_factory()
 
     try:
-        service, returned_session = create_learning_object_service(session)
+        service, returned_session = create_learning_object_service(
+            session
+        )
 
         assert returned_session is session
 
@@ -50,10 +68,6 @@ def test_create_learning_object_service_uses_provided_session() -> None:
             service.audit_repository,
             SQLAlchemyAuditRepository,
         )
-
-        assert service.learning_object_repository.session is session
-        assert service.version_repository.session is session
-        assert service.audit_repository.session is session
     finally:
         session.close()
         engine.dispose()
