@@ -1,7 +1,10 @@
+import os
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
-DATABASE_URL = "postgresql+psycopg://..."
+
+DATABASE_URL = os.environ["DATABASE_URL"]
 
 engine = create_engine(DATABASE_URL)
 
@@ -10,3 +13,4 @@ SessionFactory = sessionmaker(
     class_=Session,
     expire_on_commit=False,
 )
+
