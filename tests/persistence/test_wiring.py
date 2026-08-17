@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
-from app.persistence.database import SessionFactory
+from app.persistence.wiring import create_learning_object_service
 from app.persistence.repositories.audit_repository import (
     SQLAlchemyAuditRepository,
 )
@@ -11,7 +11,6 @@ from app.persistence.repositories.learning_object_repository import (
 from app.persistence.repositories.version_repository import (
     SQLAlchemyVersionRepository,
 )
-from app.persistence.wiring import create_learning_object_service
 
 
 def test_create_learning_object_service_creates_session() -> None:
@@ -37,8 +36,8 @@ def test_create_learning_object_service_uses_provided_session() -> None:
     try:
         service, returned_session = create_learning_object_service(session)
 
-        assert service is not None
         assert returned_session is session
+
         assert isinstance(
             service.learning_object_repository,
             SQLAlchemyLearningObjectRepository,
@@ -51,6 +50,10 @@ def test_create_learning_object_service_uses_provided_session() -> None:
             service.audit_repository,
             SQLAlchemyAuditRepository,
         )
+
+        assert service.learning_object_repository.session is session
+        assert service.version_repository.session is session
+        assert service.audit_repository.session is session
     finally:
         session.close()
         engine.dispose()
