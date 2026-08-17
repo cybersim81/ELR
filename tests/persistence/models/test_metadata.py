@@ -20,3 +20,10 @@ def test_learning_object_owned_collections_use_delete_orphan():
 
     assert examples_relationship.cascade.delete_orphan
     assert notes_relationship.cascade.delete_orphan
+
+def test_learning_object_owned_collections_are_collection_relationships():
+    examples_relationship = LearningObjectModel.examples.property
+    notes_relationship = LearningObjectModel.notes.property
+
+    assert examples_relationship.uselist is True
+    assert notes_relationship.uselist is True
