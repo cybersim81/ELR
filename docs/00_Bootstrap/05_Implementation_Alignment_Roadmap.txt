@@ -370,59 +370,86 @@ Status: `PENDING`
 # Current Roadmap Position
 
 M0.3.2 Specification Propagation
-        │
-        ▼
+│
+▼
 Implementation Baseline Inventory
-        │
-        ▼
+│
+▼
 E2E Gap Map
-        │
-        ▼
+│
+▼
 IA-01 Domain Semantic Alignment
-        │
-        │ COMPLETE
-        ▼
-▶ IA-02 Contract and Lifecycle Alignment
-        │
-        │ COMPLETE — 100%
-        ▼
-IA-03 Persistence Model
-        │
-        ▼
+│
+│ COMPLETE
+▼
+IA-02 Contract and Lifecycle Alignment
+│
+│ COMPLETE — 100%
+▼
+▶ IA-03 Persistence Model
+│
+│ COMPLETE — 100%
+▼
 IA-04 Repository Integration
-        │
-        ▼
+│
+│ NEXT — 0%
+▼
 IA-05 Database Integration
-        │
-        ▼
+│
+▼
 IA-06 Persistence Test Conformance
-        │
-        ▼
+│
+▼
 IA-07 E2E-GATE-01
-        │
-        ▼
+│
+▼
 IA-08 Implementation Conformance
 
-Last Completed Gate
+## Current Status Summary
 
-IA-02 — COMPLETE
+| Phase                                  | Status   | Progress |
+| -------------------------------------- | -------- | -------: |
+| IA-01 Domain Semantic Alignment        | COMPLETE |     100% |
+| IA-02 Contract and Lifecycle Alignment | COMPLETE |     100% |
+| IA-03 Persistence Model                | COMPLETE |     100% |
+| IA-04 Concrete Repository Layer        | PENDING  |       0% |
+| IA-05 Database Wiring                  | PENDING  |       0% |
+| IA-06 Persistent Integration Tests     | PENDING  |       0% |
+| IA-07 E2E-GATE-01                      | PENDING  |       0% |
+| IA-08 Implementation Conformance       | PENDING  |       0% |
 
-Current Gate Progress
+## Last Completed Gate
 
-IA-02 — 100%
+`IA-03 — PERSISTENCE MODEL ALIGNMENT — COMPLETE — 100%`
 
-Current Work Package
+## Current Work Package
 
-IA-03 — PERSISTENCE MODEL
+`IA-04 — CONCRETE REPOSITORY LAYER — 0%`
 
-Next Action
+## Next Action
 
-IA-03 — PERSISTENCE MODEL
+Verify the existing Domain Repository contracts and repository tree before implementing IA-04.
 
-IA-01 is complete.
+Then proceed one concrete repository block at a time using:
 
-IA-02 is complete and must not be reopened unless new authoritative evidence establishes a direct contract or lifecycle contradiction with the normative corpus.
+`inspect → block/sections → verify → test → percentage → next gap`
 
-The remaining implementation gaps are persistence, concrete repository integration, database wiring, persistent reload, and persistent end-to-end test coverage.
+## Operating Rule
 
-No production persistence implementation should be treated as complete until the IA-03 through IA-07 gates are positively verified.
+No implementation change is considered complete until its focused test passes.
+
+For an existing file with a small, localized change, identify only the sections that need modification instead of rewriting the whole file.
+
+For a new file, provide one complete block for that file.
+
+If a single-file change is too large for one block, split it into sequential blocks while keeping all blocks scoped to that same file.
+
+Distinct files are always handled as distinct blocks.
+
+If a repository read or search fails, automatically try alternative Git tree, path, or lookup methods before stopping.
+
+After a focused test passes, advance automatically to the next confirmed gap and update the completion percentage.
+
+Do not reopen a completed IA phase unless new authoritative evidence establishes a direct contradiction with the normative architecture or roadmap.
+
+IA-03 is closed. Concrete repository integration belongs to IA-04. Database/session/migration/transaction wiring belongs to IA-05. Persistent integration testing belongs to IA-06.
