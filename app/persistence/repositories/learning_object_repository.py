@@ -27,7 +27,7 @@ class SQLAlchemyLearningObjectRepository(LearningObjectRepository):
             updated_at=learning_object.updated_at,
         )
 
-         self._session.add(model)
+        self._session.add(model)
 
     def get_by_id(self, object_id: UUID) -> LearningObject | None:
         model = self._session.get(LearningObjectModel, object_id)
