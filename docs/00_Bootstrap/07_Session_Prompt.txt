@@ -67,7 +67,7 @@ The following state is already established:
 
 `IA-01 Domain Semantic Alignment → COMPLETE`
 
-`IA-02 Contract and Lifecycle Alignment → NEXT`
+`IA-02 Contract and Lifecycle Alignment → IN PROGRESS — 55%`
 
 `E2E-GATE-01 → PENDING`
 
@@ -116,9 +116,12 @@ The remaining implementation alignment and persistence findings are recorded in:
 
 `03_Implementation_Finding_Register.txt`
 
-The principal current open alignment item is:
+The previously identified IA-02 alignment findings have been resolved and verified:
 
-* `IA-009` — LearningObject delete capability.
+* `IA-009` — LearningObject delete capability — `RESOLVED`;
+* `IA-016` — Lifecycle Application Orchestration — `RESOLVED`.
+
+The remaining IA-02 work concerns repository ownership boundaries, Version history ownership, Audit history boundary, and lifecycle contract consistency.
 
 The principal remaining persistence gaps concern:
 
@@ -142,7 +145,9 @@ Resume at:
 
 **IA-02 — Contract and Lifecycle Alignment**
 
-The immediate task is to resolve the remaining contract and lifecycle ambiguities before materializing production persistence.
+The immediate task is to complete the remaining Contract and Lifecycle Alignment work before materializing production persistence.
+
+Current IA-02 progress is `55%`.
 
 Do NOT restart IA-01 unless new authoritative evidence establishes a contradiction with its closure.
 
@@ -160,8 +165,6 @@ Proceed in this order:
 8. Update the Roadmap if the gate position changes.
 9. Keep `06_Session_Continuity_State.txt` synchronized.
 10. Only then proceed to the next implementation gate.
-
----
 
 ---
 
@@ -300,6 +303,7 @@ Before ending the session:
 5. update `06_Session_Continuity_State.txt`;
 6. ensure `00_Bootstrap_Pack_Index.txt` still correctly describes the Pack;
 7. ensure this Session Prompt still references the complete Pack.
+8. report the current completion percentage of the active roadmap step only after positive repository verification.
 
 The next session must be able to begin from `07_Session_Prompt.txt` alone and autonomously discover and read the complete Bootstrap Pack.
 
@@ -336,4 +340,4 @@ Do not allow historical bootstrap state to silently override the current consoli
 
 **READ THE COMPLETE `docs/00_Bootstrap/` PACK FIRST.**
 
-**THEN RESUME AT IA-02 — CONTRACT AND LIFECYCLE ALIGNMENT.**
+**THEN RESUME AT IA-02 — CONTRACT AND LIFECYCLE ALIGNMENT — 55%.**
