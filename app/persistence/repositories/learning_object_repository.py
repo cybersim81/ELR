@@ -2,7 +2,7 @@ from uuid import UUID
 
 from sqlalchemy.orm import Session
 
-from app.domain.entities.learning_object import LearningObject
+from app.domain.entities.learning_object import LearningObject, LearningObjectState
 from app.domain.entities.example import Example
 from app.domain.entities.knowledge_statement import KnowledgeStatement
 from app.domain.entities.note import Note
@@ -53,7 +53,7 @@ class SQLAlchemyLearningObjectRepository(LearningObjectRepository):
                 Note(content=note.content)
                 for note in model.notes
             },
-            state=model.state,
+            state=LearningObjectState(model.state),
             created_at=model.created_at,
             updated_at=model.updated_at,
         )
