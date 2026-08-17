@@ -146,6 +146,7 @@ The LearningObject does not use `Reviewed`, `Approved`, `Rejected`, or `Updated`
 ### IA Mapping
 
 * IA-005 — RESOLVED
+* IA-016 — RESOLVED
 
 ### Status
 
