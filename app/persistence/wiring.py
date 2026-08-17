@@ -16,7 +16,6 @@ from app.persistence.repositories.version_repository import (
 def create_learning_object_service(
     session: Session | None = None,
 ) -> tuple[LearningObjectService, Session]:
-    owned_session = session is None
     session = session or SessionFactory()
 
     service = LearningObjectService(
