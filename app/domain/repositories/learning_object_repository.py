@@ -23,11 +23,3 @@ class LearningObjectRepository(ABC):
         object_id: UUID
     ) -> LearningObject | None:
         pass
-
-
-    @abstractmethod
-    def delete(
-        self,
-        object_id: UUID
-    ) -> None:
-        pass
