@@ -11,10 +11,11 @@ class SQLAlchemyLearningObjectRepository(LearningObjectRepository):
 SQLAlchemy implementation of the LearningObject repository.
 """
 
-def __init__(self, session: Session) -> None:
+
+ def __init__(self, session: Session) -> None:
     self._session = session
 
-def save(self, learning_object: LearningObject) -> None:
+ def save(self, learning_object: LearningObject) -> None:
     model = LearningObjectModel(
         id=learning_object.id,
         anchor_id=learning_object.anchor_id,
@@ -28,7 +29,7 @@ def save(self, learning_object: LearningObject) -> None:
 
     self._session.add(model)
 
-def get_by_id(self, object_id: UUID) -> LearningObject | None:
+ def get_by_id(self, object_id: UUID) -> LearningObject | None:
     model = self._session.get(LearningObjectModel, object_id)
 
     if model is None:
@@ -37,3 +38,4 @@ def get_by_id(self, object_id: UUID) -> LearningObject | None:
     raise NotImplementedError(
         "LearningObject persistence-to-domain mapping is not implemented yet"
     )
+
