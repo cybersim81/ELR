@@ -89,17 +89,26 @@ The current gate is:
 
 IA-01 is closed.
 
-IA-02 must resolve remaining repository and lifecycle contract ambiguities before production persistence is materialized.
+IA-02 is in progress.
+
+Current verified progress:
+
+`55%`
+
+The following IA-02 findings have been resolved and verified:
+
+* `IA-009` — LearningObject delete capability;
+* `IA-016` — Lifecycle Application Orchestration.
+
+The remaining IA-02 work concerns repository ownership boundaries, Version history ownership, Audit history boundary, and lifecycle contract consistency before production persistence is materialized.
 
 ---
 
 ## Known Remaining Alignment Items
 
-The following remain open for subsequent implementation phases:
+No currently verified open IA-02 findings remain.
 
-* `IA-009` — LearningObject delete capability.
-
-IA-009 must be resolved against the normative lifecycle and repository boundaries before the production repository contract is treated as final.
+The IA-02 gate remains in progress at `55%` while the remaining repository ownership, Version history, Audit history, and lifecycle contract boundaries are reviewed and formally closed.
 
 ---
 
@@ -225,5 +234,11 @@ The Bootstrap Pack MUST remain internally consistent after such an update.
 **RESUME AT: IA-02 CONTRACT AND LIFECYCLE ALIGNMENT**
 
 **IA-01 DOMAIN SEMANTIC ALIGNMENT: COMPLETE**
+
+**IA-02 CONTRACT AND LIFECYCLE ALIGNMENT: IN PROGRESS — 55%**
+
+**IA-009: RESOLVED**
+
+**IA-016: RESOLVED**
 
 **E2E-GATE-01: PENDING — LATER IMPLEMENTATION GATE**
