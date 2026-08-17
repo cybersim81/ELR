@@ -12,3 +12,11 @@ def test_persistence_models_are_registered_in_base_metadata():
     assert LearningObjectModel.__tablename__ in Base.metadata.tables
     assert LearningObjectExampleModel.__tablename__ in Base.metadata.tables
     assert LearningObjectNoteModel.__tablename__ in Base.metadata.tables
+
+
+def test_learning_object_owned_collections_use_delete_orphan():
+    examples_relationship = LearningObjectModel.examples.property
+    notes_relationship = LearningObjectModel.notes.property
+
+    assert examples_relationship.cascade.delete_orphan
+    assert notes_relationship.cascade.delete_orphan
