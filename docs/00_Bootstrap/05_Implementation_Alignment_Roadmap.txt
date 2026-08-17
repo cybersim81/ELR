@@ -210,7 +210,9 @@ Repository capabilities must remain consistent with the lifecycle and aggregate 
 
 `IA-04 REPOSITORY INTEGRATION`
 
-Status: `PENDING`
+Status: `COMPLETE`
+
+Progress: `100%`
 
 ---
 
@@ -392,7 +394,7 @@ IA-02 Contract and Lifecycle Alignment
 ▼
 IA-04 Repository Integration
 │
-│ NEXT — 0%
+│ COMPLETE — 100%
 ▼
 IA-05 Database Integration
 │
@@ -412,7 +414,7 @@ IA-08 Implementation Conformance
 | IA-01 Domain Semantic Alignment        | COMPLETE |     100% |
 | IA-02 Contract and Lifecycle Alignment | COMPLETE |     100% |
 | IA-03 Persistence Model                | COMPLETE |     100% |
-| IA-04 Concrete Repository Layer        | PENDING  |       0% |
+| IA-04 Concrete Repository Layer        | COMPLETE |     100% |
 | IA-05 Database Wiring                  | PENDING  |       0% |
 | IA-06 Persistent Integration Tests     | PENDING  |       0% |
 | IA-07 E2E-GATE-01                      | PENDING  |       0% |
@@ -420,15 +422,15 @@ IA-08 Implementation Conformance
 
 ## Last Completed Gate
 
-`IA-03 — PERSISTENCE MODEL ALIGNMENT — COMPLETE — 100%`
+`IA-04 — REPOSITORY INTEGRATION — COMPLETE — 100%`
 
 ## Current Work Package
 
-`IA-04 — CONCRETE REPOSITORY LAYER — 0%`
+`IA-05 — DATABASE WIRING — 0%`
 
 ## Next Action
 
-Verify the existing Domain Repository contracts and repository tree before implementing IA-04.
+Verify the database/session wiring before implementing IA-05.
 
 Then proceed one concrete repository block at a time using:
 
