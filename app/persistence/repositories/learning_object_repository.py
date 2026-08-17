@@ -3,6 +3,9 @@ from uuid import UUID
 from sqlalchemy.orm import Session
 
 from app.domain.entities.learning_object import LearningObject
+from app.domain.entities.example import Example
+from app.domain.entities.knowledge_statement import KnowledgeStatement
+from app.domain.entities.note import Note
 from app.domain.repositories.learning_object_repository import LearningObjectRepository
 from app.persistence.models.learning_object_model import LearningObjectModel
 
@@ -34,6 +37,23 @@ class SQLAlchemyLearningObjectRepository(LearningObjectRepository):
         if model is None:
             return None
 
-        raise NotImplementedError(
-            "LearningObject persistence-to-domain mapping is not implemented yet"
+        return LearningObject(
+            id=model.id,
+            anchor_id=model.anchor_id,
+            statement=KnowledgeStatement(
+                text=model.statement_text,
+                language=model.statement_language,
+            ),
+            category_id=model.category_id,
+            examples={
+                Example(content=example.content)
+                for example in model.examples
+            },
+            notes={
+                Note(content=note.content)
+                for note in model.notes
+            },
+            state=model.state,
+            created_at=model.created_at,
+            updated_at=model.updated_at,
         )
