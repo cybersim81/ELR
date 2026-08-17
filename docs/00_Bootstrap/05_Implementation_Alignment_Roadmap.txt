@@ -354,8 +354,6 @@ IA-01 Domain Semantic Alignment
         │
         │ IN PROGRESS — 55%
         ▼
-        │
-        ▼
 IA-03 Persistence Model
         │
         ▼
