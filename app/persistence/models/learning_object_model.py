@@ -1,10 +1,14 @@
 from datetime import datetime
 from uuid import UUID
 
-from sqlalchemy import DateTime, Enum, ForeignKey, String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import DateTime, ForeignKey, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from .base import Base
+from app.persistence.models.base import Base
+from app.persistence.models.learning_object_value_models import (
+    LearningObjectExampleModel,
+    LearningObjectNoteModel,
+)
 
 
 class LearningObjectModel(Base):
@@ -28,17 +32,12 @@ class LearningObjectModel(Base):
     )
 
     category_id: Mapped[UUID] = mapped_column(
+        ForeignKey("categories.id"),
         nullable=False,
     )
 
     state: Mapped[str] = mapped_column(
-        Enum(
-            "Candidate",
-            "Proposed",
-            "Active",
-            "Retired",
-            name="learning_object_state",
-        ),
+        String,
         nullable=False,
     )
 
@@ -50,4 +49,12 @@ class LearningObjectModel(Base):
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,
+    )
+
+    examples: Mapped[set[LearningObjectExampleModel]] = relationship(
+        cascade="all, delete-orphan",
+    )
+
+    notes: Mapped[set[LearningObjectNoteModel]] = relationship(
+        cascade="all, delete-orphan",
     )
