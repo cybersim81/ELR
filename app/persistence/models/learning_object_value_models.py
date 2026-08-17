@@ -1,30 +1,34 @@
-from datetime import datetime, timezone
-from uuid import uuid4
+from uuid import UUID
 
-from app.persistence.models.learning_object_model import LearningObjectModel
+from sqlalchemy import ForeignKey, String
+from sqlalchemy.orm import Mapped, mapped_column
+
+from .base import Base
 
 
-def test_learning_object_model_constructs_with_required_fields():
-    anchor_id = uuid4()
-    category_id = uuid4()
-    created_at = datetime.now(timezone.utc)
-    updated_at = datetime.now(timezone.utc)
+class LearningObjectExampleModel(Base):
+    __tablename__ = "learning_object_examples"
 
-    model = LearningObjectModel(
-        id=uuid4(),
-        anchor_id=anchor_id,
-        statement_text="A learning statement",
-        statement_language="en",
-        category_id=category_id,
-        state="Candidate",
-        created_at=created_at,
-        updated_at=updated_at,
+    learning_object_id: Mapped[UUID] = mapped_column(
+        ForeignKey("learning_objects.id"),
+        primary_key=True,
     )
 
-    assert model.anchor_id == anchor_id
-    assert model.statement_text == "A learning statement"
-    assert model.statement_language == "en"
-    assert model.category_id == category_id
-    assert model.state == "Candidate"
-    assert model.created_at == created_at
-    assert model.updated_at == updated_at
+    content: Mapped[str] = mapped_column(
+        String,
+        primary_key=True,
+    )
+
+
+class LearningObjectNoteModel(Base):
+    __tablename__ = "learning_object_notes"
+
+    learning_object_id: Mapped[UUID] = mapped_column(
+        ForeignKey("learning_objects.id"),
+        primary_key=True,
+    )
+
+    content: Mapped[str] = mapped_column(
+        String,
+        primary_key=True,
+    )
