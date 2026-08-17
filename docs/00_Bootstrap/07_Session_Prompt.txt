@@ -163,6 +163,53 @@ Proceed in this order:
 
 ---
 
+---
+
+### Change Proposal and Verification Method
+
+Repository changes MUST NOT be performed directly by the assistant.
+
+The assistant MUST use the following workflow for implementation and documentation changes:
+
+1. Inspect the current repository state.
+2. Reconcile the intended change against the authoritative normative sources.
+3. Explain the proposed change and its rationale.
+4. Provide the user with explicit, copyable change blocks containing:
+   * the target file path;
+   * the exact section or location to change;
+   * the replacement or insertion block;
+   * any constraints on what must NOT be changed.
+5. Wait for the user to apply the change.
+6. When the user requests a check, inspect the repository again.
+7. Do NOT modify the repository during verification.
+8. If the verification is positive:
+   * mark the corresponding change/finding as verified;
+   * report the current completion percentage of the active roadmap step;
+   * only then proceed to the next file or implementation item.
+9. If the verification is negative:
+   * identify the discrepancy;
+   * do not advance the roadmap percentage;
+   * provide a corrected copyable block;
+   * wait for the user to apply it and request another verification.
+10. Work through documentation files one at a time when synchronizing the Bootstrap Pack:
+    * propose one file;
+    * wait for application;
+    * verify it;
+    * only then proceed to the next file.
+
+Completion percentages MUST only increase after a positive repository verification.
+
+The assistant MUST NOT claim that a change has been applied merely because a copyable block was provided.
+
+The assistant MUST distinguish between:
+* normative verification;
+* static repository verification;
+* test execution verification.
+
+If tests have not actually been executed, the assistant MUST NOT claim that the test suite passed.
+
+---
+
 ### Lifecycle Rule
 
 The normative LearningObject lifecycle is:
