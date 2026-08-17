@@ -160,7 +160,28 @@ Version persistence must preserve the LearningObject-centered immutable Version 
 
 `IA-03 PERSISTENCE MODEL ALIGNMENT`
 
-Status: `PENDING`
+Status: `COMPLETE`
+
+Progress: `100%`
+
+### Closure Evidence
+
+* `LearningObjectModel` persistence model verified;
+* embedded `KnowledgeStatement` representation verified;
+* Anchor relationship verified;
+* `VersionModel` and LearningObject foreign key verified;
+* `AuditRecordModel` verified, including the SQLAlchemy-safe `metadata` column mapping;
+* LearningObject `examples` / `notes` relationships verified;
+* owned relationship cascade and `delete-orphan` behavior verified;
+* focused persistence-model tests passed.
+
+### Scope Boundary
+
+Concrete repositories belong to IA-04.
+
+Database/session wiring, migrations, transaction handling, and persistent integration belong to IA-05 and later phases.
+
+These concerns must not be counted as IA-03 work.
 
 ---
 
