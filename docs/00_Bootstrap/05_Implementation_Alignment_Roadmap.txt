@@ -84,6 +84,19 @@ Primarily:
 * Audit history boundary;
 * lifecycle contract consistency.
 
+### Verified Resolution Progress
+
+The following IA-02 alignment findings have been resolved and verified:
+
+* IA-009 — LearningObject delete capability — `RESOLVED`;
+* IA-016 — Lifecycle Application Orchestration — `RESOLVED`.
+
+The LearningObject Repository no longer exposes physical deletion as a Domain Repository capability.
+
+The LearningObject lifecycle orchestration and invalid-transition coverage have been verified against:
+
+`Candidate → Proposed → Active → Retired`
+
 ### Required Result
 
 Every repository capability must have an explicit normative purpose.
@@ -102,7 +115,9 @@ Audit history must remain distinct from immutable Version history.
 
 `IA-02 CONTRACT AND LIFECYCLE ALIGNMENT`
 
-Status: `PENDING`
+Status: `IN PROGRESS`
+
+Progress: `55%`
 
 ---
 
@@ -337,6 +352,9 @@ IA-01 Domain Semantic Alignment
         ▼
 ▶ IA-02 Contract and Lifecycle Alignment
         │
+        │ IN PROGRESS — 55%
+        ▼
+        │
         ▼
 IA-03 Persistence Model
         │
@@ -358,6 +376,10 @@ IA-08 Implementation Conformance
 Last Completed Gate
 
 IA-01 — COMPLETE
+
+Current Gate Progress
+
+IA-02 — 55%
 
 Current Work Package
 
