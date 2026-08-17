@@ -1,4 +1,3 @@
-
 from uuid import UUID
 
 from sqlalchemy.orm import Session
@@ -22,7 +21,7 @@ class SQLAlchemyAuditRepository(AuditRepository):
             entity_id=audit.entity_id,
             event_type=audit.event_type,
             actor=audit.actor,
-            metadata=audit.metadata,
+            metadata_=audit.metadata,
             timestamp=audit.timestamp,
         )
 
@@ -42,7 +41,7 @@ class SQLAlchemyAuditRepository(AuditRepository):
                 entity_id=model.entity_id,
                 event_type=model.event_type,
                 actor=model.actor,
-                metadata=model.metadata,
+                metadata=model.metadata_,
                 timestamp=model.timestamp,
             )
             for model in models
