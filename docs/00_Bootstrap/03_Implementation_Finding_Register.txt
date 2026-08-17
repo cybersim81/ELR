@@ -136,13 +136,22 @@ Each finding must be resolved against the authoritative normative corpus before 
 
 **Area:** Repository / Lifecycle
 
-**Finding:** LearningObjectRepository exposes `delete()`, and the in-memory implementation supports it.
+**Finding:** LearningObjectRepository exposed `delete()`, and the in-memory implementation supported it.
 
-**Impact:** Physical deletion semantics have not yet been reconciled with lifecycle and persistence requirements.
+**Impact:** Physical deletion semantics had not yet been reconciled with lifecycle and persistence requirements.
 
-**Status:** `OPEN`
+**Status:** `RESOLVED`
 
-**Required action:** Establish whether deletion is an allowed domain operation, an administrative/infrastructure operation, or must be removed from the effective repository contract.
+**Resolution:** `delete()` has been removed from the effective LearningObjectRepository contract and from the in-memory repository implementation.
+
+**Normative alignment:** LearningObject lifecycle terminates at `Retired`. Retirement does not imply physical deletion, and historical identity/version information must remain available. Physical deletion, if ever required, is outside the Domain Repository contract.
+
+**Evidence:**
+
+* `app/domain/repositories/learning_object_repository.py`
+* `tests/fixtures/repositories.py`
+
+**Resolution note:** LearningObject no longer exposes physical deletion as a Domain Repository capability.
 
 ---
 
@@ -242,9 +251,23 @@ and the in-memory implementation filters Version records using `learning_object_
 
 **Finding:** LearningObjectService implements the lifecycle progression and rejects invalid transitions through the domain model.
 
-**Impact:** The application lifecycle skeleton is operational.
+**Impact:** The application lifecycle skeleton is operational, but explicit test coverage was initially incomplete for several prohibited transitions.
 
-**Status:** `PRELIMINARILY CONSISTENT`
+**Status:** `RESOLVED`
+
+**Resolution:** Lifecycle orchestration and domain transition rules have been verified, including explicit rejection of invalid transitions across Candidate, Proposed, Active, and Retired states.
+
+**Normative lifecycle:**
+
+`Candidate → Proposed → Active → Retired`
+
+**Evidence:**
+
+* `app/domain/entities/learning_object.py`
+* `app/application/services/learning_object_service.py`
+* `tests/domain/test_learning_object.py`
+
+**Resolution note:** The application lifecycle is aligned with the normative state model. `Reviewed`, `Approved`, `Rejected`, and `Updated` are not LearningObject lifecycle states.
 
 ---
 
@@ -387,7 +410,7 @@ IA-01 is therefore considered complete.
 
 ## Remaining Open Alignment
 
-* IA-009 — LearningObject Delete Capability
+No currently verified open Contract and Lifecycle alignment findings remain.
 
 ## Persistence Gaps
 
@@ -406,7 +429,6 @@ IA-01 is therefore considered complete.
 
 * IA-011
 * IA-012
-* IA-016
 * IA-023
 
 ## Current Conclusion
