@@ -996,3 +996,157 @@ def test_get_history_returns_persisted_versions_in_order(
         session.close()
         engine.dispose()
 
+
+def test_get_reconstructs_learning_object_with_examples_and_notes(
+    monkeypatch,
+) -> None:
+    monkeypatch.setenv(
+        "DATABASE_URL",
+        "sqlite://",
+    )
+
+    import importlib
+
+    import app.persistence.database as database
+
+    database = importlib.reload(database)
+
+    from app.domain.entities.example import Example
+    from app.domain.entities.knowledge_statement import KnowledgeStatement
+    from app.domain.entities.note import Note
+    from app.persistence.models.anchor_model import AnchorModel
+    from app.persistence.models.base import Base
+    from app.persistence.models.knowledge_category_model import (
+        KnowledgeCategoryModel,
+    )
+    from app.persistence.models.learning_object_model import (
+        LearningObjectModel,
+    )
+    from app.persistence.models.learning_object_value_models import (
+        LearningObjectExampleModel,
+        LearningObjectNoteModel,
+    )
+    from app.persistence.wiring import create_learning_object_service
+
+    engine = create_engine(
+        "sqlite://",
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
+    )
+
+    Base.metadata.create_all(engine)
+
+    SessionFactory = database.sessionmaker(
+        bind=engine,
+        class_=database.Session,
+        expire_on_commit=False,
+    )
+
+    session = SessionFactory()
+
+    try:
+        anchor_id = uuid4()
+        category_id = uuid4()
+
+        session.add(
+            AnchorModel(
+                id=anchor_id,
+                content="Test anchor",
+                type="text",
+                created_at=__import__("datetime").datetime.now(
+                    __import__("datetime").timezone.utc
+                ),
+            )
+        )
+
+        session.add(
+            KnowledgeCategoryModel(
+                id=category_id,
+                name="Test category",
+            )
+        )
+
+        session.commit()
+
+        service, repository = create_learning_object_service(
+            session
+        )
+
+        learning_object = service.create_candidate(
+            anchor_id=anchor_id,
+            statement=KnowledgeStatement(
+                text="Persisted knowledge statement",
+                language="en",
+            ),
+            category_id=category_id,
+            actor="creator",
+        )
+
+        session.flush()
+
+        model = session.get(
+            LearningObjectModel,
+            learning_object.id,
+        )
+
+        assert model is not None
+
+        model.examples.add(
+            LearningObjectExampleModel(
+                learning_object_id=learning_object.id,
+                content="Example one",
+            )
+        )
+
+        model.examples.add(
+            LearningObjectExampleModel(
+                learning_object_id=learning_object.id,
+                content="Example two",
+            )
+        )
+
+        model.notes.add(
+            LearningObjectNoteModel(
+                learning_object_id=learning_object.id,
+                content="Note one",
+            )
+        )
+
+        model.notes.add(
+            LearningObjectNoteModel(
+                learning_object_id=learning_object.id,
+                content="Note two",
+            )
+        )
+
+        session.commit()
+        session.expire_all()
+
+        persisted = service.get(
+            learning_object.id,
+        )
+
+        assert persisted.id == learning_object.id
+        assert persisted.anchor_id == anchor_id
+        assert persisted.category_id == category_id
+
+        assert persisted.statement.text == (
+            "Persisted knowledge statement"
+        )
+        assert persisted.statement.language == "en"
+
+        assert persisted.state.value == "Candidate"
+
+        assert persisted.examples == {
+            Example(content="Example one"),
+            Example(content="Example two"),
+        }
+
+        assert persisted.notes == {
+            Note(content="Note one"),
+            Note(content="Note two"),
+        }
+
+    finally:
+        session.close()
+        engine.dispose()
