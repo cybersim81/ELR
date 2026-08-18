@@ -1,17 +1,24 @@
 from uuid import uuid4
 
-from sqlalchemy import inspect
+import pytest
 
 from app.domain.entities.knowledge_statement import KnowledgeStatement
 from app.persistence.models.audit_record_model import AuditRecordModel
 from app.persistence.models.learning_object_model import LearningObjectModel
 from app.persistence.models.version_model import VersionModel
-from app.persistence.transaction import transaction
-from app.persistence.wiring import create_learning_object_service
 
 
-def test_approve_persists_version_and_audit() -> None:
+def test_approve_persists_version_and_audit(
+    monkeypatch,
+) -> None:
+    monkeypatch.setenv(
+        "DATABASE_URL",
+        "sqlite:///:memory:",
+    )
+
     from app.persistence.database import create_session
+    from app.persistence.transaction import transaction
+    from app.persistence.wiring import create_learning_object_service
 
     session = create_session()
 
@@ -74,6 +81,7 @@ def test_approve_persists_version_and_audit() -> None:
         )
 
         assert len(audits) == 3
+
         assert [
             audit.event_type
             for audit in audits
