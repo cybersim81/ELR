@@ -1228,7 +1228,7 @@ def test_invalid_retire_rolls_back_state_and_audit(
 
         session.commit()
 
-        service = create_learning_object_service(
+        service, _ = create_learning_object_service(
     	    session
         )
         repository = SQLAlchemyLearningObjectRepository(
