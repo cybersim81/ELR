@@ -1,9 +1,6 @@
 import pytest
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.orm import Session, sessionmaker
-
-from app.persistence import transaction as transaction_module
-from app.persistence.wiring import create_learning_object_service
 
 
 def test_transaction_and_wiring_share_the_same_session(
@@ -13,6 +10,9 @@ def test_transaction_and_wiring_share_the_same_session(
         "DATABASE_URL",
         "sqlite:///:memory:",
     )
+
+    from app.persistence import transaction as transaction_module
+    from app.persistence.wiring import create_learning_object_service
 
     engine = create_engine("sqlite:///:memory:")
     session_factory = sessionmaker(
@@ -31,15 +31,12 @@ def test_transaction_and_wiring_share_the_same_session(
 
             assert returned_session is transaction_session
 
-            assert service.learning_object_repository._session is (
-                transaction_session
+            assert (
+                service.learning_object_repository._session
+                is transaction_session
             )
-            assert service.version_repository._session is (
-                transaction_session
-            )
-            assert service.audit_repository._session is (
-                transaction_session
-            )
+            assert service.version_repository._session is transaction_session
+            assert service.audit_repository._session is transaction_session
     finally:
         session.close()
         engine.dispose()
@@ -52,6 +49,9 @@ def test_transaction_wiring_rolls_back_on_error(
         "DATABASE_URL",
         "sqlite:///:memory:",
     )
+
+    from app.persistence import transaction as transaction_module
+    from app.persistence.wiring import create_learning_object_service
 
     engine = create_engine("sqlite:///:memory:")
     session_factory = sessionmaker(
@@ -71,9 +71,7 @@ def test_transaction_wiring_rolls_back_on_error(
 
                 assert service is not None
 
-                transaction_session.execute(
-                    __import__("sqlalchemy").text("SELECT 1")
-                )
+                transaction_session.execute(text("SELECT 1"))
 
                 raise RuntimeError("boom")
 
