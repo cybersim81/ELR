@@ -2,10 +2,15 @@ import pytest
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import Session, sessionmaker
 
-from app.persistence import transaction as transaction_module
 
+def test_transaction_commits_on_success(monkeypatch) -> None:
+    monkeypatch.setenv(
+        "DATABASE_URL",
+        "sqlite:///:memory:",
+    )
 
-def test_transaction_commits_on_success() -> None:
+    from app.persistence import transaction as transaction_module
+
     engine = create_engine("sqlite:///:memory:")
     session_factory = sessionmaker(bind=engine, class_=Session)
     session = session_factory()
@@ -20,7 +25,14 @@ def test_transaction_commits_on_success() -> None:
         engine.dispose()
 
 
-def test_transaction_rolls_back_on_error() -> None:
+def test_transaction_rolls_back_on_error(monkeypatch) -> None:
+    monkeypatch.setenv(
+        "DATABASE_URL",
+        "sqlite:///:memory:",
+    )
+
+    from app.persistence import transaction as transaction_module
+
     engine = create_engine("sqlite:///:memory:")
     session_factory = sessionmaker(bind=engine, class_=Session)
     session = session_factory()
@@ -38,6 +50,13 @@ def test_transaction_rolls_back_on_error() -> None:
 
 
 def test_transaction_closes_owned_session(monkeypatch) -> None:
+    monkeypatch.setenv(
+        "DATABASE_URL",
+        "sqlite:///:memory:",
+    )
+
+    from app.persistence import transaction as transaction_module
+
     engine = create_engine("sqlite:///:memory:")
 
     class TrackingSession(Session):
