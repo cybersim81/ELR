@@ -172,7 +172,9 @@ The Version snapshot contains the structured KnowledgeStatement representation.
 
 The Version repository is explicitly LearningObject-centered.
 
-Production Version persistence remains absent.
+Production Version persistence is implemented and verified by E2E-07.
+
+The remaining gap is recovery of persistent Version history after a new independent session, which belongs to E2E-09.
 
 ### IA Mapping
 
@@ -184,7 +186,7 @@ Production Version persistence remains absent.
 
 ### Status
 
-`APPLICATION COMPLETE / PERSISTENCE GAP`
+``APPLICATION COMPLETE / PERSISTENCE VERIFIED — RECOVERY GAP REMAINS``
 
 ---
 
@@ -198,11 +200,13 @@ Create an immutable operational AuditRecord for lifecycle operations.
 
 AuditRecord creation and in-memory storage are implemented and tested.
 
-Production AuditRecord persistence remains absent.
+AuditRecord production persistence is implemented and verified by E2E-07.
+
+The remaining gap is recovery of persistent Audit history after a new independent session, which belongs to E2E-10.
 
 ### Status
 
-`APPLICATION COMPLETE / PERSISTENCE GAP`
+`APPLICATION COMPLETE / PERSISTENCE VERIFIED — RECOVERY GAP REMAINS`
 
 ---
 
