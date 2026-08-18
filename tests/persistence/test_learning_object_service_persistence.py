@@ -1182,6 +1182,9 @@ def test_invalid_retire_rolls_back_state_and_audit(
     from app.persistence.models.learning_object_model import (
         LearningObjectModel,
     )
+    from app.persistence.repositories.learning_object_repository import (
+        SQLAlchemyLearningObjectRepository,
+    )
     from app.persistence.wiring import create_learning_object_service
     from app.persistence.transaction import transaction
 
@@ -1225,7 +1228,10 @@ def test_invalid_retire_rolls_back_state_and_audit(
 
         session.commit()
 
-        service, repository = create_learning_object_service(
+        service = create_learning_object_service(
+    	    session
+        )
+        repository = SQLAlchemyLearningObjectRepository(
             session
         )
 
