@@ -257,6 +257,14 @@ IA-04 Concrete Repository Layer
 IA-05 Database Wiring
         ↓
 E2E-07 Production Persistence
+        │
+        ├──────────────────────────────────────────────┐
+        │ IA-06 Persistence Test Conformance           │
+        │ IN PROGRESS — PARTIAL                        │
+        │                                              │
+        │ Cross-cutting conformance scope:             │
+        │ E2E-08 → E2E-11                              │
+        └──────────────────────────────────────────────┘
         ↓
 E2E-08 Persistent Reload
         ↓
@@ -265,8 +273,6 @@ E2E-09 Version History Recovery
 E2E-10 Audit History Recovery
         ↓
 E2E-11 Persistent End-to-End Test
-        ↓
-IA-06 Persistence Test Conformance
         ↓
 IA-07 E2E-GATE-01
         ↓
