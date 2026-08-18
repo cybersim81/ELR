@@ -1336,6 +1336,13 @@ def test_approve_rolls_back_learning_object_version_and_audit_on_failure(
     from app.persistence.models.audit_record_model import AuditRecordModel
     from app.persistence.models.base import Base
     from app.persistence.models.version_model import VersionModel
+    from app.persistence.models.anchor_model import AnchorModel
+    from app.persistence.models.knowledge_category_model import (
+        KnowledgeCategoryModel,
+    )
+    from app.persistence.models.learning_object_model import (
+        LearningObjectModel,
+    )
     from app.persistence.repositories.learning_object_repository import (
         SQLAlchemyLearningObjectRepository,
     )
