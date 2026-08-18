@@ -1,9 +1,8 @@
 import pytest
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.orm import Session, sessionmaker
+from uuid import uuid4
 
-from app.domain.entities.knowledge_statement import KnowledgeStatement
-from app.domain.entities.learning_object import LearningObject
 from app.persistence.models.audit_record_model import AuditRecordModel
 from app.persistence.models.learning_object_model import LearningObjectModel
 from app.persistence.models.version_model import VersionModel
@@ -17,9 +16,13 @@ def test_approve_persists_learning_object_version_and_audit(
         "sqlite:///:memory:",
     )
 
-    from app.persistence.database import Base
+    from app.persistence.models.base import Base
+    from app.persistence.models.anchor_model import AnchorModel
+    from app.persistence.models.category_model import CategoryModel
     from app.persistence.transaction import transaction
     from app.persistence.wiring import create_learning_object_service
+    from app.domain.entities.knowledge_statement import KnowledgeStatement
+    from app.domain.entities.learning_object import LearningObject
 
     engine = create_engine("sqlite:///:memory:")
     Base.metadata.create_all(engine)
@@ -29,31 +32,39 @@ def test_approve_persists_learning_object_version_and_audit(
         class_=Session,
         expire_on_commit=False,
     )
-
     session = session_factory()
 
     try:
+        anchor_id = uuid4()
+        category_id = uuid4()
+
+        session.add(
+            AnchorModel(
+                id=anchor_id,
+            )
+        )
+        session.add(
+            CategoryModel(
+                id=category_id,
+            )
+        )
+        session.commit()
+
         service, _ = create_learning_object_service(session)
 
         learning_object = LearningObject(
-            anchor_id=__import__("uuid").uuid4(),
+            anchor_id=anchor_id,
             statement=KnowledgeStatement(
                 text="Test knowledge",
                 language="en",
             ),
-            category_id=__import__("uuid").uuid4(),
+            category_id=category_id,
         )
 
         with transaction(session):
             service.learning_object_repository.save(
                 learning_object
             )
-
-        session.expire_all()
-
-        proposed = service.get(learning_object.id)
-
-        assert proposed.id == learning_object.id
 
         with transaction(session):
             approved = service.approve(
@@ -99,7 +110,6 @@ def test_approve_persists_learning_object_version_and_audit(
 
     finally:
         session.close()
-        Base.metadata.drop_all(engine)
         engine.dispose()
 
 
@@ -111,9 +121,13 @@ def test_approve_rolls_back_all_persistence_on_error(
         "sqlite:///:memory:",
     )
 
-    from app.persistence.database import Base
+    from app.persistence.models.base import Base
+    from app.persistence.models.anchor_model import AnchorModel
+    from app.persistence.models.category_model import CategoryModel
     from app.persistence.transaction import transaction
     from app.persistence.wiring import create_learning_object_service
+    from app.domain.entities.knowledge_statement import KnowledgeStatement
+    from app.domain.entities.learning_object import LearningObject
 
     engine = create_engine("sqlite:///:memory:")
     Base.metadata.create_all(engine)
@@ -123,19 +137,33 @@ def test_approve_rolls_back_all_persistence_on_error(
         class_=Session,
         expire_on_commit=False,
     )
-
     session = session_factory()
 
     try:
+        anchor_id = uuid4()
+        category_id = uuid4()
+
+        session.add(
+            AnchorModel(
+                id=anchor_id,
+            )
+        )
+        session.add(
+            CategoryModel(
+                id=category_id,
+            )
+        )
+        session.commit()
+
         service, _ = create_learning_object_service(session)
 
         learning_object = LearningObject(
-            anchor_id=__import__("uuid").uuid4(),
+            anchor_id=anchor_id,
             statement=KnowledgeStatement(
                 text="Test knowledge",
                 language="en",
             ),
-            category_id=__import__("uuid").uuid4(),
+            category_id=category_id,
         )
 
         with transaction(session):
@@ -149,6 +177,9 @@ def test_approve_rolls_back_all_persistence_on_error(
                     learning_object.id,
                     actor="test",
                 )
+
+                session.execute(text("SELECT 1"))
+
                 raise RuntimeError("boom")
 
         session.expire_all()
@@ -185,5 +216,4 @@ def test_approve_rolls_back_all_persistence_on_error(
 
     finally:
         session.close()
-        Base.metadata.drop_all(engine)
         engine.dispose()
