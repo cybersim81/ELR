@@ -698,3 +698,122 @@ def test_update_knowledge_rolls_back_when_audit_fails(
     finally:
         session.close()
         engine.dispose()
+
+
+def test_retire_persists_retired_state_and_audit(
+    monkeypatch,
+) -> None:
+    monkeypatch.setenv(
+        "DATABASE_URL",
+        "sqlite:///:memory:",
+    )
+
+    import importlib
+
+    import app.persistence.database as database
+
+    database = importlib.reload(database)
+
+    from app.persistence.models.anchor_model import AnchorModel
+    from app.persistence.models.audit_record_model import AuditRecordModel
+    from app.persistence.models.base import Base
+    from app.persistence.models.knowledge_category_model import (
+        KnowledgeCategoryModel,
+    )
+    from app.persistence.models.learning_object_model import (
+        LearningObjectModel,
+    )
+    from app.persistence.models.version_model import VersionModel
+
+    Base.metadata.create_all(database.engine)
+
+    session = database.SessionFactory()
+    repository = SQLAlchemyLearningObjectRepository(session)
+
+    try:
+        learning_object = LearningObject(
+            anchor_id=uuid4(),
+            statement=KnowledgeStatement(
+                text="Test knowledge statement",
+                language="en",
+            ),
+            category_id=uuid4(),
+        )
+
+        repository.save(learning_object)
+        session.flush()
+
+        persisted = repository.get_by_id(learning_object.id)
+
+        assert persisted is not None
+
+        persisted.state = type(persisted.state).PROPOSED
+
+        repository.save(persisted)
+        session.flush()
+
+        persisted = repository.get_by_id(learning_object.id)
+
+        assert persisted is not None
+
+        persisted.state = type(persisted.state).ACTIVE
+
+        repository.save(persisted)
+        session.flush()
+
+        persisted = repository.get_by_id(learning_object.id)
+
+        assert persisted is not None
+        assert persisted.state.value == "Active"
+
+        service = LearningObjectService(
+            session=session,
+            learning_object_repository=repository,
+            version_repository=SQLAlchemyVersionRepository(session),
+            audit_repository=SQLAlchemyAuditRepository(session),
+        )
+
+        service.retire(
+            learning_object.id,
+            actor="reviewer",
+        )
+
+        session.flush()
+        session.expire_all()
+
+        retired = repository.get_by_id(learning_object.id)
+
+        assert retired is not None
+        assert retired.state.value == "Retired"
+
+        versions = (
+            session.query(VersionModel)
+            .filter(
+                VersionModel.learning_object_id
+                == learning_object.id
+            )
+            .all()
+        )
+
+        assert versions == []
+
+        audits = (
+            session.query(AuditRecordModel)
+            .filter(
+                AuditRecordModel.entity_id
+                == learning_object.id
+            )
+            .order_by(AuditRecordModel.timestamp.asc())
+            .all()
+        )
+
+        assert [
+            audit.event_type
+            for audit in audits
+        ] == [
+            "LearningObjectRetired",
+        ]
+
+    finally:
+        session.close()
+        database.engine.dispose()
