@@ -121,7 +121,7 @@ IA-01 does not include production persistence implementation.
 
 ---
 
-## Current Implementation Alignment Gate
+## Last Completed Implementation Alignment Gate
 
 IA-02 — CONTRACT AND LIFECYCLE ALIGNMENT
 
@@ -269,15 +269,24 @@ The expected sequence is:
 
 ## Explicit Do-Not-Reopen Rule
 
-Unless new authoritative repository evidence reveals a direct contradiction, the next session MUST NOT restart:
+Unless new authoritative or repository evidence reveals a direct contradiction, the next session MUST NOT restart:
 
 * specification propagation review;
 * complete implementation inventory;
 * E2E gap discovery;
 * IA-01 Domain Semantic Alignment;
+* IA-02 Contract and Lifecycle Alignment;
+* IA-03 Persistence Model;
+* IA-04 Concrete Repository Integration;
+* IA-05 Database Wiring;
+* E2E-07 Production Persistence;
 * previously consolidated architectural decisions.
 
-These activities are already represented in this Bootstrap Pack.
+These activities are already represented in this Bootstrap Pack as completed and verified work.
+
+The next session MUST resume at:
+
+`E2E-08 — Persistent Reload`
 
 If a contradiction is discovered, identify the authoritative source first and update the Bootstrap Pack only after the contradiction has been established and resolved.
 
@@ -319,6 +328,8 @@ The current verified test state is:
 **IA-03 PERSISTENCE MODEL: COMPLETE**
 
 **IA-04 CONCRETE REPOSITORY INTEGRATION: COMPLETE**
+
+**IA-05 DATABASE WIRING: COMPLETE**
 
 **E2E-07 PRODUCTION PERSISTENCE: COMPLETE — VERIFIED**
 
