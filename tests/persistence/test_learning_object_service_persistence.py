@@ -1,44 +1,99 @@
+import importlib
 from uuid import uuid4
 
-import pytest
-
-from app.domain.entities.knowledge_statement import KnowledgeStatement
-from app.persistence.models.audit_record_model import AuditRecordModel
-from app.persistence.models.learning_object_model import LearningObjectModel
-from app.persistence.models.version_model import VersionModel
+from sqlalchemy import create_engine
+from sqlalchemy.pool import StaticPool
 
 
-def test_approve_persists_version_and_audit(
-    monkeypatch,
-) -> None:
+def test_approve_persists_version_and_audit(monkeypatch) -> None:
     monkeypatch.setenv(
         "DATABASE_URL",
-        "sqlite:///:memory:",
+        "sqlite://",
     )
 
-    from app.persistence.database import create_session
+    import app.persistence.database as database
+
+    database = importlib.reload(database)
+
+    from app.persistence.models.base import Base
+    from app.persistence.models.anchor_model import AnchorModel
+    from app.persistence.models.audit_record_model import AuditRecordModel
+    from app.persistence.models.knowledge_category_model import (
+        KnowledgeCategoryModel,
+    )
+    from app.persistence.models.learning_object_model import (
+        LearningObjectModel,
+    )
+    from app.persistence.models.learning_object_value_models import (
+        LearningObjectExampleModel,
+        LearningObjectNoteModel,
+    )
+    from app.persistence.models.version_model import VersionModel
+
+    from app.domain.entities.knowledge_statement import KnowledgeStatement
     from app.persistence.transaction import transaction
     from app.persistence.wiring import create_learning_object_service
 
-    session = create_session()
+    engine = create_engine(
+        "sqlite://",
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
+    )
+
+    Base.metadata.create_all(engine)
+
+    SessionFactory = database.sessionmaker(
+        bind=engine,
+        class_=database.Session,
+        expire_on_commit=False,
+    )
+
+    session = SessionFactory()
 
     try:
+        anchor_id = uuid4()
+        category_id = uuid4()
+
+        session.add(
+            AnchorModel(
+                id=anchor_id,
+                content="Test anchor",
+                type="text",
+                created_at=__import__("datetime").datetime.now(
+                    __import__("datetime").timezone.utc
+                ),
+            )
+        )
+
+        session.add(
+            KnowledgeCategoryModel(
+                id=category_id,
+                name="Test category",
+            )
+        )
+
+        session.commit()
+
         service, _ = create_learning_object_service(session)
 
         learning_object = service.create_candidate(
-            anchor_id=uuid4(),
+            anchor_id=anchor_id,
             statement=KnowledgeStatement(
                 text="Test knowledge statement",
                 language="en",
             ),
-            category_id=uuid4(),
-            actor="test",
+            category_id=category_id,
+            actor="creator",
         )
+
+        session.commit()
 
         service.submit_for_review(
             learning_object.id,
             actor="producer",
         )
+
+        session.commit()
 
         with transaction(session):
             approved = service.approve(
@@ -50,13 +105,13 @@ def test_approve_persists_version_and_audit(
 
         session.expire_all()
 
-        learning_object_model = session.get(
+        persisted = session.get(
             LearningObjectModel,
             learning_object.id,
         )
 
-        assert learning_object_model is not None
-        assert learning_object_model.state == "Active"
+        assert persisted is not None
+        assert persisted.state == "Active"
 
         versions = (
             session.query(VersionModel)
@@ -69,6 +124,7 @@ def test_approve_persists_version_and_audit(
 
         assert len(versions) == 1
         assert versions[0].number == 1
+        assert versions[0].snapshot["state"] == "Active"
 
         audits = (
             session.query(AuditRecordModel)
@@ -92,6 +148,8 @@ def test_approve_persists_version_and_audit(
         ]
 
         assert audits[-1].actor == "reviewer"
+        assert audits[-1].metadata_ == {"version": 1}
 
     finally:
         session.close()
+        engine.dispose()
