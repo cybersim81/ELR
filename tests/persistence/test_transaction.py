@@ -1,8 +1,6 @@
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import Session, sessionmaker
 
-from app.persistence.transaction import transaction
-
 
 def test_transaction_commits_on_success() -> None:
     engine = create_engine("sqlite:///:memory:")
