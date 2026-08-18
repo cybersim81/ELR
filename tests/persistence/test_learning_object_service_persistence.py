@@ -1,7 +1,5 @@
 from uuid import uuid4
 
-from sqlalchemy.orm import Session
-
 from app.application.services.learning_object_service import (
     LearningObjectService,
 )
@@ -17,19 +15,21 @@ from app.persistence.repositories.version_repository import (
 )
 
 
-def test_approve_coordinates_sqlalchemy_repositories() -> None:
+def test_approve_coordinates_all_sqlalchemy_repositories() -> None:
+    from sqlalchemy.orm import Session
+
     session = Session()
 
+    learning_object_repository = SQLAlchemyLearningObjectRepository(
+        session
+    )
+    version_repository = SQLAlchemyVersionRepository(session)
+    audit_repository = SQLAlchemyAuditRepository(session)
+
     service = LearningObjectService(
-        learning_object_repository=(
-            SQLAlchemyLearningObjectRepository(session)
-        ),
-        version_repository=(
-            SQLAlchemyVersionRepository(session)
-        ),
-        audit_repository=(
-            SQLAlchemyAuditRepository(session)
-        ),
+        learning_object_repository=learning_object_repository,
+        version_repository=version_repository,
+        audit_repository=audit_repository,
     )
 
     learning_object = service.create_candidate(
@@ -53,6 +53,10 @@ def test_approve_coordinates_sqlalchemy_repositories() -> None:
     )
 
     assert approved.state.value == "Active"
+
+    assert learning_object_repository._session is session
+    assert version_repository._session is session
+    assert audit_repository._session is session
 
     models = list(session.new)
 
@@ -92,5 +96,7 @@ def test_approve_coordinates_sqlalchemy_repositories() -> None:
         "LearningObjectSubmitted",
         "LearningObjectApproved",
     ]
+
+    assert audit_models[-1].actor == "reviewer"
 
     session.close()
