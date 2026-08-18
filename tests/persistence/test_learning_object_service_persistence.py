@@ -854,7 +854,9 @@ def test_retire_persists_retired_state_and_audit(
         engine.dispose()
 
 
-def test_get_history_returns_persisted_versions_in_order() -> None:
+def test_get_history_returns_persisted_versions_in_order(
+    monkeypatch,
+) -> None:
     monkeypatch.setenv(
         "DATABASE_URL",
         "sqlite://",
