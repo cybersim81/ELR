@@ -503,7 +503,7 @@ IA-08 Implementation Conformance
 | E2E-09 Version History Recovery        | PENDING      |       0% |
 | E2E-10 Audit History Recovery          | PENDING      |       0% |
 | E2E-11 Persistent End-to-End Test      | PENDING      |       0% |
-| IA-06 Persistent Integration Tests     | PENDING      |       0% |
+| IA-06 Persistent Integration Tests     | IN PROGRESS  |  PARTIAL |
 | IA-07 E2E-GATE-01                      | PENDING      |       0% |
 | IA-08 Implementation Conformance       | PENDING      |       0% |
 
