@@ -65,9 +65,10 @@ def test_learning_object_repository_save_updates_existing_learning_object() -> N
 
     model.state = "Proposed"
 
-    session.add(model)
+    repository.save(learning_object)
 
     session.flush()
 
     assert model.id == learning_object.id
     assert model.state == "Proposed"
+
