@@ -189,10 +189,20 @@ def test_approve_rolls_back_learning_object_and_version_on_audit_error(
     from app.persistence.wiring import create_learning_object_service
 
     engine = create_engine(
-    "sqlite://",
-    connect_args={"check_same_thread": False},
-    poolclass=StaticPool,
+        "sqlite://",
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
     )
+
+    Base.metadata.create_all(engine)
+
+    SessionFactory = database.sessionmaker(
+        bind=engine,
+        class_=database.Session,
+        expire_on_commit=False,
+    )
+
+    session = SessionFactory()
 
     try:
         anchor_id = uuid4()
