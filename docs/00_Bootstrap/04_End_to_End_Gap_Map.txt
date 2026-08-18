@@ -89,7 +89,11 @@ Create a LearningObject with stable identity and a representation conformant wit
 * Domain creation exists.
 * Application creation exists.
 * In-memory persistence exists.
-* Production persistence model is absent.
+* Application behavior is complete.
+
+Production persistence for the LearningObject path is implemented and verified downstream by E2E-07.
+
+This phase does not independently verify cross-session reconstruction.
 
 ### IA Mapping
 
@@ -98,7 +102,7 @@ Create a LearningObject with stable identity and a representation conformant wit
 
 ### Status
 
-`APPLICATION COMPLETE / PERSISTENCE GAP`
+`APPLICATION COMPLETE / PERSISTENCE VERIFIED DOWNSTREAM`
 
 ---
 
@@ -150,7 +154,7 @@ The LearningObject does not use `Reviewed`, `Approved`, `Rejected`, or `Updated`
 
 ### Status
 
-`APPLICATION COMPLETE / PERSISTENCE GAP`
+`APPLICATION COMPLETE / PERSISTENCE VERIFIED DOWNSTREAM`
 
 ---
 
