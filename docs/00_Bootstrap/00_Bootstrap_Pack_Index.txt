@@ -155,7 +155,7 @@ Audit records must not be used as a substitute for immutable Version history.
 
 ---
 
-## Current Implementation State
+### Current Implementation State
 
 The verified implementation contains:
 
@@ -168,20 +168,15 @@ The verified implementation contains:
 * LearningObjectRepository contract;
 * VersionRepository contract;
 * AnchorRepository contract;
-* in-memory repositories used by tests;
+* concrete production LearningObject repository;
+* concrete production Version repository;
+* concrete production Audit repository;
+* SQLAlchemy persistence models;
+* database/session wiring;
+* transaction boundary;
 * domain tests;
 * application tests;
-* Anchor persistence model and persistence test.
-
-The verified implementation provides:
-
-* domain and application behavior;
-* concrete production repositories;
-* SQLAlchemy persistence models;
-* production database/session wiring;
-* transaction boundaries;
-* persistent LearningObject, Version and AuditRecord state;
-* production persistence integration tests.
+* persistence integration tests.
 
 The verified production boundary is:
 
@@ -189,7 +184,9 @@ The verified production boundary is:
 
 E2E-07 verifies the production persistence path.
 
-The remaining unverified boundary is persistent reconstruction across a newly created session.
+The remaining unverified boundary is:
+
+`Database → New Session → Repository → Reconstructed Aggregate`
 
 ---
 
@@ -269,8 +266,6 @@ E2E-10 Audit History Recovery
         ↓
 E2E-11 Persistent End-to-End Test
         ↓
-E2E-GATE-01
-        ↓
 IA-06 Persistence Test Conformance
         ↓
 IA-07 E2E-GATE-01
@@ -335,11 +330,12 @@ A future session must:
 2. Treat the authoritative normative corpus as the final authority.
 3. Treat the Bootstrap Pack as the consolidated implementation continuity state.
 4. Verify repository evidence before declaring a finding resolved.
-5. Preserve the closure of IA-01 unless contradictory authoritative evidence is found.
-6. Resume at IA-02.
+5. Preserve the closure of IA-01 through IA-05 and E2E-07 unless contradictory authoritative or repository evidence is found.
+6. Resume at E2E-08 — Persistent Reload.
 7. Distinguish domain/application alignment from production persistence.
 8. Distinguish immutable Version history from operational Audit history.
 9. Keep LearningObject lifecycle states separate from Change Proposal review decisions.
+10. Do not restart completed implementation phases without new contradictory evidence.
 
 ---
 
