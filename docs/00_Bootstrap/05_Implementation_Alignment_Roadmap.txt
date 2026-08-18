@@ -220,36 +220,60 @@ Progress: `100%`
 
 ### Objective
 
-Make the persistent infrastructure executable.
+Make the production persistence infrastructure executable and verify its database/session/transaction boundary.
 
 ### Scope
 
-Establish:
+Establish and verify:
 
 * database configuration;
-* session/unit-of-work boundary as required;
+* SQLAlchemy engine/session creation;
 * model metadata;
-* schema/migration mechanism as required;
 * repository lifecycle;
-* transaction behavior.
+* transaction boundary;
+* production persistence wiring.
 
-### Required Result
+Schema/migration concerns remain separate and must only be marked complete when independently verified.
 
-A fresh runtime can create and persist the required domain state.
+### Verified Result
 
-The database representation must preserve:
+The production persistence infrastructure is executable.
 
-* LearningObject identity;
-* KnowledgeStatement aggregate-member semantics;
-* immutable Version history;
-* Audit history;
-* Anchor references.
+The concrete service wiring connects application services to:
+
+`LearningObject Repository → Version Repository → Audit Repository`
+
+using the SQLAlchemy persistence layer.
+
+A fresh SQLite runtime can create the required schema and persist LearningObject, Version and AuditRecord state.
+
+Transaction behavior has been verified through rollback-focused integration tests.
 
 ### Gate
 
 `IA-05 DATABASE INTEGRATION`
 
-Status: `PENDING`
+Status: `COMPLETE`
+
+Progress: `100%`
+
+### Closure Evidence
+
+* database engine creation verified;
+* session factory verified;
+* SQLAlchemy model metadata verified;
+* production repository wiring verified;
+* transaction boundary verified;
+* persistence rollback verified;
+* production persistence flow verified by E2E-07;
+* full test suite: `70 passed`;
+* checkpoint: `b00d5c7`.
+
+### Scope Boundary
+
+Persistent reload and recovery across a newly created session belong to E2E-08 and subsequent E2E phases.
+
+Schema/migration hardening remains pending unless separately verified.
 
 ---
 
@@ -257,29 +281,48 @@ Status: `PENDING`
 
 ### Objective
 
-Prove persistence behavior rather than merely testing repository mocks or in-memory fixtures.
+Prove production persistence behavior rather than relying only on repository mocks or in-memory fixtures.
 
-### Scope
+### Verified Scope
 
-Tests for:
+The following persistent behaviors are covered:
 
 * LearningObject persistence;
 * Version persistence;
 * Audit persistence;
 * Anchor relationships;
-* reload behavior;
-* Version history recovery;
-* Audit history recovery.
+* transaction rollback;
+* invalid lifecycle transition rollback;
+* atomic approve() persistence;
+* atomic update_knowledge() persistence;
+* multi-Version persistence and ordering.
 
-### Required Result
+The production persistence flow is verified by dedicated integration coverage.
 
-Persistent tests must demonstrate that the semantic boundaries already resolved by IA-01 survive storage and reload.
+### Remaining Scope
+
+The following cross-session behaviors remain:
+
+* persistent reload through a newly created session;
+* Version history recovery after session reload;
+* Audit history recovery after session reload;
+* complete persistent lifecycle across a session boundary.
+
+These remaining behaviors are tracked by E2E-08 through E2E-11.
 
 ### Gate
 
 `IA-06 PERSISTENCE TEST CONFORMANCE`
 
-Status: `PENDING`
+Status: `IN PROGRESS`
+
+Progress: `PARTIAL`
+
+Production persistence behavior is verified, but cross-session recovery is not yet complete.
+
+### Current Next Gap
+
+`E2E-08 — Persistent Reload`
 
 ---
 
@@ -337,6 +380,18 @@ Status
 
 PENDING
 
+### Prerequisite Sequence
+
+The gate is downstream of:
+
+`E2E-07 Production Persistence — COMPLETE`
+→ `E2E-08 Persistent Reload — NEXT`
+→ `E2E-09 Version History Recovery — PENDING`
+→ `E2E-10 Audit History Recovery — PENDING`
+→ `E2E-11 Persistent End-to-End Test — PENDING`
+
+IA-07 MUST NOT be marked complete until the full persistent lifecycle has been verified across the session boundary.
+
 ---
 
 ## Phase IA-08 — Implementation Conformance
@@ -382,57 +437,108 @@ E2E Gap Map
 ▼
 IA-01 Domain Semantic Alignment
 │
-│ COMPLETE
+│ COMPLETE — 100%
 ▼
 IA-02 Contract and Lifecycle Alignment
 │
 │ COMPLETE — 100%
 ▼
-▶ IA-03 Persistence Model
+IA-03 Persistence Model
 │
 │ COMPLETE — 100%
 ▼
-IA-04 Repository Integration
+IA-04 Concrete Repository Layer
 │
 │ COMPLETE — 100%
 ▼
-IA-05 Database Integration
+IA-05 Database Wiring
 │
+│ COMPLETE — 100%
+▼
+E2E-07 Production Persistence
+│
+│ COMPLETE — VERIFIED
+│
+│ checkpoint: b00d5c7
+│
+│ test suite: 70 passed
+▼
+E2E-08 Persistent Reload
+│
+│ NEXT
+▼
+E2E-09 Version History Recovery
+│
+│ PENDING
+▼
+E2E-10 Audit History Recovery
+│
+│ PENDING
+▼
+E2E-11 Persistent End-to-End Test
+│
+│ PENDING
 ▼
 IA-06 Persistence Test Conformance
 │
+│ PENDING
 ▼
 IA-07 E2E-GATE-01
 │
+│ PENDING
 ▼
 IA-08 Implementation Conformance
 
 ## Current Status Summary
 
-| Phase                                  | Status   | Progress |
-| -------------------------------------- | -------- | -------: |
-| IA-01 Domain Semantic Alignment        | COMPLETE |     100% |
-| IA-02 Contract and Lifecycle Alignment | COMPLETE |     100% |
-| IA-03 Persistence Model                | COMPLETE |     100% |
-| IA-04 Concrete Repository Layer        | COMPLETE |     100% |
-| IA-05 Database Wiring                  | PENDING  |       0% |
-| IA-06 Persistent Integration Tests     | PENDING  |       0% |
-| IA-07 E2E-GATE-01                      | PENDING  |       0% |
-| IA-08 Implementation Conformance       | PENDING  |       0% |
+| Phase                                  | Status       | Progress |
+| -------------------------------------- | ------------ | -------: |
+| IA-01 Domain Semantic Alignment        | COMPLETE     |     100% |
+| IA-02 Contract and Lifecycle Alignment | COMPLETE     |     100% |
+| IA-03 Persistence Model                | COMPLETE     |     100% |
+| IA-04 Concrete Repository Layer        | COMPLETE     |     100% |
+| IA-05 Database Wiring                  | COMPLETE     |     100% |
+| E2E-07 Production Persistence          | COMPLETE     |     100% |
+| E2E-08 Persistent Reload               | NEXT         |       0% |
+| E2E-09 Version History Recovery        | PENDING      |       0% |
+| E2E-10 Audit History Recovery          | PENDING      |       0% |
+| E2E-11 Persistent End-to-End Test      | PENDING      |       0% |
+| IA-06 Persistent Integration Tests     | PENDING      |       0% |
+| IA-07 E2E-GATE-01                      | PENDING      |       0% |
+| IA-08 Implementation Conformance       | PENDING      |       0% |
 
 ## Last Completed Gate
 
-`IA-04 — REPOSITORY INTEGRATION — COMPLETE — 100%`
+`E2E-07 — PRODUCTION PERSISTENCE — COMPLETE — VERIFIED`
+
+Checkpoint:
+
+`b00d5c7`
+
+Verification:
+
+`70 passed`
 
 ## Current Work Package
 
-`IA-05 — DATABASE WIRING — 0%`
+`E2E-08 — PERSISTENT RELOAD — NEXT`
 
 ## Next Action
 
-Verify the database/session wiring before implementing IA-05.
+Implement and verify:
 
-Then proceed one concrete repository block at a time using:
+`E2E-08 — Persistent Reload`
+
+The test must:
+
+1. persist a LearningObject through the production persistence path;
+2. commit the transaction;
+3. close the original session;
+4. create a new independent session;
+5. reload the LearningObject through the concrete repository;
+6. verify reconstructed aggregate state.
+
+Then proceed one concrete E2E block at a time using:
 
 `inspect → block/sections → verify → test → percentage → next gap`
 
@@ -454,4 +560,19 @@ After a focused test passes, advance automatically to the next confirmed gap and
 
 Do not reopen a completed IA phase unless new authoritative evidence establishes a direct contradiction with the normative architecture or roadmap.
 
-IA-03 is closed. Concrete repository integration belongs to IA-04. Database/session/migration/transaction wiring belongs to IA-05. Persistent integration testing belongs to IA-06.
+
+IA-01, IA-02, IA-03, IA-04 and IA-05 are closed.
+
+E2E-07 Production Persistence is complete and verified at checkpoint `b00d5c7` with `70 passed`.
+
+The current implementation boundary is:
+
+`Application → Concrete Repository → Persistence Model → Database`
+
+The next unclosed boundary is:
+
+`Database → New Session → Repository → Reconstructed Aggregate`
+
+Therefore the next confirmed gap is:
+
+`E2E-08 — Persistent Reload`
