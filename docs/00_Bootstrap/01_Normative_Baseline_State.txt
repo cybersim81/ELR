@@ -182,13 +182,19 @@ If this summary conflicts with an authoritative source, the authoritative source
 
 ### Implementation Alignment Rule
 
-The implementation must be aligned to the normative baseline above.
+The implementation alignment state recorded at Bootstrap creation was:
 
-The next phase MUST NOT silently weaken, reinterpret, or generalize these boundaries merely because the current implementation uses a different representation.
+IA-01 — COMPLETE.
 
-IA-01 is closed.
+This closure must not be interpreted as reopening the resolved IA-01 findings unless new repository evidence establishes a direct contradiction with the authoritative corpus.
 
-The next implementation phase is IA-02 and must not reopen the resolved IA-01 findings unless new repository evidence establishes a direct contradiction with the authoritative corpus.
+Subsequent implementation-alignment progress is tracked by:
+
+`05_Implementation_Alignment_Roadmap.txt`
+
+and
+
+`06_Session_Continuity_State.txt`.
 
 ### Current Normative Status
 
@@ -212,6 +218,8 @@ The next implementation phase is IA-02 and must not reopen the resolved IA-01 fi
 
 **IA-019: RESOLVED**
 
-**IMPLEMENTATION ALIGNMENT: IA-01 COMPLETE**
+**IMPLEMENTATION ALIGNMENT AT BOOTSTRAP CREATION: IA-01 COMPLETE**
 
-**CURRENT IMPLEMENTATION ALIGNMENT GATE: IA-02**
+**CURRENT IMPLEMENTATION ALIGNMENT STATUS: SUPERSEDED BY THE CURRENT ROADMAP**
+
+**CURRENT IMPLEMENTATION / SESSION POSITION: SEE 05_Implementation_Alignment_Roadmap.txt AND 06_Session_Continuity_State.txt**
