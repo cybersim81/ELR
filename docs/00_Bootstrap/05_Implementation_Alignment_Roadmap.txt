@@ -64,7 +64,9 @@ Status: `COMPLETE`
 
 ### Remaining Work Outside IA-01
 
-Production persistence and repository integration remain pending and belong to subsequent implementation-alignment phases.
+Production persistence and repository integration were completed in subsequent phases.
+
+IA-01 remains closed and is not reopened by the completion of those later phases.
 
 ---
 
@@ -175,13 +177,15 @@ Progress: `100%`
 * owned relationship cascade and `delete-orphan` behavior verified;
 * focused persistence-model tests passed.
 
-### Scope Boundary
+Concrete repositories were implemented in IA-04.
 
-Concrete repositories belong to IA-04.
+Database/session wiring and transaction handling were implemented and verified in IA-05.
 
-Database/session wiring, migrations, transaction handling, and persistent integration belong to IA-05 and later phases.
+Persistent integration testing continues in IA-06.
 
-These concerns must not be counted as IA-03 work.
+Persistent reload and cross-session recovery belong to E2E-08 and subsequent E2E phases.
+
+These concerns are outside the IA-03 persistence-model boundary.
 
 ---
 
