@@ -186,7 +186,7 @@ The remaining gap is recovery of persistent Version history after a new independ
 
 ### Status
 
-``APPLICATION COMPLETE / PERSISTENCE VERIFIED — RECOVERY GAP REMAINS``
+`APPLICATION COMPLETE / PERSISTENCE VERIFIED — RECOVERY GAP REMAINS`
 
 ---
 
