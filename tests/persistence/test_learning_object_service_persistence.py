@@ -277,16 +277,10 @@ def test_approve_rolls_back_learning_object_and_version_on_audit_error(
 
         session.expire_all()
 
-        rows = session.query(LearningObjectModel).all()
-
-        print("LEARNING_OBJECTS AFTER ROLLBACK:", rows)
-
         persisted = session.get(
             LearningObjectModel,
             learning_object.id,
         )
-
-        print("PERSISTED AFTER ROLLBACK:", persisted)
 
         assert persisted is not None
         assert persisted.state == "Proposed"
