@@ -149,11 +149,13 @@ Tests verify Version creation, Version history, Version numbering, snapshot cont
 
 Present.
 
-Provides save, retrieval, and delete capabilities.
+The Domain Repository provides persistence-oriented save and retrieval capabilities.
 
-The concrete meaning and authorization of physical deletion require lifecycle/persistence alignment.
+Physical deletion is not exposed as a Domain Repository capability.
 
-**Status: IMPLEMENTED / DELETE SEMANTICS OPEN**
+The concrete production implementation is provided by the SQLAlchemy persistence repository.
+
+**Status: IMPLEMENTED / DOMAIN-ALIGNED / PRODUCTION-WIRED**
 
 #### VersionRepository
 
@@ -207,40 +209,76 @@ The application workflow is covered by tests.
 
 ### Persistence Layer
 
-The verified persistence tree contains:
+The verified production persistence tree contains:
 
-`app/persistence/models/base.py`
+* `app/persistence/models/base.py`;
+* `app/persistence/models/anchor_model.py`;
+* `app/persistence/models/learning_object_model.py`;
+* `app/persistence/models/learning_object_value_models.py`;
+* `app/persistence/models/version_model.py`;
+* `app/persistence/models/audit_record_model.py`;
+* concrete LearningObject repository;
+* concrete Version repository;
+* concrete Audit repository;
+* production service wiring;
+* database/session infrastructure;
+* transaction boundary.
 
-and:
-
-`app/persistence/models/anchor_model.py`
-
-Anchor persistence is therefore materialized.
-
-No verified persistence models were found for:
+The persistence layer materializes:
 
 * LearningObject;
-* KnowledgeStatement;
+* structured KnowledgeStatement representation;
 * Version;
-* AuditRecord.
+* AuditRecord;
+* Anchor relationships;
+* LearningObject examples and notes.
 
-No verified concrete production repository implementations were found under the inspected persistence tree.
+The verified production path is:
 
-**Status: PARTIAL**
+`Application → Concrete Repository → Persistence Model → Database`
+
+Transaction rollback and atomic persistence behavior are covered by integration tests.
+
+**Status: IMPLEMENTED / PRODUCTION-VERIFIED**
 
 ### Test Layer
 
-Domain tests cover Anchor and LearningObject lifecycle behavior.
+Domain tests cover:
 
-Application tests cover the LearningObject service workflow, including Version creation, Version history, and AuditRecord creation.
+* Anchor behavior;
+* LearningObject lifecycle behavior;
+* invalid lifecycle transitions.
 
-Persistence tests cover AnchorModel.
+Application tests cover:
 
-The current application tests use in-memory repositories.
+* LearningObject service workflow;
+* Version creation;
+* Version history;
+* Version numbering;
+* Version snapshot contents;
+* AuditRecord creation;
+* knowledge updates through new Version creation.
 
-No persistent database round-trip test was identified for LearningObject, Version, KnowledgeStatement, or AuditRecord.
+Persistence integration tests cover:
 
-**Status: PARTIAL**
+* LearningObject persistence;
+* Version persistence;
+* Audit persistence;
+* Anchor relationships;
+* transaction rollback;
+* invalid lifecycle transition rollback;
+* atomic approve() persistence;
+* atomic update_knowledge() persistence;
+* multi-Version persistence and ordering;
+* production persistence flow.
+
+The current full test suite is:
+
+`70 passed`
+
+Persistent reload through a newly created session remains the next E2E gap.
+
+**Status: IMPLEMENTED / PRODUCTION PERSISTENCE VERIFIED / CROSS-SESSION RECOVERY PENDING**
 
 ### In-Memory Infrastructure
 
@@ -256,46 +294,62 @@ The Version repository stores Version objects and retrieves history by `learning
 
 ### Current Implementation Boundary
 
-The verified implementation currently reaches:
+The verified implementation reaches:
 
-`Domain → Application → In-Memory Repository → Tests`
+`Domain → Application → Concrete Repository → Persistence Model → Database`
 
-The verified production persistence path reaches only the independently persisted Anchor model.
+The production persistence path is verified for LearningObject, Version and AuditRecord.
 
-The following persistent path is not yet materialized:
+The remaining unverified boundary is the session reload boundary:
 
-`Application → Concrete Repository → Persistence Model → Database → Reload`
+`Database → New Session → Repository → Reconstructed Aggregate`
+
+This boundary is the scope of:
+
+`E2E-08 — Persistent Reload`
 
 ### Baseline Conclusion
 
 The current ELR implementation contains:
 
-**DOMAIN/APPLICATION SKELETON: PRESENT**
-
-**IN-MEMORY VERTICAL SLICE: PRESENT AND TESTED**
-
-**IA-001: RESOLVED**
-
-**IA-002: RESOLVED**
-
-**IA-003: RESOLVED**
-
-**IA-005: RESOLVED**
-
-**IA-010: RESOLVED**
-
-**IA-017: RESOLVED**
-
-**IA-018: RESOLVED**
-
-**IA-019: RESOLVED**
+**DOMAIN/APPLICATION IMPLEMENTATION: PRESENT AND TESTED**
 
 **IA-01 DOMAIN SEMANTIC ALIGNMENT: COMPLETE**
 
-**PRODUCTION PERSISTENCE: PARTIAL**
+**IA-02 CONTRACT AND LIFECYCLE ALIGNMENT: COMPLETE — 100%**
 
-**PERSISTENT END-TO-END PATH: NOT YET IMPLEMENTED**
+**IA-03 PERSISTENCE MODEL: COMPLETE — 100%**
+
+**IA-04 CONCRETE REPOSITORY LAYER: COMPLETE — 100%**
+
+**IA-05 DATABASE WIRING: COMPLETE — 100%**
+
+**E2E-07 PRODUCTION PERSISTENCE: COMPLETE AND VERIFIED**
+
+**FULL TEST SUITE: 70 PASSED**
+
+**CHECKPOINT: b00d5c7**
+
+The verified production persistence boundary is:
+
+`Application → Concrete Repository → Persistence Model → Database`
+
+The next unverified boundary is:
+
+`Database → New Session → Repository → Reconstructed Aggregate`
 
 The next work package is:
 
-**IA-02 — CONTRACT AND LIFECYCLE ALIGNMENT**
+**E2E-08 — PERSISTENT RELOAD**
+
+Subsequent work packages are:
+
+**E2E-09 — VERSION HISTORY RECOVERY**
+
+**E2E-10 — AUDIT HISTORY RECOVERY**
+
+**E2E-11 — PERSISTENT END-TO-END TEST**
+
+followed by:
+
+**E2E-GATE-01**
