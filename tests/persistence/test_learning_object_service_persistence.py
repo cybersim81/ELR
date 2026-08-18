@@ -289,7 +289,7 @@ def test_approve_rolls_back_learning_object_and_version_on_audit_error(
         print("PERSISTED AFTER ROLLBACK:", persisted)
 
         assert persisted is not None
-        assert persisted.state == LearningObjectState.PROPOSED
+        assert persisted.state == "Proposed"
 
         versions = (
             session.query(VersionModel)
