@@ -99,11 +99,27 @@ Each finding must be resolved against the authoritative normative corpus before 
 
 **Area:** Persistence
 
-**Finding:** Version creation exists in the application layer, but no verified Version persistence model exists under `app/persistence/models/`.
+**Finding:** Version creation existed in the application layer but Version persistence was not previously verified.
 
-**Impact:** Immutable Version history cannot currently be demonstrated as production-persistent.
+**Resolution:** Version persistence is now implemented through the production SQLAlchemy persistence model and concrete Version repository.
 
-**Status:** `PERSISTENCE GAP`
+Version records are persisted with:
+
+* explicit `learning_object_id`;
+* Version number;
+* immutable snapshot;
+* persisted ownership relationship.
+
+**Evidence:**
+
+* `app/persistence/models/version_model.py`
+* `app/persistence/repositories/version_repository.py`
+* `app/application/services/learning_object_service.py`
+* `tests/persistence/test_learning_object_service_persistence.py`
+
+**Status:** `RESOLVED`
+
+**Resolution note:** Production Version persistence is verified. Cross-session Version history recovery remains an E2E-09 concern.
 
 ---
 
@@ -207,41 +223,75 @@ and the in-memory implementation filters Version records using `learning_object_
 
 ---
 
-## IA-013 — LearningObject Persistence Missing
+## IA-013 — LearningObject Persistence
 
 **Area:** Persistence
 
-**Finding:** No verified LearningObject persistence model exists.
+**Finding:** LearningObject production persistence was previously absent.
 
-**Impact:** LearningObject cannot currently be demonstrated as production-persistent.
+**Resolution:** LearningObject persistence is now implemented through the SQLAlchemy persistence model and concrete repository.
 
-**Status:** `PERSISTENCE GAP`
+The persisted representation preserves the LearningObject identity, lifecycle state, statement data, Anchor relationship, and KnowledgeCategory relationship.
+
+**Evidence:**
+
+* `app/persistence/models/learning_object_model.py`
+* `app/persistence/repositories/learning_object_repository.py`
+* `tests/persistence/test_learning_object_service_persistence.py`
+
+**Status:** `RESOLVED`
+
+**Resolution note:** Production LearningObject persistence is verified by E2E-07. Reconstruction through a newly created session remains E2E-08.
 
 ---
 
-## IA-014 — KnowledgeStatement Persistence Missing
+## IA-014 — KnowledgeStatement Persistence
 
 **Area:** Persistence
 
-**Finding:** No verified KnowledgeStatement persistence model exists.
+**Finding:** KnowledgeStatement persistence was previously not demonstrated.
 
-**Impact:** The aggregate-member representation cannot yet be demonstrated through a persistent LearningObject representation.
+**Resolution:** KnowledgeStatement is now persisted as structured aggregate-member data within the LearningObject persistence representation.
 
-**Status:** `PERSISTENCE GAP`
+The persistence boundary does not introduce an autonomous KnowledgeStatement repository or aggregate.
 
-**Note:** This does not imply that KnowledgeStatement requires an autonomous persistence repository.
+The persisted representation preserves:
+
+* `text`;
+* `language`.
+
+**Evidence:**
+
+* `app/persistence/models/learning_object_model.py`
+* `app/persistence/models/learning_object_value_models.py`
+* `app/persistence/repositories/learning_object_repository.py`
+* `tests/persistence/test_learning_object_service_persistence.py`
+
+**Status:** `RESOLVED`
+
+**Resolution note:** The KnowledgeStatement persistence representation remains owned by LearningObject. Cross-session reconstruction is part of E2E-08.
 
 ---
 
-## IA-015 — Version Persistence Missing
+## IA-015 — Version Persistence
 
 **Area:** Persistence
 
-**Finding:** No verified Version persistence model exists.
+**Finding:** Version history was previously materialized only in-memory.
 
-**Impact:** Version history is currently materialized only in-memory.
+**Resolution:** Version records are now persisted through the production SQLAlchemy Version model and concrete Version repository.
 
-**Status:** `PERSISTENCE GAP`
+The persistence layer preserves immutable Version records and their LearningObject-centered ownership.
+
+**Evidence:**
+
+* `app/persistence/models/version_model.py`
+* `app/persistence/repositories/version_repository.py`
+* `tests/persistence/test_learning_object_service_persistence.py`
+
+**Status:** `RESOLVED`
+
+**Resolution note:** Persistent Version creation and ordering are verified. Recovery after closing and reopening the session remains E2E-09.
 
 ---
 
@@ -345,11 +395,19 @@ and the in-memory implementation filters Version records using `learning_object_
 
 **Area:** Tests
 
-**Finding:** Persistence tests cover AnchorModel only.
+**Finding:** Persistence coverage was previously limited to AnchorModel.
 
-**Impact:** No persistent conformance is demonstrated for LearningObject, Version, KnowledgeStatement, or AuditRecord.
+**Resolution:** Production persistence tests now cover LearningObject, Version, AuditRecord, KnowledgeStatement representation, repository wiring, transaction rollback, and atomic persistence behavior.
+
+The remaining coverage gap concerns reconstruction after creating a new independent database session.
+
+**Evidence:**
+
+* `tests/persistence/test_learning_object_service_persistence.py`
 
 **Status:** `COVERAGE GAP`
+
+**Remaining scope:** E2E-08 Persistent Reload and the subsequent cross-session recovery tests.
 
 ---
 
@@ -357,11 +415,27 @@ and the in-memory implementation filters Version records using `learning_object_
 
 **Area:** Persistence / Infrastructure
 
-**Finding:** No verified concrete production repositories for LearningObject or Version were identified in the inspected persistence tree.
+**Finding:** Concrete production repositories for LearningObject, Version and AuditRecord were previously absent from the verified persistence path.
 
-**Impact:** The application workflow currently relies on in-memory repository implementations for tested execution.
+**Resolution:** Concrete SQLAlchemy repositories are now wired into the production LearningObjectService.
 
-**Status:** `PERSISTENCE GAP`
+Verified repository boundaries include:
+
+* LearningObjectRepository;
+* VersionRepository;
+* AuditRepository.
+
+**Evidence:**
+
+* `app/persistence/repositories/learning_object_repository.py`
+* `app/persistence/repositories/version_repository.py`
+* `app/persistence/repositories/audit_repository.py`
+* `app/persistence/wiring.py`
+* `tests/persistence/test_learning_object_service_persistence.py`
+
+**Status:** `RESOLVED`
+
+**Resolution note:** Concrete repository integration is complete. Persistent reload remains E2E-08.
 
 ---
 
@@ -369,11 +443,23 @@ and the in-memory implementation filters Version records using `learning_object_
 
 **Area:** End-to-End
 
-**Finding:** No verified test demonstrates Application → Repository → Persistence Model → Database → Reload for the complete LearningObject lifecycle.
+**Finding:** The complete cross-session persistent LearningObject lifecycle has not yet been demonstrated.
 
-**Impact:** Persistent end-to-end conformance is not established.
+**Verified:** E2E-07 verifies:
+
+`Application → Concrete Repository → Persistence Model → Database`
+
+for LearningObject, Version and AuditRecord persistence.
+
+**Remaining gap:**
+
+`Database → New Session → Repository → Reconstructed Aggregate`
+
+followed by persistent Version and Audit history recovery and complete lifecycle verification.
 
 **Status:** `PERSISTENCE GAP`
+
+**Next phase:** `E2E-08 — Persistent Reload`
 
 ---
 
@@ -387,7 +473,7 @@ and the in-memory implementation filters Version records using `learning_object_
 
 **Status:** `PRELIMINARILY CONSISTENT`
 
-**Open point:** Production persistence remains absent.
+**Open point:** Production AuditRecord persistence is now implemented and verified. Cross-session Audit history recovery remains an E2E-10 concern.
 
 ---
 
@@ -414,11 +500,6 @@ No currently verified open Contract and Lifecycle alignment findings remain.
 
 ## Persistence Gaps
 
-* IA-004
-* IA-013
-* IA-014
-* IA-015
-* IA-021
 * IA-022
 
 ## Test Coverage Gaps
@@ -435,11 +516,40 @@ No currently verified open Contract and Lifecycle alignment findings remain.
 
 IA-01 — Domain Semantic Alignment is RESOLVED.
 
-The resolved IA-01 findings must not be reopened unless new repository evidence establishes a direct contradiction with the authoritative normative corpus.
+IA-02 — Contract and Lifecycle Alignment is RESOLVED.
+
+IA-03 — Persistence Model is COMPLETE.
+
+IA-04 — Concrete Repository Layer is COMPLETE.
+
+IA-05 — Database Wiring is COMPLETE.
+
+E2E-07 — Production Persistence is COMPLETE and VERIFIED.
+
+The following implementation findings are resolved:
+
+* IA-004;
+* IA-013;
+* IA-014;
+* IA-015;
+* IA-021.
+
+The remaining persistence/conformance findings are:
+
+* IA-020 — cross-session persistence coverage gap;
+* IA-022 — persistent end-to-end lifecycle gap.
 
 The next work package is:
 
-**IMPLEMENTATION ALIGNMENT — IA-02 CONTRACT AND LIFECYCLE ALIGNMENT**
+**E2E-08 — PERSISTENT RELOAD**
+
+Checkpoint:
+
+`b00d5c7`
+
+Verification:
+
+`70 passed`
 
 ---
 
