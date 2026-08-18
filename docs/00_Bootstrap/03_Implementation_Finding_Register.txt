@@ -15,7 +15,7 @@ Each finding must be resolved against the authoritative normative corpus before 
 * `RESOLVED` — the identified implementation alignment issue has been resolved and verified.
 * `CONFIRMED DEVIATION` — implementation contradicts an established normative boundary.
 * `COVERAGE GAP` — behavior may exist, but the required conformance is not demonstrated by tests.
-* `PERSISTENCE GAP` — required persistent implementation is absent.
+* `PERSISTENCE GAP` — required persistent behavior or persistence boundary is not yet implemented or demonstrated.
 * `ALIGNMENT REQUIRED` — implementation exists but requires semantic or structural alignment.
 * `PRELIMINARILY CONSISTENT` — inspected evidence is currently consistent with the baseline.
 * `OPEN` — requires further verification or an explicit implementation decision.
