@@ -245,6 +245,14 @@ def test_approve_rolls_back_learning_object_and_version_on_audit_error(
 
         session.commit()
 
+        persisted_before_approve = session.get(
+            LearningObjectModel,
+            learning_object.id,
+        )
+
+        assert persisted_before_approve is not None
+        assert persisted_before_approve.state == "Proposed"
+
         def fail_audit(*args, **kwargs) -> None:
             raise RuntimeError("audit failure")
 
