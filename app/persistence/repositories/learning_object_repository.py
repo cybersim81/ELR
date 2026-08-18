@@ -44,8 +44,6 @@ class SQLAlchemyLearningObjectRepository(LearningObjectRepository):
         model.category_id = learning_object.category_id
         model.state = learning_object.state.value
         model.updated_at = learning_object.updated_at
-```
-
 
     def get_by_id(self, object_id: UUID) -> LearningObject | None:
         model = self._session.get(LearningObjectModel, object_id)
