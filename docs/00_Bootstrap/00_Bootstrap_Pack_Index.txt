@@ -173,60 +173,75 @@ The verified implementation contains:
 * application tests;
 * Anchor persistence model and persistence test.
 
-The current implementation provides a tested in-memory vertical slice.
+The verified implementation provides:
 
-Production persistence for the complete LearningObject / Version / Audit path remains incomplete.
+* domain and application behavior;
+* concrete production repositories;
+* SQLAlchemy persistence models;
+* production database/session wiring;
+* transaction boundaries;
+* persistent LearningObject, Version and AuditRecord state;
+* production persistence integration tests.
+
+The verified production boundary is:
+
+`Domain → Application → Concrete Repository → Persistence Model → Database`
+
+E2E-07 verifies the production persistence path.
+
+The remaining unverified boundary is persistent reconstruction across a newly created session.
 
 ---
 
 ## Current Persistence State
 
-The verified production persistence layer currently materializes the Anchor boundary.
+Production persistence is implemented and verified for:
 
-The following production persistence areas remain incomplete or unverified:
-
-* LearningObject persistence;
-* KnowledgeStatement representation in persistent LearningObject state;
-* Version persistence;
-* AuditRecord persistence;
+* LearningObject;
+* KnowledgeStatement representation;
+* Version;
+* AuditRecord;
+* Anchor relationships;
 * concrete LearningObject repository;
 * concrete Version repository;
 * concrete Audit repository;
-* persistent database wiring;
-* persistent reload;
-* Version history;
-* Audit history.
+* database/session wiring;
+* transaction rollback;
+* atomic persistence behavior.
+
+The verified persistence boundary is:
+
+`Application → Concrete Repository → Persistence Model → Database`
+
+The remaining persistence boundary is:
+
+`Database → New Session → Repository → Reconstructed Aggregate`
+
+Remaining recovery work:
+
+* E2E-08 — Persistent Reload;
+* E2E-09 — Version History Recovery;
+* E2E-10 — Audit History Recovery;
+* E2E-11 — Persistent End-to-End Test.
 
 ---
 
 ## Current Open Findings
 
-The following findings remain open after IA-01 closure:
+### Persistence / End-to-End
 
-### IA-009
+* IA-020 — Persistent test coverage remains incomplete for cross-session reconstruction.
+* IA-022 — Persistent end-to-end lifecycle remains incomplete across the session boundary.
 
-LearningObject delete capability requires explicit lifecycle / repository contract alignment.
+These findings do not reopen IA-01 or IA-02.
 
-### Persistence Findings
+The next implementation gap is:
 
-* IA-004 — Version persistence;
-* IA-013 — LearningObject persistence;
-* IA-014 — KnowledgeStatement persistence representation;
-* IA-015 — Version persistence;
-* IA-021 — Concrete repository coverage;
-* IA-022 — Persistent end-to-end flow.
-
-### Test Coverage
-
-* IA-020 — Persistent test coverage.
-
-These open findings do not reopen the resolved IA-01 findings.
+`E2E-08 — Persistent Reload`
 
 ---
 
 ## Current Roadmap Position
-
-The implementation roadmap is:
 
 M0.3.2 Specification Propagation
         ↓
@@ -240,9 +255,21 @@ IA-02 Contract and Lifecycle Alignment
         ↓
 IA-03 Persistence Model
         ↓
-IA-04 Repository Integration
+IA-04 Concrete Repository Layer
         ↓
-IA-05 Database Integration
+IA-05 Database Wiring
+        ↓
+E2E-07 Production Persistence
+        ↓
+E2E-08 Persistent Reload
+        ↓
+E2E-09 Version History Recovery
+        ↓
+E2E-10 Audit History Recovery
+        ↓
+E2E-11 Persistent End-to-End Test
+        ↓
+E2E-GATE-01
         ↓
 IA-06 Persistence Test Conformance
         ↓
@@ -251,10 +278,20 @@ IA-07 E2E-GATE-01
 IA-08 Implementation Conformance
 
 Last Completed Gate
-IA-01 — COMPLETE
+
+E2E-07 — PRODUCTION PERSISTENCE — COMPLETE / VERIFIED
+
+Checkpoint
+
+`b00d5c7`
+
+Verification
+
+`70 passed`
 
 Current Work Package / Gate
-IA-02 — CONTRACT AND LIFECYCLE ALIGNMENT
+
+E2E-08 — PERSISTENT RELOAD
 
 ---
 
@@ -262,9 +299,13 @@ IA-02 — CONTRACT AND LIFECYCLE ALIGNMENT
 
 The next implementation session must resume at:
 
-**IA-02 — CONTRACT AND LIFECYCLE ALIGNMENT**
+**E2E-08 — PERSISTENT RELOAD**
 
-The session must not restart the IA-01 semantic alignment work unless new authoritative evidence requires reopening it.
+IA-01, IA-02, IA-03, IA-04 and IA-05 are complete.
+
+E2E-07 Production Persistence is complete and verified at checkpoint `b00d5c7` with `70 passed`.
+
+The session must not restart completed alignment or production persistence work unless new repository or authoritative evidence requires reopening it.
 
 ---
 
@@ -314,71 +355,68 @@ Implementation changes must be explicitly identified, reviewed, and applied as s
 
 ## Current Bootstrap Status
 
-NORMATIVE BASELINE
-        COMPLETE
-
-IMPLEMENTATION BASELINE
-        COMPLETE
-
-E2E GAP MAP
-        COMPLETE
-
-IA-01 DOMAIN SEMANTIC ALIGNMENT
-        COMPLETE
-
-IA-001
-        RESOLVED
-
-IA-002
-        RESOLVED
-
-IA-003
-        RESOLVED
-
-IA-005
-        RESOLVED
-
-IA-010
-        RESOLVED
-
-IA-017
-        RESOLVED
-
-IA-018
-        RESOLVED
-
-IA-019
-        RESOLVED
-
 PRODUCTION PERSISTENCE
-        PARTIAL
+        COMPLETE
+
+E2E-07 PRODUCTION PERSISTENCE
+        COMPLETE / VERIFIED
+
+PERSISTENT RELOAD
+        NEXT
+
+VERSION HISTORY RECOVERY
+        PENDING
+
+AUDIT HISTORY RECOVERY
+        PENDING
 
 PERSISTENT E2E FLOW
-        NOT IMPLEMENTED
+        PENDING
 
 CURRENT GATE
-        IA-02
+        E2E-08
 
 CURRENT RESUMPTION POINT
-        IA-02 — CONTRACT AND LIFECYCLE ALIGNMENT
+        E2E-08 — PERSISTENT RELOAD
 
 ---
 
 ## Final Continuity Statement
 
-The ELR implementation has completed IA-01 Domain Semantic Alignment.
+The ELR implementation has completed:
 
-The eight IA-01 findings are formally resolved:
+* IA-01 Domain Semantic Alignment;
+* IA-02 Contract and Lifecycle Alignment;
+* IA-03 Persistence Model;
+* IA-04 Concrete Repository Layer;
+* IA-05 Database Wiring;
+* E2E-07 Production Persistence.
 
-* IA-001
-* IA-002
-* IA-003
-* IA-005
-* IA-010
-* IA-017
-* IA-018
-* IA-019
+E2E-07 is verified by the persistent integration suite:
 
-The next implementation objective is IA-02 — Contract and Lifecycle Alignment.
+`70 passed`
 
-No session should restart the completed IA-01 work without new authoritative evidence requiring such action.
+Checkpoint:
+
+`b00d5c7`
+
+The verified production boundary is:
+
+`Domain → Application → Concrete Repository → Persistence Model → Database`
+
+The next unverified boundary is:
+
+`Database → New Session → Repository → Reconstructed Aggregate`
+
+The next implementation objective is:
+
+**E2E-08 — Persistent Reload**
+
+Subsequent objectives are:
+
+* E2E-09 — Version History Recovery;
+* E2E-10 — Audit History Recovery;
+* E2E-11 — Persistent End-to-End Test;
+* E2E-GATE-01.
+
+No session should restart completed IA-01 through IA-05 or E2E-07 work without new contradictory repository or authoritative evidence.
