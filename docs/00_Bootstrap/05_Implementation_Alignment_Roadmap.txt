@@ -481,7 +481,7 @@ E2E-11 Persistent End-to-End Test
 ▼
 IA-06 Persistence Test Conformance
 │
-│ PENDING
+│ IN PROGRESS — PARTIAL
 ▼
 IA-07 E2E-GATE-01
 │
