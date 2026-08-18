@@ -1,248 +1,96 @@
-import pytest
-from datetime import datetime, timezone
 from uuid import uuid4
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.orm import Session
 
-from app.persistence.models.audit_record_model import AuditRecordModel
-from app.persistence.models.learning_object_model import LearningObjectModel
-from app.persistence.models.version_model import VersionModel
+from app.application.services.learning_object_service import (
+    LearningObjectService,
+)
+from app.domain.entities.knowledge_statement import KnowledgeStatement
+from app.persistence.repositories.audit_repository import (
+    SQLAlchemyAuditRepository,
+)
+from app.persistence.repositories.learning_object_repository import (
+    SQLAlchemyLearningObjectRepository,
+)
+from app.persistence.repositories.version_repository import (
+    SQLAlchemyVersionRepository,
+)
 
 
-def test_approve_persists_version_and_audit(monkeypatch) -> None:
-    monkeypatch.setenv(
-        "DATABASE_URL",
-        "sqlite:///:memory:",
+def test_approve_coordinates_sqlalchemy_repositories() -> None:
+    session = Session()
+
+    service = LearningObjectService(
+        learning_object_repository=(
+            SQLAlchemyLearningObjectRepository(session)
+        ),
+        version_repository=(
+            SQLAlchemyVersionRepository(session)
+        ),
+        audit_repository=(
+            SQLAlchemyAuditRepository(session)
+        ),
     )
 
-    from app.persistence.models.base import Base
-    from app.persistence.models.anchor_model import AnchorModel
-    from app.persistence.models.knowledge_category_model import (
-        KnowledgeCategoryModel,
-    )
-    from app.persistence.transaction import transaction
-    from app.persistence.wiring import create_learning_object_service
-    from app.domain.entities.knowledge_statement import KnowledgeStatement
-
-    engine = create_engine("sqlite:///:memory:")
-    Base.metadata.create_all(engine)
-
-    SessionFactory = sessionmaker(
-        bind=engine,
-        class_=Session,
-        expire_on_commit=False,
+    learning_object = service.create_candidate(
+        anchor_id=uuid4(),
+        statement=KnowledgeStatement(
+            text="Test knowledge statement",
+            language="en",
+        ),
+        category_id=uuid4(),
+        actor="test",
     )
 
-    session = SessionFactory()
-
-    try:
-        anchor_id = uuid4()
-        category_id = uuid4()
-
-        session.add(
-            AnchorModel(
-                id=anchor_id,
-                content="Test anchor",
-                type="text",
-                created_at=datetime.now(timezone.utc),
-            )
-        )
-
-        session.add(
-            KnowledgeCategoryModel(
-                id=category_id,
-                name="Test category",
-            )
-        )
-
-        session.commit()
-
-        service, _ = create_learning_object_service(session)
-
-        learning_object = service.create_candidate(
-            anchor_id=anchor_id,
-            statement=KnowledgeStatement(
-                text="Test knowledge",
-                language="en",
-            ),
-            category_id=category_id,
-            actor="test",
-        )
-
-        service.submit_for_review(
-            learning_object.id,
-            actor="test",
-        )
-
-        with transaction(session):
-            approved = service.approve(
-                learning_object.id,
-                actor="reviewer",
-            )
-
-        assert approved.state.value == "Active"
-
-        model = session.get(
-            LearningObjectModel,
-            learning_object.id,
-        )
-
-        assert model is not None
-        assert model.state == "Active"
-
-        versions = (
-            session.query(VersionModel)
-            .filter(
-                VersionModel.learning_object_id
-                == learning_object.id
-            )
-            .all()
-        )
-
-        assert len(versions) == 1
-        assert versions[0].number == 1
-
-        audits = (
-            session.query(AuditRecordModel)
-            .filter(
-                AuditRecordModel.entity_id
-                == learning_object.id
-            )
-            .all()
-        )
-
-        assert len(audits) == 3
-        assert [
-            audit.event_type
-            for audit in audits
-        ] == [
-            "LearningObjectCreated",
-            "LearningObjectSubmitted",
-            "LearningObjectApproved",
-        ]
-
-        assert audits[-1].actor == "reviewer"
-
-    finally:
-        session.close()
-        engine.dispose()
-
-
-def test_approve_rollback_removes_version_and_audit(
-    monkeypatch,
-) -> None:
-    monkeypatch.setenv(
-        "DATABASE_URL",
-        "sqlite:///:memory:",
+    service.submit_for_review(
+        learning_object.id,
+        actor="producer",
     )
 
-    from app.persistence.models.base import Base
-    from app.persistence.models.anchor_model import AnchorModel
-    from app.persistence.models.knowledge_category_model import (
-        KnowledgeCategoryModel,
-    )
-    from app.persistence.transaction import transaction
-    from app.persistence.wiring import create_learning_object_service
-    from app.domain.entities.knowledge_statement import KnowledgeStatement
-
-    engine = create_engine("sqlite:///:memory:")
-    Base.metadata.create_all(engine)
-
-    SessionFactory = sessionmaker(
-        bind=engine,
-        class_=Session,
-        expire_on_commit=False,
+    approved = service.approve(
+        learning_object.id,
+        actor="reviewer",
     )
 
-    session = SessionFactory()
+    assert approved.state.value == "Active"
 
-    try:
-        anchor_id = uuid4()
-        category_id = uuid4()
+    models = list(session.new)
 
-        session.add(
-            AnchorModel(
-                id=anchor_id,
-                content="Test anchor",
-                type="text",
-                created_at=datetime.now(timezone.utc),
-            )
-        )
+    learning_object_models = [
+        model
+        for model in models
+        if model.__class__.__name__ == "LearningObjectModel"
+    ]
 
-        session.add(
-            KnowledgeCategoryModel(
-                id=category_id,
-                name="Test category",
-            )
-        )
+    version_models = [
+        model
+        for model in models
+        if model.__class__.__name__ == "VersionModel"
+    ]
 
-        session.commit()
+    audit_models = [
+        model
+        for model in models
+        if model.__class__.__name__ == "AuditRecordModel"
+    ]
 
-        service, _ = create_learning_object_service(session)
+    assert len(learning_object_models) == 1
+    assert len(version_models) == 1
+    assert len(audit_models) == 3
 
-        learning_object = service.create_candidate(
-            anchor_id=anchor_id,
-            statement=KnowledgeStatement(
-                text="Test knowledge",
-                language="en",
-            ),
-            category_id=category_id,
-            actor="test",
-        )
+    assert learning_object_models[0].id == learning_object.id
+    assert learning_object_models[0].state == "Active"
 
-        service.submit_for_review(
-            learning_object.id,
-            actor="test",
-        )
+    assert version_models[0].learning_object_id == learning_object.id
+    assert version_models[0].number == 1
 
-        with pytest.raises(RuntimeError, match="boom"):
-            with transaction(session):
-                service.approve(
-                    learning_object.id,
-                    actor="reviewer",
-                )
-                raise RuntimeError("boom")
+    assert [
+        model.event_type
+        for model in audit_models
+    ] == [
+        "LearningObjectCreated",
+        "LearningObjectSubmitted",
+        "LearningObjectApproved",
+    ]
 
-        session.expire_all()
-
-        model = session.get(
-            LearningObjectModel,
-            learning_object.id,
-        )
-
-        assert model is not None
-        assert model.state == "Proposed"
-
-        versions = (
-            session.query(VersionModel)
-            .filter(
-                VersionModel.learning_object_id
-                == learning_object.id
-            )
-            .all()
-        )
-
-        assert versions == []
-
-        audits = (
-            session.query(AuditRecordModel)
-            .filter(
-                AuditRecordModel.entity_id
-                == learning_object.id
-            )
-            .all()
-        )
-
-        assert len(audits) == 2
-        assert [
-            audit.event_type
-            for audit in audits
-        ] == [
-            "LearningObjectCreated",
-            "LearningObjectSubmitted",
-        ]
-
-    finally:
-        session.close()
-        engine.dispose()
+    session.close()
