@@ -1,102 +1,89 @@
 from uuid import uuid4
 
-from app.application.services.learning_object_service import (
-    LearningObjectService,
-)
+from sqlalchemy import inspect
+
 from app.domain.entities.knowledge_statement import KnowledgeStatement
-from app.persistence.repositories.audit_repository import (
-    SQLAlchemyAuditRepository,
-)
-from app.persistence.repositories.learning_object_repository import (
-    SQLAlchemyLearningObjectRepository,
-)
-from app.persistence.repositories.version_repository import (
-    SQLAlchemyVersionRepository,
-)
+from app.persistence.models.audit_record_model import AuditRecordModel
+from app.persistence.models.learning_object_model import LearningObjectModel
+from app.persistence.models.version_model import VersionModel
+from app.persistence.transaction import transaction
+from app.persistence.wiring import create_learning_object_service
 
 
-def test_approve_coordinates_all_sqlalchemy_repositories() -> None:
-    from sqlalchemy.orm import Session
+def test_approve_persists_version_and_audit() -> None:
+    from app.persistence.database import create_session
 
-    session = Session()
+    session = create_session()
 
-    learning_object_repository = SQLAlchemyLearningObjectRepository(
-        session
-    )
-    version_repository = SQLAlchemyVersionRepository(session)
-    audit_repository = SQLAlchemyAuditRepository(session)
+    try:
+        service, _ = create_learning_object_service(session)
 
-    service = LearningObjectService(
-        learning_object_repository=learning_object_repository,
-        version_repository=version_repository,
-        audit_repository=audit_repository,
-    )
+        learning_object = service.create_candidate(
+            anchor_id=uuid4(),
+            statement=KnowledgeStatement(
+                text="Test knowledge statement",
+                language="en",
+            ),
+            category_id=uuid4(),
+            actor="test",
+        )
 
-    learning_object = service.create_candidate(
-        anchor_id=uuid4(),
-        statement=KnowledgeStatement(
-            text="Test knowledge statement",
-            language="en",
-        ),
-        category_id=uuid4(),
-        actor="test",
-    )
+        service.submit_for_review(
+            learning_object.id,
+            actor="producer",
+        )
 
-    service.submit_for_review(
-        learning_object.id,
-        actor="producer",
-    )
+        with transaction(session):
+            approved = service.approve(
+                learning_object.id,
+                actor="reviewer",
+            )
 
-    approved = service.approve(
-        learning_object.id,
-        actor="reviewer",
-    )
+        assert approved.state.value == "Active"
 
-    assert approved.state.value == "Active"
+        session.expire_all()
 
-    assert learning_object_repository._session is session
-    assert version_repository._session is session
-    assert audit_repository._session is session
+        learning_object_model = session.get(
+            LearningObjectModel,
+            learning_object.id,
+        )
 
-    models = list(session.new)
+        assert learning_object_model is not None
+        assert learning_object_model.state == "Active"
 
-    learning_object_models = [
-        model
-        for model in models
-        if model.__class__.__name__ == "LearningObjectModel"
-    ]
+        versions = (
+            session.query(VersionModel)
+            .filter(
+                VersionModel.learning_object_id
+                == learning_object.id
+            )
+            .all()
+        )
 
-    version_models = [
-        model
-        for model in models
-        if model.__class__.__name__ == "VersionModel"
-    ]
+        assert len(versions) == 1
+        assert versions[0].number == 1
 
-    audit_models = [
-        model
-        for model in models
-        if model.__class__.__name__ == "AuditRecordModel"
-    ]
+        audits = (
+            session.query(AuditRecordModel)
+            .filter(
+                AuditRecordModel.entity_id
+                == learning_object.id
+            )
+            .order_by(AuditRecordModel.timestamp.asc())
+            .all()
+        )
 
-    assert len(learning_object_models) == 1
-    assert len(version_models) == 1
-    assert len(audit_models) == 3
+        assert len(audits) == 3
+        assert [
+            audit.event_type
+            for audit in audits
+        ] == [
+            "LearningObjectCreated",
+            "LearningObjectSubmitted",
+            "LearningObjectApproved",
+        ]
 
-    assert learning_object_models[0].id == learning_object.id
-    assert learning_object_models[0].state == "Active"
+        assert audits[-1].actor == "reviewer"
 
-    assert version_models[0].learning_object_id == learning_object.id
-    assert version_models[0].number == 1
-
-    assert [
-        model.event_type
-        for model in audit_models
-    ] == [
-        "LearningObjectCreated",
-        "LearningObjectSubmitted",
-        "LearningObjectApproved",
-    ]
-
-    assert audit_models[-1].actor == "reviewer"
-
-    session.close()
+    finally:
+        session.close()
