@@ -178,10 +178,6 @@ def test_approve_rolls_back_learning_object_and_version_on_audit_error(
     from app.persistence.models.learning_object_model import (
         LearningObjectModel,
     )
-    from app.persistence.models.learning_object_value_models import (
-        LearningObjectExampleModel,
-        LearningObjectNoteModel,
-    )
     from app.persistence.models.version_model import VersionModel
 
     from app.domain.entities.knowledge_statement import KnowledgeStatement
