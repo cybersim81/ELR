@@ -1313,3 +1313,139 @@ def test_invalid_retire_rolls_back_state_and_audit(
         session.close()
         engine.dispose()
 
+
+
+def test_approve_rolls_back_learning_object_version_and_audit_on_failure(
+    monkeypatch,
+) -> None:
+    monkeypatch.setenv(
+        "DATABASE_URL",
+        "sqlite://",
+    )
+
+    import importlib
+
+    import pytest
+
+    import app.persistence.database as database
+
+    database = importlib.reload(database)
+
+    from app.domain.entities.knowledge_statement import KnowledgeStatement
+    from app.domain.entities.learning_object import LearningObjectState
+    from app.persistence.models.audit_record_model import AuditRecordModel
+    from app.persistence.models.base import Base
+    from app.persistence.models.version_model import VersionModel
+    from app.persistence.repositories.learning_object_repository import (
+        SQLAlchemyLearningObjectRepository,
+    )
+    from app.persistence.transaction import transaction
+    from app.persistence.wiring import create_learning_object_service
+
+    Base.metadata.create_all(database.engine)
+
+    session = database.SessionFactory()
+
+    try:
+        service, _ = create_learning_object_service(session)
+
+        learning_object = service.create_candidate(
+            anchor_id=uuid4(),
+            statement=KnowledgeStatement(
+                text="Knowledge to approve",
+                language="en",
+            ),
+            category_id=uuid4(),
+            actor="creator",
+        )
+
+        session.flush()
+
+        service.submit_for_review(
+            learning_object.id,
+            actor="reviewer",
+        )
+
+        session.flush()
+
+        persisted_before = session.get(
+            LearningObjectModel,
+            learning_object.id,
+        )
+
+        assert persisted_before is not None
+        assert persisted_before.state == "Proposed"
+
+        def fail_audit(_audit) -> None:
+            raise RuntimeError("forced audit failure")
+
+        monkeypatch.setattr(
+            service.audit_repository,
+            "record",
+            fail_audit,
+        )
+
+        with pytest.raises(RuntimeError, match="forced audit failure"):
+            with transaction(session):
+                service.approve(
+                    learning_object.id,
+                    actor="approver",
+                )
+
+        session.expire_all()
+
+        repository = SQLAlchemyLearningObjectRepository(
+            session,
+        )
+
+        persisted = repository.get_by_id(
+            learning_object.id,
+        )
+
+        assert persisted is not None
+        assert persisted.state == LearningObjectState.PROPOSED
+
+        versions = (
+            session.query(VersionModel)
+            .filter(
+                VersionModel.learning_object_id
+                == learning_object.id,
+            )
+            .all()
+        )
+
+        assert versions == []
+
+        audits = (
+            session.query(AuditRecordModel)
+            .filter(
+                AuditRecordModel.entity_id
+                == learning_object.id,
+            )
+            .all()
+        )
+
+        assert [
+            audit.event_type
+            for audit in audits
+        ] == [
+            "LearningObjectCreated",
+            "LearningObjectSubmitted",
+        ]
+
+        approved_audits = (
+            session.query(AuditRecordModel)
+            .filter(
+                AuditRecordModel.entity_id
+                == learning_object.id,
+                AuditRecordModel.event_type
+                == "LearningObjectApproved",
+            )
+            .all()
+        )
+
+        assert approved_audits == []
+
+    finally:
+        session.close()
+        database.engine.dispose()
