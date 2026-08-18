@@ -494,3 +494,207 @@ def test_update_knowledge_persists_new_version_and_audit(
     finally:
         session.close()
         engine.dispose()
+
+
+def test_update_knowledge_rolls_back_when_audit_fails(
+    monkeypatch,
+) -> None:
+    monkeypatch.setenv(
+        "DATABASE_URL",
+        "sqlite://",
+    )
+
+    import importlib
+
+    import app.persistence.database as database
+
+    database = importlib.reload(database)
+
+    from app.persistence.models.base import Base
+    from app.persistence.models.anchor_model import AnchorModel
+    from app.persistence.models.audit_record_model import AuditRecordModel
+    from app.persistence.models.knowledge_category_model import (
+        KnowledgeCategoryModel,
+    )
+    from app.persistence.models.learning_object_model import (
+        LearningObjectModel,
+    )
+    from app.persistence.models.version_model import VersionModel
+
+    from app.domain.entities.knowledge_statement import KnowledgeStatement
+    from app.persistence.transaction import transaction
+    from app.persistence.wiring import create_learning_object_service
+
+    engine = create_engine(
+        "sqlite://",
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
+    )
+
+    Base.metadata.create_all(engine)
+
+    SessionFactory = database.sessionmaker(
+        bind=engine,
+        class_=database.Session,
+        expire_on_commit=False,
+    )
+
+    session = SessionFactory()
+
+    try:
+        anchor_id = uuid4()
+        category_id = uuid4()
+
+        session.add(
+            AnchorModel(
+                id=anchor_id,
+                content="Test anchor",
+                type="text",
+                created_at=__import__("datetime").datetime.now(
+                    __import__("datetime").timezone.utc
+                ),
+            )
+        )
+
+        session.add(
+            KnowledgeCategoryModel(
+                id=category_id,
+                name="Test category",
+            )
+        )
+
+        session.commit()
+
+        service, _ = create_learning_object_service(session)
+
+        learning_object = service.create_candidate(
+            anchor_id=anchor_id,
+            statement=KnowledgeStatement(
+                text="Original knowledge statement",
+                language="en",
+            ),
+            category_id=category_id,
+            actor="creator",
+        )
+
+        session.commit()
+
+        service.submit_for_review(
+            learning_object.id,
+            actor="producer",
+        )
+
+        session.commit()
+
+        with transaction(session):
+            service.approve(
+                learning_object.id,
+                actor="reviewer",
+            )
+
+        session.expire_all()
+
+        original = session.get(
+            LearningObjectModel,
+            learning_object.id,
+        )
+
+        assert original is not None
+        assert original.state == "Active"
+        assert original.statement_text == "Original knowledge statement"
+        assert original.statement_language == "en"
+
+        versions_before = (
+            session.query(VersionModel)
+            .filter(
+                VersionModel.learning_object_id
+                == learning_object.id
+            )
+            .order_by(VersionModel.number.asc())
+            .all()
+        )
+
+        assert len(versions_before) == 1
+        assert versions_before[0].number == 1
+        assert (
+            versions_before[0].snapshot["statement"]["text"]
+            == "Original knowledge statement"
+        )
+
+        def fail_audit(*args, **kwargs) -> None:
+            raise RuntimeError("audit failure")
+
+        monkeypatch.setattr(
+            service.audit_repository,
+            "record",
+            fail_audit,
+        )
+
+        try:
+            with transaction(session):
+                service.update_knowledge(
+                    learning_object.id,
+                    KnowledgeStatement(
+                        text="Updated knowledge statement",
+                        language="en",
+                    ),
+                    actor="editor",
+                )
+        except RuntimeError as exc:
+            assert str(exc) == "audit failure"
+        else:
+            raise AssertionError(
+                "update_knowledge() should have raised RuntimeError"
+            )
+
+        session.expire_all()
+
+        persisted = session.get(
+            LearningObjectModel,
+            learning_object.id,
+        )
+
+        assert persisted is not None
+        assert persisted.state == "Active"
+        assert persisted.statement_text == "Original knowledge statement"
+        assert persisted.statement_language == "en"
+
+        versions_after = (
+            session.query(VersionModel)
+            .filter(
+                VersionModel.learning_object_id
+                == learning_object.id
+            )
+            .order_by(VersionModel.number.asc())
+            .all()
+        )
+
+        assert len(versions_after) == 1
+        assert versions_after[0].number == 1
+        assert (
+            versions_after[0].snapshot["statement"]["text"]
+            == "Original knowledge statement"
+        )
+
+        audits = (
+            session.query(AuditRecordModel)
+            .filter(
+                AuditRecordModel.entity_id
+                == learning_object.id
+            )
+            .order_by(AuditRecordModel.timestamp.asc())
+            .all()
+        )
+
+        assert [
+            audit.event_type
+            for audit in audits
+        ] == [
+            "LearningObjectCreated",
+            "LearningObjectSubmitted",
+            "LearningObjectApproved",
+        ]
+
+    finally:
+        session.close()
+        engine.dispose()
