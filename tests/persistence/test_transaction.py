@@ -2,21 +2,16 @@ import pytest
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import Session, sessionmaker
 
+from app.persistence import transaction as transaction_module
 
-def test_transaction_commits_on_success(monkeypatch) -> None:
-    monkeypatch.setenv(
-        "DATABASE_URL",
-        "sqlite:///:memory:",
-    )
 
-    from app.persistence.transaction import transaction
-
+def test_transaction_commits_on_success() -> None:
     engine = create_engine("sqlite:///:memory:")
     session_factory = sessionmaker(bind=engine, class_=Session)
     session = session_factory()
 
     try:
-        with transaction(session):
+        with transaction_module.transaction(session):
             session.execute(text("SELECT 1"))
 
         assert session.is_active
@@ -25,21 +20,14 @@ def test_transaction_commits_on_success(monkeypatch) -> None:
         engine.dispose()
 
 
-def test_transaction_rolls_back_on_error(monkeypatch) -> None:
-    monkeypatch.setenv(
-        "DATABASE_URL",
-        "sqlite:///:memory:",
-    )
-
-    from app.persistence.transaction import transaction
-
+def test_transaction_rolls_back_on_error() -> None:
     engine = create_engine("sqlite:///:memory:")
     session_factory = sessionmaker(bind=engine, class_=Session)
     session = session_factory()
 
     try:
         with pytest.raises(RuntimeError, match="boom"):
-            with transaction(session):
+            with transaction_module.transaction(session):
                 session.execute(text("SELECT 1"))
                 raise RuntimeError("boom")
 
@@ -50,13 +38,6 @@ def test_transaction_rolls_back_on_error(monkeypatch) -> None:
 
 
 def test_transaction_closes_owned_session(monkeypatch) -> None:
-    monkeypatch.setenv(
-        "DATABASE_URL",
-        "sqlite:///:memory:",
-    )
-
-    from app.persistence.transaction import transaction
-
     engine = create_engine("sqlite:///:memory:")
 
     class TrackingSession(Session):
@@ -71,14 +52,21 @@ def test_transaction_closes_owned_session(monkeypatch) -> None:
         class_=TrackingSession,
     )
 
-    session = tracking_factory()
+    monkeypatch.setattr(
+        transaction_module,
+        "SessionFactory",
+        tracking_factory,
+    )
+
+    session = None
 
     try:
-        with transaction(session):
-            pass
+        with transaction_module.transaction() as owned_session:
+            session = owned_session
 
+        assert session is not None
         assert session.closed
     finally:
-        if not session.closed:
+        if session is not None and not session.closed:
             session.close()
         engine.dispose()
