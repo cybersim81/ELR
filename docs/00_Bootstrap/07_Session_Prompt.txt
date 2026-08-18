@@ -69,25 +69,60 @@ The following state is already established:
 
 `IA-02 Contract and Lifecycle Alignment → COMPLETE — 100%`
 
-`IA-03 Persistence Model → NEXT`
+`IA-03 Persistence Model → COMPLETE — 100%`
+
+`IA-04 Concrete Repository Layer → COMPLETE — 100%`
+
+`IA-05 Database Wiring → COMPLETE — 100%`
+
+`E2E-07 Production Persistence → COMPLETE — VERIFIED`
+
+`E2E-08 Persistent Reload → NEXT`
+
+`E2E-09 Version History Recovery → PENDING`
+
+`E2E-10 Audit History Recovery → PENDING`
+
+`E2E-11 Persistent End-to-End Test → PENDING`
 
 `E2E-GATE-01 → PENDING`
+
+`IA-06 Persistence Test Conformance → IN PROGRESS — PARTIAL`
+
+`IA-07 E2E-GATE-01 → PENDING`
+
+`IA-08 Implementation Conformance → PENDING`
 
 ### Current Implementation Characterization
 
 The repository currently contains:
 
-* a domain/application skeleton;
+* a domain/application implementation;
 * a tested LearningObject lifecycle;
 * KnowledgeStatement as an immutable aggregate member/value;
-* Version creation in the application layer;
 * immutable LearningObject-centered Version history;
 * structured Version snapshots;
-* AuditRecord creation in the application layer;
-* in-memory repositories used by the application tests;
-* an independently materialized Anchor persistence model.
+* AuditRecord creation and persistence;
+* concrete production repositories;
+* SQLAlchemy persistence models;
+* production database/session wiring;
+* transaction boundaries;
+* persistent LearningObject state;
+* persistent Version state;
+* persistent AuditRecord state;
+* persistence integration tests.
 
-The persistent end-to-end LearningObject lifecycle is NOT yet implemented.
+The verified production persistence boundary is:
+
+`Domain → Application → Concrete Repository → Persistence Model → Database`
+
+E2E-07 verifies this production persistence path.
+
+The remaining unverified boundary is:
+
+`Database → New Session → Repository → Reconstructed Aggregate`
+
+The next objective is persistent reconstruction across a newly created session.
 
 ---
 
@@ -114,40 +149,37 @@ They may only be reopened if new repository evidence establishes a direct contra
 
 ### Current Known Open Items
 
-The remaining implementation alignment and persistence findings are recorded in:
+The remaining implementation findings are recorded in:
 
 `03_Implementation_Finding_Register.txt`
 
-IA-02 Contract and Lifecycle Alignment has been technically resolved and verified.
+The resolved implementation-alignment phases are:
 
-Verified IA-02 conditions include:
+* IA-01 — Domain Semantic Alignment;
+* IA-02 — Contract and Lifecycle Alignment;
+* IA-03 — Persistence Model;
+* IA-04 — Concrete Repository Layer;
+* IA-05 — Database Wiring.
 
-* repository capability boundaries and purposes;
-* LearningObject Repository ownership;
-* LearningObject-centered Version history;
-* distinct Audit history boundary;
-* absence of LearningObject physical deletion from the Domain Repository contract;
-* normative lifecycle orchestration;
-* invalid lifecycle transition behavior;
-* separation of Change Proposal review decisions from LearningObject lifecycle state.
+E2E-07 Production Persistence is complete and verified.
 
-The remaining implementation gaps are persistence, concrete repository integration, database wiring, persistent reload, and persistent end-to-end test coverage.
+The remaining persistence/conformance work concerns:
 
-These remaining gaps belong to subsequent implementation gates and MUST NOT be reclassified as IA-02 deviations without contradictory authoritative evidence.
+* cross-session LearningObject reconstruction;
+* persistent Version history recovery;
+* persistent Audit history recovery;
+* complete persistent end-to-end lifecycle verification;
+* subsequent E2E-GATE-01 and implementation-conformance work.
 
-The principal remaining persistence gaps concern:
+These remaining gaps belong to E2E-08 onward and MUST NOT be reclassified as IA-01 or IA-02 deviations without contradictory authoritative evidence.
 
-* LearningObject persistence;
-* KnowledgeStatement representation within persistent LearningObject state;
-* Version persistence;
-* AuditRecord persistence;
-* concrete production repositories;
-* persistent database integration;
-* persistent reload;
-* persistent Version history;
-* persistent Audit history.
+Current verification:
 
-Do not silently reinterpret or discard these findings.
+`70 passed`
+
+Checkpoint:
+
+`b00d5c7`
 
 ---
 
@@ -155,15 +187,23 @@ Do not silently reinterpret or discard these findings.
 
 Resume at:
 
-**IA-03 — Persistence Model**
+**E2E-08 — PERSISTENT RELOAD**
 
-IA-02 — Contract and Lifecycle Alignment is COMPLETE.
+IA-01 through IA-05 are COMPLETE.
 
-Current IA-02 progress is `100%`.
+E2E-07 — Production Persistence is COMPLETE and VERIFIED.
 
-The immediate task is to materialize the aligned domain model in production persistence without violating the contract, lifecycle, Version, Audit, or aggregate boundaries already verified under IA-02.
+Current checkpoint:
 
-Do NOT restart IA-01 unless new authoritative evidence establishes a contradiction with its closure.
+`b00d5c7`
+
+Current verified test suite:
+
+`70 passed`
+
+The immediate task is to demonstrate that persisted LearningObject state can be reconstructed correctly from a newly created independent database session.
+
+Do NOT restart IA-01, IA-02, IA-03, IA-04, IA-05, or E2E-07 unless new authoritative or repository evidence establishes a contradiction with their verified closure.
 
 ### Required Working Sequence
 
@@ -172,13 +212,26 @@ Proceed in this order:
 1. Read the complete Bootstrap Pack.
 2. Reconcile the current state against the relevant authoritative documents.
 3. Confirm whether the recorded findings remain valid.
-4. Resolve IA-02.
+4. Verify the current active roadmap item against repository evidence.
 5. Update affected implementation/specification documents as required.
 6. Update the Finding Register.
 7. Update the E2E Gap Map if the resolution changes an E2E dependency.
 8. Update the Roadmap if the gate position changes.
 9. Keep `06_Session_Continuity_State.txt` synchronized.
 10. Only then proceed to the next implementation gate.
+
+The current active implementation objective is:
+
+**E2E-08 — Persistent Reload**
+
+Documentation files must be synchronized one at a time:
+
+* propose one file;
+* wait for user application;
+* verify it;
+* only then proceed to the next file.
+
+Do not advance a roadmap item based solely on an intended change or a proposed change block.
 
 ---
 
@@ -257,21 +310,31 @@ Audit records must not be used as a substitute for immutable Version history.
 
 ### Persistence Rule
 
-Do NOT materialize production persistence schemas for semantics that remain unresolved under IA-02.
-
-The intended sequence is:
-
-`Domain Semantic Alignment`
-→ `Contract and Lifecycle Alignment`
-→ `Persistence Model`
-→ `Concrete Repository`
-→ `Database Integration`
-→ `Persistence Tests`
-→ `E2E-GATE-01`
-
-IA-01 is already complete.
-
 Production persistence must preserve the semantic boundaries established by IA-01 and the contract/lifecycle boundaries established by IA-02.
+
+The following production persistence phases are already complete and verified:
+
+`Persistence Model → Concrete Repository → Database Integration`
+
+The verified production boundary is:
+
+`Application → Concrete Repository → Persistence Model → Database`
+
+The remaining persistence boundary is:
+
+`Database → New Session → Repository → Reconstructed Aggregate`
+
+Therefore the current persistence objective is:
+
+**E2E-08 — Persistent Reload**
+
+Persistent Version history recovery belongs to E2E-09.
+
+Persistent Audit history recovery belongs to E2E-10.
+
+The complete persistent end-to-end lifecycle belongs to E2E-11.
+
+Do not reopen completed persistence implementation phases without contradictory evidence.
 
 ### End-to-End Objective
 
@@ -315,11 +378,22 @@ Before ending the session:
 3. update E2E status;
 4. update roadmap position;
 5. update `06_Session_Continuity_State.txt`;
-6. ensure `00_Bootstrap_Pack_Index.txt` still correctly describes the Pack;
-7. ensure this Session Prompt still references the complete Pack.
-8. report the current completion percentage of the active roadmap step only after positive repository verification.
+6. ensure `00_Bootstrap_Pack_Index.txt` correctly describes the Pack;
+7. ensure `04_End_to_End_Gap_Map.txt` reflects the current E2E position;
+8. ensure `05_Implementation_Alignment_Roadmap.txt` reflects the current roadmap position;
+9. ensure this Session Prompt references the complete Pack;
+10. record the latest verified checkpoint and test result when applicable;
+11. report the current completion percentage of the active roadmap step only after positive repository verification.
 
-The next session must be able to begin from `07_Session_Prompt.txt` alone and autonomously discover and read the complete Bootstrap Pack.
+Bootstrap documentation updates are performed one document at a time.
+
+A document is considered synchronized only after:
+
+* the user applies the proposed change;
+* the repository is re-read;
+* the resulting state is positively verified.
+
+The next session must be able to begin from `07_Session_Prompt.txt` and discover the complete current Bootstrap Pack without relying on prior conversational context.
 
 ---
 
@@ -354,6 +428,16 @@ Do not allow historical bootstrap state to silently override the current consoli
 
 **READ THE COMPLETE `docs/00_Bootstrap/` PACK FIRST.**
 
-**THEN RESUME AT IA-03 — PERSISTENCE MODEL.**
+**VERIFY THE CURRENT REPOSITORY STATE AGAINST THE PACK AND AUTHORITATIVE SOURCES.**
 
-**IA-02 — CONTRACT AND LIFECYCLE ALIGNMENT IS COMPLETE — 100%.**
+**THEN RESUME AT E2E-08 — PERSISTENT RELOAD.**
+
+**IA-01 THROUGH IA-05 ARE COMPLETE.**
+
+**E2E-07 — PRODUCTION PERSISTENCE IS COMPLETE AND VERIFIED.**
+
+**CHECKPOINT: `b00d5c7`**
+
+**VERIFIED TEST SUITE: `70 passed`**
+
+**DO NOT RESTART COMPLETED WORK WITHOUT CONTRADICTORY EVIDENCE.**
