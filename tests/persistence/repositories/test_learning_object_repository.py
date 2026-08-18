@@ -96,7 +96,7 @@ def test_learning_object_repository_save_updates_existing_learning_object(
     assert persisted is not None
     assert persisted.state.value == learning_object.state.value
 
-    persisted.state = type(persisted.state).Proposed
+    persisted.state = type(persisted.state).PROPOSED
 
     repository.save(persisted)
 
