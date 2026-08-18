@@ -1152,6 +1152,7 @@ def test_get_reconstructs_learning_object_with_examples_and_notes(
         engine.dispose()
 
 
+
 def test_invalid_retire_rolls_back_state_and_audit(
     monkeypatch,
 ) -> None:
@@ -1161,6 +1162,7 @@ def test_invalid_retire_rolls_back_state_and_audit(
     )
 
     import importlib
+    import pytest
 
     import app.persistence.database as database
 
@@ -1304,3 +1306,4 @@ def test_invalid_retire_rolls_back_state_and_audit(
     finally:
         session.close()
         engine.dispose()
+
