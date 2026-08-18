@@ -149,7 +149,11 @@ The implementation has progressed beyond the IA-02 alignment gate into productio
 
 No currently verified open IA-02 findings remain.
 
-The IA-02 gate remains in progress at `55%` while the remaining repository ownership, Version history, Audit history, and lifecycle contract boundaries are reviewed and formally closed.
+The IA-02 gate is closed at `100%`.
+
+Remaining implementation work is tracked by the production persistence and E2E roadmap, beginning with:
+
+`E2E-08 — Persistent Reload`
 
 ---
 
