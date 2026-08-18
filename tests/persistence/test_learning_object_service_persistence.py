@@ -1150,3 +1150,157 @@ def test_get_reconstructs_learning_object_with_examples_and_notes(
     finally:
         session.close()
         engine.dispose()
+
+
+def test_invalid_retire_rolls_back_state_and_audit(
+    monkeypatch,
+) -> None:
+    monkeypatch.setenv(
+        "DATABASE_URL",
+        "sqlite://",
+    )
+
+    import importlib
+
+    import app.persistence.database as database
+
+    database = importlib.reload(database)
+
+    from app.domain.entities.knowledge_statement import KnowledgeStatement
+    from app.domain.entities.learning_object import (
+        InvalidStateTransition,
+        LearningObjectState,
+    )
+    from app.persistence.models.anchor_model import AnchorModel
+    from app.persistence.models.audit_record_model import AuditRecordModel
+    from app.persistence.models.base import Base
+    from app.persistence.models.knowledge_category_model import (
+        KnowledgeCategoryModel,
+    )
+    from app.persistence.models.learning_object_model import (
+        LearningObjectModel,
+    )
+    from app.persistence.wiring import create_learning_object_service
+    from app.persistence.transaction import transaction
+
+    engine = create_engine(
+        "sqlite://",
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
+    )
+
+    Base.metadata.create_all(engine)
+
+    SessionFactory = database.sessionmaker(
+        bind=engine,
+        class_=database.Session,
+        expire_on_commit=False,
+    )
+
+    session = SessionFactory()
+
+    try:
+        anchor_id = uuid4()
+        category_id = uuid4()
+
+        session.add(
+            AnchorModel(
+                id=anchor_id,
+                content="Test anchor",
+                type="text",
+                created_at=__import__("datetime").datetime.now(
+                    __import__("datetime").timezone.utc
+                ),
+            )
+        )
+
+        session.add(
+            KnowledgeCategoryModel(
+                id=category_id,
+                name="Test category",
+            )
+        )
+
+        session.commit()
+
+        service, repository = create_learning_object_service(
+            session
+        )
+
+        learning_object = service.create_candidate(
+            anchor_id=anchor_id,
+            statement=KnowledgeStatement(
+                text="Test knowledge statement",
+                language="en",
+            ),
+            category_id=category_id,
+            actor="creator",
+        )
+
+        session.commit()
+
+        service.submit_for_review(
+            learning_object.id,
+            actor="producer",
+        )
+
+        session.commit()
+
+        with pytest.raises(InvalidStateTransition):
+            with transaction(session):
+                service.retire(
+                    learning_object.id,
+                    actor="reviewer",
+                )
+
+        session.expire_all()
+
+        persisted = repository.get_by_id(
+            learning_object.id,
+        )
+
+        assert persisted is not None
+        assert persisted.state == LearningObjectState.PROPOSED
+
+        audits = (
+            session.query(AuditRecordModel)
+            .filter(
+                AuditRecordModel.entity_id
+                == learning_object.id
+            )
+            .order_by(AuditRecordModel.timestamp.asc())
+            .all()
+        )
+
+        assert [
+            audit.event_type
+            for audit in audits
+        ] == [
+            "LearningObjectCreated",
+            "LearningObjectSubmitted",
+        ]
+
+        retired_audits = (
+            session.query(AuditRecordModel)
+            .filter(
+                AuditRecordModel.entity_id
+                == learning_object.id,
+                AuditRecordModel.event_type
+                == "LearningObjectRetired",
+            )
+            .all()
+        )
+
+        assert retired_audits == []
+
+        model = session.get(
+            LearningObjectModel,
+            learning_object.id,
+        )
+
+        assert model is not None
+        assert model.state == "Proposed"
+
+    finally:
+        session.close()
+        engine.dispose()
