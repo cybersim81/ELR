@@ -18,18 +18,34 @@ class SQLAlchemyLearningObjectRepository(LearningObjectRepository):
         self._session = session
 
     def save(self, learning_object: LearningObject) -> None:
-        model = LearningObjectModel(
-            id=learning_object.id,
-            anchor_id=learning_object.anchor_id,
-            statement_text=learning_object.statement.text,
-            statement_language=learning_object.statement.language,
-            category_id=learning_object.category_id,
-            state=learning_object.state.value,
-            created_at=learning_object.created_at,
-            updated_at=learning_object.updated_at,
+        model = self._session.get(
+            LearningObjectModel,
+            learning_object.id,
         )
 
-        self._session.add(model)
+        if model is None:
+            model = LearningObjectModel(
+                id=learning_object.id,
+                anchor_id=learning_object.anchor_id,
+                statement_text=learning_object.statement.text,
+                statement_language=learning_object.statement.language,
+                category_id=learning_object.category_id,
+                state=learning_object.state.value,
+                created_at=learning_object.created_at,
+                updated_at=learning_object.updated_at,
+            )
+
+            self._session.add(model)
+            return
+
+        model.anchor_id = learning_object.anchor_id
+        model.statement_text = learning_object.statement.text
+        model.statement_language = learning_object.statement.language
+        model.category_id = learning_object.category_id
+        model.state = learning_object.state.value
+        model.updated_at = learning_object.updated_at
+```
+
 
     def get_by_id(self, object_id: UUID) -> LearningObject | None:
         model = self._session.get(LearningObjectModel, object_id)
