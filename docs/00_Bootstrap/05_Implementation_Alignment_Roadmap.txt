@@ -399,29 +399,59 @@ IA-07 is closed.
 
 ---
 
-## Phase IA-08 — Implementation Conformance
+================================================================================
+# IA-08 — Implementation Conformance
+================================================================================
 
-### Objective
+Status:
 
-Compare the resulting implementation against the authoritative normative corpus.
+CURRENT — IN PROGRESS
 
-### Required Result
 
-All confirmed deviations must be resolved or explicitly documented as authorized exceptions.
+Current Finding:
 
-All critical persistence and E2E gaps must be closed.
+IA-08-A01 — Application Service
 
-The final implementation must preserve:
 
-* LearningObject as the primary knowledge aggregate;
-* KnowledgeStatement as an aggregate member/value;
-* LearningObject-centered immutable Version history;
-* the normative LearningObject lifecycle;
-* separation between Change Proposal review decisions and LearningObject lifecycle;
-* separation between Version history and Audit history;
-* independent Anchor identity and persistence boundary.
+Responsibility Status:
 
-The completed E2E-GATE-01 persistence lifecycle must be included in the conformance assessment.
+A01.6 — Application Error Boundary
+RESOLVED / VERIFIED
+
+A01.2 — Review / Change Proposal
+BLOCKED
+
+A01.3 — Category Service
+PARTIAL
+
+A01.4 — Version Service
+PARTIAL
+
+A01.5 — Audit Service
+PARTIAL
+
+A01.7 — Transaction Boundary
+PARTIAL
+
+
+Verification Evidence:
+
+A01.6 focused tests: PASS
+
+Full pytest suite: 79 passed
+
+E2E-GATE-01: VERIFIED / CLOSED
+
+
+Current Rule:
+
+A01.6 shall not be reopened unless new authoritative or repository evidence
+demonstrates a regression or contradiction.
+
+The next implementation action shall address one of the remaining
+non-resolved A01 responsibilities only after focused repository inspection
+confirms the actual implementation gap.
+
 
 ### Gate
 
