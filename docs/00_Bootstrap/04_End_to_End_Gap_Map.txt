@@ -174,7 +174,7 @@ The Version repository is explicitly LearningObject-centered.
 
 Production Version persistence is implemented and verified by E2E-07.
 
-The remaining gap is recovery of persistent Version history after a new independent session, which belongs to E2E-09.
+Persistent Version history recovery after a new independent session is verified by E2E-09.
 
 ### IA Mapping
 
@@ -186,7 +186,7 @@ The remaining gap is recovery of persistent Version history after a new independ
 
 ### Status
 
-`APPLICATION COMPLETE / PERSISTENCE VERIFIED — RECOVERY GAP REMAINS`
+`COMPLETE / PERSISTENCE AND RECOVERY VERIFIED`
 
 ---
 
@@ -202,11 +202,11 @@ AuditRecord creation and in-memory storage are implemented and tested.
 
 AuditRecord production persistence is implemented and verified by E2E-07.
 
-The remaining gap is recovery of persistent Audit history after a new independent session, which belongs to E2E-10.
+Persistent Audit history recovery after a new independent session is verified by E2E-10.
 
 ### Status
 
-`APPLICATION COMPLETE / PERSISTENCE VERIFIED — RECOVERY GAP REMAINS`
+`COMPLETE / PERSISTENCE AND RECOVERY VERIFIED`
 
 ---
 
