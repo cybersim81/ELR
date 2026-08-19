@@ -1,0 +1,501 @@
+================================================================================
+English Learning Repository (ELR)
+
+IA-08-A01.1 Application Error Boundary
+
+Version: 0.1.0
+Status: WORKING IMPLEMENTATION GUIDANCE
+================================================================================
+
+
+# Document Identity
+
+Document Name:
+
+ELR IA-08-A01.1 Application Error Boundary
+
+Document Version:
+
+0.1.0
+
+Status:
+
+WORKING IMPLEMENTATION GUIDANCE
+
+Parent Finding:
+
+IA-08-A01 — Application Service Conformance
+
+Parent Plan:
+
+ELR_IA08_Implementation_Conformance_Gap_Resolution_Plan_0.1.0
+
+Authority Status:
+
+This document is an implementation coordination artifact.
+
+It does not supersede, amend, or introduce normative domain semantics.
+
+In case of conflict, the applicable authoritative specification prevails.
+
+
+================================================================================
+# 1. Purpose
+================================================================================
+
+This document defines the minimum implementation change required to establish
+an Application Layer error boundary.
+
+The objective is to separate:
+
+* Domain errors;
+* Application-level errors;
+* transport-level error handling.
+
+The change must not alter Domain behavior, lifecycle semantics, persistence
+semantics, or API behavior.
+
+
+================================================================================
+# 2. Confirmed Finding
+================================================================================
+
+The current Application Layer exposes domain/infrastructure-level failures
+directly to its consumers.
+
+The current implementation contains domain-specific lookup failure handling
+inside LearningObjectService, but does not provide a complete application
+error taxonomy and translation boundary.
+
+This is classified as:
+
+IA-08-A01.1 — CONFIRMED GAP
+
+
+================================================================================
+# 3. Required Responsibility Boundary
+================================================================================
+
+The intended dependency direction is:
+
+Domain
+    ->
+Application Error Boundary
+    ->
+Application Consumer
+
+
+The Domain Layer remains the authority for domain rules.
+
+The Application Layer translates domain failures into stable application-level
+failures.
+
+The API Layer, when implemented, will subsequently translate application
+failures into transport-level responses.
+
+The Application Layer must therefore not:
+
+* raise HTTPException;
+* depend on FastAPI;
+* expose SQLAlchemy exceptions;
+* expose database-specific exceptions;
+* redefine domain rules.
+
+
+================================================================================
+# 4. Domain Errors
+================================================================================
+
+Existing domain exceptions must remain owned by the Domain Layer.
+
+Examples include:
+
+* InvalidStateTransition;
+* LearningObjectNotFound;
+* domain validation failures.
+
+No domain exception should be moved into the Application Layer merely to create
+the application boundary.
+
+
+================================================================================
+# 5. Application Error Model
+================================================================================
+
+Introduce an application-level error taxonomy sufficient for the currently
+implemented use cases.
+
+The initial categories shall be:
+
+* EntityNotFound;
+* ValidationFailure;
+* InvalidOperation;
+* UnauthorizedOperation.
+
+The taxonomy may be implemented as application-specific exception classes.
+
+The implementation must remain intentionally small.
+
+Do not introduce a large hierarchy before additional use cases require it.
+
+
+================================================================================
+# 6. Error Mapping
+================================================================================
+
+The Application Layer shall translate known Domain failures into application
+errors.
+
+The initial conceptual mapping is:
+
+Domain Error
+    ->
+Application Error
+
+LearningObjectNotFound
+    ->
+EntityNotFound
+
+InvalidStateTransition
+    ->
+InvalidOperation
+
+Domain validation failure
+    ->
+ValidationFailure
+
+
+UnauthorizedOperation is reserved for application/security authorization
+failures.
+
+It must not be manufactured from ordinary domain state-transition failures.
+
+
+================================================================================
+# 7. Preservation of Original Cause
+================================================================================
+
+Application-level translation must preserve the original exception as the
+underlying cause.
+
+Conceptually:
+
+raise EntityNotFound(...) from original_exception
+
+
+or the equivalent mechanism supported by the implementation language.
+
+This preserves diagnostic information without exposing the Domain exception
+as the primary Application boundary.
+
+
+================================================================================
+# 8. Scope of Translation
+================================================================================
+
+Translation shall occur at the Application Service boundary.
+
+It shall not be performed:
+
+* inside Domain entities;
+* inside repository implementations;
+* inside persistence models;
+* inside API routes.
+
+
+================================================================================
+# 9. Repository Error Handling
+================================================================================
+
+Repository-specific infrastructure failures must not be silently converted
+into EntityNotFound.
+
+Only a repository result that semantically means "entity does not exist" may
+be mapped to EntityNotFound.
+
+Unexpected infrastructure failures must remain distinguishable from a normal
+not-found condition.
+
+This prevents database failures from being incorrectly represented as
+business-level absence.
+
+
+================================================================================
+# 10. LearningObjectService
+================================================================================
+
+The existing LearningObjectService shall be the first Application Service
+covered by this boundary.
+
+The following operations must be inspected and, where applicable, brought
+under application-level error translation:
+
+* create_candidate();
+* submit_for_review();
+* approve();
+* update_knowledge();
+* retire();
+* get();
+* get_history().
+
+The implementation must not change their successful behavior.
+
+
+================================================================================
+# 11. No Semantic Change
+================================================================================
+
+This change must not alter:
+
+* lifecycle transitions;
+* aggregate invariants;
+* version creation rules;
+* audit semantics;
+* repository interfaces;
+* persistence mappings;
+* database schema.
+
+
+================================================================================
+# 12. Proposed Implementation Shape
+================================================================================
+
+The preferred initial structure is:
+
+app/
+    application/
+        errors.py
+        services/
+            learning_object_service.py
+
+
+The exact filename may differ if an equivalent existing application error
+module is already present.
+
+Do not create duplicate error modules.
+
+
+================================================================================
+# 13. Required Inspection Before Modification
+================================================================================
+
+Before applying the change, inspect the existing code for:
+
+* application exception classes;
+* domain exception classes;
+* repository not-found behavior;
+* existing error translation;
+* existing tests for exception behavior.
+
+Search for:
+
+* Exception;
+* NotFound;
+* InvalidStateTransition;
+* ValidationError;
+* Unauthorized;
+* raise;
+* except.
+
+
+================================================================================
+# 14. Minimal Change Rule
+================================================================================
+
+The implementation shall introduce only the minimum structures required to:
+
+1. define the initial application error taxonomy;
+2. translate currently known domain failures;
+3. preserve exception causes;
+4. preserve successful behavior;
+5. provide testable Application Layer error semantics.
+
+
+================================================================================
+# 15. Test Requirements
+================================================================================
+
+Add focused Application Layer tests for:
+
+## 15.1 Not Found
+
+A missing Learning Object must result in:
+
+EntityNotFound
+
+at the Application boundary.
+
+## 15.2 Invalid State Transition
+
+An invalid lifecycle operation must result in:
+
+InvalidOperation
+
+at the Application boundary.
+
+## 15.3 Validation
+
+A domain validation failure must result in:
+
+ValidationFailure
+
+when such a failure exists in the current implementation.
+
+## 15.4 Cause Preservation
+
+The application error must preserve the original domain exception as its
+cause.
+
+## 15.5 Successful Operations
+
+Existing successful operations must continue to return the same successful
+results.
+
+## 15.6 Regression
+
+All existing tests must remain green.
+
+
+================================================================================
+# 16. Explicit Non-Goals
+================================================================================
+
+This change does not implement:
+
+* FastAPI error handlers;
+* HTTP status mapping;
+* Authentication;
+* Authorization;
+* Identity Context;
+* Security middleware;
+* Transaction management;
+* Transactional Event Records;
+* Review;
+* Change Proposal;
+* Category Service.
+
+
+================================================================================
+# 17. Acceptance Criteria
+================================================================================
+
+A01.1 is resolved when:
+
+AC-001
+
+An application-level error taxonomy exists.
+
+AC-002
+
+Known Domain errors are translated at the Application boundary.
+
+AC-003
+
+Domain exceptions remain owned by the Domain Layer.
+
+AC-004
+
+HTTP and framework-specific errors are absent from the Application Layer.
+
+AC-005
+
+Unexpected infrastructure failures are not incorrectly converted into
+EntityNotFound.
+
+AC-006
+
+Original exception causes remain available for diagnostics.
+
+AC-007
+
+Existing successful Application Service behavior remains unchanged.
+
+AC-008
+
+Focused error tests pass.
+
+AC-009
+
+The complete existing regression suite passes.
+
+AC-010
+
+No persistence, lifecycle, versioning, audit, or domain semantics have
+changed.
+
+
+================================================================================
+# 18. Stop Conditions
+================================================================================
+
+Stop implementation if:
+
+* an existing application error taxonomy is discovered;
+* Domain exception semantics are ambiguous;
+* repository behavior cannot distinguish absence from infrastructure failure;
+* implementing translation requires changing Domain behavior;
+* an API-specific error model is required;
+* a previously passing persistence or lifecycle test fails.
+
+
+================================================================================
+# 19. Verification Sequence
+================================================================================
+
+After applying the local implementation change:
+
+STEP 1
+
+Run focused Application Layer error tests.
+
+STEP 2
+
+Run Domain tests.
+
+STEP 3
+
+Run persistence and repository tests.
+
+STEP 4
+
+Run the complete regression suite.
+
+STEP 5
+
+Confirm that E2E-GATE-01 remains green.
+
+STEP 6
+
+Record the verification result.
+
+STEP 7
+
+Only after successful verification proceed to:
+
+IA-08-A01.2 — Transaction Boundary.
+
+
+================================================================================
+# 20. Current Status
+================================================================================
+
+Finding:
+
+IA-08-A01.1
+
+Status:
+
+CONFIRMED GAP — IMPLEMENTATION NOT YET APPLIED
+
+Authorized Action:
+
+LOCAL INSPECTION AND CONTROLLED IMPLEMENTATION ONLY
+
+Repository modification through this document:
+
+NOT AUTHORIZED
+
+
+================================================================================
+End of Document
+================================================================================
