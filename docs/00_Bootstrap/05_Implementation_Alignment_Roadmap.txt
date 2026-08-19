@@ -513,9 +513,12 @@ IA-07 E2E-GATE-01
 ▼
 IA-08 Implementation Conformance
 │
-│ CURRENT — PENDING
+│ CURRENT — IN PROGRESS
 │
-│ NEXT WORK PACKAGE
+│ A01.6 — RESOLVED / VERIFIED
+│
+│ NEXT WORK PACKAGE:
+│ Remaining IA-08-A01 responsibilities
 
 ## Current Status Summary
 
@@ -533,7 +536,7 @@ IA-08 Implementation Conformance
 | E2E-11 Persistent End-to-End Test      | VERIFIED     |     100% |
 | IA-06 Persistent Integration Tests     | COMPLETE     |     100% |
 | IA-07 E2E-GATE-01                      | COMPLETE     |     100% |
-| IA-08 Implementation Conformance       | PENDING      |       0% |
+| IA-08 Implementation Conformance       | IN PROGRESS  |        — |
 
 ## Last Completed Gate
 
@@ -549,22 +552,31 @@ Verification:
 
 ## Current Work Package
 
-`IA-08 — IMPLEMENTATION CONFORMANCE — NEXT`
+`IA-08 — IMPLEMENTATION CONFORMANCE — IN PROGRESS`
+
+Current responsibility:
+
+`IA-08-A01 — Application Service`
+
+Resolved responsibility:
+
+`A01.6 — Application Error Boundary — RESOLVED / VERIFIED`
 
 ## Next Action
 
-Inspect the resulting implementation against the authoritative normative corpus and verify implementation conformance.
+Continue the IA-08-A01 conformance assessment.
 
-The conformance pass must:
+The next implementation action shall:
 
-1. compare the implementation against the authoritative normative specifications;
-2. identify only confirmed deviations;
-3. distinguish already-closed findings from genuinely remaining gaps;
-4. verify that no completed IA or E2E gate is reopened without contradictory evidence;
-5. resolve or explicitly document any remaining implementation deviation;
-6. establish the next authoritative gate only after the conformance assessment.
-
-The completed E2E-GATE-01 persistence lifecycle is evidence for conformance and must not be treated as an unresolved E2E gap.
+1. inspect one remaining A01 responsibility against the authoritative normative corpus;
+2. identify only confirmed implementation deviations;
+3. preserve already-resolved responsibilities as closed;
+4. avoid reopening A01.6 unless contradictory authoritative or repository evidence is found;
+5. implement only the confirmed gap;
+6. verify the focused tests;
+7. verify the complete test suite;
+8. update the corresponding implementation documentation;
+9. establish the next controlled action only after verification.
 
 Then proceed using:
 
