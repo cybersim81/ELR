@@ -343,7 +343,7 @@ A future session must:
 2. Treat the authoritative normative corpus as the final authority.
 3. Treat the Bootstrap Pack as the consolidated implementation continuity state.
 4. Verify repository evidence before declaring a finding resolved.
-5. Preserve the closure of IA-01 through IA-05 and E2E-07 unless contradictory authoritative or repository evidence is found.
+5. Preserve the closure of IA-01 through IA-07 and E2E-07 through E2E-GATE-01 unless contradictory authoritative or repository evidence is found.
 6. Resume at IA-08 — Implementation Conformance.
 7. Distinguish domain/application alignment from production persistence.
 8. Distinguish immutable Version history from operational Audit history.
