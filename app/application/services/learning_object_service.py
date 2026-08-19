@@ -1,8 +1,15 @@
-from uuid import UUID
+from uuid import uuid4
 
+from app.application.errors import (
+    EntityNotFound,
+    InvalidOperation,
+)
 from app.domain.entities.audit_record import AuditRecord
 from app.domain.entities.knowledge_statement import KnowledgeStatement
-from app.domain.entities.learning_object import LearningObject
+from app.domain.entities.learning_object import (
+    InvalidStateTransition,
+    LearningObject,
+)
 from app.domain.entities.version import Version
 from app.domain.repositories.audit_repository import AuditRepository
 from app.domain.repositories.learning_object_repository import (
@@ -10,9 +17,6 @@ from app.domain.repositories.learning_object_repository import (
 )
 from app.domain.repositories.version_repository import VersionRepository
 
-
-class LearningObjectNotFound(Exception):
-    pass
 
 
 class LearningObjectService:
@@ -77,7 +81,12 @@ class LearningObjectService:
             learning_object_id
         )
 
-        learning_object.submit_for_review()
+        try:
+            learning_object.submit_for_review()
+        except InvalidStateTransition as exc:
+            raise InvalidOperation(
+                "Learning object cannot be submitted for review."
+            ) from exc
 
         self.learning_object_repository.save(
             learning_object
@@ -109,7 +118,12 @@ class LearningObjectService:
             learning_object_id
         )
 
-        learning_object.approve()
+        try:
+            learning_object.approve()
+        except InvalidStateTransition as exc:
+            raise InvalidOperation(
+                "Learning object cannot be approved."
+            ) from exc
 
         version = Version(
             learning_object_id=learning_object.id,
@@ -168,9 +182,14 @@ class LearningObjectService:
             learning_object_id
         )
 
-        learning_object.update_knowledge(
-            statement
-        )
+        try:
+            learning_object.update_knowledge(
+                statement
+            )
+        except InvalidStateTransition as exc:
+            raise InvalidOperation(
+                "Learning object cannot be updated."
+            ) from exc
 
         history = self.version_repository.get_history(
             learning_object_id
@@ -236,7 +255,12 @@ class LearningObjectService:
             learning_object_id
         )
 
-        learning_object.retire()
+        try:
+            learning_object.retire()
+        except InvalidStateTransition as exc:
+            raise InvalidOperation(
+                "Learning object cannot be retired."
+            ) from exc
 
         self.learning_object_repository.save(
             learning_object
@@ -297,7 +321,7 @@ class LearningObjectService:
         )
 
         if learning_object is None:
-            raise LearningObjectNotFound(
+            raise EntityNotFound(
                 f"Learning Object "
                 f"{learning_object_id} not found"
             )
