@@ -346,8 +346,8 @@ error taxonomy.
 
 AC-002
 
-LearningObjectNotFound is no longer defined locally in
-LearningObjectService.
+The service-local LearningObjectNotFound definition is removed and replaced
+by the centralized EntityNotFound Application error.
 
 AC-003
 
@@ -413,7 +413,8 @@ Create app/application/errors.py.
 
 STEP 2
 
-Move the semantic responsibility of LearningObjectNotFound to EntityNotFound.
+Replace the service-local LearningObjectNotFound definition with the
+centralized EntityNotFound Application error.
 
 STEP 3
 
