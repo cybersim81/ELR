@@ -1,0 +1,476 @@
+================================================================================
+English Learning Repository (ELR)
+
+IA-08-A01.1 Application Error Boundary
+Implementation Change Set
+
+Version: 0.1.0
+Status: CONTROLLED IMPLEMENTATION
+================================================================================
+
+
+# 1. Objective
+================================================================================
+
+Implement the minimum Application Layer error boundary required to resolve
+IA-08-A01.1.
+
+The implementation shall:
+
+* centralize Application errors;
+* preserve Domain error ownership;
+* translate InvalidStateTransition into InvalidOperation;
+* normalize LearningObjectNotFound into EntityNotFound;
+* preserve exception causes for Domain-to-Application translation;
+* avoid changes to Domain behavior;
+* avoid changes to persistence behavior.
+
+
+================================================================================
+# 2. Current Implementation
+================================================================================
+
+Current relevant structure:
+
+app/
+    application/
+        services/
+            learning_object_service.py
+
+The current LearningObjectService defines LearningObjectNotFound locally.
+
+The Domain LearningObject model defines InvalidStateTransition.
+
+No centralized Application error taxonomy currently exists.
+
+
+================================================================================
+# 3. Files to Change
+================================================================================
+
+Create:
+
+app/application/errors.py
+
+Modify:
+
+app/application/services/learning_object_service.py
+
+
+================================================================================
+# 4. Application Error Taxonomy
+================================================================================
+
+Create:
+
+app/application/errors.py
+
+The module shall define:
+
+* ApplicationError;
+* EntityNotFound;
+* InvalidOperation;
+* ValidationFailure;
+* UnauthorizedOperation.
+
+
+ApplicationError shall be the common Application Layer base exception.
+
+The classes shall contain no HTTP-specific behavior.
+
+They shall not depend on FastAPI or any infrastructure component.
+
+
+================================================================================
+# 5. LearningObjectService Changes
+================================================================================
+
+Remove the locally defined LearningObjectNotFound exception.
+
+Import EntityNotFound and InvalidOperation from:
+
+app.application.errors
+
+
+The existing _get_or_raise() helper shall raise EntityNotFound.
+
+Its semantic behavior must remain:
+
+* repository returns no entity;
+* Application Service raises application-level not-found error.
+
+
+================================================================================
+# 6. Domain Error Translation
+================================================================================
+
+Operations that invoke Domain behavior and may raise
+InvalidStateTransition shall translate that Domain exception at the
+Application boundary.
+
+The affected LearningObjectService operations include:
+
+* submit_for_review();
+* approve();
+* update_knowledge();
+* retire().
+
+The conceptual implementation is:
+
+try:
+    domain_operation()
+except InvalidStateTransition as exc:
+    raise InvalidOperation(...) from exc
+
+
+The original Domain exception must remain available as the exception cause.
+
+
+================================================================================
+# 7. Error Message Requirements
+================================================================================
+
+Application error messages shall be stable and application-oriented.
+
+They must not expose:
+
+* SQL statements;
+* database driver messages;
+* HTTP implementation details;
+* internal stack traces;
+* infrastructure-specific object representations.
+
+
+Messages should describe the failed application operation.
+
+Examples:
+
+EntityNotFound:
+
+"Learning object not found."
+
+InvalidOperation:
+
+"Learning object cannot perform the requested operation."
+
+
+The exact wording may follow existing project conventions if such conventions
+already exist.
+
+
+================================================================================
+# 8. ValidationFailure
+================================================================================
+
+Define ValidationFailure as part of the Application Error taxonomy.
+
+Do not introduce a new Domain-to-Application mapping for ValidationFailure in
+this change.
+
+No existing validation behavior shall be modified merely to exercise this
+class.
+
+
+================================================================================
+# 9. UnauthorizedOperation
+================================================================================
+
+Define UnauthorizedOperation as part of the Application Error taxonomy.
+
+Do not introduce authorization logic in this change.
+
+Authorization remains a Security Layer responsibility.
+
+
+================================================================================
+# 10. Scope of Exception Translation
+================================================================================
+
+Only known Domain exceptions shall be translated.
+
+Do not introduce:
+
+except Exception:
+
+or equivalent catch-all translation.
+
+Unexpected infrastructure or programming errors must remain distinguishable
+from known application failures.
+
+
+================================================================================
+# 11. Tests
+================================================================================
+
+Add focused tests for the Application Service.
+
+At minimum verify:
+
+## 11.1 Not Found
+
+Given a missing Learning Object:
+
+LearningObjectService.get()
+
+raises:
+
+EntityNotFound
+
+
+## 11.2 Invalid Submission
+
+Given a Learning Object for which submission is invalid:
+
+LearningObjectService.submit_for_review()
+
+raises:
+
+InvalidOperation
+
+
+The underlying cause must be:
+
+InvalidStateTransition
+
+
+## 11.3 Invalid Approval
+
+Given a Learning Object for which approval is invalid:
+
+LearningObjectService.approve()
+
+raises:
+
+InvalidOperation
+
+
+The underlying cause must be:
+
+InvalidStateTransition
+
+
+## 11.4 Invalid Knowledge Update
+
+Given an invalid lifecycle state:
+
+LearningObjectService.update_knowledge()
+
+raises:
+
+InvalidOperation
+
+
+The underlying cause must be:
+
+InvalidStateTransition
+
+
+## 11.5 Invalid Retirement
+
+Given an invalid lifecycle state:
+
+LearningObjectService.retire()
+
+raises:
+
+InvalidOperation
+
+
+The underlying cause must be:
+
+InvalidStateTransition
+
+
+## 11.6 Successful Operations
+
+Existing successful tests for:
+
+* candidate creation;
+* submission;
+* approval;
+* knowledge update;
+* retirement;
+* retrieval;
+* history;
+
+must continue to pass without behavioral changes.
+
+
+================================================================================
+# 12. Regression Requirements
+================================================================================
+
+After implementation, run:
+
+1. Application Service tests;
+2. Domain tests;
+3. Repository tests;
+4. Persistence tests;
+5. complete test suite;
+6. E2E-GATE-01.
+
+
+No existing test shall be weakened or removed to achieve conformance.
+
+
+================================================================================
+# 13. Architectural Constraints
+================================================================================
+
+The implementation must preserve:
+
+Application
+    ->
+Domain
+    ->
+Repository Interfaces
+
+The Application Layer must not import:
+
+* FastAPI;
+* SQLAlchemy;
+* PostgreSQL drivers;
+* HTTP response classes.
+
+
+================================================================================
+# 14. Verification Criteria
+================================================================================
+
+A01.1 passes when:
+
+AC-001
+
+app/application/errors.py exists and contains the centralized Application
+error taxonomy.
+
+AC-002
+
+LearningObjectNotFound is no longer defined locally in
+LearningObjectService.
+
+AC-003
+
+Missing Learning Objects raise EntityNotFound.
+
+AC-004
+
+InvalidStateTransition is translated into InvalidOperation.
+
+AC-005
+
+The original InvalidStateTransition remains available through exception
+chaining.
+
+AC-006
+
+No catch-all exception translation exists.
+
+AC-007
+
+ValidationFailure and UnauthorizedOperation exist but introduce no new
+semantics.
+
+AC-008
+
+Existing successful behavior is unchanged.
+
+AC-009
+
+All focused tests pass.
+
+AC-010
+
+The complete regression suite passes.
+
+AC-011
+
+E2E-GATE-01 remains green.
+
+
+================================================================================
+# 15. Stop Conditions
+================================================================================
+
+Stop and reassess if:
+
+* LearningObjectService already contains an equivalent centralized error
+  mechanism;
+* existing tests require LearningObjectNotFound to remain publicly importable
+  from learning_object_service;
+* Domain behavior must be changed to perform the translation;
+* a repository failure cannot be distinguished from a not-found result;
+* API-specific behavior becomes necessary.
+
+
+================================================================================
+# 16. Implementation Order
+================================================================================
+
+STEP 1
+
+Create app/application/errors.py.
+
+STEP 2
+
+Move the semantic responsibility of LearningObjectNotFound to EntityNotFound.
+
+STEP 3
+
+Remove the local LearningObjectNotFound definition from
+LearningObjectService.
+
+STEP 4
+
+Update _get_or_raise() to raise EntityNotFound.
+
+STEP 5
+
+Import InvalidStateTransition into LearningObjectService.
+
+STEP 6
+
+Wrap Domain operations that may raise InvalidStateTransition.
+
+STEP 7
+
+Translate InvalidStateTransition to InvalidOperation using exception
+chaining.
+
+STEP 8
+
+Add focused tests.
+
+STEP 9
+
+Run focused tests.
+
+STEP 10
+
+Run the complete regression suite.
+
+STEP 11
+
+Verify E2E-GATE-01.
+
+STEP 12
+
+Record the result in the A01 implementation status.
+
+
+================================================================================
+# 17. Implementation Result
+================================================================================
+
+Status:
+
+NOT YET IMPLEMENTED
+
+Expected result:
+
+A01.1 — RESOLVED
+
+
+================================================================================
+End of Document
+================================================================================
