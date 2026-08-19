@@ -12,53 +12,66 @@ A future session MUST use this state together with the complete Bootstrap Pack a
 
 ---
 
-## Current State
+================================================================================
+# Current State
+================================================================================
 
-### Normative State
+IA-01 through IA-07 remain complete and verified according to the established
+roadmap and E2E baseline.
 
-`M0.3.2 Specification Propagation: COMPLETE`
+IA-08 — Implementation Conformance is now:
 
-The normative baseline has been consolidated sufficiently to proceed with implementation alignment.
+IN PROGRESS
 
-The current task is no longer broad architectural discovery.
 
-### Implementation State
+Current responsibility:
 
-The implementation baseline has been inventoried across:
+IA-08-A01 — Application Service
 
-* domain entities;
-* domain repositories;
-* application services;
-* persistence models;
-* concrete persistence repositories;
-* database wiring;
-* transaction boundaries;
-* domain tests;
-* application tests;
-* persistence tests;
-* in-memory test infrastructure.
 
-The implementation contains a tested LearningObject application workflow and a concrete SQLAlchemy persistence path.
+Resolved responsibility:
 
-Production persistence is materialized for:
+IA-08-A01.6 — Application Error Boundary
 
-* LearningObject;
-* Version;
-* AuditRecord;
-* Anchor;
-* concrete repository implementations;
-* database wiring;
-* transaction handling.
+Status:
 
-Persistence behavior is covered by dedicated integration tests.
+RESOLVED / VERIFIED
 
-The current full test suite is:
 
-`74 passed`
+A01.6 verification evidence:
 
-Current Git checkpoint:
+* focused A01.6 tests pass;
+* complete pytest suite: 79 passed;
+* centralized Application error taxonomy verified;
+* EntityNotFound boundary verified;
+* InvalidOperation translation verified;
+* original Domain exception preserved through exception chaining;
+* no catch-all exception translation introduced.
 
-`d679299`
+
+Remaining A01 responsibilities:
+
+* A01.2 — Review / Change Proposal — BLOCKED;
+* A01.3 — Category Service — PARTIAL;
+* A01.4 — Version Service — PARTIAL;
+* A01.5 — Audit Service — PARTIAL;
+* A01.7 — Transaction Boundary — PARTIAL.
+
+
+A01.6 shall not be reopened unless new authoritative or repository evidence
+demonstrates a regression or contradiction.
+
+
+The historical E2E-GATE-01 checkpoint remains:
+
+checkpoint: d679299
+verification: 74 passed
+
+
+The latest A01.6 implementation verification is:
+
+79 passed
+
 
 ### End-to-End State
 
