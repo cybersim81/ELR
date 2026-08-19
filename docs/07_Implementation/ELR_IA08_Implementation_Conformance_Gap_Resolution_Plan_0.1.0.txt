@@ -110,65 +110,55 @@ explicit contradictory evidence and a separate disposition.
 # 3. Confirmed Findings
 ================================================================================
 
-The IA-08 analysis has confirmed four implementation gaps.
+The IA-08 analysis has identified four implementation-conformance findings.
+
+The findings do not all have the same evidence state.
+
+The distinction between a confirmed conformance finding and a confirmed
+implementation gap must be preserved.
 
 IA-08-A01
 
-Application Service implementation is incomplete relative to the ELR
-Application Service Implementation Specification.
+Confirmed conformance finding.
 
-================================================================================
-# 3.1 A01 Finding Qualification
-================================================================================
-
-IA-08-A01 is a confirmed implementation-conformance finding because the
-current Application Layer does not yet provide the complete application
-responsibility surface required by the authoritative Application Service
+The Application Service implementation does not yet provide sufficient
+evidence of complete conformance with the authoritative Application Service
 Implementation Specification.
 
-However, the individual responsibilities within that surface shall not be
-assumed to be independently absent.
-
-Each responsibility shall be inspected and classified as:
-
-* CONFORMANT;
-* PARTIAL;
-* GAP;
-* UNKNOWN;
-* BLOCKED.
-
-Therefore:
-
-Confirmed Finding
-    ->
-Responsibility-Level Inspection
-    ->
-Evidence-Based Classification
-    ->
-Minimal Resolution
-
-A responsibility shall not be implemented merely because its expected class,
-method, or module name is absent.
-
-Where an existing implementation satisfies the authoritative responsibility
-through a different but valid structure, that implementation shall be
-preserved.
-
-
-================================================================================
+Responsibility-level implementation inspection is required before defining
+the concrete resolution.
 
 IA-08-A02
 
-Transactional Event Record and the first Event Implementation layer are not
+Confirmed implementation gap.
+
+The Transactional Event Record and the first Event Implementation layer
+required by the authoritative Event Implementation Specification are not
 implemented.
 
 IA-08-A03
 
-The Security and Authorization boundary is not implemented.
+Confirmed implementation gap.
+
+The Security and Authorization boundary required by the authoritative
+Security Implementation Specification is not implemented.
 
 IA-08-A04
 
-The API Implementation Layer is not implemented.
+Confirmed implementation gap.
+
+The API Implementation Layer required by the authoritative API Implementation
+Specification is not implemented.
+
+The implementation resolution process shall not treat the four findings as
+identical.
+
+IA-08-A01 requires evidence-based responsibility-level inspection before
+implementation changes are defined.
+
+IA-08-A02, IA-08-A03, and IA-08-A04 may proceed according to their respective
+resolution plans once their dependencies and implementation boundaries are
+confirmed.
 
 
 ================================================================================
