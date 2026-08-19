@@ -1,0 +1,583 @@
+================================================================================
+English Learning Repository (ELR)
+
+IA-08-A01.6 Application Error Boundary
+Implementation Guidance
+
+Version: 0.2.0
+Status: WORKING IMPLEMENTATION GUIDANCE
+================================================================================
+
+
+# Document Identity
+================================================================================
+
+Document Name:
+
+ELR IA-08-A01.6 Application Error Boundary
+
+Document Version:
+
+0.2.0
+
+Status:
+
+WORKING IMPLEMENTATION GUIDANCE
+
+Parent Plan:
+
+ELR IA-08-A01 Application Service Resolution
+
+Finding:
+
+IA-08-A01.6 — Application Error Boundary
+
+Authority Status:
+
+This document is an implementation coordination artifact.
+
+It does not supersede, amend, or introduce normative domain, lifecycle,
+versioning, persistence, API, event, security, or architectural rules.
+
+In case of conflict, the applicable authoritative specification prevails.
+
+
+================================================================================
+# 1. Purpose
+================================================================================
+
+This document defines the controlled implementation guidance for the confirmed
+IA-08-A01.6 Application Error Boundary gap.
+
+The objective is to establish a stable Application Layer error boundary while
+preserving:
+
+* Domain ownership of domain rules and domain exceptions;
+* existing LearningObject lifecycle behavior;
+* existing repository contracts;
+* existing persistence behavior;
+* existing API behavior.
+
+The implementation shall be minimal.
+
+No unrelated Application, Domain, Persistence, Security, Review, or API
+changes are authorized by this document.
+
+
+================================================================================
+# 2. Confirmed Finding
+================================================================================
+
+The current Application Layer has an incomplete error boundary.
+
+Confirmed issues:
+
+* LearningObjectNotFound is defined locally in LearningObjectService;
+* InvalidStateTransition is owned by the Domain Layer;
+* InvalidStateTransition currently crosses the Application boundary without
+  translation;
+* no centralized Application error taxonomy is confirmed.
+
+
+================================================================================
+# 3. Required Boundary
+================================================================================
+
+The intended error flow is:
+
+Domain exception
+    ->
+Application Service
+    ->
+Application error
+    ->
+Application consumer
+
+
+The Domain Layer remains responsible for:
+
+* domain rules;
+* domain invariants;
+* domain exception ownership.
+
+The Application Layer is responsible for translating known Domain failures
+into stable Application errors.
+
+
+================================================================================
+# 4. Application Error Taxonomy
+================================================================================
+
+The Application Layer shall provide the following centralized exception
+types:
+
+* ApplicationError;
+* EntityNotFound;
+* InvalidOperation;
+* ValidationFailure;
+* UnauthorizedOperation.
+
+
+ApplicationError shall be the common Application Layer base exception.
+
+These exceptions shall contain no:
+
+* HTTP behavior;
+* FastAPI dependencies;
+* SQLAlchemy dependencies;
+* database-driver dependencies;
+* transport-specific response behavior.
+
+
+================================================================================
+# 5. Not-Found Boundary
+================================================================================
+
+The current service-local LearningObjectNotFound exception shall be replaced
+by the centralized Application error:
+
+EntityNotFound
+
+
+The Application Service shall raise EntityNotFound when a requested
+Learning Object does not exist.
+
+Unexpected repository or infrastructure failures shall not be converted into
+EntityNotFound.
+
+
+================================================================================
+# 6. Domain-to-Application Translation
+================================================================================
+
+The confirmed initial Domain-to-Application translation is:
+
+InvalidStateTransition
+    ->
+InvalidOperation
+
+
+The Domain exception shall remain defined and owned by the Domain Layer.
+
+The Application Service shall translate the known exception at the
+Application boundary.
+
+
+================================================================================
+# 7. Exception Cause Preservation
+================================================================================
+
+Domain-to-Application translation shall preserve the original Domain
+exception as the exception cause.
+
+Conceptually:
+
+try:
+    domain_operation()
+except InvalidStateTransition as exc:
+    raise InvalidOperation(...) from exc
+
+
+The original InvalidStateTransition must therefore remain available through:
+
+exception.__cause__
+
+
+No catch-all exception translation is permitted.
+
+
+================================================================================
+# 8. Affected Application Operations
+================================================================================
+
+The following LearningObjectService operations shall be inspected for
+InvalidStateTransition translation:
+
+* submit_for_review();
+* approve();
+* update_knowledge();
+* retire().
+
+
+Only operations that can actually raise InvalidStateTransition shall receive
+the translation boundary.
+
+Successful behavior shall remain unchanged.
+
+
+================================================================================
+# 9. ValidationFailure
+================================================================================
+
+ValidationFailure shall exist as part of the centralized Application error
+taxonomy.
+
+This implementation does not introduce a new Domain-to-Application mapping
+for ValidationFailure.
+
+No existing validation behavior shall be changed solely to exercise this
+exception.
+
+
+================================================================================
+# 10. UnauthorizedOperation
+================================================================================
+
+UnauthorizedOperation shall exist as part of the centralized Application
+error taxonomy.
+
+This implementation does not introduce authorization logic.
+
+Authorization remains outside the scope of A01.6.
+
+
+================================================================================
+# 11. Exception Scope
+================================================================================
+
+Only known, explicitly handled Domain exceptions shall be translated.
+
+The implementation shall not introduce:
+
+except Exception:
+
+or equivalent catch-all translation.
+
+Unexpected programming, persistence, infrastructure, or system errors shall
+remain distinguishable from known Application failures.
+
+
+================================================================================
+# 12. Proposed Source Changes
+================================================================================
+
+The preferred Application error module is:
+
+app/application/errors.py
+
+
+The existing Application Service is:
+
+app/application/services/learning_object_service.py
+
+
+The implementation shall:
+
+1. create the centralized Application error taxonomy;
+2. remove the local LearningObjectNotFound definition;
+3. replace its use with EntityNotFound;
+4. import InvalidStateTransition from the Domain Layer;
+5. translate InvalidStateTransition into InvalidOperation at the Application
+   boundary;
+6. preserve the original exception as __cause__.
+
+
+No new Application Service shall be created.
+
+
+================================================================================
+# 13. Architectural Constraints
+================================================================================
+
+The implementation must preserve:
+
+Application
+    ->
+Domain
+    ->
+Repository Interfaces
+
+
+The Application Layer shall not import:
+
+* FastAPI;
+* SQLAlchemy;
+* PostgreSQL drivers;
+* concrete persistence repositories;
+* HTTP response classes.
+
+
+The Domain Layer shall not be modified merely to support the Application
+error translation.
+
+
+================================================================================
+# 14. Tests
+================================================================================
+
+Focused tests shall verify the following.
+
+
+## 14.1 Missing Learning Object
+
+Given a missing Learning Object:
+
+LearningObjectService.get()
+
+shall raise:
+
+EntityNotFound
+
+
+## 14.2 Invalid Submission
+
+Given an invalid lifecycle state:
+
+LearningObjectService.submit_for_review()
+
+shall raise:
+
+InvalidOperation
+
+
+The cause shall be:
+
+InvalidStateTransition
+
+
+## 14.3 Invalid Approval
+
+Given an invalid lifecycle state:
+
+LearningObjectService.approve()
+
+shall raise:
+
+InvalidOperation
+
+
+The cause shall be:
+
+InvalidStateTransition
+
+
+## 14.4 Invalid Knowledge Update
+
+Given an invalid lifecycle state:
+
+LearningObjectService.update_knowledge()
+
+shall raise:
+
+InvalidOperation
+
+
+The cause shall be:
+
+InvalidStateTransition
+
+
+## 14.5 Invalid Retirement
+
+Given an invalid lifecycle state:
+
+LearningObjectService.retire()
+
+shall raise:
+
+InvalidOperation
+
+
+The cause shall be:
+
+InvalidStateTransition
+
+
+## 14.6 Successful Operations
+
+Existing successful tests shall continue to pass for:
+
+* candidate creation;
+* review submission;
+* approval;
+* knowledge update;
+* retirement;
+* retrieval;
+* version history.
+
+
+================================================================================
+# 15. Regression Requirements
+================================================================================
+
+After implementation:
+
+1. Application tests shall pass;
+2. Domain tests shall pass;
+3. Persistence tests shall pass;
+4. the complete regression suite shall pass;
+5. E2E-GATE-01 shall remain green.
+
+
+No existing test shall be weakened or removed to achieve conformance.
+
+
+================================================================================
+# 16. Explicit Non-Goals
+================================================================================
+
+A01.6 does not implement:
+
+* Review / Change Proposal;
+* Category Service;
+* Version Service;
+* Audit Service;
+* transaction coordination;
+* Security;
+* authorization;
+* API error handlers;
+* persistence exception normalization;
+* new Domain exceptions.
+
+
+================================================================================
+# 17. Acceptance Criteria
+================================================================================
+
+AC-001
+
+A centralized Application error taxonomy exists.
+
+
+AC-002
+
+The service-local LearningObjectNotFound definition is removed and replaced
+by EntityNotFound.
+
+
+AC-003
+
+Missing Learning Objects raise EntityNotFound.
+
+
+AC-004
+
+InvalidStateTransition is translated into InvalidOperation at the
+Application boundary.
+
+
+AC-005
+
+The original InvalidStateTransition remains available through exception
+chaining.
+
+
+AC-006
+
+ValidationFailure and UnauthorizedOperation exist without introducing
+unrelated semantics.
+
+
+AC-007
+
+No catch-all exception translation exists.
+
+
+AC-008
+
+No Domain lifecycle semantics change.
+
+
+AC-009
+
+No repository or persistence behavior changes.
+
+
+AC-010
+
+Existing successful Application Service behavior remains unchanged.
+
+
+AC-011
+
+Focused tests pass.
+
+
+AC-012
+
+The complete regression suite passes.
+
+
+AC-013
+
+E2E-GATE-01 remains green.
+
+
+================================================================================
+# 18. Implementation Order
+================================================================================
+
+STEP 1
+
+Inspect existing Application error definitions and test imports.
+
+STEP 2
+
+Create app/application/errors.py if no equivalent centralized taxonomy
+already exists.
+
+STEP 3
+
+Remove the service-local LearningObjectNotFound definition.
+
+STEP 4
+
+Replace its usage with EntityNotFound.
+
+STEP 5
+
+Import InvalidStateTransition into LearningObjectService.
+
+STEP 6
+
+Add translation only around Domain operations that can raise
+InvalidStateTransition.
+
+STEP 7
+
+Preserve the Domain exception using exception chaining.
+
+STEP 8
+
+Add or update focused tests.
+
+STEP 9
+
+Run focused tests.
+
+STEP 10
+
+Run the complete regression suite.
+
+STEP 11
+
+Verify E2E-GATE-01.
+
+
+================================================================================
+# 19. Verification Status
+================================================================================
+
+Finding:
+
+IA-08-A01.6 — Application Error Boundary
+
+Current Status:
+
+CONFIRMED GAP
+
+Implementation Status:
+
+NOT YET IMPLEMENTED
+
+
+Successful implementation shall change the finding status to:
+
+RESOLVED
+
+only after the acceptance criteria and regression requirements are verified.
+
+
+================================================================================
+End of Document
+================================================================================
