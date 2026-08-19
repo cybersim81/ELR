@@ -2636,3 +2636,234 @@ def test_audit_history_survives_new_session(
     finally:
         new_session.close()
         engine.dispose()
+
+
+
+def test_persistent_end_to_end_lifecycle_survives_session_boundary(
+    monkeypatch,
+) -> None:
+    monkeypatch.setenv(
+        "DATABASE_URL",
+        "sqlite://",
+    )
+
+    import importlib
+
+    import app.persistence.database as database
+
+    database = importlib.reload(database)
+
+    from app.persistence.models.anchor_model import AnchorModel
+    from app.persistence.models.base import Base
+    from app.persistence.models.knowledge_category_model import (
+        KnowledgeCategoryModel,
+    )
+    from app.persistence.transaction import transaction
+    from app.persistence.wiring import create_learning_object_service
+    from app.domain.entities.knowledge_statement import KnowledgeStatement
+
+    engine = create_engine(
+        "sqlite://",
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
+    )
+
+    Base.metadata.create_all(engine)
+
+    SessionFactory = database.sessionmaker(
+        bind=engine,
+        class_=database.Session,
+        expire_on_commit=False,
+    )
+
+    session_a = SessionFactory()
+
+    try:
+        anchor_id = uuid4()
+        category_id = uuid4()
+
+        session_a.add(
+            AnchorModel(
+                id=anchor_id,
+                content="Persistent E2E anchor",
+                type="text",
+                created_at=__import__("datetime").datetime.now(
+                    __import__("datetime").timezone.utc,
+                ),
+            )
+        )
+
+        session_a.add(
+            KnowledgeCategoryModel(
+                id=category_id,
+                name="Persistent E2E category",
+            )
+        )
+
+        session_a.commit()
+
+        service, _ = create_learning_object_service(session_a)
+
+        learning_object = service.create_candidate(
+            anchor_id=anchor_id,
+            statement=KnowledgeStatement(
+                text="Initial persistent statement",
+                language="en",
+            ),
+            category_id=category_id,
+            actor="creator",
+        )
+
+        session_a.commit()
+
+        learning_object_id = learning_object.id
+
+        session_a.close()
+
+        session_b = SessionFactory()
+
+        try:
+            service, _ = create_learning_object_service(session_b)
+
+            reloaded = service.get(learning_object_id)
+
+            assert reloaded.state.value == "Candidate"
+            assert reloaded.anchor_id == anchor_id
+            assert reloaded.category_id == category_id
+            assert reloaded.statement.text == (
+                "Initial persistent statement"
+            )
+
+            reloaded = service.submit_for_review(
+                learning_object_id,
+                actor="producer",
+            )
+
+            session_b.commit()
+
+            assert reloaded.state.value == "Proposed"
+
+            reloaded = service.approve(
+                learning_object_id,
+                actor="reviewer",
+            )
+
+            session_b.commit()
+
+            assert reloaded.state.value == "Active"
+
+            reloaded = service.update_knowledge(
+                learning_object_id,
+                KnowledgeStatement(
+                    text="Updated persistent statement",
+                    language="en",
+                ),
+                actor="editor",
+            )
+
+            session_b.commit()
+
+            assert reloaded.state.value == "Active"
+
+            reloaded = service.retire(
+                learning_object_id,
+                actor="retirer",
+            )
+
+            session_b.commit()
+
+            assert reloaded.state.value == "Retired"
+
+        finally:
+            session_b.close()
+
+        session_c = SessionFactory()
+
+        try:
+            service, _ = create_learning_object_service(session_c)
+
+            final_object = service.get(learning_object_id)
+
+            assert final_object.id == learning_object_id
+            assert final_object.state.value == "Retired"
+            assert final_object.anchor_id == anchor_id
+            assert final_object.category_id == category_id
+            assert final_object.statement.text == (
+                "Updated persistent statement"
+            )
+            assert final_object.statement.language == "en"
+
+            version_history = service.get_history(
+                learning_object_id,
+            )
+
+            assert [version.number for version in version_history] == [
+                1,
+                2,
+            ]
+
+            assert [
+                version.snapshot["statement"]["text"]
+                for version in version_history
+            ] == [
+                "Initial persistent statement",
+                "Updated persistent statement",
+            ]
+
+            assert all(
+                version.learning_object_id == learning_object_id
+                for version in version_history
+            )
+
+            audit_history = (
+                service.audit_repository.find_by_entity(
+                    learning_object_id,
+                )
+            )
+
+            assert [
+                audit.event_type
+                for audit in audit_history
+            ] == [
+                "LearningObjectCreated",
+                "LearningObjectSubmitted",
+                "LearningObjectApproved",
+                "LearningObjectUpdated",
+                "LearningObjectRetired",
+            ]
+
+            assert [
+                audit.actor
+                for audit in audit_history
+            ] == [
+                "creator",
+                "producer",
+                "reviewer",
+                "editor",
+                "retirer",
+            ]
+
+            assert all(
+                audit.entity_id == learning_object_id
+                for audit in audit_history
+            )
+
+            assert all(
+                audit_history[index].timestamp
+                <= audit_history[index + 1].timestamp
+                for index in range(len(audit_history) - 1)
+            )
+
+            assert audit_history[2].metadata == {"version": 1}
+            assert audit_history[3].metadata == {"version": 2}
+            assert audit_history[0].metadata == {}
+            assert audit_history[1].metadata == {}
+            assert audit_history[4].metadata == {}
+
+        finally:
+            session_c.close()
+            engine.dispose()
+
+    finally:
+        if session_a.is_active:
+            session_a.close()
