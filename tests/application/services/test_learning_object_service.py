@@ -1,3 +1,5 @@
+import pytest
+
 from uuid import uuid4
 
 from app.application.services.learning_object_service import (
@@ -8,6 +10,15 @@ from tests.fixtures.repositories import (
     InMemoryAuditRepository,
     InMemoryLearningObjectRepository,
     InMemoryVersionRepository,
+)
+
+from app.application.errors import (
+    EntityNotFound,
+    InvalidOperation,
+)
+
+from app.domain.entities.learning_object import (
+    InvalidStateTransition,
 )
 
 
@@ -303,3 +314,82 @@ def test_retire():
     )
 
     assert learning_object.state.value == "Retired"
+
+def test_get_missing_learning_object_raises_entity_not_found():
+    service = create_service()
+
+    missing_id = uuid4()
+
+    with pytest.raises(EntityNotFound):
+        service.get(missing_id)
+
+def test_submit_for_review_invalid_state_raises_invalid_operation():
+    service = create_service()
+
+    learning_object = create_candidate(service)
+
+    with pytest.raises(InvalidOperation) as exc_info:
+        service.submit_for_review(
+            learning_object.id,
+            actor="test-user",
+        )
+
+    assert isinstance(
+        exc_info.value.__cause__,
+        InvalidStateTransition,
+    )
+
+def test_approve_invalid_state_raises_invalid_operation():
+    service = create_service()
+
+    learning_object = create_candidate(service)
+
+    with pytest.raises(InvalidOperation) as exc_info:
+        service.approve(
+            learning_object.id,
+            actor="test-user",
+        )
+
+    assert isinstance(
+        exc_info.value.__cause__,
+        InvalidStateTransition,
+    )
+
+def test_update_knowledge_invalid_state_raises_invalid_operation():
+    service = create_service()
+
+    learning_object = create_candidate(service)
+
+    with pytest.raises(InvalidOperation) as exc_info:
+        service.update_knowledge(
+            learning_object.id,
+            statement=create_statement(
+                "Updated example statement"
+            ),
+            actor="test-user",
+        )
+
+    assert isinstance(
+        exc_info.value.__cause__,
+        InvalidStateTransition,
+    )
+
+def test_update_knowledge_invalid_state_raises_invalid_operation():
+    service = create_service()
+
+    learning_object = create_candidate(service)
+
+    with pytest.raises(InvalidOperation) as exc_info:
+        service.update_knowledge(
+            learning_object.id,
+            statement=create_statement(
+                "Updated example statement"
+            ),
+            actor="test-user",
+        )
+
+    assert isinstance(
+        exc_info.value.__cause__,
+        InvalidStateTransition,
+    )
+
