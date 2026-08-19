@@ -514,22 +514,31 @@ A01.2 — Review / Change Proposal
 # 22.14 Next Controlled Action
 ================================================================================
 
-The next implementation action is limited to:
+A01.6 — Application Error Boundary is RESOLVED.
 
-A01.6 — Application Error Boundary
+The next implementation action shall address the next confirmed
+non-resolved A01 responsibility according to the verified conformance
+matrix.
 
-Before source modification:
+Current candidates are:
 
-1. verify the current Application error definitions;
-2. verify existing imports and test dependencies;
-3. verify the current LearningObjectService exception behavior;
-4. define the minimum source change;
-5. implement only the confirmed error-boundary change;
-6. run focused tests;
-7. run regression tests.
+A01.3 — Category Service
+A01.4 — Version Service
+A01.5 — Audit Service
+A01.7 — Transaction Boundary
+
+
+The next action shall be selected only after focused inspection of the
+relevant responsibility and confirmation that the required capability is
+actually missing or incomplete.
 
 No A01.3, A01.4, A01.5, or A01.7 implementation shall be mixed into the
-A01.6 change.
+resolved A01.6 change.
+
+
+================================================================================
+End of Document
+================================================================================
 
 
 ================================================================================
