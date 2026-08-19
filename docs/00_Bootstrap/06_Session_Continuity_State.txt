@@ -58,7 +58,9 @@ The current full test suite is:
 
 Current Git checkpoint:
 
-`d679299`### End-to-End State
+`d679299`
+
+### End-to-End State
 
 E2E-07 — Production Persistence is complete and verified.
 
