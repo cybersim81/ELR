@@ -274,11 +274,26 @@ Persistence integration tests cover:
 
 The current full test suite is:
 
-`70 passed`
+`74 passed`
 
-Persistent reload through a newly created session remains the next E2E gap.
+Persistent integration tests now cover:
 
-**Status: IMPLEMENTED / PRODUCTION PERSISTENCE VERIFIED / CROSS-SESSION RECOVERY PENDING**
+* LearningObject persistence;
+* Version persistence;
+* Audit persistence;
+* Anchor relationships;
+* transaction rollback;
+* invalid lifecycle transition rollback;
+* atomic approve() persistence;
+* atomic update_knowledge() persistence;
+* multi-Version persistence and ordering;
+* production persistence flow;
+* persistent reload through a newly created session;
+* Version history recovery after session reload;
+* Audit history recovery after session reload;
+* complete persistent end-to-end lifecycle across a session boundary.
+
+**Status: IMPLEMENTED / PRODUCTION PERSISTENCE VERIFIED / CROSS-SESSION RECOVERY VERIFIED**
 
 ### In-Memory Infrastructure
 
@@ -296,17 +311,27 @@ The Version repository stores Version objects and retrieves history by `learning
 
 The verified implementation reaches:
 
-`Domain → Application → Concrete Repository → Persistence Model → Database`
+`Domain → Application → Concrete Repository → Persistence Model → Database → New Session → Reconstructed Aggregate`
 
-The production persistence path is verified for LearningObject, Version and AuditRecord.
+The production persistence path is verified for:
 
-The remaining unverified boundary is the session reload boundary:
+* LearningObject;
+* Version;
+* AuditRecord.
 
-`Database → New Session → Repository → Reconstructed Aggregate`
+Cross-session recovery is verified for:
 
-This boundary is the scope of:
+* LearningObject aggregate state;
+* Version history;
+* Audit history.
 
-`E2E-08 — Persistent Reload`
+The complete persistent lifecycle is verified as:
+
+`Candidate → Proposed → Active → Retired`
+
+The complete E2E boundary is:
+
+`Application → Concrete Repository → Persistence Model → Database → New Session → Reconstructed Aggregate → Version History → Audit History`
 
 ### Baseline Conclusion
 
@@ -324,32 +349,34 @@ The current ELR implementation contains:
 
 **IA-05 DATABASE WIRING: COMPLETE — 100%**
 
+**IA-06 PERSISTENCE TEST CONFORMANCE: COMPLETE — 100%**
+
 **E2E-07 PRODUCTION PERSISTENCE: COMPLETE AND VERIFIED**
 
-**FULL TEST SUITE: 70 PASSED**
+**E2E-08 PERSISTENT RELOAD: VERIFIED**
 
-**CHECKPOINT: b00d5c7**
+**E2E-09 VERSION HISTORY RECOVERY: VERIFIED**
 
-The verified production persistence boundary is:
+**E2E-10 AUDIT HISTORY RECOVERY: VERIFIED**
 
-`Application → Concrete Repository → Persistence Model → Database`
+**E2E-11 PERSISTENT END-TO-END TEST: VERIFIED**
 
-The next unverified boundary is:
+**IA-07 / E2E-GATE-01: COMPLETE AND VERIFIED**
 
-`Database → New Session → Repository → Reconstructed Aggregate`
+**FULL TEST SUITE: 74 PASSED**
+
+**CHECKPOINT: d679299**
+
+The verified persistent implementation boundary is:
+
+`Application → Concrete Repository → Persistence Model → Database → New Session → Reconstructed Aggregate → Version History → Audit History`
+
+The persistent LearningObject lifecycle is verified as:
+
+`Candidate → Proposed → Active → Retired`
+
+No remaining E2E persistence gap is currently open within E2E-GATE-01.
 
 The next work package is:
 
-**E2E-08 — PERSISTENT RELOAD**
-
-Subsequent work packages are:
-
-**E2E-09 — VERSION HISTORY RECOVERY**
-
-**E2E-10 — AUDIT HISTORY RECOVERY**
-
-**E2E-11 — PERSISTENT END-TO-END TEST**
-
-followed by:
-
-**E2E-GATE-01**
+**IA-08 — IMPLEMENTATION CONFORMANCE**
