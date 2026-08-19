@@ -1,6 +1,6 @@
 import pytest
 
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 from app.application.services.learning_object_service import (
     LearningObjectService,
