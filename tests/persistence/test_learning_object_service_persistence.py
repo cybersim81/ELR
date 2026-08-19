@@ -2191,3 +2191,118 @@ def test_e2e_07_production_persistence_flow(
     finally:
         session.close()
         engine.dispose()
+
+
+def test_persistent_reload_reconstructs_learning_object_from_new_session(
+    monkeypatch,
+) -> None:
+    monkeypatch.setenv(
+        "DATABASE_URL",
+        "sqlite://",
+    )
+
+    import importlib
+
+    import app.persistence.database as database
+
+    database = importlib.reload(database)
+
+    from app.persistence.models.anchor_model import AnchorModel
+    from app.persistence.models.base import Base
+    from app.persistence.models.knowledge_category_model import (
+        KnowledgeCategoryModel,
+    )
+    from app.persistence.wiring import create_learning_object_service
+    from app.domain.entities.knowledge_statement import KnowledgeStatement
+
+    engine = create_engine(
+        "sqlite://",
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
+    )
+
+    Base.metadata.create_all(engine)
+
+    SessionFactory = database.sessionmaker(
+        bind=engine,
+        class_=database.Session,
+        expire_on_commit=False,
+    )
+
+    original_session = SessionFactory()
+
+    try:
+        anchor_id = uuid4()
+        category_id = uuid4()
+
+        original_session.add(
+            AnchorModel(
+                id=anchor_id,
+                content="Test anchor",
+                type="text",
+                created_at=__import__("datetime").datetime.now(
+                    __import__("datetime").timezone.utc
+                ),
+            )
+        )
+
+        original_session.add(
+            KnowledgeCategoryModel(
+                id=category_id,
+                name="Test category",
+            )
+        )
+
+        original_session.commit()
+
+        service, _ = create_learning_object_service(
+            original_session,
+        )
+
+        learning_object = service.create_candidate(
+            anchor_id=anchor_id,
+            statement=KnowledgeStatement(
+                text="Persisted knowledge statement",
+                language="en",
+            ),
+            category_id=category_id,
+            actor="creator",
+        )
+
+        original_session.commit()
+
+        learning_object_id = learning_object.id
+
+    finally:
+        original_session.close()
+
+    new_session = SessionFactory()
+
+    try:
+        reloaded_service, _ = create_learning_object_service(
+            new_session,
+        )
+
+        reloaded = reloaded_service.get(
+            learning_object_id,
+        )
+
+        assert reloaded is not None
+
+        assert reloaded.id == learning_object_id
+        assert reloaded.anchor_id == anchor_id
+        assert reloaded.category_id == category_id
+
+        assert reloaded.statement.text == (
+            "Persisted knowledge statement"
+        )
+        assert reloaded.statement.language == "en"
+
+        assert reloaded.state.value == "Candidate"
+
+        assert reloaded.created_at is not None
+        assert reloaded.updated_at is not None
+
+    finally:
+        new_session.close()
+        engine.dispose()
