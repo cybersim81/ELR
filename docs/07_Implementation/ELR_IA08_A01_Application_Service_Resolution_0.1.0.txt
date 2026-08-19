@@ -339,6 +339,19 @@ Application-level write use cases must be atomic.
 
 The Application Layer owns the use-case transaction boundary.
 
+This statement defines the responsibility boundary, not the concrete
+infrastructure mechanism.
+
+The transaction boundary is an Application Layer responsibility.
+
+The concrete transaction mechanism remains an implementation dependency and
+must be determined from the existing infrastructure before any new mechanism
+is introduced.
+
+No new Unit of Work, transaction manager, session abstraction, or equivalent
+mechanism shall be introduced solely to satisfy this document until the
+existing transaction infrastructure has been inspected.
+
 For a write operation, the conceptual flow is:
 
 BEGIN TRANSACTION
@@ -381,6 +394,18 @@ The Application Layer may depend on:
 * Repository Interfaces;
 * application-level services;
 * technical abstractions required for coordination.
+
+The Application Layer may consume an Identity Context or authorization
+decision supplied by the Security boundary.
+
+The Application Layer must not implement, duplicate, or redefine the
+authentication or authorization model.
+
+Security semantics remain owned by the Security Layer and its authoritative
+specification.
+
+This finding therefore does not authorize implementation of IA-08-A03 as
+part of IA-08-A01.
 
 The Application Layer must not depend directly on:
 
