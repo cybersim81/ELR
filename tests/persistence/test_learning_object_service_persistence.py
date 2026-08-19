@@ -2423,10 +2423,8 @@ def test_version_history_survives_new_session(
     new_session = SessionFactory()
 
     try:
-        reloaded_service, version_repository = (
-            create_learning_object_service(
-                new_session,
-            )
+        reloaded_service, _ = create_learning_object_service(
+            new_session,
         )
 
         reloaded = reloaded_service.get(
@@ -2436,8 +2434,8 @@ def test_version_history_survives_new_session(
         assert reloaded is not None
         assert reloaded.id == learning_object_id
 
-        history = version_repository.get_history(
-            learning_object_id,
+        history = reloaded_service.version_repository.get_history(
+           learning_object_id,
         )
 
         assert len(history) == 2
