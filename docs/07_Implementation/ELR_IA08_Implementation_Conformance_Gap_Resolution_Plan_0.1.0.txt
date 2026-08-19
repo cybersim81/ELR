@@ -732,6 +732,7 @@ IA-08:
 
 IN PROGRESS
 
+
 Confirmed Findings:
 
 IA-08-A01 — Application Service
@@ -739,16 +740,65 @@ IA-08-A02 — Transactional Event Record
 IA-08-A03 — Security and Authorization
 IA-08-A04 — API Implementation
 
+
+IA-08-A01 Responsibility Status:
+
+A01.6 — Application Error Boundary
+
+RESOLVED
+
+
+A01.3 — Category Service
+
+PARTIAL
+
+
+A01.4 — Version Service
+
+PARTIAL
+
+
+A01.5 — Audit Service
+
+PARTIAL
+
+
+A01.7 — Transaction Boundary
+
+PARTIAL
+
+
+A01.2 — Review / Change Proposal
+
+BLOCKED
+
+
 Current Active Finding:
 
 IA-08-A01
 
-No implementation change has yet been authorized by this document.
 
-Next controlled action:
+Current Controlled Action:
 
-Design the minimum implementation change required to resolve IA-08-A01,
-followed by focused verification before proceeding to IA-08-A02.
+Continue responsibility-level inspection of the remaining non-resolved
+IA-08-A01 responsibilities.
+
+The next implementation action shall be selected only after focused
+inspection confirms the required capability is missing or incomplete.
+
+
+The following responsibilities shall not be reopened as part of the next
+change:
+
+A01.6 — Application Error Boundary
+
+
+A01.6 has been implemented and verified and shall remain closed unless new
+contradictory evidence is discovered.
+
+
+The resolution process shall not proceed to IA-08-A02 until IA-08-A01 has
+received a complete responsibility-level disposition.
 
 
 ================================================================================
