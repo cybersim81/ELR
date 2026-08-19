@@ -706,247 +706,290 @@ inspection in Section 22 has been completed.
 # 22. Implementation Inspection Matrix
 ================================================================================
 
-Before any source modification is applied, the current implementation shall be
-inspected against the Application Service requirements.
+This matrix records the verified implementation state of IA-08-A01.
 
-This matrix is an inspection instrument.
+The matrix reconciles:
 
-It does not authorize implementation changes.
+* the Bootstrap Pack;
+* the authoritative IA-08 Application Service specification;
+* the current repository structure;
+* the current Application Layer implementation;
+* the Domain Layer contracts;
+* the Persistence Layer capabilities.
 
-A requirement shall not be classified as a confirmed gap until implementation
-evidence has been inspected.
+A classification shall be based on confirmed implementation evidence.
 
-The following status values shall be used:
+A structural naming difference alone is not sufficient to establish a gap.
+
+
+================================================================================
+# 22.1 Classification
+================================================================================
 
 CONFORMANT
 
-The required capability exists and is aligned with the authoritative
-specification.
+The required responsibility is already satisfied by the current implementation.
 
 PARTIAL
 
-The capability exists but does not yet satisfy the complete requirement.
+The required responsibility is substantially present, but an explicit
+application boundary, capability, or integration remains incomplete.
 
 GAP
 
-The required capability is absent and its absence is confirmed by inspection.
-
-UNKNOWN
-
-Insufficient implementation evidence has been inspected.
+A required responsibility is confirmed missing or incorrectly exposed.
 
 BLOCKED
 
-The requirement depends on an authoritative component or decision that is not
-yet available.
+The responsibility cannot be implemented correctly because a required
+authoritative upstream capability is not currently available.
 
 
 ================================================================================
-# 22.1 Inspection Matrix
+# 22.2 Verified Matrix
 ================================================================================
 
-| Area         | Specification Requirement                 | Existing Component    | Evidence   | Status  | Dependency                | Next Action |
-|--------------|-------------------------------------------|-----------------------|------------|---------|---------------------------|-------------|
-| Candidate | create_candidate() | LearningObjectService | app/application/services/learning_object_service.py:create_candidate() | UNKNOWN | LearningObject / transaction / application error boundary | Inspect complete responsibility boundary |
-| Review       | approve_change_proposal()                 | To inspect            | To inspect | UNKNOWN | Change Proposal / Review  | Inspect     |
-| Review       | reject_change_proposal()                  | To inspect            | To inspect | UNKNOWN | Change Proposal / Review  | Inspect     |
-| Category     | get_categories()                          | To inspect            | To inspect | UNKNOWN | Category model/repository | Inspect     |
-| Category     | get_category_tree()                       | To inspect            | To inspect | UNKNOWN | Category model/repository | Inspect     |
-| Version      | create_version()                          | To inspect            | To inspect | UNKNOWN | Version model/repository  | Inspect     |
-| Version      | get_versions()                            | To inspect            | To inspect | UNKNOWN | Version model/repository  | Inspect     |
-| Audit        | record_event()                            | To inspect            | To inspect | UNKNOWN | Audit model/repository    | Inspect     |
-| Audit        | get_events()                              | To inspect            | To inspect | UNKNOWN | Audit model/repository    | Inspect     |
-| Errors       | Application-level error translation       | To inspect            | To inspect | UNKNOWN | Domain exceptions         | Inspect     |
-| Transactions | Explicit application transaction boundary | To inspect            | To inspect | UNKNOWN | Unit of Work / session    | Inspect     |
+| Area | Status | Evidence / Finding |
+|------|--------|--------------------|
+| Candidate / LearningObject use cases | CONFORMANT | LearningObjectService already coordinates candidate creation, retrieval, lifecycle operations, knowledge updates, version coordination, history, and audit recording. |
+| Review / Change Proposal | BLOCKED | LearningObject lifecycle operations exist, but no confirmed ChangeProposal / LearningReview process exists to support approve_change_proposal() and reject_change_proposal(). |
+| Category Service | PARTIAL | KnowledgeCategory and CategoryRepository exist. The required Application Service boundary exposing get_categories() and get_category_tree() is not yet confirmed. |
+| Version Service | PARTIAL | Version entity, VersionRepository, version creation, sequencing, and history coordination already exist through LearningObjectService. Explicit Version Service boundary is not separately established. |
+| Audit Service | PARTIAL | AuditRecord, AuditRepository, recording, and retrieval capabilities exist. Explicit Audit Service boundary is not separately established. |
+| Application Error Boundary | GAP | LearningObjectNotFound is local to LearningObjectService and InvalidStateTransition crosses the Application boundary without translation. No centralized Application error taxonomy is confirmed. |
+| Transaction Boundary | PARTIAL | Persistence transaction infrastructure exists, including transaction context, commit, rollback, and shared session wiring. Explicit Application ownership of the transaction boundary requires further verification. |
 
 
 ================================================================================
-# 22.2 Inspection Targets
+# 22.3 A01.1 — Candidate / Learning Object
 ================================================================================
 
-The inspection shall cover the following implementation areas.
+Status:
 
-Application Layer:
+CONFORMANT
 
-app/application/
+The existing LearningObjectService already coordinates the implemented
+Learning Object use cases.
 
-Domain Layer:
-
-app/domain/
-
-Repository Interfaces:
-
-app/domain/repositories/
-
-Audit:
-
-app/domain/entities/audit_record.py
-app/domain/repositories/audit_repository.py
-
-Versioning:
-
-app/domain/entities/version.py
-app/domain/repositories/version_repository.py
-
-Review and Change Proposal:
-
-Search for:
-
-* ChangeProposal
-* LearningReview
-* Review
-* ReviewDecision
-* approve_change_proposal
-* reject_change_proposal
-
-Category:
-
-Search for:
-
-* Category
-* category_repository
-* get_categories
-* get_category_tree
-
-Transaction Infrastructure:
-
-Search for:
-
-* UnitOfWork
-* transaction
-* commit
-* rollback
-* session
-* session_factory
+No new service shall be introduced solely to satisfy a naming difference.
 
 
 ================================================================================
-# 22.3 Evidence Rules
+# 22.4 A01.2 — Review / Change Proposal
 ================================================================================
 
-Evidence must identify the actual implementation artifact whenever possible.
+Status:
 
-Acceptable evidence includes:
+BLOCKED
 
-* source file;
-* class;
-* function;
-* interface;
-* repository;
-* test;
-* persistence mapping;
-* explicit transaction abstraction.
+The required operations are:
 
-A directory name alone is not sufficient evidence of implementation.
+* approve_change_proposal();
+* reject_change_proposal().
 
-A specification statement alone is not evidence of implementation.
+No confirmed Change Proposal / Learning Review model or equivalent process
+currently exists.
 
-The absence of a search result may establish absence only after the relevant
-implementation scope has been searched sufficiently.
+The Application Layer shall not invent replacement Review semantics.
 
 
 ================================================================================
-# 22.4 Finding Classification Rules
+# 22.5 A01.3 — Category Service
 ================================================================================
 
-The inspection shall follow these rules.
+Status:
 
-RULE-A01-INSPECT-001
+PARTIAL
 
-Do not classify an item as GAP while its implementation status is still
-UNKNOWN.
+Existing:
 
-RULE-A01-INSPECT-002
+* KnowledgeCategory;
+* CategoryRepository;
+* persistence support.
 
-A PARTIAL implementation must identify exactly which part of the requirement
-is already implemented.
+Required Application boundary:
 
-RULE-A01-INSPECT-003
+* get_categories();
+* get_category_tree().
 
-A GAP must identify the missing implementation responsibility.
+Further implementation requires only the minimum Application coordination
+needed to expose the existing Category contract.
 
-RULE-A01-INSPECT-004
-
-If implementation depends on a missing Domain or Review concept, classify the
-item as BLOCKED rather than inventing an Application Layer substitute.
-
-RULE-A01-INSPECT-005
-
-If an existing implementation satisfies the requirement through a different
-but architecturally valid structure, record the existing structure and assess
-it against the authoritative responsibility rather than requiring a specific
-class name.
-
-RULE-A01-INSPECT-006
-
-No implementation change shall be proposed solely because the current class
-or module names differ from the specification.
-
-RULE-A01-INSPECT-007
-
-The inspection must preserve the distinction between:
-
-* Application Service;
-* Domain Service;
-* Repository;
-* Audit Service;
-* Transactional Event Record;
-* API Layer;
-* Security Layer.
+No new taxonomy semantics shall be introduced.
 
 
 ================================================================================
-# 22.5 Inspection Output
+# 22.6 A01.4 — Version Service
 ================================================================================
 
-After inspection, every matrix row shall have:
+Status:
 
-* an identified implementation component, or an explicit statement that none
-  exists;
-* concrete evidence;
-* a status;
-* identified dependency where applicable;
-* a next action.
+PARTIAL
 
-The resulting matrix becomes the evidence basis for the A01 implementation
-decision.
+Existing LearningObjectService already coordinates:
 
-No source modification shall be derived from an uninspected UNKNOWN row.
+* Version creation;
+* version sequencing;
+* version history;
+* VersionRepository access.
 
+The existence of these responsibilities means that a separate VersionService
+shall not be created merely because the specification names a service.
 
-================================================================================
-# 22.6 Inspection Completion Criteria
-================================================================================
-
-The inspection phase is complete when:
-
-1. every row in the matrix has been inspected;
-2. no required row remains UNKNOWN;
-3. every PARTIAL item identifies its missing responsibility;
-4. every GAP identifies the missing component or boundary;
-5. every BLOCKED item identifies its blocking dependency;
-6. existing conformant implementation is explicitly preserved;
-7. no implementation change has yet been applied.
+Further action requires confirming whether an explicit Version Service
+boundary provides a materially required application responsibility.
 
 
 ================================================================================
-# 22.7 Post-Inspection Decision
+# 22.7 A01.5 — Audit Service
 ================================================================================
 
-Once the inspection matrix is complete, the next step shall be to produce a
-minimal implementation change set.
+Status:
 
-The change set shall:
+PARTIAL
 
-* address only confirmed A01 gaps;
-* preserve CONFORMANT capabilities;
-* resolve PARTIAL capabilities only where necessary;
-* explicitly account for BLOCKED dependencies;
-* avoid implementing A02, A03, or A04 prematurely.
+Existing capabilities include:
 
-The implementation change set shall be reviewed against this matrix before
-application.
+* AuditRecord;
+* AuditRepository;
+* audit recording;
+* audit retrieval.
 
+The explicit Application Service boundary:
+
+* record_event();
+* get_events();
+
+is not separately established.
+
+Further implementation shall preserve the existing AuditRecord and
+AuditRepository contracts.
+
+
+================================================================================
+# 22.8 A01.6 — Application Error Boundary
+================================================================================
+
+Status:
+
+GAP
+
+Confirmed issues:
+
+* LearningObjectNotFound is defined locally in LearningObjectService;
+* InvalidStateTransition is owned by the Domain Layer;
+* InvalidStateTransition is not translated into a stable Application error;
+* no centralized Application error taxonomy is confirmed.
+
+Required initial Application error categories:
+
+* EntityNotFound;
+* InvalidOperation;
+* ValidationFailure;
+* UnauthorizedOperation.
+
+The Domain Layer shall retain ownership of Domain exceptions.
+
+
+================================================================================
+# 22.9 A01.7 — Transaction Boundary
+================================================================================
+
+Status:
+
+PARTIAL
+
+Existing Persistence infrastructure includes:
+
+* transaction context;
+* commit;
+* rollback;
+* session ownership;
+* repository session wiring.
+
+The remaining conformance question is whether Application-level write
+use cases explicitly own transaction coordination as required by IA-08-A01.
+
+No replacement transaction infrastructure shall be introduced until this
+boundary is verified.
+
+
+================================================================================
+# 22.10 Implementation Priority
+================================================================================
+
+The confirmed GAP shall be addressed first:
+
+A01.6 — Application Error Boundary
+
+
+The following remain PARTIAL and require subsequent focused verification:
+
+A01.3 — Category Service
+A01.4 — Version Service
+A01.5 — Audit Service
+A01.7 — Transaction Boundary
+
+
+The following remains BLOCKED:
+
+A01.2 — Review / Change Proposal
+
+
+================================================================================
+# 22.11 Explicit Non-Goals
+================================================================================
+
+This inspection does not authorize implementation of:
+
+* ChangeProposal;
+* LearningReview;
+* Security policy;
+* authorization mechanisms;
+* replacement transaction infrastructure;
+* new Category domain semantics;
+* new Version domain semantics;
+* API error handlers.
+
+
+================================================================================
+# 22.12 Verification Rule
+================================================================================
+
+A finding may move from GAP or PARTIAL to CONFORMANT only after:
+
+1. implementation evidence is confirmed;
+2. focused tests pass;
+3. regression tests pass;
+4. the relevant architectural boundary remains intact.
+
+
+================================================================================
+# 22.13 Current Status
+================================================================================
+
+Finding:
+
+IA-08-A01 — Application Service Conformance
+
+Status:
+
+IN PROGRESS
+
+Confirmed GAP:
+
+A01.6 — Application Error Boundary
+
+PARTIAL:
+
+A01.3 — Category Service
+A01.4 — Version Service
+A01.5 — Audit Service
+A01.7 — Transaction Boundary
+
+BLOCKED:
+
+A01.2 — Review / Change Proposal
 
 
 ================================================================================
