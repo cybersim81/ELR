@@ -346,24 +346,57 @@ AuditRepository contracts.
 
 Status:
 
-GAP
+CONFORMANT
 
-Confirmed issues:
+Confirmed finding:
 
-* LearningObjectNotFound is defined locally in LearningObjectService;
-* InvalidStateTransition is owned by the Domain Layer;
-* InvalidStateTransition is not translated into a stable Application error;
-* no centralized Application error taxonomy is confirmed.
+The Application Layer previously had an incomplete error boundary.
 
-Required initial Application error categories:
+Resolution:
 
+The Application Layer now provides a centralized error taxonomy including:
+
+* ApplicationError;
 * EntityNotFound;
 * InvalidOperation;
 * ValidationFailure;
 * UnauthorizedOperation.
 
-The Domain Layer shall retain ownership of Domain exceptions.
+The service-local LearningObjectNotFound exception has been removed and
+replaced by EntityNotFound.
 
+InvalidStateTransition is translated at the Application boundary into
+InvalidOperation.
+
+The original Domain exception is preserved through exception chaining.
+
+No catch-all exception translation has been introduced.
+
+No Domain lifecycle semantics have been changed.
+
+
+Evidence:
+
+* app/application/errors.py;
+* app/application/services/learning_object_service.py;
+* app/application/services/__init__.py;
+* tests/application/services/test_learning_object_service.py.
+
+
+Verification:
+
+* focused A01.6 tests pass;
+* complete pytest suite passes with 79 tests;
+* E2E-GATE-01 is VERIFIED / CLOSED according to
+  docs/00_Bootstrap/04_End_to_End_Gap_Map.txt.
+
+
+Resolution:
+
+A01.6 is RESOLVED.
+
+
+================================================================================
 
 ================================================================================
 # 22.9 A01.7 — Transaction Boundary
@@ -392,12 +425,15 @@ boundary is verified.
 # 22.10 Implementation Priority
 ================================================================================
 
-The confirmed GAP shall be addressed first:
-
 A01.6 — Application Error Boundary
 
+Status:
 
-The following remain PARTIAL and require subsequent focused verification:
+RESOLVED
+
+
+The following findings remain PARTIAL and require subsequent focused
+verification:
 
 A01.3 — Category Service
 A01.4 — Version Service
@@ -405,12 +441,13 @@ A01.5 — Audit Service
 A01.7 — Transaction Boundary
 
 
-The following remains BLOCKED:
+The following finding remains BLOCKED:
 
 A01.2 — Review / Change Proposal
 
 
-A01.1 remains CONFORMANT and requires no structural change.
+No further implementation work is required for A01.6 unless new evidence
+demonstrates a regression or a conflict with the authoritative specification.
 
 
 ================================================================================
@@ -453,33 +490,24 @@ Status:
 
 IN PROGRESS
 
-A01.1 — Candidate / Learning Object:
 
-CONFORMANT
+RESOLVED:
 
-A01.2 — Review / Change Proposal:
+A01.6 — Application Error Boundary
 
-BLOCKED
 
-A01.3 — Category Service:
+PARTIAL:
 
-PARTIAL
+A01.3 — Category Service
+A01.4 — Version Service
+A01.5 — Audit Service
+A01.7 — Transaction Boundary
 
-A01.4 — Version Service:
 
-PARTIAL
+BLOCKED:
 
-A01.5 — Audit Service:
+A01.2 — Review / Change Proposal
 
-PARTIAL
-
-A01.6 — Application Error Boundary:
-
-GAP
-
-A01.7 — Transaction Boundary:
-
-PARTIAL
 
 
 ================================================================================
