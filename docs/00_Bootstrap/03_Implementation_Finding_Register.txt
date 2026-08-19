@@ -397,17 +397,15 @@ The persistence layer preserves immutable Version records and their LearningObje
 
 **Finding:** Persistence coverage was previously limited to AnchorModel.
 
-**Resolution:** Production persistence tests now cover LearningObject, Version, AuditRecord, KnowledgeStatement representation, repository wiring, transaction rollback, and atomic persistence behavior.
-
-The remaining coverage gap concerns reconstruction after creating a new independent database session.
+**Resolution:** Production persistence tests now cover LearningObject, Version, AuditRecord, KnowledgeStatement representation, repository wiring, transaction rollback, atomic persistence behavior, persistent reload, Version history recovery, Audit history recovery, and the complete persistent end-to-end lifecycle across a session boundary.
 
 **Evidence:**
 
 * `tests/persistence/test_learning_object_service_persistence.py`
 
-**Status:** `COVERAGE GAP`
+**Status:** `RESOLVED`
 
-**Remaining scope:** E2E-08 Persistent Reload and the subsequent cross-session recovery tests.
+**Resolution note:** E2E-08, E2E-09, E2E-10 and E2E-11 verify the previously missing cross-session and end-to-end persistence coverage.
 
 ---
 
@@ -443,23 +441,29 @@ Verified repository boundaries include:
 
 **Area:** End-to-End
 
-**Finding:** The complete cross-session persistent LearningObject lifecycle has not yet been demonstrated.
+**Finding:** The complete cross-session persistent LearningObject lifecycle had not previously been demonstrated.
 
-**Verified:** E2E-07 verifies:
+**Resolution:** The complete persistent lifecycle is now verified across session boundaries.
 
-`Application → Concrete Repository → Persistence Model → Database`
+Verified boundary:
 
-for LearningObject, Version and AuditRecord persistence.
+`Application → Concrete Repository → Persistence Model → Database → New Session → Reconstructed Aggregate → Version History → Audit History`
 
-**Remaining gap:**
+Verified lifecycle:
 
-`Database → New Session → Repository → Reconstructed Aggregate`
+`Candidate → Proposed → Active → Retired`
 
-followed by persistent Version and Audit history recovery and complete lifecycle verification.
+**Evidence:**
 
-**Status:** `PERSISTENCE GAP`
+* E2E-07 — Production Persistence;
+* E2E-08 — Persistent Reload;
+* E2E-09 — Version History Recovery;
+* E2E-10 — Audit History Recovery;
+* E2E-11 — Persistent End-to-End Test.
 
-**Next phase:** `E2E-08 — Persistent Reload`
+**Status:** `RESOLVED`
+
+**Resolution note:** IA-022 is closed by E2E-GATE-01.
 
 ---
 
@@ -471,85 +475,71 @@ followed by persistent Version and Audit history recovery and complete lifecycle
 
 **Impact:** Current operational-history semantics are consistent at the in-memory level.
 
-**Status:** `PRELIMINARILY CONSISTENT`
+**Resolution:** AuditRecord immutability and append-only history semantics are preserved, production AuditRecord persistence is implemented, and Audit history recovery across a new independent session is verified.
 
-**Open point:** Production AuditRecord persistence is now implemented and verified. Cross-session Audit history recovery remains an E2E-10 concern.
+**Evidence:**
+
+* `app/domain/entities/audit_record.py`
+* `app/persistence/models/audit_model.py`
+* `app/persistence/repositories/audit_repository.py`
+* `tests/persistence/test_learning_object_service_persistence.py`
+
+**Status:** `RESOLVED`
+
+**Resolution note:** E2E-10 verifies persistent Audit history recovery and preserves the distinction between operational Audit history and immutable Version history.
 
 ---
 
-# Finding Summary
+## Finding Summary
 
-## IA-01 — RESOLVED
-
-The following eight findings are explicitly closed:
+### Resolved Findings
 
 * IA-001 — RESOLVED
 * IA-002 — RESOLVED
 * IA-003 — RESOLVED
+* IA-004 — RESOLVED
 * IA-005 — RESOLVED
+* IA-006 — RESOLVED
+* IA-007 — RESOLVED
+* IA-008 — RESOLVED
+* IA-009 — RESOLVED
 * IA-010 — RESOLVED
+* IA-013 — RESOLVED
+* IA-014 — RESOLVED
+* IA-015 — RESOLVED
+* IA-016 — RESOLVED
 * IA-017 — RESOLVED
 * IA-018 — RESOLVED
 * IA-019 — RESOLVED
+* IA-020 — RESOLVED
+* IA-021 — RESOLVED
+* IA-022 — RESOLVED
+* IA-023 — RESOLVED
 
-IA-01 is therefore considered complete.
+### Remaining Findings
 
-## Remaining Open Alignment
+* IA-011 — PRELIMINARILY CONSISTENT
+* IA-012 — PRELIMINARILY CONSISTENT
 
-No currently verified open Contract and Lifecycle alignment findings remain.
+### Current Interpretation
 
-## Persistence Gaps
+The implementation alignment work covered by the resolved findings is complete.
 
-* IA-022
+The persistence and end-to-end findings previously associated with production persistence, cross-session reload, Version history recovery, Audit history recovery, and the complete persistent LearningObject lifecycle are resolved and verified.
 
-## Test Coverage Gaps
-
-* IA-020
-
-## Preliminarily Consistent
-
-* IA-011
-* IA-012
-* IA-023
-
-## Current Conclusion
-
-IA-01 — Domain Semantic Alignment is RESOLVED.
-
-IA-02 — Contract and Lifecycle Alignment is RESOLVED.
-
-IA-03 — Persistence Model is COMPLETE.
-
-IA-04 — Concrete Repository Layer is COMPLETE.
-
-IA-05 — Database Wiring is COMPLETE.
-
-E2E-07 — Production Persistence is COMPLETE and VERIFIED.
-
-The following implementation findings are resolved:
-
-* IA-004;
-* IA-013;
-* IA-014;
-* IA-015;
-* IA-021.
-
-The remaining persistence/conformance findings are:
-
-* IA-020 — cross-session persistence coverage gap;
-* IA-022 — persistent end-to-end lifecycle gap.
+The remaining entries IA-011 and IA-012 are not treated as implementation blockers at this stage. Their current classification remains `PRELIMINARILY CONSISTENT` pending the dedicated IA-08 Implementation Conformance assessment.
 
 The next work package is:
 
-**E2E-08 — PERSISTENT RELOAD**
+**IA-08 — IMPLEMENTATION CONFORMANCE**
 
-Checkpoint:
+Latest verified checkpoint:
 
-`b00d5c7`
+`d679299`
 
-Verification:
+Latest verification:
 
-`70 passed`
+`74 passed`
 
 ---
 
