@@ -95,11 +95,11 @@ The complete lifecycle has been verified across session boundaries:
 
 `Candidate → Proposed → Active → Retired`
 
-Latest verification result:
+Historical E2E-GATE-01 verification result:
 
 `74 passed`
 
-Latest Git checkpoint:
+Historical E2E-GATE-01 Git checkpoint:
 
 `d679299`
 
