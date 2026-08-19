@@ -747,7 +747,7 @@ yet available.
 
 | Area         | Specification Requirement                 | Existing Component    | Evidence   | Status  | Dependency                | Next Action |
 |--------------|-------------------------------------------|-----------------------|------------|---------|---------------------------|-------------|
-| Candidate    | create_candidate()                        | LearningObjectService | To inspect | UNKNOWN | LearningObject            | Inspect     |
+| Candidate    | create_candidate()                        | LearningObjectService | app/application/services/learning_object_service.py:create_candidate() | CONFORMANT | LearningObject            | None        |
 | Review       | approve_change_proposal()                 | To inspect            | To inspect | UNKNOWN | Change Proposal / Review  | Inspect     |
 | Review       | reject_change_proposal()                  | To inspect            | To inspect | UNKNOWN | Change Proposal / Review  | Inspect     |
 | Category     | get_categories()                          | To inspect            | To inspect | UNKNOWN | Category model/repository | Inspect     |
