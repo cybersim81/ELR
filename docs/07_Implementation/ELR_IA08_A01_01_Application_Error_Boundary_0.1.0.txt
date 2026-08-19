@@ -60,16 +60,20 @@ semantics, or API behavior.
 # 2. Confirmed Finding
 ================================================================================
 
-The current Application Layer exposes domain/infrastructure-level failures
-directly to its consumers.
+The current Application Layer has an incomplete application error boundary.
 
-The current implementation contains domain-specific lookup failure handling
-inside LearningObjectService, but does not provide a complete application
-error taxonomy and translation boundary.
+The current implementation already defines LearningObjectNotFound inside
+LearningObjectService. This is an application-level not-found error.
 
-This is classified as:
+The Domain Layer independently defines InvalidStateTransition.
 
-IA-08-A01.1 — CONFIRMED GAP
+InvalidStateTransition currently crosses the Application Service boundary
+without translation into an application-level error taxonomy.
+
+The confirmed gap is therefore:
+
+IA-08-A01.1 — Application Error Taxonomy and Domain-Error Translation
+Incomplete
 
 
 ================================================================================
@@ -103,72 +107,88 @@ The Application Layer must therefore not:
 
 
 ================================================================================
-# 4. Domain Errors
+# 4. Current Error Ownership
 ================================================================================
 
-Existing domain exceptions must remain owned by the Domain Layer.
+The current implementation establishes two different error ownership
+locations.
 
-Examples include:
+Application Layer:
 
-* InvalidStateTransition;
-* LearningObjectNotFound;
-* domain validation failures.
+LearningObjectNotFound
 
-No domain exception should be moved into the Application Layer merely to create
-the application boundary.
+This exception is currently defined in LearningObjectService and therefore
+already belongs to the Application Layer.
+
+Domain Layer:
+
+InvalidStateTransition
+
+This exception is defined by the LearningObject domain model and remains owned
+by the Domain Layer.
+
+This distinction must be preserved.
 
 
 ================================================================================
 # 5. Application Error Model
 ================================================================================
 
-Introduce an application-level error taxonomy sufficient for the currently
-implemented use cases.
+The Application Layer shall provide a stable application-level error
+taxonomy.
 
-The initial categories shall be:
+The initial categories are:
 
 * EntityNotFound;
-* ValidationFailure;
 * InvalidOperation;
+* ValidationFailure;
 * UnauthorizedOperation.
 
-The taxonomy may be implemented as application-specific exception classes.
+The taxonomy shall be centralized in the Application Layer.
 
-The implementation must remain intentionally small.
+The implementation must not create duplicate application error classes inside
+individual Application Services.
 
-Do not introduce a large hierarchy before additional use cases require it.
+UnauthorizedOperation is reserved for authorization failures and shall not be
+introduced into A01.1 through artificial mappings.
 
 
 ================================================================================
 # 6. Error Mapping
 ================================================================================
 
-The Application Layer shall translate known Domain failures into application
-errors.
+The initial mapping shall be limited to failures that actually exist in the
+current implementation.
 
-The initial conceptual mapping is:
-
-Domain Error
-    ->
-Application Error
-
-LearningObjectNotFound
-    ->
-EntityNotFound
+Current Domain Error:
 
 InvalidStateTransition
-    ->
+
+shall map to:
+
 InvalidOperation
 
-Domain validation failure
-    ->
-ValidationFailure
+
+Current Application Error:
+
+LearningObjectNotFound
+
+shall be normalized to:
+
+EntityNotFound
 
 
-UnauthorizedOperation is reserved for application/security authorization
-failures.
+The LearningObjectNotFound class must therefore not be treated as a Domain
+exception.
 
-It must not be manufactured from ordinary domain state-transition failures.
+No mapping shall be introduced for ValidationFailure until an applicable
+Domain validation failure exists in the current implementation.
+
+No mapping shall be introduced for UnauthorizedOperation until the Security
+Layer defines an authorization failure boundary.
+
+The objective is to establish the taxonomy without inventing unused
+semantics.
 
 
 ================================================================================
@@ -187,6 +207,13 @@ or the equivalent mechanism supported by the implementation language.
 
 This preserves diagnostic information without exposing the Domain exception
 as the primary Application boundary.
+
+For existing application-level errors that are normalized into the central
+Application Error taxonomy, exception chaining is optional unless an original
+Domain or infrastructure exception is being translated.
+
+Domain-to-Application translations shall preserve the original Domain
+exception as the underlying cause.
 
 
 ================================================================================
