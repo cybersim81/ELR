@@ -299,34 +299,33 @@ The following persistent behaviors are covered:
 * invalid lifecycle transition rollback;
 * atomic approve() persistence;
 * atomic update_knowledge() persistence;
-* multi-Version persistence and ordering.
-
-The production persistence flow is verified by dedicated integration coverage.
-
-### Remaining Scope
-
-The following cross-session behaviors remain:
-
+* multi-Version persistence and ordering;
 * persistent reload through a newly created session;
 * Version history recovery after session reload;
 * Audit history recovery after session reload;
 * complete persistent lifecycle across a session boundary.
 
-These remaining behaviors are tracked by E2E-08 through E2E-11.
+The production persistence flow and cross-session recovery are verified by dedicated integration coverage.
 
 ### Gate
 
 `IA-06 PERSISTENCE TEST CONFORMANCE`
 
-Status: `IN PROGRESS`
+Status: `COMPLETE`
 
-Progress: `PARTIAL`
+Progress: `100%`
 
-Production persistence behavior is verified, but cross-session recovery is not yet complete.
+### Closure Evidence
 
-### Current Next Gap
+* E2E-07 Production Persistence — VERIFIED;
+* E2E-08 Persistent Reload — VERIFIED;
+* E2E-09 Version History Recovery — VERIFIED;
+* E2E-10 Audit History Recovery — VERIFIED;
+* E2E-11 Persistent End-to-End Test — VERIFIED;
+* latest verification result: `74 passed`;
+* latest checkpoint: `d679299`.
 
-`E2E-08 — Persistent Reload`
+IA-06 is closed.
 
 ---
 
@@ -334,9 +333,9 @@ Production persistence behavior is verified, but cross-session recovery is not y
 
 ### Objective
 
-Demonstrate the complete persistent LearningObject lifecycle.
+Demonstrate and close the complete persistent LearningObject lifecycle.
 
-### Required Flow
+### Verified Flow
 
 Anchor
   ↓
@@ -364,37 +363,39 @@ Version History
   ↓
 Audit History
 
-Change Proposal review decisions such as Reviewed, Approved, and Rejected are not LearningObject lifecycle states and must not appear in this lifecycle flow.
+Change Proposal review decisions such as Reviewed, Approved, and Rejected are not LearningObject lifecycle states and do not appear in this lifecycle flow.
 
-Gate Condition
+### Gate Condition
 
-The complete flow must succeed without semantic loss or violation of the established lifecycle, aggregate, Version, and Audit boundaries.
+The complete flow succeeds without semantic loss or violation of the established lifecycle, aggregate, Version, and Audit boundaries.
 
-IA-01 Preconditions
-IA-001 — RESOLVED
-IA-002 — RESOLVED
-IA-003 — RESOLVED
-IA-005 — RESOLVED
-IA-010 — RESOLVED
-IA-017 — RESOLVED
-IA-018 — RESOLVED
-IA-019 — RESOLVED
+### Verified Prerequisites
 
-Status
+* E2E-07 Production Persistence — VERIFIED;
+* E2E-08 Persistent Reload — VERIFIED;
+* E2E-09 Version History Recovery — VERIFIED;
+* E2E-10 Audit History Recovery — VERIFIED;
+* E2E-11 Persistent End-to-End Test — VERIFIED.
 
-PENDING
+### Gate
 
-### Prerequisite Sequence
+`IA-07 E2E-GATE-01`
 
-The gate is downstream of:
+Status: `COMPLETE`
 
-`E2E-07 Production Persistence — COMPLETE`
-→ `E2E-08 Persistent Reload — NEXT`
-→ `E2E-09 Version History Recovery — PENDING`
-→ `E2E-10 Audit History Recovery — PENDING`
-→ `E2E-11 Persistent End-to-End Test — PENDING`
+Progress: `100%`
 
-IA-07 MUST NOT be marked complete until the full persistent lifecycle has been verified across the session boundary.
+### Closure Evidence
+
+* persistent LearningObject lifecycle verified;
+* cross-session aggregate reconstruction verified;
+* Version history recovery verified;
+* Audit history recovery verified;
+* final Retired state verified;
+* latest verification result: `74 passed`;
+* latest checkpoint: `d679299`.
+
+IA-07 is closed.
 
 ---
 
@@ -420,6 +421,8 @@ The final implementation must preserve:
 * separation between Version history and Audit history;
 * independent Anchor identity and persistence boundary.
 
+The completed E2E-GATE-01 persistence lifecycle must be included in the conformance assessment.
+
 ### Gate
 
 `IMPLEMENTATION CONFORMANCE`
@@ -428,7 +431,7 @@ Status: `PENDING`
 
 ---
 
-# Current Roadmap Position
+## Current Roadmap Position
 
 M0.3.2 Specification Propagation
 │
@@ -463,39 +466,26 @@ E2E-07 Production Persistence
 │
 │ COMPLETE — VERIFIED
 │ checkpoint: b00d5c7
-│ test suite: 70 passed
-│
-├──────────────────────────────────────────────┐
-│ IA-06 Persistence Test Conformance           │
-│ IN PROGRESS — PARTIAL                        │
-│                                              │
-│ Cross-cutting conformance scope:             │
-│ E2E-08 → E2E-11                              │
-└──────────────────────────────────────────────┘
 │
 ▼
-E2E-08 Persistent Reload
+IA-06 Persistence Test Conformance
 │
-│ NEXT
-▼
-E2E-09 Version History Recovery
-│
-│ PENDING
-▼
-E2E-10 Audit History Recovery
-│
-│ PENDING
-▼
-E2E-11 Persistent End-to-End Test
-│
-│ PENDING
+│ COMPLETE — 100%
+│ E2E-08 → E2E-11 VERIFIED
 │
 ▼
 IA-07 E2E-GATE-01
 │
-│ PENDING
+│ COMPLETE — 100%
+│ checkpoint: d679299
+│ test suite: 74 passed
+│
 ▼
 IA-08 Implementation Conformance
+│
+│ CURRENT — PENDING
+│
+│ NEXT WORK PACKAGE
 
 ## Current Status Summary
 
@@ -507,46 +497,46 @@ IA-08 Implementation Conformance
 | IA-04 Concrete Repository Layer        | COMPLETE     |     100% |
 | IA-05 Database Wiring                  | COMPLETE     |     100% |
 | E2E-07 Production Persistence          | COMPLETE     |     100% |
-| E2E-08 Persistent Reload               | NEXT         |       0% |
-| E2E-09 Version History Recovery        | PENDING      |       0% |
-| E2E-10 Audit History Recovery          | PENDING      |       0% |
-| E2E-11 Persistent End-to-End Test      | PENDING      |       0% |
-| IA-06 Persistent Integration Tests     | IN PROGRESS  |  PARTIAL |
-| IA-07 E2E-GATE-01                      | PENDING      |       0% |
+| E2E-08 Persistent Reload               | VERIFIED     |     100% |
+| E2E-09 Version History Recovery        | VERIFIED     |     100% |
+| E2E-10 Audit History Recovery          | VERIFIED     |     100% |
+| E2E-11 Persistent End-to-End Test      | VERIFIED     |     100% |
+| IA-06 Persistent Integration Tests     | COMPLETE     |     100% |
+| IA-07 E2E-GATE-01                      | COMPLETE     |     100% |
 | IA-08 Implementation Conformance       | PENDING      |       0% |
 
 ## Last Completed Gate
 
-`E2E-07 — PRODUCTION PERSISTENCE — COMPLETE — VERIFIED`
+`IA-07 / E2E-GATE-01 — PERSISTENT LEARNINGOBJECT LIFECYCLE — COMPLETE — VERIFIED`
 
 Checkpoint:
 
-`b00d5c7`
+`d679299`
 
 Verification:
 
-`70 passed`
+`74 passed`
 
 ## Current Work Package
 
-`E2E-08 — PERSISTENT RELOAD — NEXT`
+`IA-08 — IMPLEMENTATION CONFORMANCE — NEXT`
 
 ## Next Action
 
-Implement and verify:
+Inspect the resulting implementation against the authoritative normative corpus and verify implementation conformance.
 
-`E2E-08 — Persistent Reload`
+The conformance pass must:
 
-The test must:
+1. compare the implementation against the authoritative normative specifications;
+2. identify only confirmed deviations;
+3. distinguish already-closed findings from genuinely remaining gaps;
+4. verify that no completed IA or E2E gate is reopened without contradictory evidence;
+5. resolve or explicitly document any remaining implementation deviation;
+6. establish the next authoritative gate only after the conformance assessment.
 
-1. persist a LearningObject through the production persistence path;
-2. commit the transaction;
-3. close the original session;
-4. create a new independent session;
-5. reload the LearningObject through the concrete repository;
-6. verify reconstructed aggregate state.
+The completed E2E-GATE-01 persistence lifecycle is evidence for conformance and must not be treated as an unresolved E2E gap.
 
-Then proceed one concrete E2E block at a time using:
+Then proceed using:
 
 `inspect → block/sections → verify → test → percentage → next gap`
 
