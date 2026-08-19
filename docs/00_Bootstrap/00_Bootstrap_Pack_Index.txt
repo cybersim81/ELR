@@ -174,13 +174,17 @@ Current verified state:
 * E2E-11 Persistent End-to-End Test — VERIFIED;
 * IA-07 / E2E-GATE-01 — COMPLETE / VERIFIED.
 
-Latest verified checkpoint:
+Historical E2E-GATE-01 checkpoint:
 
 `d679299`
 
-Latest verified test result:
+Historical E2E-GATE-01 verification:
 
 `74 passed`
+
+Latest A01.6 implementation verification:
+
+`79 passed`
 
 Current work package:
 
