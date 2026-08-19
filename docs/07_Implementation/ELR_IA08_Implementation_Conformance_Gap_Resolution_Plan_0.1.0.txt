@@ -187,10 +187,18 @@ surface defined by the current Application Service Implementation
 Specification.
 
 
-## 4.2 Confirmed Gap
+================================================================================
+## 4.2 Conformance Finding Under Inspection
+================================================================================
 
-The implementation specification defines additional application-level
-responsibilities including:
+The Application Service implementation currently provides a substantial part
+of the required Learning Object use-case coordination.
+
+However, complete conformance with the authoritative Application Service
+Implementation Specification has not yet been established.
+
+The following responsibilities require evidence-based implementation
+inspection:
 
 * approve_change_proposal();
 * reject_change_proposal();
@@ -200,8 +208,20 @@ responsibilities including:
 * explicit application transaction coordination;
 * application-level error translation.
 
-The current implementation does not yet provide the complete separation and
-coordination model described by that specification.
+These responsibilities must not be classified as implementation gaps solely
+because a dedicated class or method is not yet visible.
+
+Conformance shall be assessed at the responsibility and boundary level.
+
+The result of the inspection shall determine whether each responsibility is:
+
+* CONFORMANT;
+* PARTIAL;
+* GAP;
+* BLOCKED.
+
+No implementation change shall be derived from an UNKNOWN or uninspected
+responsibility.
 
 
 ## 4.3 Target State
