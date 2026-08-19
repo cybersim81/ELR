@@ -186,6 +186,26 @@ Current work package:
 
 `IA-08 — Implementation Conformance`
 
+Current responsibility under active resolution:
+
+`IA-08-A01 — Application Service`
+
+Current resolved responsibility:
+
+`IA-08-A01.6 — Application Error Boundary`
+
+Status:
+
+`A01.6 — RESOLVED / VERIFIED`
+
+Current remaining A01 responsibilities:
+
+* A01.2 — Review / Change Proposal — BLOCKED;
+* A01.3 — Category Service — PARTIAL;
+* A01.4 — Version Service — PARTIAL;
+* A01.5 — Audit Service — PARTIAL;
+* A01.7 — Transaction Boundary — PARTIAL.
+
 ---
 
 ## Current Persistence State
@@ -275,9 +295,21 @@ IA-07 E2E-GATE-01
         ↓
 IA-08 Implementation Conformance
         │
-        │ CURRENT — PENDING
+        │ CURRENT — IN PROGRESS
         │
-        │ NEXT WORK PACKAGE
+        ├── IA-08-A01 Application Service
+        │
+        ├── A01.6 Application Error Boundary
+        │       │
+        │       └── RESOLVED / VERIFIED
+        │
+        └── Remaining A01 responsibilities
+                │
+                ├── A01.2 — BLOCKED
+                ├── A01.3 — PARTIAL
+                ├── A01.4 — PARTIAL
+                ├── A01.5 — PARTIAL
+                └── A01.7 — PARTIAL
 
 Last Completed Gate
 
@@ -303,17 +335,29 @@ The next implementation session must resume at:
 
 **IA-08 — IMPLEMENTATION CONFORMANCE**
 
-IA-01 through IA-07 are complete or verified.
+Current active finding:
 
-E2E-08 through E2E-11 and E2E-GATE-01 are closed and must not be restarted unless new contradictory repository or authoritative evidence is found.
+**IA-08-A01 — Application Service**
 
-Latest verified checkpoint:
+A01.6 — Application Error Boundary has been implemented and verified and
+must not be reopened unless new contradictory authoritative or repository
+evidence is found.
+
+The next controlled action shall address one of the remaining non-resolved
+A01 responsibilities after repository inspection and confirmation of the
+actual implementation gap.
+
+Current verification baseline for A01.6:
+
+`79 passed`
+
+The historical E2E-GATE-01 checkpoint remains:
 
 `d679299`
 
-Latest verification:
-
 `74 passed`
+
+The historical E2E checkpoint must not be replaced or rewritten.
 
 ---
 
@@ -362,31 +406,35 @@ Implementation changes must be explicitly identified, reviewed, and applied as s
 
 ---
 
-## Current Bootstrap Status
-
-PRODUCTION PERSISTENCE
-        COMPLETE
-
-E2E-07 PRODUCTION PERSISTENCE
-        COMPLETE / VERIFIED
-
-E2E-08 PERSISTENT RELOAD
-        VERIFIED
-
-E2E-09 VERSION HISTORY RECOVERY
-        VERIFIED
-
-E2E-10 AUDIT HISTORY RECOVERY
-        VERIFIED
-
-E2E-11 PERSISTENT E2E FLOW
-        VERIFIED
-
 IA-07 / E2E-GATE-01
         COMPLETE / VERIFIED
+
+IA-08 — IMPLEMENTATION CONFORMANCE
+        IN PROGRESS
+
+IA-08-A01 — APPLICATION SERVICE
+        IN PROGRESS
+
+IA-08-A01.6 — APPLICATION ERROR BOUNDARY
+        RESOLVED / VERIFIED
+
+A01.2
+        BLOCKED
+
+A01.3 / A01.4 / A01.5 / A01.7
+        PARTIAL
 
 CURRENT WORK PACKAGE
         IA-08 — IMPLEMENTATION CONFORMANCE
 
-CURRENT RESUMPTION POINT
-        IA-08 — IMPLEMENTATION CONFORMANCE
+CURRENT RESPONSIBILITY
+        IA-08-A01 — APPLICATION SERVICE
+
+CURRENT RESOLVED RESPONSIBILITY
+        A01.6 — APPLICATION ERROR BOUNDARY
+
+LATEST A01.6 VERIFICATION
+        79 passed
+
+HISTORICAL E2E-GATE-01 CHECKPOINT
+        d679299 / 74 passed
