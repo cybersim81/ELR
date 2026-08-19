@@ -1,0 +1,928 @@
+================================================================================
+English Learning Repository (ELR)
+
+IA-08-A01 Application Service
+Implementation Conformance Resolution
+
+Version: 0.1.0
+Status: WORKING IMPLEMENTATION GUIDANCE
+================================================================================
+
+
+# Document Identity
+
+Document Name:
+
+ELR IA-08-A01 Application Service Resolution
+
+Document Version:
+
+0.1.0
+
+Status:
+
+WORKING IMPLEMENTATION GUIDANCE
+
+Parent Plan:
+
+ELR IA-08 Implementation Conformance Gap Resolution Plan 0.1.0
+
+Finding:
+
+IA-08-A01 — Application Service Conformance
+
+Authority Status:
+
+This document is an implementation coordination artifact.
+
+It does not supersede, amend, or introduce normative domain, lifecycle,
+versioning, persistence, API, event, security, or architectural rules.
+
+In case of conflict, the applicable authoritative specification prevails.
+
+
+================================================================================
+# 1. Purpose
+================================================================================
+
+This document defines the controlled implementation resolution for:
+
+IA-08-A01 — Application Service Conformance.
+
+The objective is to bring the Application Layer into conformance with the
+authoritative ELR Application Service Implementation Specification while
+preserving all previously verified domain and persistence behavior.
+
+The implementation shall be minimal.
+
+No unrelated architectural or semantic changes are authorized by this
+document.
+
+
+================================================================================
+# 2. Confirmed Finding
+================================================================================
+
+The current implementation contains a LearningObjectService and already
+coordinates several Learning Object operations.
+
+Existing capabilities include:
+
+* create_candidate();
+* submit_for_review();
+* approve();
+* update_knowledge();
+* retire();
+* get();
+* get_history().
+
+The current implementation does not yet provide the complete Application
+Service structure required by the Application Service Implementation
+Specification.
+
+The confirmed missing or incomplete areas are:
+
+* Change Proposal approval/rejection coordination;
+* Category Service boundary;
+* Version Service boundary;
+* Audit Service boundary;
+* explicit application transaction coordination;
+* application-level error translation.
+
+
+================================================================================
+# 3. Authoritative Requirements
+================================================================================
+
+The Application Layer is responsible for coordinating:
+
+* API requests;
+* use cases;
+* domain rules;
+* persistence;
+* audit.
+
+The Application Layer is not responsible for:
+
+* cognitive logic;
+* database schema;
+* HTTP details.
+
+Application Services must:
+
+* represent explicit use cases;
+* preserve Domain Layer authority;
+* define transaction boundaries;
+* coordinate components without replacing their responsibilities.
+
+
+================================================================================
+# 4. Current Implementation Baseline
+================================================================================
+
+The current LearningObjectService already demonstrates the intended basic
+dependency direction.
+
+It depends on:
+
+* Domain entities;
+* Repository interfaces.
+
+It does not directly depend on:
+
+* FastAPI;
+* SQLAlchemy;
+* PostgreSQL.
+
+This dependency direction must be preserved.
+
+
+================================================================================
+# 5. Resolution Strategy
+================================================================================
+
+The A01 resolution shall be implemented incrementally.
+
+The first implementation increment shall NOT attempt to implement the complete
+Review, Security, Event, or API systems.
+
+The objective is to establish the correct Application Service boundaries
+without introducing semantics that are not yet implemented elsewhere.
+
+The resolution is therefore divided into:
+
+A01.1 — Application Service boundary normalization
+
+A01.2 — Supporting service boundaries
+
+A01.3 — Error translation boundary
+
+A01.4 — Transaction boundary
+
+A01.5 — Application Service verification
+
+
+================================================================================
+# 6. A01.1 — Application Service Boundary Normalization
+================================================================================
+
+The existing LearningObjectService shall remain the primary coordinator for
+Learning Object use cases unless the current implementation evidence requires
+a different decomposition.
+
+The service shall remain responsible for coordinating:
+
+* candidate creation;
+* submission for review;
+* approved changes;
+* rejected changes;
+* retrieval;
+* history access;
+* lifecycle operations;
+* version coordination;
+* audit coordination.
+
+The service shall not independently decide:
+
+* whether a Change Proposal is semantically approvable;
+* whether a Review decision is valid;
+* whether a lifecycle transition is legal;
+* whether a version is semantically required.
+
+Those decisions remain owned by their respective domain/process authorities.
+
+
+================================================================================
+# 7. A01.2 — Change Proposal Operations
+================================================================================
+
+The Application Service specification requires:
+
+approve_change_proposal();
+
+reject_change_proposal();
+
+The current implementation shall not create artificial Change Proposal
+semantics merely to satisfy the method names.
+
+Before implementing these methods, the implementation baseline must establish
+whether the corresponding:
+
+* Change Proposal entity;
+* Review model;
+* Review repository;
+* Review decision model;
+
+already exist in the current implementation.
+
+If these components do not exist, the Application Service shall not invent
+replacement domain objects inside the Application Layer.
+
+In that situation the finding remains partially resolved until the required
+authoritative domain/process components are available.
+
+
+================================================================================
+# 8. A01.3 — Category Service
+================================================================================
+
+The Application Service specification defines:
+
+get_categories();
+
+get_category_tree();
+
+The implementation shall provide a Category Service boundary only if the
+corresponding Category domain/repository contract already exists.
+
+The Category Service shall:
+
+* coordinate category retrieval;
+* delegate persistence access to repository interfaces;
+* avoid HTTP concerns;
+* avoid database-specific logic;
+* avoid introducing taxonomy semantics.
+
+If the Category domain contract is not yet implemented, the missing Category
+Service shall be recorded as a dependent implementation gap rather than
+invented inside this change.
+
+
+================================================================================
+# 9. A01.4 — Version Service
+================================================================================
+
+The Application Service specification defines:
+
+create_version();
+
+get_versions();
+
+The existing LearningObjectService already coordinates version creation for
+approved or updated Learning Objects.
+
+The implementation must therefore first determine whether Version coordination
+is currently sufficiently cohesive to extract or formalize as a Version
+Service.
+
+The following invariant must be preserved:
+
+Version validity remains governed by the Versioning Model and Domain
+implementation.
+
+The Version Service may coordinate version creation.
+
+It may not independently decide the semantic validity of a version.
+
+
+================================================================================
+# 10. A01.5 — Audit Service
+================================================================================
+
+The Application Service specification defines:
+
+record_event();
+
+get_events();
+
+The current implementation already records Audit Records through an
+AuditRepository.
+
+The first A01 implementation should therefore introduce an Audit Service
+boundary around the existing audit contract rather than redesigning the Audit
+Model.
+
+The Audit Service shall:
+
+* receive application-level audit information;
+* create or coordinate Audit Records according to the existing contract;
+* delegate persistence to AuditRepository;
+* provide retrieval according to the existing access contract.
+
+The Audit Service shall not:
+
+* become an Event Store;
+* publish domain events;
+* replace Transactional Event Records;
+* introduce a new audit semantic model.
+
+
+================================================================================
+# 11. A01.6 — Application Error Boundary
+================================================================================
+
+The Application Service specification requires application-level translation
+of domain failures.
+
+The intended categories include:
+
+* InvalidStateTransition;
+* EntityNotFound;
+* UnauthorizedOperation;
+* ValidationFailure.
+
+The implementation shall introduce an application-level error boundary without
+destroying the original domain error semantics.
+
+Domain exceptions must remain owned by the Domain Layer.
+
+The Application Layer may translate them into stable application-level errors
+for its consumers.
+
+
+================================================================================
+# 12. A01.7 — Transaction Boundary
+================================================================================
+
+Application-level write use cases must be atomic.
+
+The Application Layer owns the use-case transaction boundary.
+
+For a write operation, the conceptual flow is:
+
+BEGIN TRANSACTION
+
+    validate application preconditions
+    load required entities
+    invoke domain behavior
+    coordinate versioning when required
+    persist domain changes
+    record audit information
+
+COMMIT
+
+On failure:
+
+ROLLBACK
+
+
+The first A01 implementation must not introduce a new infrastructure-specific
+transaction mechanism if an existing transaction abstraction already exists.
+
+The implementation baseline must first be inspected for:
+
+* Unit of Work;
+* session factory;
+* transaction manager;
+* repository transaction support.
+
+If none exists, the missing transaction boundary shall be recorded as a
+separate implementation dependency rather than hidden inside repositories.
+
+
+================================================================================
+# 13. Dependency Rules
+================================================================================
+
+The Application Layer may depend on:
+
+* Domain Layer;
+* Repository Interfaces;
+* application-level services;
+* technical abstractions required for coordination.
+
+The Application Layer must not depend directly on:
+
+* FastAPI;
+* SQLAlchemy;
+* PostgreSQL;
+* HTTP request/response objects;
+* infrastructure-specific database models.
+
+
+================================================================================
+# 14. Scope Control
+================================================================================
+
+The following changes are explicitly excluded from A01:
+
+* implementation of FastAPI;
+* implementation of authentication;
+* implementation of authorization;
+* implementation of Transactional Event Records;
+* implementation of an external event bus;
+* redesign of the Domain Model;
+* redesign of the Persistence Model;
+* introduction of Change Proposal semantics not already specified;
+* introduction of Review semantics not already specified.
+
+
+================================================================================
+# 15. Required Repository Inspection Before Modification
+================================================================================
+
+Before any source modification is applied, inspect the local implementation
+for the following components.
+
+Application:
+
+app/application/
+
+Domain:
+
+app/domain/
+
+Repositories:
+
+app/domain/repositories/
+
+Audit:
+
+app/domain/entities/audit_record.py
+app/domain/repositories/audit_repository.py
+
+Versioning:
+
+app/domain/entities/version.py
+app/domain/repositories/version_repository.py
+
+Review / Change Proposal:
+
+search for:
+
+* ChangeProposal
+* LearningReview
+* Review
+* approve_change_proposal
+* reject_change_proposal
+
+Category:
+
+search for:
+
+* Category
+* category_repository
+* get_categories
+* get_category_tree
+
+Transaction infrastructure:
+
+search for:
+
+* UnitOfWork
+* transaction
+* session
+* commit
+* rollback
+
+
+No implementation modification should be made until this inspection has been
+completed.
+
+
+================================================================================
+# 16. Minimal Expected Implementation Shape
+================================================================================
+
+The intended application structure is conceptually:
+
+Application Services
+    |
+    +-- LearningObjectService
+    |
+    +-- CategoryService
+    |
+    +-- VersionService
+    |
+    +-- AuditService
+    |
+    +-- Application Error Boundary
+    |
+    +-- Transaction Boundary
+
+
+The exact class/module decomposition remains an implementation decision,
+provided that the authoritative dependency and responsibility rules are
+preserved.
+
+
+================================================================================
+# 17. Verification Requirements
+================================================================================
+
+A01 verification shall include at minimum:
+
+## Application Unit Tests
+
+Verify:
+
+* create candidate use case;
+* submit for review use case;
+* approval coordination;
+* knowledge update coordination;
+* retirement coordination;
+* retrieval;
+* history retrieval;
+* error translation.
+
+## Repository Boundary Tests
+
+Verify:
+
+* Application Services use repository interfaces;
+* Application Services do not access infrastructure directly.
+
+## Transaction Tests
+
+Where transaction infrastructure exists, verify:
+
+* successful commit;
+* rollback on failure;
+* no partial application-level write state.
+
+## Regression Tests
+
+All previously passing tests must remain green.
+
+In particular:
+
+* domain lifecycle tests;
+* persistence tests;
+* cross-session reconstruction tests;
+* version history tests;
+* audit history tests;
+* E2E-GATE-01 tests.
+
+
+================================================================================
+# 18. A01 Acceptance Criteria
+================================================================================
+
+IA-08-A01 may be marked RESOLVED only when all applicable criteria are true.
+
+AC-001
+
+The Application Layer exposes the required implemented use-case boundaries.
+
+AC-002
+
+Application Services remain independent of HTTP and database frameworks.
+
+AC-003
+
+Domain rules remain delegated to the Domain Layer.
+
+AC-004
+
+Version semantics remain delegated to the Versioning Model and Domain Layer.
+
+AC-005
+
+Audit remains distinct from Transactional Events.
+
+AC-006
+
+Application errors have a stable application-level boundary.
+
+AC-007
+
+Write use cases have an explicit transaction boundary where infrastructure
+supports transactional execution.
+
+AC-008
+
+No unsupported Change Proposal or Review semantics have been invented.
+
+AC-009
+
+Previously verified persistence behavior remains green.
+
+AC-010
+
+All required A01 tests pass.
+
+
+================================================================================
+# 19. Stop Conditions
+================================================================================
+
+Implementation work must stop immediately if any of the following occurs:
+
+* a missing domain concept must be invented;
+* an authoritative specification is ambiguous;
+* a required Review rule is undefined;
+* transaction ownership cannot be established without changing the
+  Persistence Model;
+* implementing A01 requires API-specific code in the Application Layer;
+* implementing A01 requires Security semantics not yet defined;
+* a previously verified IA-07 boundary fails.
+
+In these cases, record the evidence and return to conformance analysis before
+continuing.
+
+
+================================================================================
+# 20. Controlled Implementation Sequence
+================================================================================
+
+The controlled sequence is:
+
+STEP 1
+
+Inspect the local Application, Domain, Repository, Review, Category, Version,
+Audit, and transaction components.
+
+STEP 2
+
+Map existing implementation components against the required Application
+Service responsibilities.
+
+STEP 3
+
+Identify which required service boundaries can be implemented without
+introducing new domain semantics.
+
+STEP 4
+
+Define the minimum source change.
+
+STEP 5
+
+Apply only that change locally.
+
+STEP 6
+
+Run focused A01 tests.
+
+STEP 7
+
+Run the full regression suite.
+
+STEP 8
+
+Record the verification result.
+
+STEP 9
+
+Only after A01 passes, proceed to IA-08-A02.
+
+
+================================================================================
+# 21. Current Status
+================================================================================
+
+Finding:
+
+IA-08-A01
+
+Status:
+
+CONFIRMED — RESOLUTION NOT YET IMPLEMENTED
+
+Current authorized action:
+
+LOCAL IMPLEMENTATION INSPECTION ONLY
+
+No repository modification is authorized by this document until the required
+inspection in Section 22 has been completed.
+
+================================================================================
+# 22. Implementation Inspection Matrix
+================================================================================
+
+Before any source modification is applied, the current implementation shall be
+inspected against the Application Service requirements.
+
+This matrix is an inspection instrument.
+
+It does not authorize implementation changes.
+
+A requirement shall not be classified as a confirmed gap until implementation
+evidence has been inspected.
+
+The following status values shall be used:
+
+CONFORMANT
+
+The required capability exists and is aligned with the authoritative
+specification.
+
+PARTIAL
+
+The capability exists but does not yet satisfy the complete requirement.
+
+GAP
+
+The required capability is absent and its absence is confirmed by inspection.
+
+UNKNOWN
+
+Insufficient implementation evidence has been inspected.
+
+BLOCKED
+
+The requirement depends on an authoritative component or decision that is not
+yet available.
+
+
+================================================================================
+# 22.1 Inspection Matrix
+================================================================================
+
+| Area         | Specification Requirement                 | Existing Component    | Evidence   | Status  | Dependency                | Next Action |
+|--------------|-------------------------------------------|-----------------------|------------|---------|---------------------------|-------------|
+| Candidate    | create_candidate()                        | LearningObjectService | To inspect | UNKNOWN | LearningObject            | Inspect     |
+| Review       | approve_change_proposal()                 | To inspect            | To inspect | UNKNOWN | Change Proposal / Review  | Inspect     |
+| Review       | reject_change_proposal()                  | To inspect            | To inspect | UNKNOWN | Change Proposal / Review  | Inspect     |
+| Category     | get_categories()                          | To inspect            | To inspect | UNKNOWN | Category model/repository | Inspect     |
+| Category     | get_category_tree()                       | To inspect            | To inspect | UNKNOWN | Category model/repository | Inspect     |
+| Version      | create_version()                          | To inspect            | To inspect | UNKNOWN | Version model/repository  | Inspect     |
+| Version      | get_versions()                            | To inspect            | To inspect | UNKNOWN | Version model/repository  | Inspect     |
+| Audit        | record_event()                            | To inspect            | To inspect | UNKNOWN | Audit model/repository    | Inspect     |
+| Audit        | get_events()                              | To inspect            | To inspect | UNKNOWN | Audit model/repository    | Inspect     |
+| Errors       | Application-level error translation       | To inspect            | To inspect | UNKNOWN | Domain exceptions         | Inspect     |
+| Transactions | Explicit application transaction boundary | To inspect            | To inspect | UNKNOWN | Unit of Work / session    | Inspect     |
+
+
+================================================================================
+# 22.2 Inspection Targets
+================================================================================
+
+The inspection shall cover the following implementation areas.
+
+Application Layer:
+
+app/application/
+
+Domain Layer:
+
+app/domain/
+
+Repository Interfaces:
+
+app/domain/repositories/
+
+Audit:
+
+app/domain/entities/audit_record.py
+app/domain/repositories/audit_repository.py
+
+Versioning:
+
+app/domain/entities/version.py
+app/domain/repositories/version_repository.py
+
+Review and Change Proposal:
+
+Search for:
+
+* ChangeProposal
+* LearningReview
+* Review
+* ReviewDecision
+* approve_change_proposal
+* reject_change_proposal
+
+Category:
+
+Search for:
+
+* Category
+* category_repository
+* get_categories
+* get_category_tree
+
+Transaction Infrastructure:
+
+Search for:
+
+* UnitOfWork
+* transaction
+* commit
+* rollback
+* session
+* session_factory
+
+
+================================================================================
+# 22.3 Evidence Rules
+================================================================================
+
+Evidence must identify the actual implementation artifact whenever possible.
+
+Acceptable evidence includes:
+
+* source file;
+* class;
+* function;
+* interface;
+* repository;
+* test;
+* persistence mapping;
+* explicit transaction abstraction.
+
+A directory name alone is not sufficient evidence of implementation.
+
+A specification statement alone is not evidence of implementation.
+
+The absence of a search result may establish absence only after the relevant
+implementation scope has been searched sufficiently.
+
+
+================================================================================
+# 22.4 Finding Classification Rules
+================================================================================
+
+The inspection shall follow these rules.
+
+RULE-A01-INSPECT-001
+
+Do not classify an item as GAP while its implementation status is still
+UNKNOWN.
+
+RULE-A01-INSPECT-002
+
+A PARTIAL implementation must identify exactly which part of the requirement
+is already implemented.
+
+RULE-A01-INSPECT-003
+
+A GAP must identify the missing implementation responsibility.
+
+RULE-A01-INSPECT-004
+
+If implementation depends on a missing Domain or Review concept, classify the
+item as BLOCKED rather than inventing an Application Layer substitute.
+
+RULE-A01-INSPECT-005
+
+If an existing implementation satisfies the requirement through a different
+but architecturally valid structure, record the existing structure and assess
+it against the authoritative responsibility rather than requiring a specific
+class name.
+
+RULE-A01-INSPECT-006
+
+No implementation change shall be proposed solely because the current class
+or module names differ from the specification.
+
+RULE-A01-INSPECT-007
+
+The inspection must preserve the distinction between:
+
+* Application Service;
+* Domain Service;
+* Repository;
+* Audit Service;
+* Transactional Event Record;
+* API Layer;
+* Security Layer.
+
+
+================================================================================
+# 22.5 Inspection Output
+================================================================================
+
+After inspection, every matrix row shall have:
+
+* an identified implementation component, or an explicit statement that none
+  exists;
+* concrete evidence;
+* a status;
+* identified dependency where applicable;
+* a next action.
+
+The resulting matrix becomes the evidence basis for the A01 implementation
+decision.
+
+No source modification shall be derived from an uninspected UNKNOWN row.
+
+
+================================================================================
+# 22.6 Inspection Completion Criteria
+================================================================================
+
+The inspection phase is complete when:
+
+1. every row in the matrix has been inspected;
+2. no required row remains UNKNOWN;
+3. every PARTIAL item identifies its missing responsibility;
+4. every GAP identifies the missing component or boundary;
+5. every BLOCKED item identifies its blocking dependency;
+6. existing conformant implementation is explicitly preserved;
+7. no implementation change has yet been applied.
+
+
+================================================================================
+# 22.7 Post-Inspection Decision
+================================================================================
+
+Once the inspection matrix is complete, the next step shall be to produce a
+minimal implementation change set.
+
+The change set shall:
+
+* address only confirmed A01 gaps;
+* preserve CONFORMANT capabilities;
+* resolve PARTIAL capabilities only where necessary;
+* explicitly account for BLOCKED dependencies;
+* avoid implementing A02, A03, or A04 prematurely.
+
+The implementation change set shall be reviewed against this matrix before
+application.
+
+
+
+================================================================================
+End of Document
+================================================================================
