@@ -2483,3 +2483,156 @@ def test_version_history_survives_new_session(
     finally:
         new_session.close()
         engine.dispose()
+
+
+
+def test_audit_history_survives_new_session(
+    monkeypatch,
+) -> None:
+    monkeypatch.setenv(
+        "DATABASE_URL",
+        "sqlite://",
+    )
+
+    import importlib
+
+    import app.persistence.database as database
+
+    database = importlib.reload(database)
+
+    from app.persistence.models.anchor_model import AnchorModel
+    from app.persistence.models.base import Base
+    from app.persistence.models.knowledge_category_model import (
+        KnowledgeCategoryModel,
+    )
+    from app.persistence.wiring import create_learning_object_service
+
+    from app.domain.entities.knowledge_statement import KnowledgeStatement
+    from app.persistence.transaction import transaction
+
+    engine = create_engine(
+        "sqlite://",
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
+    )
+
+    Base.metadata.create_all(engine)
+
+    SessionFactory = database.sessionmaker(
+        bind=engine,
+        class_=database.Session,
+        expire_on_commit=False,
+    )
+
+    original_session = SessionFactory()
+
+    try:
+        anchor_id = uuid4()
+        category_id = uuid4()
+
+        original_session.add(
+            AnchorModel(
+                id=anchor_id,
+                content="Test anchor",
+                type="text",
+                created_at=__import__("datetime").datetime.now(
+                    __import__("datetime").timezone.utc
+                ),
+            )
+        )
+
+        original_session.add(
+            KnowledgeCategoryModel(
+                id=category_id,
+                name="Test category",
+            )
+        )
+
+        original_session.commit()
+
+        service, _ = create_learning_object_service(
+            original_session,
+        )
+
+        learning_object = service.create_candidate(
+            anchor_id=anchor_id,
+            statement=KnowledgeStatement(
+                text="Audit history test",
+                language="en",
+            ),
+            category_id=category_id,
+            actor="creator",
+        )
+
+        original_session.commit()
+
+        service.submit_for_review(
+            learning_object.id,
+            actor="producer",
+        )
+
+        original_session.commit()
+
+        with transaction(original_session):
+            service.approve(
+                learning_object.id,
+                actor="reviewer",
+            )
+
+        original_session.commit()
+
+        learning_object_id = learning_object.id
+
+    finally:
+        original_session.close()
+
+    new_session = SessionFactory()
+
+    try:
+        reloaded_service, _ = create_learning_object_service(
+            new_session,
+        )
+
+        audits = reloaded_service.audit_repository.find_by_entity(
+            learning_object_id,
+        )
+
+        assert len(audits) == 3
+
+        assert all(
+            audit.entity_id == learning_object_id
+            for audit in audits
+        )
+
+        assert [
+            audit.event_type
+            for audit in audits
+        ] == [
+            "LearningObjectCreated",
+            "LearningObjectSubmitted",
+            "LearningObjectApproved",
+        ]
+
+        assert [
+            audit.actor
+            for audit in audits
+        ] == [
+            "creator",
+            "producer",
+            "reviewer",
+        ]
+
+        assert audits[0].metadata == {}
+        assert audits[1].metadata == {}
+        assert audits[2].metadata == {"version": 1}
+
+        assert audits[0].timestamp <= audits[1].timestamp
+        assert audits[1].timestamp <= audits[2].timestamp
+
+        assert audits[0].id != audits[1].id
+        assert audits[1].id != audits[2].id
+        assert audits[0].id != audits[2].id
+
+    finally:
+        new_session.close()
+        engine.dispose()
