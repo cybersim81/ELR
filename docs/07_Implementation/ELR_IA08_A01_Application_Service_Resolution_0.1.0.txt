@@ -60,7 +60,7 @@ document.
 
 
 ================================================================================
-# 2. Confirmed Finding
+# 2. Conformance Finding Under Inspection
 ================================================================================
 
 The current implementation contains a LearningObjectService and already
@@ -80,7 +80,8 @@ The current implementation does not yet provide the complete Application
 Service structure required by the Application Service Implementation
 Specification.
 
-The confirmed missing or incomplete areas are:
+The suspected missing or incomplete areas requiring implementation
+inspection are:
 
 * Change Proposal approval/rejection coordination;
 * Category Service boundary;
@@ -667,7 +668,7 @@ IA-08-A01
 
 Status:
 
-CONFIRMED — RESOLUTION NOT YET IMPLEMENTED
+CONFIRMED CONFORMANCE FINDING — RESOLUTION NOT YET IMPLEMENTED
 
 Current authorized action:
 
