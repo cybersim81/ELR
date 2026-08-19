@@ -1177,6 +1177,7 @@ def test_invalid_retire_rolls_back_state_and_audit(
     database = importlib.reload(database)
 
     from app.domain.entities.knowledge_statement import KnowledgeStatement
+    from app.application.errors import InvalidOperation
     from app.domain.entities.learning_object import (
         InvalidStateTransition,
         LearningObjectState,
@@ -1262,12 +1263,17 @@ def test_invalid_retire_rolls_back_state_and_audit(
 
         session.commit()
 
-        with pytest.raises(InvalidStateTransition):
+        with pytest.raises(InvalidOperation) as exc_info:
             with transaction(session):
                 service.retire(
                     learning_object.id,
                     actor="reviewer",
                 )
+
+        assert isinstance(
+            exc_info.value.__cause__,
+            InvalidStateTransition,
+        )
 
         session.expire_all()
 
