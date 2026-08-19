@@ -117,6 +117,46 @@ IA-08-A01
 Application Service implementation is incomplete relative to the ELR
 Application Service Implementation Specification.
 
+================================================================================
+# 3.1 A01 Finding Qualification
+================================================================================
+
+IA-08-A01 is a confirmed implementation-conformance finding because the
+current Application Layer does not yet provide the complete application
+responsibility surface required by the authoritative Application Service
+Implementation Specification.
+
+However, the individual responsibilities within that surface shall not be
+assumed to be independently absent.
+
+Each responsibility shall be inspected and classified as:
+
+* CONFORMANT;
+* PARTIAL;
+* GAP;
+* UNKNOWN;
+* BLOCKED.
+
+Therefore:
+
+Confirmed Finding
+    ->
+Responsibility-Level Inspection
+    ->
+Evidence-Based Classification
+    ->
+Minimal Resolution
+
+A responsibility shall not be implemented merely because its expected class,
+method, or module name is absent.
+
+Where an existing implementation satisfies the authoritative responsibility
+through a different but valid structure, that implementation shall be
+preserved.
+
+
+================================================================================
+
 IA-08-A02
 
 Transactional Event Record and the first Event Implementation layer are not
@@ -187,7 +227,7 @@ Application Services shall:
 * coordinate repositories;
 * coordinate versioning;
 * coordinate audit;
-* coordinate authorization where required;
+* consume the applicable identity and authorization context where required;
 * define transaction boundaries;
 * translate domain failures into application-level failures.
 
@@ -199,6 +239,15 @@ Application Services shall not:
 * contain PostgreSQL-specific logic;
 * introduce new domain semantics;
 * independently decide Review or Lifecycle semantics.
+
+The Application Layer may consume an authorization decision or Identity
+Context provided by the Security boundary.
+
+The Application Layer must not independently implement or redefine the
+Security and Authorization model.
+
+The Security Layer remains responsible for authentication and authorization
+semantics according to the authoritative Security Implementation Specification.
 
 
 ## 4.4 Invariants
