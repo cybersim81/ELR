@@ -244,83 +244,99 @@ The persistence test suite verifies:
 * atomic knowledge update persistence;
 * multi-Version history preservation.
 
-Current verification:
-
-`70 passed`
-
-Checkpoint:
-
-`b00d5c7`
-
 E2E-07 is closed.
+
+Latest downstream verification:
+
+`74 passed`
+
+Latest checkpoint:
+
+`d679299`
 
 ---
 
 ## E2E-08 — Persistent Reload
 
-Status: NEXT
+Status: VERIFIED
 
 Objective:
 
 Demonstrate that a LearningObject persisted through the production SQLAlchemy repositories can be reconstructed correctly from a newly created database session.
 
-Required boundary:
+Verified boundary:
 
 `Database → New Session → Repository → Reconstructed Aggregate`
 
-The test MUST:
+The integration test verifies:
 
-1. create and persist a LearningObject;
-2. commit the transaction;
-3. close the original session;
-4. create a new independent session;
-5. reconstruct the LearningObject through the concrete repository;
-6. verify identity and aggregate state;
-7. verify persisted KnowledgeStatement data;
-8. verify Anchor and KnowledgeCategory references.
+1. LearningObject creation and persistence;
+2. transaction commit;
+3. closure of the original session;
+4. creation of a new independent session;
+5. reconstruction through the concrete repository;
+6. identity and aggregate state;
+7. persisted KnowledgeStatement data;
+8. Anchor and KnowledgeCategory references.
 
-E2E-08 remains open until the new-session reload behavior is demonstrated by an integration test.
+E2E-08 is closed and verified.
+
+Checkpoint:
+
+`9357ea3`
+
+Verification result:
+
+`71 passed`
 
 ---
 
 ## E2E-09 — Version History Recovery
 
-Status: PENDING
+Status: VERIFIED
 
 Objective:
 
 Demonstrate that immutable Version history survives session reload and can be recovered from persistent storage in the correct order.
 
-Required behavior:
+Verified behavior:
 
 `Persist Versions → Close Session → New Session → Recover Version History`
 
-The recovered history MUST preserve:
+The integration test verifies:
 
 * LearningObject ownership;
 * Version identity;
 * Version numbers;
 * snapshot contents;
 * ascending Version order;
-* immutability of historical snapshots.
+* preservation of historical snapshots.
 
-E2E-09 starts after E2E-08 is complete.
+E2E-09 is closed and verified.
+
+Checkpoint:
+
+`55340dd`
+
+Verification result:
+
+`72 passed`
 
 ---
 
 ## E2E-10 — Audit History Recovery
 
-Status: PENDING
+Status: VERIFIED
 
 Objective:
 
 Demonstrate that operational Audit history survives session reload and can be recovered from persistent storage in deterministic order.
 
-Required behavior:
+Verified behavior:
 
 `Persist Audit Records → Close Session → New Session → Recover Audit History`
 
-The recovered audit history MUST preserve:
+The integration test verifies:
 
 * entity ownership;
 * event type;
@@ -328,25 +344,33 @@ The recovered audit history MUST preserve:
 * metadata;
 * chronological ordering.
 
-Audit history remains operational history and MUST remain distinct from immutable Version history.
+Audit history remains operational history and remains distinct from immutable Version history.
 
-E2E-10 starts after E2E-09 is complete.
+E2E-10 is closed and verified.
+
+Checkpoint:
+
+`90f2615`
+
+Verification result:
+
+`73 passed`
 
 ---
 
 ## E2E-11 — Persistent End-to-End Test
 
-Status: PENDING
+Status: VERIFIED
 
 Objective:
 
-Demonstrate the complete persistent LearningObject lifecycle across a session boundary.
+Demonstrate the complete persistent LearningObject lifecycle across session boundaries.
 
-Required lifecycle:
+Verified lifecycle:
 
 `Candidate → Proposed → Active → Retired`
 
-The persistent flow MUST demonstrate:
+The integration test verifies:
 
 * LearningObject creation;
 * persistence;
@@ -358,35 +382,51 @@ The persistent flow MUST demonstrate:
 * Audit history recovery;
 * final persisted state.
 
-The test MUST exercise the concrete production persistence path rather than in-memory repositories.
+The test exercises the concrete production persistence path rather than in-memory repositories.
 
-E2E-11 starts after E2E-08, E2E-09 and E2E-10 are complete.
+E2E-11 is closed and verified.
+
+Checkpoint:
+
+`d679299`
+
+Verification result:
+
+`74 passed`
 
 ---
 
 ## E2E-GATE-01 — Persistent LearningObject Lifecycle
 
-Status: PENDING
+Status: VERIFIED
 
 Gate objective:
 
 Close the persistent end-to-end LearningObject lifecycle.
 
-Prerequisites:
+Verified prerequisites:
 
-* E2E-07 Production Persistence — COMPLETE;
-* E2E-08 Persistent Reload — COMPLETE;
-* E2E-09 Version History Recovery — COMPLETE;
-* E2E-10 Audit History Recovery — COMPLETE;
-* E2E-11 Persistent End-to-End Test — COMPLETE.
+* E2E-07 Production Persistence — COMPLETE / VERIFIED;
+* E2E-08 Persistent Reload — VERIFIED;
+* E2E-09 Version History Recovery — VERIFIED;
+* E2E-10 Audit History Recovery — VERIFIED;
+* E2E-11 Persistent End-to-End Test — VERIFIED.
 
-Gate boundary:
+Verified gate boundary:
 
 `Application → Repository → Database → New Session → Reconstructed Aggregate → History`
 
-The gate MUST be supported by a green integration test suite.
+The gate is supported by the verified persistent integration tests.
 
-E2E-GATE-01 remains pending until all prerequisites are complete.
+Latest checkpoint:
+
+`d679299`
+
+Latest verification result:
+
+`74 passed`
+
+E2E-GATE-01 is closed.
 
 
 ---
