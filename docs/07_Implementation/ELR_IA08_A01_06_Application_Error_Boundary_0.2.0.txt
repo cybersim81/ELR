@@ -562,20 +562,40 @@ Finding:
 
 IA-08-A01.6 — Application Error Boundary
 
-Current Status:
-
-CONFIRMED GAP
-
-Implementation Status:
-
-NOT YET IMPLEMENTED
-
-
-Successful implementation shall change the finding status to:
+Status:
 
 RESOLVED
 
-only after the acceptance criteria and regression requirements are verified.
+Implementation Status:
+
+IMPLEMENTED AND VERIFIED
+
+
+Verification Evidence:
+
+* centralized Application error taxonomy implemented;
+* EntityNotFound implemented;
+* service-local LearningObjectNotFound removed;
+* InvalidStateTransition translated into InvalidOperation;
+* original Domain exception preserved through __cause__;
+* no catch-all exception translation introduced;
+* focused A01.6 tests pass;
+* complete pytest suite passes with 79 tests;
+* E2E-GATE-01 is already VERIFIED / CLOSED in the Bootstrap End-to-End
+  Gap Map.
+
+
+Verification Result:
+
+The Application Layer now provides the required stable error boundary for
+the verified A01.6 cases without changing Domain lifecycle semantics,
+repository contracts, persistence behavior, or successful Application Service
+behavior.
+
+
+================================================================================
+End of Document
+================================================================================
 
 
 ================================================================================
