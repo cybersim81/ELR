@@ -400,7 +400,7 @@ IA-07 is closed.
 ---
 
 ================================================================================
-# IA-08 — Implementation Conformance
+# Phase IA-08 — Implementation Conformance
 ================================================================================
 
 Status:
@@ -457,7 +457,21 @@ confirms the actual implementation gap.
 
 `IMPLEMENTATION CONFORMANCE`
 
-Status: `PENDING`
+Status: `IN PROGRESS`
+
+The gate remains open until all applicable IA-08-A01 responsibilities have
+received a verified disposition.
+
+A01.6 — Application Error Boundary is already RESOLVED / VERIFIED and is not
+a remaining gate blocker.
+
+Remaining A01 responsibilities:
+
+* A01.2 — BLOCKED;
+* A01.3 — PARTIAL;
+* A01.4 — PARTIAL;
+* A01.5 — PARTIAL;
+* A01.7 — PARTIAL.
 
 ---
 
