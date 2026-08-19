@@ -373,3 +373,19 @@ def test_update_knowledge_invalid_state_raises_invalid_operation():
         exc_info.value.__cause__,
         InvalidStateTransition,
     )
+
+def test_retire_invalid_state_raises_invalid_operation():
+    service = create_service()
+
+    learning_object = create_candidate(service)
+
+    with pytest.raises(InvalidOperation) as exc_info:
+        service.retire(
+            learning_object.id,
+            actor="test-user",
+        )
+
+    assert isinstance(
+        exc_info.value.__cause__,
+        InvalidStateTransition,
+    )
