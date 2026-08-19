@@ -1,83 +1,77 @@
 # 07_Session_Prompt.txt
 
-## ELR Session Bootstrap Prompt
+================================================================================
+# ELR — Session Prompt
+================================================================================
 
-### Session Entry Rule
+This document is the operational entry point for any new implementation
+session in the ELR repository.
 
-You are resuming work on the ELR repository.
+It provides the minimum authoritative context required to resume work without
+reconstructing the project state from chat history.
 
-Before performing analysis, proposing implementation changes, modifying documents, modifying code, or changing the roadmap, you MUST reconstruct the current project state from the complete Bootstrap Pack.
+The session must treat the repository contents, the normative corpus, and the
+implementation documentation as the authoritative sources of truth.
 
-The Bootstrap Pack is located at:
+Chat history is contextual only and must not override repository evidence or
+the normative corpus.
 
-`docs/00_Bootstrap/`
 
-### Mandatory Pack Read
+================================================================================
+## Session Operating Rules
+================================================================================
 
-Read ALL documents in `docs/00_Bootstrap/` in the following order:
+1. Inspect before modifying.
 
-1. `00_Bootstrap_Pack_Index.txt`
-2. `01_Normative_Baseline_State.txt`
-3. `02_Implementation_Baseline_Inventory.txt`
-4. `03_Implementation_Finding_Register.txt`
-5. `04_End_to_End_Gap_Map.txt`
-6. `05_Implementation_Alignment_Roadmap.txt`
-7. `06_Session_Continuity_State.txt`
-8. Read this document again after the preceding documents have been loaded.
+2. Do not infer implementation state from documentation alone when repository
+   evidence can be inspected directly.
 
-Do not assume that the previous conversational session is available.
+3. Do not reopen a responsibility already marked RESOLVED / VERIFIED unless
+   new authoritative or repository evidence demonstrates a regression,
+   contradiction, or previously missed gap.
 
-Do not infer missing state from memory.
+4. Do not replace historical checkpoints with newer implementation
+   verification results. Historical checkpoints must remain identifiable as
+   historical.
 
-The Bootstrap Pack is the session continuity source.
+5. Every implementation change must be followed by focused verification and
+   complete test-suite verification where applicable.
 
----
+6. Implementation documentation must remain synchronized with verified
+   repository state.
 
-### Repository Authority
+7. Work must proceed through controlled, evidence-based increments.
 
-The Bootstrap Pack is a continuity and handoff artifact.
+8. When a gap is identified, distinguish clearly between:
+   - missing implementation;
+   - partial implementation;
+   - blocked implementation;
+   - documentation-only inconsistency;
+   - already-resolved responsibility.
 
-It is NOT the architectural authority.
+9. Do not expand scope beyond the confirmed gap.
 
-For normative questions, consult the authoritative repository documents identified by the Pack, including the relevant:
+10. Preserve all previously verified E2E gates unless contradictory evidence
+    is found.
 
-* Specification Authority Matrix;
-* Architecture Consistency Matrix;
-* Architecture Decision Log;
-* Domain Model specifications;
-* Anchor specification;
-* Data Model specification;
-* Evidence specifications;
-* lifecycle specifications;
-* other applicable authoritative documents.
 
-If a Bootstrap Pack summary conflicts with an authoritative specification or ADR, STOP and resolve the conflict against the authoritative source before proceeding.
-
----
-
+================================================================================
 ### Current Project Position
+================================================================================
 
-The following state is already established:
-
-`M0.3.2 Specification Propagation → COMPLETE`
-
-`Implementation Baseline Inventory → COMPLETE`
-
-`E2E Gap Map → COMPLETE`
+The ELR implementation roadmap has completed the following stages:
 
 `IA-01 Domain Semantic Alignment → COMPLETE`
 
-`IA-02 Contract and Lifecycle Alignment → COMPLETE — 100%`
+`IA-02 Contract and Lifecycle Alignment → COMPLETE`
 
-`IA-03 Persistence Model → COMPLETE — 100%`
+`IA-03 Persistence Model → COMPLETE`
 
-`IA-04 Concrete Repository Layer → COMPLETE — 100%`
+`IA-04 Concrete Repository Layer → COMPLETE`
 
-`IA-05 Database Wiring → COMPLETE — 100%`
+`IA-05 Database Wiring → COMPLETE`
 
 `E2E-07 Production Persistence → COMPLETE — VERIFIED`
-
-`IA-06 Persistence Test Conformance → COMPLETE — 100%`
 
 `E2E-08 Persistent Reload → VERIFIED`
 
@@ -87,383 +81,308 @@ The following state is already established:
 
 `E2E-11 Persistent End-to-End Test → VERIFIED`
 
+`IA-06 Persistence Test Conformance → COMPLETE`
+
 `IA-07 / E2E-GATE-01 → COMPLETE — VERIFIED`
 
-`IA-08 Implementation Conformance → CURRENT — PENDING`
 
-Latest verified checkpoint:
+Historical E2E-GATE-01 checkpoint:
 
 `d679299`
 
-Latest verified test suite:
+Historical E2E-GATE-01 verification:
 
 `74 passed`
 
-### Current Implementation Characterization
 
-The repository currently contains:
+Current work package:
 
-* a domain/application implementation;
-* a tested LearningObject lifecycle;
-* KnowledgeStatement as an immutable aggregate member/value;
-* immutable LearningObject-centered Version history;
-* structured Version snapshots;
-* AuditRecord creation and persistence;
-* concrete production repositories;
-* SQLAlchemy persistence models;
-* production database/session wiring;
-* transaction boundaries;
-* persistent LearningObject state;
-* persistent Version state;
-* persistent AuditRecord state;
-* persistence integration tests.
+`IA-08 — Implementation Conformance`
 
-The verified production persistence boundary is:
+Status:
 
-`Domain → Application → Concrete Repository → Persistence Model → Database`
+`IN PROGRESS`
 
-The verified persistent reload boundary is:
 
-`Database → New Session → Repository → Reconstructed Aggregate`
+Current responsibility:
 
-Cross-session Version history recovery is verified.
+`IA-08-A01 — Application Service`
 
-Cross-session Audit history recovery is verified.
 
-The complete persistent end-to-end lifecycle is verified.
+Current responsibility disposition:
 
-The complete verified boundary is:
+`A01.2 — Review / Change Proposal — BLOCKED`
 
-`Application → Concrete Repository → Persistence Model → Database → New Session → Reconstructed Aggregate → Version History → Audit History`
+`A01.3 — Category Service — PARTIAL`
 
-The verified LearningObject lifecycle is:
+`A01.4 — Version Service — PARTIAL`
 
-`Candidate → Proposed → Active → Retired`
+`A01.5 — Audit Service — PARTIAL`
 
-The next implementation objective is:
+`A01.6 — Application Error Boundary — RESOLVED / VERIFIED`
 
-**IA-08 — IMPLEMENTATION CONFORMANCE**
+`A01.7 — Transaction Boundary — PARTIAL`
 
----
 
-### IA-01 Closure
+Latest A01.6 implementation verification:
 
-IA-01 — Domain Semantic Alignment is COMPLETE.
+`79 passed`
 
-The following findings are resolved:
 
-* `IA-001`
-* `IA-002`
-* `IA-003`
-* `IA-005`
-* `IA-010`
-* `IA-017`
-* `IA-018`
-* `IA-019`
+A01.6 must remain closed unless new authoritative or repository evidence
+demonstrates a regression, contradiction, or previously missed implementation
+gap.
 
-These findings MUST NOT be reopened merely because later persistence or infrastructure work remains incomplete.
 
-They may only be reopened if new repository evidence establishes a direct contradiction with the authoritative normative corpus.
-
----
-
+================================================================================
 ### Current Known Open Items
+================================================================================
 
-The remaining implementation findings are recorded in:
+The current implementation-conformance work is limited to:
 
-`03_Implementation_Finding_Register.txt`
+`IA-08-A01 — Application Service`
 
-The resolved implementation-alignment phases are:
 
-* IA-01 — Domain Semantic Alignment;
-* IA-02 — Contract and Lifecycle Alignment;
-* IA-03 — Persistence Model;
-* IA-04 — Concrete Repository Layer;
-* IA-05 — Database Wiring;
-* IA-06 — Persistence Test Conformance;
-* IA-07 — E2E-GATE-01.
+Known A01 responsibility states:
 
-E2E-07 through E2E-11 are complete and verified.
+`A01.2 — Review / Change Proposal`
 
-No remaining E2E persistence gap is currently open within E2E-GATE-01.
+Status:
 
-The current implementation-conformance work is:
+`BLOCKED`
 
-**IA-08 — IMPLEMENTATION CONFORMANCE**
+The responsibility remains blocked pending the authoritative conditions
+required for its implementation. No speculative implementation shall be
+introduced.
 
-Current verification:
 
-`74 passed`
+`A01.3 — Category Service`
 
-Checkpoint:
+Status:
 
-`d679299`
+`PARTIAL`
 
----
+The actual repository implementation must be inspected before defining the
+remaining implementation gap.
 
+
+`A01.4 — Version Service`
+
+Status:
+
+`PARTIAL`
+
+The actual repository implementation must be inspected before defining the
+remaining implementation gap.
+
+
+`A01.5 — Audit Service`
+
+Status:
+
+`PARTIAL`
+
+The actual repository implementation must be inspected before defining the
+remaining implementation gap.
+
+
+`A01.6 — Application Error Boundary`
+
+Status:
+
+`RESOLVED / VERIFIED`
+
+Verified implementation characteristics include:
+
+* centralized application error taxonomy;
+* EntityNotFound translation at the application boundary;
+* InvalidOperation translation at the application boundary;
+* preservation of the original domain exception through exception chaining;
+* absence of catch-all exception translation;
+* focused tests passing;
+* complete test suite passing with `79 passed`.
+
+A01.6 is not a current implementation gap and must not be reopened without
+contradictory authoritative or repository evidence.
+
+
+`A01.7 — Transaction Boundary`
+
+Status:
+
+`PARTIAL`
+
+The actual repository implementation must be inspected before defining the
+remaining implementation gap.
+
+
+Current implementation-conformance rule:
+
+Only confirmed repository deviations shall be converted into implementation
+work.
+
+No responsibility shall be marked COMPLETE merely because its intended
+behavior is documented.
+
+No responsibility shall be marked FAILED merely because its implementation
+has not yet been inspected.
+
+
+================================================================================
 ### Immediate Objective
+================================================================================
 
-Resume at:
+Continue the controlled resolution of:
 
-**IA-08 — IMPLEMENTATION CONFORMANCE**
+`IA-08 — Implementation Conformance`
 
-IA-01 through IA-07 are COMPLETE or VERIFIED.
 
-E2E-07 through E2E-11 are COMPLETE or VERIFIED.
+Current active finding:
 
-IA-07 / E2E-GATE-01 is COMPLETE and VERIFIED.
+`IA-08-A01 — Application Service`
 
-Current checkpoint:
+
+The immediate objective is to inspect the remaining non-resolved A01
+responsibilities and determine the next confirmed implementation gap.
+
+
+The inspection order shall be:
+
+1. A01.3 — Category Service
+2. A01.4 — Version Service
+3. A01.5 — Audit Service
+4. A01.7 — Transaction Boundary
+
+
+A01.2 remains BLOCKED and shall not be implemented speculatively.
+
+
+For each responsibility:
+
+1. inspect the authoritative normative requirements;
+2. inspect the actual repository implementation;
+3. compare the implementation against the normative requirements;
+4. identify only confirmed deviations;
+5. determine whether the responsibility is CONFORMANT, PARTIAL, BLOCKED,
+   or requires implementation work;
+6. implement only the confirmed gap;
+7. run focused tests;
+8. run the complete test suite;
+9. update the corresponding implementation documentation;
+10. update the continuity documentation when the controlled state changes.
+
+
+The already-resolved responsibility:
+
+`A01.6 — Application Error Boundary`
+
+must remain closed throughout this process.
+
+
+Historical E2E-GATE-01 evidence must remain unchanged:
+
+checkpoint:
 
 `d679299`
 
-Current verified test suite:
+verification:
 
 `74 passed`
 
-The immediate task is to compare the resulting implementation against the authoritative normative corpus and identify only confirmed implementation deviations.
 
-Do NOT restart IA-01, IA-02, IA-03, IA-04, IA-05, IA-06, IA-07, E2E-07, E2E-08, E2E-09, E2E-10, E2E-11, or E2E-GATE-01 unless new authoritative or repository evidence establishes a contradiction with their verified closure.
+Current A01.6 verification evidence:
 
-### Required Working Sequence
+`79 passed`
 
-Proceed in this order:
 
-1. Read the complete Bootstrap Pack.
-2. Reconcile the current state against the relevant authoritative documents.
-3. Confirm whether the recorded findings remain valid.
-4. Verify the current active roadmap item against repository evidence.
-5. Update affected implementation/specification documents as required.
-6. Update the Finding Register.
-7. Update the E2E Gap Map if the resolution changes an E2E dependency.
-8. Update the Roadmap if the gate position changes.
-9. Keep `06_Session_Continuity_State.txt` synchronized.
-10. Only then proceed to the next implementation gate.
+The next implementation decision must therefore be based on the repository
+inspection of the remaining A01 responsibilities, not on assumptions derived
+from the previous A01.6 work.
 
-The current active implementation objective is:
 
-**IA-08 — IMPLEMENTATION CONFORMANCE**
-
-Documentation files must be synchronized one at a time:
-
-* propose one file;
-* wait for user application;
-* verify it;
-* only then proceed to the next file.
-
-Do not advance a roadmap item based solely on an intended change or a proposed change block.
-
----
-
-### Change Proposal and Verification Method
-
-Repository changes MUST NOT be performed directly by the assistant.
-
-The assistant MUST use the following workflow for implementation and documentation changes:
-
-1. Inspect the current repository state.
-2. Reconcile the intended change against the authoritative normative sources.
-3. Explain the proposed change and its rationale.
-4. Provide the user with explicit, copyable change blocks containing:
-   * the target file path;
-   * the exact section or location to change;
-   * the replacement or insertion block;
-   * any constraints on what must NOT be changed.
-5. Wait for the user to apply the change.
-6. When the user requests a check, inspect the repository again.
-7. Do NOT modify the repository during verification.
-8. If the verification is positive:
-   * mark the corresponding change/finding as verified;
-   * report the current completion percentage of the active roadmap step;
-   * only then proceed to the next file or implementation item.
-9. If the verification is negative:
-   * identify the discrepancy;
-   * do not advance the roadmap percentage;
-   * provide a corrected copyable block;
-   * wait for the user to apply it and request another verification.
-10. Work through documentation files one at a time when synchronizing the Bootstrap Pack:
-    * propose one file;
-    * wait for application;
-    * verify it;
-    * only then proceed to the next file.
-
-Completion percentages MUST only increase after a positive repository verification.
-
-The assistant MUST NOT claim that a change has been applied merely because a copyable block was provided.
-
-The assistant MUST distinguish between:
-* normative verification;
-* static repository verification;
-* test execution verification.
-
-If tests have not actually been executed, the assistant MUST NOT claim that the test suite passed.
-
----
-
-### Lifecycle Rule
-
-The normative LearningObject lifecycle is:
-
-`Candidate → Proposed → Active → Retired`
-
-`Reviewed`, `Approved`, and `Rejected` are Change Proposal review decisions.
-
-They are NOT LearningObject lifecycle states.
-
-Do not introduce lifecycle states representing review decisions or modification events.
-
----
-
-### Versioning Rule
-
-LearningObject is the primary unit of knowledge versioning.
-
-KnowledgeStatement is an aggregate member/value.
-
-Version is immutable and explicitly belongs to LearningObject through `learning_object_id`.
-
-Version history is distinct from operational Audit history.
-
-Audit records must not be used as a substitute for immutable Version history.
-
----
-
-### Persistence Rule
-
-Production persistence must preserve the semantic boundaries established by IA-01 and the contract/lifecycle boundaries established by IA-02.
-
-The following production persistence phases are already complete and verified:
-
-`Persistence Model → Concrete Repository → Database Integration`
-
-The verified production boundary is:
-
-`Application → Concrete Repository → Persistence Model → Database`
-
-The verified persistent boundary is:
-
-`Application → Concrete Repository → Persistence Model → Database → New Session → Reconstructed Aggregate`
-
-Persistent Version history recovery is verified by E2E-09.
-
-Persistent Audit history recovery is verified by E2E-10.
-
-The complete persistent end-to-end lifecycle is verified by E2E-11.
-
-IA-07 / E2E-GATE-01 is complete and verified.
-
-The current implementation objective is:
-
-**IA-08 — IMPLEMENTATION CONFORMANCE**
-
-Do not reopen completed persistence implementation phases or E2E gates without contradictory evidence.
-
----
-
-### End-to-End Objective
-
-The final implementation objective is to demonstrate:
-
-`Anchor`
-→ `LearningObject`
-→ `KnowledgeStatement`
-→ normative lifecycle
-→ immutable Version
-→ Audit
-→ persistent storage
-→ reload
-→ Version history
-→ Audit history
-
-without semantic loss or violation of established architectural boundaries.
-
----
-
-### Continuity Rule
-
-This session MUST preserve continuity.
-
-Do not restart completed inventory work merely because a new session has begun.
-
-Do not recreate completed IA-01 work.
-
-Do not create parallel interpretations of established architectural decisions.
-
-When new evidence changes the state, update the Bootstrap Pack so the next session receives the corrected state.
-
----
-
-### Session Completion Rule
-
-Before ending the session:
-
-1. update the current gate;
-2. update finding statuses;
-3. update E2E status;
-4. update roadmap position;
-5. update `06_Session_Continuity_State.txt`;
-6. ensure `00_Bootstrap_Pack_Index.txt` correctly describes the Pack;
-7. ensure `04_End_to_End_Gap_Map.txt` reflects the current E2E position;
-8. ensure `05_Implementation_Alignment_Roadmap.txt` reflects the current roadmap position;
-9. ensure this Session Prompt references the complete Pack;
-10. record the latest verified checkpoint and test result when applicable;
-11. report the current completion percentage of the active roadmap step only after positive repository verification.
-
-Bootstrap documentation updates are performed one document at a time.
-
-A document is considered synchronized only after:
-
-* the user applies the proposed change;
-* the repository is re-read;
-* the resulting state is positively verified.
-
-The next session must be able to begin from `07_Session_Prompt.txt` and discover the complete current Bootstrap Pack without relying on prior conversational context.
-
----
-
-### Legacy Bootstrap Context
-
-The current Bootstrap Pack is the successor to the previous ELR bootstrap and continuity mechanism.
-
-For lineage and historical context, the previous bootstrap set consisted of:
-
-* `docs/00_Current_Architecture/ELR Architectural Work State - Handoff 6.4.0.txt`
-* `docs/00_Current_Architecture/ELR Continuity Package 2.4.0.txt`
-* `docs/00_Current_Architecture/ELR Implementation Baseline Assessment 1.0.0.txt`
-* `docs/00_Current_Architecture/ELR Implementation Status 1.0.0.txt`
-
-These documents remain in the repository as historical bootstrap material.
-
-Do NOT treat them as the current session state.
-
-The current session state is defined by the complete:
-
-`docs/00_Bootstrap/`
-
-pack.
-
-If historical lineage becomes relevant, consult the legacy documents after the current Bootstrap Pack has been read and only when required to resolve a specific historical question.
-
-Do not allow historical bootstrap state to silently override the current consolidated state or any authoritative specification.
-
----
-
+================================================================================
 ### Final Resume Instruction
+================================================================================
 
-**READ THE COMPLETE `docs/00_Bootstrap/` PACK FIRST.**
+Resume the ELR implementation work at:
 
-**VERIFY THE CURRENT REPOSITORY STATE AGAINST THE PACK AND AUTHORITATIVE SOURCES.**
+`IA-08 — Implementation Conformance`
 
-**THEN RESUME AT IA-08 — IMPLEMENTATION CONFORMANCE.**
 
-**IA-01 THROUGH IA-07 ARE COMPLETE OR VERIFIED.**
+Current active finding:
 
-**E2E-07 THROUGH E2E-11 ARE COMPLETE OR VERIFIED.**
+`IA-08-A01 — Application Service`
 
-**IA-07 / E2E-GATE-01 IS COMPLETE AND VERIFIED.**
 
-**CHECKPOINT: `d679299`**
+Current resolved responsibility:
 
-**VERIFIED TEST SUITE: `74 passed`**
+`A01.6 — Application Error Boundary — RESOLVED / VERIFIED`
 
-**DO NOT RESTART COMPLETED WORK WITHOUT CONTRADICTORY EVIDENCE.**
+
+Current remaining responsibility states:
+
+`A01.2 — BLOCKED`
+
+`A01.3 — PARTIAL`
+
+`A01.4 — PARTIAL`
+
+`A01.5 — PARTIAL`
+
+`A01.7 — PARTIAL`
+
+
+The next session must not reopen A01.6 unless new authoritative or
+repository evidence demonstrates a regression, contradiction, or previously
+missed implementation gap.
+
+
+The next controlled action is:
+
+1. inspect A01.3 — Category Service;
+2. verify the normative requirement;
+3. inspect the repository implementation;
+4. determine the actual conformance state;
+5. identify only confirmed implementation gaps;
+6. implement only the confirmed gap, if one exists;
+7. run focused verification;
+8. run the complete test suite;
+9. update the corresponding implementation documentation;
+10. update session-continuity documentation if the controlled state changes.
+
+
+If A01.3 is found conformant, proceed to A01.4 using the same controlled
+method.
+
+If A01.3 is found partial, define the smallest confirmed implementation gap
+before making any change.
+
+Do not infer missing behavior solely from the responsibility name.
+
+Do not introduce speculative abstractions.
+
+Do not modify unrelated responsibilities.
+
+Do not replace historical E2E-GATE-01 evidence.
+
+
+Historical E2E-GATE-01 checkpoint:
+
+`d679299`
+
+Historical E2E-GATE-01 verification:
+
+`74 passed`
+
+
+Latest A01.6 implementation verification:
+
+`79 passed`
+
+
+The implementation process remains:
+
+`inspect → identify gap → implement → focused test → full test suite → update documentation → verify → next responsibility`
+
+
+================================================================================
