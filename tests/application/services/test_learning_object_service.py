@@ -328,6 +328,11 @@ def test_submit_for_review_invalid_state_raises_invalid_operation():
 
     learning_object = create_candidate(service)
 
+    service.submit_for_review(
+        learning_object.id,
+        actor="test-user",
+    )
+
     with pytest.raises(InvalidOperation) as exc_info:
         service.submit_for_review(
             learning_object.id,
