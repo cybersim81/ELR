@@ -326,17 +326,35 @@ At the end of the next session, this document MUST be updated if any of the foll
 
 The Bootstrap Pack MUST remain internally consistent after such an update.
 
-The current verified checkpoint is:
+The historical E2E-GATE-01 checkpoint remains:
 
-`d679299`
+d679299
 
-The current verified test state is:
+The historical E2E-GATE-01 verification result remains:
 
-`74 passed`
+74 passed
+
+The latest A01.6 implementation verification result is:
+
+79 passed
+
+The current working package is:
+
+IA-08 — Implementation Conformance
+
+The current responsibility is:
+
+IA-08-A01 — Application Service
+
+A01.6 — Application Error Boundary is:
+
+RESOLVED / VERIFIED
 
 ---
 
+================================================================================
 ## Frozen Resume Point
+================================================================================
 
 **RESUME AT: IA-08 IMPLEMENTATION CONFORMANCE**
 
@@ -366,8 +384,18 @@ The current verified test state is:
 
 **IA-07 / E2E-GATE-01: COMPLETE — VERIFIED**
 
-**TEST SUITE: 74 PASSED**
+**HISTORICAL E2E TEST SUITE: 74 PASSED**
 
-**GIT CHECKPOINT: d679299**
+**HISTORICAL E2E GIT CHECKPOINT: d679299**
 
-**IA-08 IMPLEMENTATION CONFORMANCE: NEXT**
+**IA-08 IMPLEMENTATION CONFORMANCE: IN PROGRESS**
+
+**IA-08-A01 APPLICATION SERVICE: IN PROGRESS**
+
+**A01.6 APPLICATION ERROR BOUNDARY: RESOLVED — VERIFIED**
+
+**A01.6 CURRENT VERIFICATION: 79 PASSED**
+
+**REMAINING A01 RESPONSIBILITIES: A01.2 BLOCKED; A01.3 PARTIAL; A01.4 PARTIAL; A01.5 PARTIAL; A01.7 PARTIAL**
+
+**A01.6 MUST NOT BE REOPENED WITHOUT CONTRADICTORY AUTHORITATIVE OR REPOSITORY EVIDENCE**
