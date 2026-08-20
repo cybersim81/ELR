@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from uuid import UUID
-
 from app.domain.entities.knowledge_category import KnowledgeCategory
 from app.domain.repositories.category_repository import CategoryRepository
 
