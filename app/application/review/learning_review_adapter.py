@@ -8,6 +8,9 @@ from app.domain.entities.review_decision_trace import (
 from app.domain.repositories.change_proposal_repository import (
     ChangeProposalRepository,
 )
+from app.domain.repositories.knowledge_validation import (
+    KnowledgeValidation,
+)
 from app.domain.repositories.learning_review import LearningReview
 from app.domain.repositories.review_decision_trace_repository import (
     ReviewDecisionTraceRepository,
@@ -23,14 +26,13 @@ class LearningReviewAdapter(LearningReview):
         2. Knowledge Validation
         3. Repository Consistency Check
         4. Decision
-
-    This implementation currently establishes the first stage explicitly.
     """
 
     def __init__(
         self,
         change_proposal_repository: ChangeProposalRepository,
         review_decision_trace_repository: ReviewDecisionTraceRepository,
+        knowledge_validation: KnowledgeValidation,
         reviewer: str = "learning-review",
     ):
         self.change_proposal_repository = (
@@ -39,6 +41,7 @@ class LearningReviewAdapter(LearningReview):
         self.review_decision_trace_repository = (
             review_decision_trace_repository
         )
+        self.knowledge_validation = knowledge_validation
         self.reviewer = reviewer
 
     def review(
@@ -73,7 +76,19 @@ class LearningReviewAdapter(LearningReview):
                 validation_error,
             )
 
-        return self._evaluate_valid_proposal(proposal)
+        knowledge_valid, rationale = (
+            self.knowledge_validation.validate(proposal)
+        )
+
+        if not knowledge_valid:
+            return (
+                ReviewDecision.REJECT,
+                rationale,
+            )
+
+        return self._evaluate_after_knowledge_validation(
+            proposal
+        )
 
     def _validate_proposal(
         self,
@@ -90,11 +105,11 @@ class LearningReviewAdapter(LearningReview):
 
         return None
 
-    def _evaluate_valid_proposal(
+    def _evaluate_after_knowledge_validation(
         self,
         proposal: ChangeProposal,
     ) -> tuple[ReviewDecision, str]:
         raise NotImplementedError(
-            "Knowledge Validation and Repository Consistency "
-            "Check are not implemented yet."
+            "Repository Consistency Check and final "
+            "Review Decision are not implemented yet."
         )
