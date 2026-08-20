@@ -2,7 +2,10 @@ from uuid import UUID
 
 from sqlalchemy.orm import Session
 
-from app.domain.entities.change_proposal import ChangeProposal
+from app.domain.entities.change_proposal import (
+    ChangeProposal,
+    ChangeType,
+)
 from app.domain.repositories.change_proposal_repository import (
     ChangeProposalRepository,
 )
