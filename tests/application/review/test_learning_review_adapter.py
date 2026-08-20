@@ -47,6 +47,19 @@ class InMemoryReviewDecisionTraceRepository:
             if trace.proposal_id == proposal_id
         ]
 
+class InMemoryKnowledgeValidation:
+    def __init__(
+        self,
+        valid=True,
+        rationale="Knowledge validation passed.",
+    ):
+        self.valid = valid
+        self.rationale = rationale
+        self.proposals = []
+
+    def validate(self, proposal):
+        self.proposals.append(proposal)
+        return self.valid, self.rationale
 
 def create_adapter():
     proposal_repository = InMemoryChangeProposalRepository()
