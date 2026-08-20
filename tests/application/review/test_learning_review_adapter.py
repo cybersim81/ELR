@@ -61,6 +61,20 @@ class InMemoryKnowledgeValidation:
         self.proposals.append(proposal)
         return self.valid, self.rationale
 
+class InMemoryRepositoryConsistency:
+    def __init__(
+        self,
+        consistent=True,
+        rationale="Repository consistency check passed.",
+    ):
+        self.consistent = consistent
+        self.rationale = rationale
+        self.proposals = []
+
+    def check(self, proposal):
+        self.proposals.append(proposal)
+        return self.consistent, self.rationale
+
 def create_adapter(
     knowledge_validation=None,
     repository_consistency=None,
