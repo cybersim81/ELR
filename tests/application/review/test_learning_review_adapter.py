@@ -187,17 +187,17 @@ def test_review_rejects_proposal_without_change_evidence():
 
 
 def test_review_persists_proposal_before_evaluation():
-    adapter, proposals, _ = create_adapter()
+    adapter, proposals, traces = create_adapter()
 
     proposal = create_valid_proposal()
 
-    with pytest.raises(
-        NotImplementedError,
-        match="Final Review Decision",
-    ):
-        adapter.review(proposal)
+    trace = adapter.review(proposal)
+
+    assert trace.decision is ReviewDecision.APPROVE
+    assert trace.rationale == "Review approved."
 
     assert proposals.get_by_id(proposal.id) is proposal
+    assert traces.get_by_id(trace.id) is trace
 
 def test_review_rejects_proposal_when_knowledge_validation_fails():
     knowledge_validation = InMemoryKnowledgeValidation(
@@ -226,20 +226,22 @@ def test_review_proceeds_after_successful_knowledge_validation():
         rationale="Knowledge validation passed.",
     )
 
-    adapter, proposal_repository, _ = create_adapter(
-        knowledge_validation
+    adapter, proposal_repository, trace_repository = (
+        create_adapter(
+            knowledge_validation=knowledge_validation,
+        )
     )
 
     proposal = create_valid_proposal()
 
-    with pytest.raises(
-        NotImplementedError,
-        match="Final Review Decision",
-    ):
-        adapter.review(proposal)
+    trace = adapter.review(proposal)
+
+    assert trace.decision is ReviewDecision.APPROVE
+    assert trace.rationale == "Review approved."
 
     assert knowledge_validation.proposals == [proposal]
     assert proposal_repository.get_by_id(proposal.id) is proposal
+    assert trace_repository.get_by_id(trace.id) is trace
 
 
 def test_review_rejects_proposal_when_repository_consistency_fails():
