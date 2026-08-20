@@ -174,7 +174,7 @@ def test_review_persists_proposal_before_evaluation():
 
     with pytest.raises(
         NotImplementedError,
-        match="Repository Consistency Check",
+        match="Final Review Decision",
     ):
         adapter.review(proposal)
 
@@ -215,7 +215,7 @@ def test_review_proceeds_after_successful_knowledge_validation():
 
     with pytest.raises(
         NotImplementedError,
-        match="Repository Consistency Check",
+        match="Final Review Decision",
     ):
         adapter.review(proposal)
 
