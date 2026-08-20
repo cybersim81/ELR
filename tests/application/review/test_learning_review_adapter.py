@@ -155,7 +155,7 @@ def test_review_persists_proposal_before_evaluation():
 
     with pytest.raises(
         NotImplementedError,
-        match="Knowledge Validation",
+        match="Repository Consistency Check",
     ):
         adapter.review(proposal)
 
