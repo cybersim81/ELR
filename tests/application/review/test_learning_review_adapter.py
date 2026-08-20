@@ -63,6 +63,7 @@ class InMemoryKnowledgeValidation:
 
 def create_adapter(
     knowledge_validation=None,
+    repository_consistency=None,
 ):
     proposal_repository = InMemoryChangeProposalRepository()
     trace_repository = InMemoryReviewDecisionTraceRepository()
@@ -70,10 +71,14 @@ def create_adapter(
     if knowledge_validation is None:
         knowledge_validation = InMemoryKnowledgeValidation()
 
+    if repository_consistency is None:
+        repository_consistency = InMemoryRepositoryConsistency()
+
     adapter = LearningReviewAdapter(
         change_proposal_repository=proposal_repository,
         review_decision_trace_repository=trace_repository,
         knowledge_validation=knowledge_validation,
+        repository_consistency=repository_consistency,
     )
 
     return (
