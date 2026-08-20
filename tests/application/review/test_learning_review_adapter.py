@@ -141,3 +141,29 @@ def test_review_persists_proposal_before_evaluation():
         adapter.review(proposal)
 
     assert proposals.get_by_id(proposal.id) is proposal
+
+def test_review_rejects_proposal_when_knowledge_validation_fails():
+    proposal_repository = InMemoryChangeProposalRepository()
+    trace_repository = InMemoryReviewDecisionTraceRepository()
+
+    knowledge_validation = InMemoryKnowledgeValidation(
+        valid=False,
+        rationale="Knowledge conflict detected.",
+    )
+
+    adapter = LearningReviewAdapter(
+        change_proposal_repository=proposal_repository,
+        review_decision_trace_repository=trace_repository,
+        knowledge_validation=knowledge_validation,
+    )
+
+    proposal = create_valid_proposal()
+
+    trace = adapter.review(proposal)
+
+    assert trace.decision is ReviewDecision.REJECT
+    assert trace.rationale == "Knowledge conflict detected."
+
+    assert knowledge_validation.proposals == [proposal]
+    assert proposal_repository.get_by_id(proposal.id) is proposal
+    assert trace_repository.get_by_id(trace.id) is trace
