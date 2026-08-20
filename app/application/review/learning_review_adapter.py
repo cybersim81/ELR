@@ -16,12 +16,15 @@ from app.domain.repositories.review_decision_trace_repository import (
 
 class LearningReviewAdapter(LearningReview):
     """
-    Concrete boundary for the Learning Review process.
+    Concrete Learning Review boundary.
 
-    The adapter owns orchestration and persistence of the resulting
-    ReviewDecisionTrace. The actual normative decision rule is kept
-    in _evaluate(), so it can be replaced with the specification-driven
-    Review semantics without changing the persistence boundary.
+    Review flow:
+        1. Proposal Validation
+        2. Knowledge Validation
+        3. Repository Consistency Check
+        4. Decision
+
+    This implementation currently establishes the first stage explicitly.
     """
 
     def __init__(
@@ -62,6 +65,36 @@ class LearningReviewAdapter(LearningReview):
         self,
         proposal: ChangeProposal,
     ) -> tuple[ReviewDecision, str]:
+        validation_error = self._validate_proposal(proposal)
+
+        if validation_error is not None:
+            return (
+                ReviewDecision.REJECT,
+                validation_error,
+            )
+
+        return self._evaluate_valid_proposal(proposal)
+
+    def _validate_proposal(
+        self,
+        proposal: ChangeProposal,
+    ) -> str | None:
+        if proposal.change_type is None:
+            return "Change Type is required."
+
+        if not proposal.change_payload:
+            return "Change Payload is required."
+
+        if not proposal.change_evidence:
+            return "Change Evidence is required."
+
+        return None
+
+    def _evaluate_valid_proposal(
+        self,
+        proposal: ChangeProposal,
+    ) -> tuple[ReviewDecision, str]:
         raise NotImplementedError(
-            "Normative Learning Review evaluation is not implemented yet."
+            "Knowledge Validation and Repository Consistency "
+            "Check are not implemented yet."
         )
