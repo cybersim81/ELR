@@ -56,7 +56,9 @@ def test_add_and_get_by_id_review_decision_trace():
         assert loaded.decision is ReviewDecision.APPROVE
         assert loaded.rationale == "Proposal is valid."
         assert loaded.reviewer == "learning-review"
-        assert loaded.created_at == trace.created_at
+        assert loaded.created_at == trace.created_at.replace(
+            tzinfo=None,
+        )
     finally:
         session.rollback()
         session.close()
