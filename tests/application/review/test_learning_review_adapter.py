@@ -75,6 +75,20 @@ class InMemoryRepositoryConsistency:
         self.proposals.append(proposal)
         return self.consistent, self.rationale
 
+class InMemoryReviewDecisionService:
+    def __init__(
+        self,
+        decision=ReviewDecision.APPROVE,
+        rationale="Review approved.",
+    ):
+        self.decision = decision
+        self.rationale = rationale
+        self.proposals = []
+
+    def decide(self, proposal):
+        self.proposals.append(proposal)
+        return self.decision, self.rationale
+
 def create_adapter(
     knowledge_validation=None,
     repository_consistency=None,
