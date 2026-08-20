@@ -790,7 +790,45 @@ Implementation gap remaining:
 * APPROVE / REJECT / REQUEST REVISION coordination;
 * integration with existing Learning Object lifecycle, versioning, persistence, and audit.
 
-A01.2 is therefore no longer blocked by missing normative semantics. Implementation may proceed after responsibility-level inspection establishes the concrete application/domain boundaries.
+A01.2 — Review / Change Proposal
+
+IMPLEMENTATION VERIFIED / RESOLVED
+
+Normative basis confirmed:
+
+* Knowledge Extraction Pipeline Specification 1.0.2;
+* Evidence Model Specification 1.0.1;
+* Learning Review Specification 1.0.0.
+
+The authoritative specifications define the Change Proposal, Change Evidence,
+Review decisions, and Review process semantics required by A01.2.
+
+Implementation verified:
+
+* Change Proposal representation is implemented;
+* Change Proposal persistence before evaluation is verified;
+* Review decision / decision trace representation is implemented;
+* Learning Review application boundary is implemented;
+* Knowledge Validation success and rejection paths are verified;
+* Repository Consistency success and rejection paths are verified;
+* APPROVE coordination is verified;
+* REJECT coordination is verified;
+* REQUEST REVISION coordination is verified;
+* ReviewDecisionTrace persistence is verified;
+* final review outcomes are exercised through the LearningReviewAdapter;
+* tests/application/review/test_learning_review_adapter.py contains the
+  corresponding verification coverage.
+
+Verification evidence:
+
+* 10 review-specific tests pass;
+* 121 tests pass in the full test suite.
+
+A01.2 is therefore considered IMPLEMENTATION VERIFIED and RESOLVED.
+
+The Application Service shall continue to coordinate Review outcomes and
+resulting domain operations. It shall not independently implement or redefine
+Review semantics.
 
 
 Current Active Finding:
@@ -803,18 +841,23 @@ Current Controlled Action:
 Continue responsibility-level inspection of the remaining non-resolved
 IA-08-A01 responsibilities.
 
+A01.2 — Review / Change Proposal is closed and shall not be reopened unless
+new contradictory evidence is discovered.
+
 The next implementation action shall be selected only after focused
-inspection confirms the required capability is missing or incomplete.
+inspection confirms that the required capability is missing or incomplete.
 
 
 The following responsibilities shall not be reopened as part of the next
 change:
 
+A01.2 — Review / Change Proposal
+
 A01.6 — Application Error Boundary
 
 
-A01.6 has been implemented and verified and shall remain closed unless new
-contradictory evidence is discovered.
+A01.2 and A01.6 have been implemented and verified and shall remain closed
+unless new contradictory evidence is discovered.
 
 
 The resolution process shall not proceed to IA-08-A02 until IA-08-A01 has
