@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from sqlalchemy import DateTime, JSON, String, Text
+from sqlalchemy import JSON, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.persistence.models.base import Base
@@ -32,7 +32,12 @@ class ChangeProposalModel(Base):
         nullable=False,
     )
 
-    created_at: Mapped[object] = mapped_column(
-        DateTime(timezone=True),
+    change_evidence: Mapped[list] = mapped_column(
+        JSON,
+        nullable=False,
+    )
+
+    change_metadata: Mapped[dict] = mapped_column(
+        JSON,
         nullable=False,
     )
