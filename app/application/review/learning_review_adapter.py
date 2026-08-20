@@ -12,6 +12,9 @@ from app.domain.repositories.knowledge_validation import (
     KnowledgeValidation,
 )
 from app.domain.repositories.learning_review import LearningReview
+from app.domain.repositories.repository_consistency import (
+    RepositoryConsistency,
+)
 from app.domain.repositories.review_decision_trace_repository import (
     ReviewDecisionTraceRepository,
 )
@@ -33,6 +36,7 @@ class LearningReviewAdapter(LearningReview):
         change_proposal_repository: ChangeProposalRepository,
         review_decision_trace_repository: ReviewDecisionTraceRepository,
         knowledge_validation: KnowledgeValidation,
+        repository_consistency: RepositoryConsistency,
         reviewer: str = "learning-review",
     ):
         self.change_proposal_repository = (
@@ -42,6 +46,7 @@ class LearningReviewAdapter(LearningReview):
             review_decision_trace_repository
         )
         self.knowledge_validation = knowledge_validation
+        self.repository_consistency = repository_consistency
         self.reviewer = reviewer
 
     def review(
@@ -86,9 +91,17 @@ class LearningReviewAdapter(LearningReview):
                 rationale,
             )
 
-        return self._evaluate_after_knowledge_validation(
-            proposal
+        repository_consistent, rationale = (
+            self.repository_consistency.check(proposal)
         )
+
+        if not repository_consistent:
+            return (
+                ReviewDecision.REJECT,
+                rationale,
+            )
+
+        return self._make_final_decision(proposal)
 
     def _validate_proposal(
         self,
@@ -105,11 +118,10 @@ class LearningReviewAdapter(LearningReview):
 
         return None
 
-    def _evaluate_after_knowledge_validation(
+    def _make_final_decision(
         self,
         proposal: ChangeProposal,
     ) -> tuple[ReviewDecision, str]:
         raise NotImplementedError(
-            "Repository Consistency Check and final "
-            "Review Decision are not implemented yet."
+            "Final Review Decision is not implemented yet."
         )
