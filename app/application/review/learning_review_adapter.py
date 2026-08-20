@@ -15,6 +15,9 @@ from app.domain.repositories.learning_review import LearningReview
 from app.domain.repositories.repository_consistency import (
     RepositoryConsistency,
 )
+from app.domain.repositories.review_decision import (
+    ReviewDecisionService,
+)
 from app.domain.repositories.review_decision_trace_repository import (
     ReviewDecisionTraceRepository,
 )
@@ -28,7 +31,7 @@ class LearningReviewAdapter(LearningReview):
         1. Proposal Validation
         2. Knowledge Validation
         3. Repository Consistency Check
-        4. Decision
+        4. Final Review Decision
     """
 
     def __init__(
@@ -37,6 +40,7 @@ class LearningReviewAdapter(LearningReview):
         review_decision_trace_repository: ReviewDecisionTraceRepository,
         knowledge_validation: KnowledgeValidation,
         repository_consistency: RepositoryConsistency,
+        review_decision_service: ReviewDecisionService,
         reviewer: str = "learning-review",
     ):
         self.change_proposal_repository = (
@@ -47,6 +51,7 @@ class LearningReviewAdapter(LearningReview):
         )
         self.knowledge_validation = knowledge_validation
         self.repository_consistency = repository_consistency
+        self.review_decision_service = review_decision_service
         self.reviewer = reviewer
 
     def review(
@@ -101,7 +106,7 @@ class LearningReviewAdapter(LearningReview):
                 rationale,
             )
 
-        return self._make_final_decision(proposal)
+        return self.review_decision_service.decide(proposal)
 
     def _validate_proposal(
         self,
@@ -117,11 +122,3 @@ class LearningReviewAdapter(LearningReview):
             return "Change Evidence is required."
 
         return None
-
-    def _make_final_decision(
-        self,
-        proposal: ChangeProposal,
-    ) -> tuple[ReviewDecision, str]:
-        raise NotImplementedError(
-            "Final Review Decision is not implemented yet."
-        )
