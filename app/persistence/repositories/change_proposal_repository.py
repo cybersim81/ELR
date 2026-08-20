@@ -33,7 +33,8 @@ class SQLAlchemyChangeProposalRepository(
             change_type=proposal.change_type.value,
             change_payload=proposal.change_payload,
             proposal_rationale=proposal.proposal_rationale,
-            created_at=proposal.created_at,
+            change_evidence=list(proposal.change_evidence),
+            change_metadata=proposal.change_metadata,
         )
 
         self.session.add(model)
@@ -55,5 +56,6 @@ class SQLAlchemyChangeProposalRepository(
             change_type=ChangeType(model.change_type),
             change_payload=model.change_payload,
             proposal_rationale=model.proposal_rationale,
-            created_at=model.created_at,
+            change_evidence=tuple(model.change_evidence),
+            change_metadata=model.change_metadata,
         )
