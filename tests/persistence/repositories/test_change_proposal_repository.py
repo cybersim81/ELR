@@ -1,15 +1,28 @@
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
 from app.domain.entities.change_proposal import (
     ChangeProposal,
     ChangeType,
 )
-from app.persistence import database
+from app.persistence.models.base import Base
 from app.persistence.repositories.change_proposal_repository import (
     SQLAlchemyChangeProposalRepository,
 )
 
 
 def test_add_persists_change_proposal():
-    session = database.SessionFactory()
+    engine = create_engine("sqlite:///:memory:")
+
+    Base.metadata.create_all(engine)
+
+    SessionFactory = sessionmaker(
+        bind=engine,
+        autoflush=False,
+        autocommit=False,
+    )
+
+    session = SessionFactory()
 
     try:
         proposal = ChangeProposal(
@@ -35,3 +48,4 @@ def test_add_persists_change_proposal():
     finally:
         session.rollback()
         session.close()
+        engine.dispose()
