@@ -49,7 +49,7 @@ class SQLAlchemyChangeProposalRepository(
 
         return ChangeProposal(
             id=model.id,
-            change_type=model.change_type,
+            change_type=ChangeType(model.change_type),
             change_payload=model.change_payload,
             proposal_rationale=model.proposal_rationale,
             created_at=model.created_at,
