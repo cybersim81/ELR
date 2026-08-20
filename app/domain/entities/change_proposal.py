@@ -1,27 +1,74 @@
-from dataclasses import dataclass, field
-from enum import Enum
-from uuid import UUID, uuid4
+from uuid import UUID
 
-class ChangeType(str, Enum):
-CREATE = "CREATE"
-MERGE = "MERGE"
-UPDATE = "UPDATE"
+from app.domain.entities.change_proposal import (
+    ChangeProposal,
+    ChangeType,
+)
 
-@dataclass(frozen=True)
-class ChangeProposal:
-"""
-Atomic proposal for a change to the ELR.
 
-The proposal describes what the KEP proposes to change.
-It does not approve, reject, or persist the change.
+def test_create_change_proposal_contains_required_fields():
+    proposal = ChangeProposal(
+        change_type=ChangeType.CREATE,
+        change_payload={
+            "anchor": "take + photo",
+            "knowledge_statement": (
+                "Per scattare una fotografia si usa take + photo."
+            ),
+            "category_id": "category-id",
+        },
+        proposal_rationale=(
+            "La conoscenza non è rappresentata nel repository."
+        ),
+        change_evidence=(
+            {"trigger": "linguistic_error"},
+        ),
+        change_metadata={
+            "origin": "KEP",
+        },
+    )
 
-Review semantics belong to the Learning Review process.
-"""
+    assert isinstance(proposal.id, UUID)
+    assert proposal.change_type is ChangeType.CREATE
+    assert proposal.change_payload["anchor"] == "take + photo"
+    assert proposal.proposal_rationale
+    assert proposal.change_evidence == (
+        {"trigger": "linguistic_error"},
+    )
+    assert proposal.change_metadata["origin"] == "KEP"
 
-change_type: ChangeType
-change_payload: dict
-proposal_rationale: str
-change_evidence: tuple[dict, ...] = ()
-change_metadata: dict = field(default_factory=dict)
 
-id: UUID = field(default_factory=uuid4)
+def test_change_proposal_supports_all_change_types():
+    for change_type in ChangeType:
+        proposal = ChangeProposal(
+            change_type=change_type,
+            change_payload={},
+            proposal_rationale="test",
+        )
+
+        assert proposal.change_type is change_type
+
+
+def test_change_proposal_is_immutable():
+    proposal = ChangeProposal(
+        change_type=ChangeType.CREATE,
+        change_payload={},
+        proposal_rationale="test",
+    )
+
+    try:
+        proposal.change_type = ChangeType.UPDATE
+    except AttributeError:
+        pass
+    else:
+        raise AssertionError("ChangeProposal must be immutable")
+
+
+def test_change_evidence_defaults_to_empty():
+    proposal = ChangeProposal(
+        change_type=ChangeType.UPDATE,
+        change_payload={},
+        proposal_rationale="test",
+    )
+
+    assert proposal.change_evidence == ()
+    assert proposal.change_metadata == {}
