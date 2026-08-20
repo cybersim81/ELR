@@ -162,18 +162,13 @@ def test_review_persists_proposal_before_evaluation():
     assert proposals.get_by_id(proposal.id) is proposal
 
 def test_review_rejects_proposal_when_knowledge_validation_fails():
-    proposal_repository = InMemoryChangeProposalRepository()
-    trace_repository = InMemoryReviewDecisionTraceRepository()
-
     knowledge_validation = InMemoryKnowledgeValidation(
         valid=False,
         rationale="Knowledge conflict detected.",
     )
 
-    adapter = LearningReviewAdapter(
-        change_proposal_repository=proposal_repository,
-        review_decision_trace_repository=trace_repository,
-        knowledge_validation=knowledge_validation,
+    adapter, proposal_repository, trace_repository = (
+        create_adapter(knowledge_validation)
     )
 
     proposal = create_valid_proposal()
