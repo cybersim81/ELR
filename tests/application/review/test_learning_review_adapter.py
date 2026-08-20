@@ -1,74 +1,281 @@
-from datetime import datetime, timezone
+from uuid import uuid4
 
-from app.domain.entities.change_proposal import ChangeProposal
+import pytest
+
+from app.application.review.learning_review_adapter import (
+    LearningReviewAdapter,
+)
+from app.domain.entities.change_proposal import (
+    ChangeProposal,
+    ChangeType,
+)
 from app.domain.entities.review_decision import ReviewDecision
-from app.domain.entities.review_decision_trace import (
-    ReviewDecisionTrace,
-)
-from app.domain.repositories.change_proposal_repository import (
-    ChangeProposalRepository,
-)
-from app.domain.repositories.knowledge_validation import (
-    KnowledgeValidation,
-)
-from app.domain.repositories.learning_review import LearningReview
-from app.domain.repositories.repository_consistency import (
-    RepositoryConsistency,
-)
-from app.domain.repositories.review_decision import (
-    ReviewDecisionService,
-)
-from app.domain.repositories.review_decision_trace_repository import (
-    ReviewDecisionTraceRepository,
-)
 
 
-class LearningReviewAdapter(LearningReview):
-    """
-    Concrete Learning Review boundary.
+class InMemoryChangeProposalRepository:
+    def __init__(self):
+        self.items = {}
 
-    Review flow:
-        1. Proposal Validation
-        2. Knowledge Validation
-        3. Repository Consistency Check
-        4. Final Review Decision
-    """
+    def add(self, proposal):
+        self.items[proposal.id] = proposal
 
+    def get_by_id(self, proposal_id):
+        return self.items.get(proposal_id)
+
+
+class InMemoryReviewDecisionTraceRepository:
+    def __init__(self):
+        self.items = []
+
+    def add(self, trace):
+        self.items.append(trace)
+
+    def get_by_id(self, trace_id):
+        return next(
+            (
+                trace
+                for trace in self.items
+                if trace.id == trace_id
+            ),
+            None,
+        )
+
+    def get_by_proposal_id(self, proposal_id):
+        return [
+            trace
+            for trace in self.items
+            if trace.proposal_id == proposal_id
+        ]
+
+class InMemoryKnowledgeValidation:
     def __init__(
         self,
-        change_proposal_repository: ChangeProposalRepository,
-        review_decision_trace_repository: ReviewDecisionTraceRepository,
-        knowledge_validation: KnowledgeValidation,
-        repository_consistency: RepositoryConsistency,
-        review_decision_service: ReviewDecisionService,
-        reviewer: str = "learning-review",
+        valid=True,
+        rationale="Knowledge validation passed.",
     ):
-        self.change_proposal_repository = (
-            change_proposal_repository
-        )
-        self.review_decision_trace_repository = (
-            review_decision_trace_repository
-        )
-        self.knowledge_validation = knowledge_validation
-        self.repository_consistency = repository_consistency
-        self.review_decision_service = review_decision_service
-        self.reviewer = reviewer
+        self.valid = valid
+        self.rationale = rationale
+        self.proposals = []
 
-    def review(
+    def validate(self, proposal):
+        self.proposals.append(proposal)
+        return self.valid, self.rationale
+
+class InMemoryRepositoryConsistency:
+    def __init__(
         self,
-        proposal: ChangeProposal,
-    ) -> ReviewDecisionTrace:
-        self.change_proposal_repository.add(proposal)
+        consistent=True,
+        rationale="Repository consistency check passed.",
+    ):
+        self.consistent = consistent
+        self.rationale = rationale
+        self.proposals = []
 
-        decision, rationale = self._evaluate(proposal)
+    def check(self, proposal):
+        self.proposals.append(proposal)
+        return self.consistent, self.rationale
 
-        trace = ReviewDecisionTrace(
-            proposal_id=proposal.id,
-            decision=decision,
-            rationale=rationale,
+class InMemoryReviewDecisionService:
+    def __init__(
+        self,
+        decision=ReviewDecision.APPROVE,
+        rationale="Review approved.",
+    ):
+        self.decision = decision
+        self.rationale = rationale
+        self.proposals = []
+
+    def decide(self, proposal):
+        self.proposals.append(proposal)
+        return self.decision, self.rationale
+
+def create_adapter(
+    knowledge_validation=None,
+    repository_consistency=None,
+    review_decision_service=None,
+):
+    proposal_repository = InMemoryChangeProposalRepository()
+    trace_repository = InMemoryReviewDecisionTraceRepository()
+
+    if knowledge_validation is None:
+        knowledge_validation = InMemoryKnowledgeValidation()
+
+    if repository_consistency is None:
+        repository_consistency = InMemoryRepositoryConsistency()
+
+    if review_decision_service is None:
+        review_decision_service = InMemoryReviewDecisionService()
+
+    adapter = LearningReviewAdapter(
+        change_proposal_repository=proposal_repository,
+        review_decision_trace_repository=trace_repository,
+        knowledge_validation=knowledge_validation,
+        repository_consistency=repository_consistency,
+        review_decision_service=review_decision_service,
+    )
+
+    return (
+        adapter,
+        proposal_repository,
+        trace_repository,
+    )
 
 
-def test_review_rejects_proposal_from_final_decision_service():
+def create_valid_proposal():
+    return ChangeProposal(
+        change_type=ChangeType.CREATE,
+        change_payload={
+            "anchor": "weever",
+            "statement": "weever → tracina",
+        },
+        proposal_rationale="Candidate linguistic knowledge.",
+        change_evidence=("evidence-1",),
+    )
+
+
+def test_review_rejects_proposal_without_change_type():
+    adapter, _, traces = create_adapter()
+
+    proposal = ChangeProposal(
+        change_type=None,
+        change_payload={"statement": "Test statement"},
+        proposal_rationale="Test rationale.",
+        change_evidence=("evidence-1",),
+    )
+
+    trace = adapter.review(proposal)
+
+    assert trace.decision is ReviewDecision.REJECT
+    assert trace.rationale == "Change Type is required."
+    assert traces.get_by_id(trace.id) is trace
+
+
+def test_review_rejects_proposal_without_change_payload():
+    adapter, _, traces = create_adapter()
+
+    proposal = ChangeProposal(
+        change_type=ChangeType.CREATE,
+        change_payload={},
+        proposal_rationale="Test rationale.",
+        change_evidence=("evidence-1",),
+    )
+
+    trace = adapter.review(proposal)
+
+    assert trace.decision is ReviewDecision.REJECT
+    assert trace.rationale == "Change Payload is required."
+    assert traces.get_by_id(trace.id) is trace
+
+
+def test_review_rejects_proposal_without_change_evidence():
+    adapter, _, traces = create_adapter()
+
+    proposal = ChangeProposal(
+        change_type=ChangeType.CREATE,
+        change_payload={
+            "statement": "Test statement",
+        },
+        proposal_rationale="Test rationale.",
+        change_evidence=(),
+    )
+
+    trace = adapter.review(proposal)
+
+    assert trace.decision is ReviewDecision.REJECT
+    assert trace.rationale == "Change Evidence is required."
+    assert traces.get_by_id(trace.id) is trace
+
+
+def test_review_persists_proposal_before_evaluation():
+    adapter, proposals, traces = create_adapter()
+
+    proposal = create_valid_proposal()
+
+    trace = adapter.review(proposal)
+
+    assert trace.decision is ReviewDecision.APPROVE
+    assert trace.rationale == "Review approved."
+
+    assert proposals.get_by_id(proposal.id) is proposal
+    assert traces.get_by_id(trace.id) is trace
+
+def test_review_rejects_proposal_when_knowledge_validation_fails():
+    knowledge_validation = InMemoryKnowledgeValidation(
+        valid=False,
+        rationale="Knowledge conflict detected.",
+    )
+
+    adapter, proposal_repository, trace_repository = (
+        create_adapter(knowledge_validation)
+    )
+
+    proposal = create_valid_proposal()
+
+    trace = adapter.review(proposal)
+
+    assert trace.decision is ReviewDecision.REJECT
+    assert trace.rationale == "Knowledge conflict detected."
+
+    assert knowledge_validation.proposals == [proposal]
+    assert proposal_repository.get_by_id(proposal.id) is proposal
+    assert trace_repository.get_by_id(trace.id) is trace
+
+def test_review_proceeds_after_successful_knowledge_validation():
+    knowledge_validation = InMemoryKnowledgeValidation(
+        valid=True,
+        rationale="Knowledge validation passed.",
+    )
+
+    adapter, proposal_repository, trace_repository = (
+        create_adapter(
+            knowledge_validation=knowledge_validation,
+        )
+    )
+
+    proposal = create_valid_proposal()
+
+    trace = adapter.review(proposal)
+
+    assert trace.decision is ReviewDecision.APPROVE
+    assert trace.rationale == "Review approved."
+
+    assert knowledge_validation.proposals == [proposal]
+    assert proposal_repository.get_by_id(proposal.id) is proposal
+    assert trace_repository.get_by_id(trace.id) is trace
+
+
+def test_review_rejects_proposal_when_repository_consistency_fails():
+    knowledge_validation = InMemoryKnowledgeValidation(
+        valid=True,
+        rationale="Knowledge validation passed.",
+    )
+
+    repository_consistency = InMemoryRepositoryConsistency(
+        consistent=False,
+        rationale="Repository conflict detected.",
+    )
+
+    adapter, proposal_repository, trace_repository = (
+        create_adapter(
+            knowledge_validation=knowledge_validation,
+            repository_consistency=repository_consistency,
+        )
+    )
+
+    proposal = create_valid_proposal()
+
+    trace = adapter.review(proposal)
+
+    assert trace.decision is ReviewDecision.REJECT
+    assert trace.rationale == "Repository conflict detected."
+
+    assert knowledge_validation.proposals == [proposal]
+    assert repository_consistency.proposals == [proposal]
+    assert proposal_repository.get_by_id(proposal.id) is proposal
+    assert trace_repository.get_by_id(trace.id) is trace
+
+
+def test_review_approves_proposal_after_all_validations():
     knowledge_validation = InMemoryKnowledgeValidation(
         valid=True,
         rationale="Knowledge validation passed.",
@@ -80,8 +287,8 @@ def test_review_rejects_proposal_from_final_decision_service():
     )
 
     review_decision_service = InMemoryReviewDecisionService(
-        decision=ReviewDecision.REJECT,
-        rationale="Proposal does not meet review criteria.",
+        decision=ReviewDecision.APPROVE,
+        rationale="Review approved.",
     )
 
     adapter, proposal_repository, trace_repository = (
@@ -96,10 +303,8 @@ def test_review_rejects_proposal_from_final_decision_service():
 
     trace = adapter.review(proposal)
 
-    assert trace.decision is ReviewDecision.REJECT
-    assert trace.rationale == (
-        "Proposal does not meet review criteria."
-    )
+    assert trace.decision is ReviewDecision.APPROVE
+    assert trace.rationale == "Review approved."
 
     assert knowledge_validation.proposals == [proposal]
     assert repository_consistency.proposals == [proposal]
@@ -107,59 +312,42 @@ def test_review_rejects_proposal_from_final_decision_service():
 
     assert proposal_repository.get_by_id(proposal.id) is proposal
     assert trace_repository.get_by_id(trace.id) is trace
-            reviewer=self.reviewer,
-            created_at=datetime.now(timezone.utc),
+
+
+def test_review_requests_revision_after_all_validations():
+    knowledge_validation = InMemoryKnowledgeValidation(
+        valid=True,
+        rationale="Knowledge validation passed.",
+    )
+
+    repository_consistency = InMemoryRepositoryConsistency(
+        consistent=True,
+        rationale="Repository consistency check passed.",
+    )
+
+    review_decision_service = InMemoryReviewDecisionService(
+        decision=ReviewDecision.REQUEST_REVISION,
+        rationale="Additional evidence is required.",
+    )
+
+    adapter, proposal_repository, trace_repository = (
+        create_adapter(
+            knowledge_validation=knowledge_validation,
+            repository_consistency=repository_consistency,
+            review_decision_service=review_decision_service,
         )
+    )
 
-        self.review_decision_trace_repository.add(trace)
+    proposal = create_valid_proposal()
 
-        return trace
+    trace = adapter.review(proposal)
 
-    def _evaluate(
-        self,
-        proposal: ChangeProposal,
-    ) -> tuple[ReviewDecision, str]:
-        validation_error = self._validate_proposal(proposal)
+    assert trace.decision is ReviewDecision.REQUEST_REVISION
+    assert trace.rationale == "Additional evidence is required."
 
-        if validation_error is not None:
-            return (
-                ReviewDecision.REJECT,
-                validation_error,
-            )
+    assert knowledge_validation.proposals == [proposal]
+    assert repository_consistency.proposals == [proposal]
+    assert review_decision_service.proposals == [proposal]
 
-        knowledge_valid, rationale = (
-            self.knowledge_validation.validate(proposal)
-        )
-
-        if not knowledge_valid:
-            return (
-                ReviewDecision.REJECT,
-                rationale,
-            )
-
-        repository_consistent, rationale = (
-            self.repository_consistency.check(proposal)
-        )
-
-        if not repository_consistent:
-            return (
-                ReviewDecision.REJECT,
-                rationale,
-            )
-
-        return self.review_decision_service.decide(proposal)
-
-    def _validate_proposal(
-        self,
-        proposal: ChangeProposal,
-    ) -> str | None:
-        if proposal.change_type is None:
-            return "Change Type is required."
-
-        if not proposal.change_payload:
-            return "Change Payload is required."
-
-        if not proposal.change_evidence:
-            return "Change Evidence is required."
-
-        return None
+    assert proposal_repository.get_by_id(proposal.id) is proposal
+    assert trace_repository.get_by_id(trace.id) is trace
