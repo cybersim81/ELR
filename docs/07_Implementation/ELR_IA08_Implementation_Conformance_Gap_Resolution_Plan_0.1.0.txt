@@ -770,7 +770,27 @@ PARTIAL
 
 A01.2 — Review / Change Proposal
 
-BLOCKED
+NORMATIVELY RESOLVED / IMPLEMENTATION GAP
+
+Normative basis confirmed:
+
+* Knowledge Extraction Pipeline Specification 1.0.2;
+* Evidence Model Specification 1.0.1;
+* Learning Review Specification 1.0.0.
+
+The authoritative specifications define the Change Proposal, Change Evidence, Review decisions, and Review process semantics required by A01.2.
+
+The Application Service shall coordinate Review outcomes and resulting domain operations. It shall not independently implement or redefine Review semantics.
+
+Implementation gap remaining:
+
+* Change Proposal representation;
+* Review decision / decision trace representation;
+* Application boundary for Learning Review;
+* APPROVE / REJECT / REQUEST REVISION coordination;
+* integration with existing Learning Object lifecycle, versioning, persistence, and audit.
+
+A01.2 is therefore no longer blocked by missing normative semantics. Implementation may proceed after responsibility-level inspection establishes the concrete application/domain boundaries.
 
 
 Current Active Finding:
