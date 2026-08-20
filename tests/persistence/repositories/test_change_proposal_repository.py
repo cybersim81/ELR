@@ -2,29 +2,36 @@ from app.domain.entities.change_proposal import (
     ChangeProposal,
     ChangeType,
 )
+from app.persistence import database
 from app.persistence.repositories.change_proposal_repository import (
     SQLAlchemyChangeProposalRepository,
 )
 
 
-def test_add_persists_change_proposal(session):
-    proposal = ChangeProposal(
-        change_type=ChangeType.CREATE,
-        change_payload={"statement": "Test statement"},
-        proposal_rationale="Test rationale.",
-    )
+def test_add_persists_change_proposal():
+    session = database.SessionFactory()
 
-    repository = SQLAlchemyChangeProposalRepository(session)
+    try:
+        proposal = ChangeProposal(
+            change_type=ChangeType.CREATE,
+            change_payload={"statement": "Test statement"},
+            proposal_rationale="Test rationale.",
+        )
 
-    repository.add(proposal)
-    session.flush()
+        repository = SQLAlchemyChangeProposalRepository(session)
 
-    loaded = repository.get_by_id(proposal.id)
+        repository.add(proposal)
+        session.flush()
 
-    assert loaded is not None
-    assert loaded.id == proposal.id
-    assert loaded.change_type == ChangeType.CREATE
-    assert loaded.change_payload == {
-        "statement": "Test statement",
-    }
-    assert loaded.proposal_rationale == "Test rationale."
+        loaded = repository.get_by_id(proposal.id)
+
+        assert loaded is not None
+        assert loaded.id == proposal.id
+        assert loaded.change_type is ChangeType.CREATE
+        assert loaded.change_payload == {
+            "statement": "Test statement",
+        }
+        assert loaded.proposal_rationale == "Test rationale."
+    finally:
+        session.rollback()
+        session.close()
