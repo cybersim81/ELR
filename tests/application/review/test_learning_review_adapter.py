@@ -202,3 +202,34 @@ def test_review_proceeds_after_successful_knowledge_validation():
 
     assert knowledge_validation.proposals == [proposal]
     assert proposal_repository.get_by_id(proposal.id) is proposal
+
+
+def test_review_rejects_proposal_when_repository_consistency_fails():
+    knowledge_validation = InMemoryKnowledgeValidation(
+        valid=True,
+        rationale="Knowledge validation passed.",
+    )
+
+    repository_consistency = InMemoryRepositoryConsistency(
+        consistent=False,
+        rationale="Repository conflict detected.",
+    )
+
+    adapter, proposal_repository, trace_repository = (
+        create_adapter(
+            knowledge_validation=knowledge_validation,
+            repository_consistency=repository_consistency,
+        )
+    )
+
+    proposal = create_valid_proposal()
+
+    trace = adapter.review(proposal)
+
+    assert trace.decision is ReviewDecision.REJECT
+    assert trace.rationale == "Repository conflict detected."
+
+    assert knowledge_validation.proposals == [proposal]
+    assert repository_consistency.proposals == [proposal]
+    assert proposal_repository.get_by_id(proposal.id) is proposal
+    assert trace_repository.get_by_id(trace.id) is trace
