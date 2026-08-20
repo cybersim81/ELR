@@ -61,13 +61,19 @@ class InMemoryKnowledgeValidation:
         self.proposals.append(proposal)
         return self.valid, self.rationale
 
-def create_adapter():
+def create_adapter(
+    knowledge_validation=None,
+):
     proposal_repository = InMemoryChangeProposalRepository()
     trace_repository = InMemoryReviewDecisionTraceRepository()
+
+    if knowledge_validation is None:
+        knowledge_validation = InMemoryKnowledgeValidation()
 
     adapter = LearningReviewAdapter(
         change_proposal_repository=proposal_repository,
         review_decision_trace_repository=trace_repository,
+        knowledge_validation=knowledge_validation,
     )
 
     return (
