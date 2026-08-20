@@ -312,3 +312,42 @@ def test_review_approves_proposal_after_all_validations():
 
     assert proposal_repository.get_by_id(proposal.id) is proposal
     assert trace_repository.get_by_id(trace.id) is trace
+
+
+def test_review_requests_revision_after_all_validations():
+    knowledge_validation = InMemoryKnowledgeValidation(
+        valid=True,
+        rationale="Knowledge validation passed.",
+    )
+
+    repository_consistency = InMemoryRepositoryConsistency(
+        consistent=True,
+        rationale="Repository consistency check passed.",
+    )
+
+    review_decision_service = InMemoryReviewDecisionService(
+        decision=ReviewDecision.REQUEST_REVISION,
+        rationale="Additional evidence is required.",
+    )
+
+    adapter, proposal_repository, trace_repository = (
+        create_adapter(
+            knowledge_validation=knowledge_validation,
+            repository_consistency=repository_consistency,
+            review_decision_service=review_decision_service,
+        )
+    )
+
+    proposal = create_valid_proposal()
+
+    trace = adapter.review(proposal)
+
+    assert trace.decision is ReviewDecision.REQUEST_REVISION
+    assert trace.rationale == "Additional evidence is required."
+
+    assert knowledge_validation.proposals == [proposal]
+    assert repository_consistency.proposals == [proposal]
+    assert review_decision_service.proposals == [proposal]
+
+    assert proposal_repository.get_by_id(proposal.id) is proposal
+    assert trace_repository.get_by_id(trace.id) is trace
