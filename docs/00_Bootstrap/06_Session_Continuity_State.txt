@@ -1,401 +1,751 @@
-# 06_Session_Continuity_State.txt
+# 05_Implementation_Alignment_Roadmap.txt
 
-## Session Continuity State
+## Implementation Alignment Roadmap
 
 ### Purpose
 
-This document freezes the current ELR working state for transfer to a future session.
+This roadmap converts the Implementation Baseline Inventory and End-to-End Gap Map into an ordered implementation sequence.
 
-It is the continuity checkpoint of the current Bootstrap Pack.
+It is subordinate to the normative architecture.
 
-A future session MUST use this state together with the complete Bootstrap Pack and the authoritative repository documents.
+### Guiding Rule
+
+Resolve semantic deviations before materializing production persistence.
+
+Do not encode a currently non-conformant domain representation into database schemas and repositories and then attempt to correct it later.
 
 ---
 
-================================================================================
-# Current State
-================================================================================
+## Phase IA-01 — Domain Semantic Alignment
 
-IA-01 through IA-07 remain complete and verified according to the established
-roadmap and E2E baseline.
+### Objective
 
-IA-08 — Implementation Conformance is now:
+Bring the domain representation into explicit agreement with the consolidated normative baseline.
 
-IN PROGRESS
+### Scope
 
+Resolve:
 
-Current responsibility:
+* IA-001 — LearningObject statement representation;
+* IA-002 — KnowledgeStatement identity/value semantics;
+* IA-003 — generic Version entity;
+* IA-005 — LearningObject version semantics;
+* IA-010 — generic VersionRepository history;
+* IA-017 — Version snapshot representation;
+* IA-018 — application/repository Version boundary;
+* IA-019 — Version snapshot test coverage.
 
-IA-08-A01 — Application Service
+### Completed Result
 
+The domain and repository contracts now express LearningObject-centered knowledge versioning.
 
-Resolved responsibility:
+KnowledgeStatement is represented as an immutable aggregate member/value and has no autonomous persistence or versioning boundary.
 
-IA-08-A01.6 — Application Error Boundary
+Version history is explicitly scoped to LearningObject.
 
-Status:
+Version snapshots preserve the structured KnowledgeStatement value.
 
-RESOLVED / VERIFIED
+Application and repository Version history contracts are aligned.
 
+### Gate
 
-A01.6 verification evidence:
+`IA-01 DOMAIN ALIGNMENT`
 
-* focused A01.6 tests pass;
-* complete pytest suite: 79 passed;
-* centralized Application error taxonomy verified;
-* EntityNotFound boundary verified;
-* InvalidOperation translation verified;
-* original Domain exception preserved through exception chaining;
-* no catch-all exception translation introduced.
+Status: `COMPLETE`
 
+### Closure Evidence
 
-Remaining A01 responsibilities:
+* Domain entities aligned;
+* VersionRepository contract aligned;
+* Application service aligned;
+* in-memory Version repository aligned;
+* Version snapshot semantics tested;
+* no autonomous KnowledgeStatement repository introduced.
 
-* A01.2 — Review / Change Proposal — BLOCKED;
-* A01.3 — Category Service — PARTIAL;
-* A01.4 — Version Service — PARTIAL;
-* A01.5 — Audit Service — PARTIAL;
-* A01.7 — Transaction Boundary — PARTIAL.
+### Remaining Work Outside IA-01
 
+Production persistence and repository integration were completed in subsequent phases.
 
-A01.6 shall not be reopened unless new authoritative or repository evidence
-demonstrates a regression or contradiction.
+IA-01 remains closed and is not reopened by the completion of those later phases.
 
+---
 
-The historical E2E-GATE-01 checkpoint remains:
+## Phase IA-02 — Contract and Lifecycle Alignment
 
-checkpoint: d679299
-verification: 74 passed
+### Objective
 
+Resolve remaining repository and lifecycle ambiguities before persistence.
 
-The latest A01.6 implementation verification is:
+### Scope
 
-79 passed
+Primarily:
 
+* IA-009 — LearningObject delete capability;
+* repository ownership boundaries;
+* Version history ownership;
+* Audit history boundary;
+* lifecycle contract consistency.
 
-### End-to-End State
+### Verified Resolution Progress
 
-E2E-07 — Production Persistence is complete and verified.
+The following IA-02 alignment findings have been resolved and verified:
 
-E2E-08 — Persistent Reload is verified.
+* IA-009 — LearningObject delete capability — `RESOLVED`;
+* IA-016 — Lifecycle Application Orchestration — `RESOLVED`.
 
-E2E-09 — Version History Recovery is verified.
+The LearningObject Repository no longer exposes physical deletion as a Domain Repository capability.
 
-E2E-10 — Audit History Recovery is verified.
-
-E2E-11 — Persistent End-to-End Test is verified.
-
-E2E-GATE-01 — Persistent LearningObject Lifecycle is complete and verified.
-
-The verified persistent lifecycle now reaches:
-
-`Application → Concrete Repository → Persistence Model → Database → New Session → Reconstructed Aggregate → Version History → Audit History`
-
-The complete lifecycle has been verified across session boundaries:
+The LearningObject lifecycle orchestration and invalid-transition coverage have been verified against:
 
 `Candidate → Proposed → Active → Retired`
 
-Historical E2E-GATE-01 verification result:
+### Required Result
 
-`74 passed`
+Every repository capability must have an explicit normative purpose.
 
-Historical E2E-GATE-01 Git checkpoint:
+The LearningObject lifecycle must remain:
 
-`d679299`
+`Candidate → Proposed → Active → Retired`
 
----
+Change Proposal review decisions must remain outside the LearningObject lifecycle state.
 
-## Resolved Implementation Alignment
+Version history must remain LearningObject-centered.
 
-### IA-01 — Domain Semantic Alignment
+Audit history must remain distinct from immutable Version history.
 
-`COMPLETE`
+### Gate
 
-The following findings have been resolved:
+`IA-02 CONTRACT AND LIFECYCLE ALIGNMENT`
 
-* `IA-001` — LearningObject statement representation;
-* `IA-002` — KnowledgeStatement identity/value semantics;
-* `IA-003` — generic Version entity;
-* `IA-005` — LearningObject version semantics;
-* `IA-010` — generic VersionRepository history;
-* `IA-017` — Version snapshot representation;
-* `IA-018` — application/repository Version boundary;
-* `IA-019` — Version snapshot test coverage.
+Status: `COMPLETE`
 
-The verified implementation now has:
+Progress: `100%`
 
-* immutable KnowledgeStatement aggregate-member/value semantics;
-* LearningObject-centered Version identity;
-* LearningObject-centered Version history;
-* immutable Version snapshots;
-* aligned application and repository Version contracts;
-* semantic Version snapshot test coverage.
+### Closure Evidence
 
-IA-01 does not include production persistence implementation.
+* repository capability boundaries verified;
+* LearningObject Repository ownership verified;
+* Version history ownership verified as LearningObject-centered;
+* Audit history boundary verified as distinct from Version history;
+* LearningObject delete capability verified as absent from the Domain Repository contract;
+* lifecycle orchestration verified against `Candidate → Proposed → Active → Retired`;
+* invalid lifecycle transition behavior verified;
+* Change Proposal review decisions remain outside LearningObject lifecycle state.
 
 ---
 
-## Last Completed Implementation Alignment Gate
+## Phase IA-03 — Persistence Model
 
-IA-02 — CONTRACT AND LIFECYCLE ALIGNMENT
+### Objective
 
-`COMPLETE — 100%`
+Materialize the aligned domain model in production persistence.
 
-IA-02 has been technically resolved and verified.
+### Scope
 
-Verified conditions include:
+Implement and verify persistence for:
 
-* explicit repository capability boundaries;
-* LearningObject-centered Version history;
-* distinct Audit history boundary;
-* absence of LearningObject physical deletion from the Domain Repository contract;
-* normative lifecycle orchestration;
-* explicit rejection of invalid lifecycle transitions;
-* separation of Change Proposal review decisions from LearningObject lifecycle state.
+* LearningObject;
+* Version;
+* AuditRecord;
+* required KnowledgeStatement representation;
+* Anchor relationships.
 
-IA-02 is closed.
+### Required Result
 
-The implementation has progressed beyond the IA-02 alignment gate into production persistence and end-to-end persistence verification.
+Persistence models represent the aligned domain semantics rather than the pre-alignment implementation.
 
----
+KnowledgeStatement must remain an aggregate member/value representation and must not acquire an autonomous persistence or repository boundary merely as a consequence of persistence implementation.
 
-## Known Remaining Alignment Items
+Version persistence must preserve the LearningObject-centered immutable Version boundary.
 
-No currently verified open IA-02 findings remain.
+### Gate
 
-The IA-02 gate is closed at `100%`.
+`IA-03 PERSISTENCE MODEL ALIGNMENT`
 
-IA-01 through IA-07 are complete or verified.
+Status: `COMPLETE`
 
-The remaining implementation work is tracked by IA-08:
+Progress: `100%`
 
-`IA-08 — Implementation Conformance`
+### Closure Evidence
 
----
+* `LearningObjectModel` persistence model verified;
+* embedded `KnowledgeStatement` representation verified;
+* Anchor relationship verified;
+* `VersionModel` and LearningObject foreign key verified;
+* `AuditRecordModel` verified, including the SQLAlchemy-safe `metadata` column mapping;
+* LearningObject `examples` / `notes` relationships verified;
+* owned relationship cascade and `delete-orphan` behavior verified;
+* focused persistence-model tests passed.
 
-## Known Persistence Gaps
+Concrete repositories were implemented in IA-04.
 
-The following production persistence concerns are implemented and verified:
+Database/session wiring and transaction handling were implemented and verified in IA-05.
 
-* LearningObject persistence;
-* KnowledgeStatement representation within persistent LearningObject state;
-* Version persistence;
-* AuditRecord persistence;
-* concrete production repositories;
-* database wiring;
-* transaction handling;
-* persistent reload;
-* persistent Version history recovery;
-* persistent Audit history recovery;
-* complete persistent end-to-end lifecycle verification.
+Persistent integration testing continues in IA-06.
 
-No remaining persistence gap is currently open within E2E-GATE-01.
+Persistent reload and cross-session recovery belong to E2E-08 and subsequent E2E phases.
 
-The next work package is:
-
-`IA-08 — Implementation Conformance`
+These concerns are outside the IA-03 persistence-model boundary.
 
 ---
 
-## Known Test Coverage Gaps
+## Phase IA-04 — Concrete Repository Layer
+
+### Objective
+
+Connect domain repositories to production persistence.
+
+### Scope
+
+Implement concrete repositories for:
+
+* LearningObject;
+* Version;
+* Audit;
+* Anchor where required by the final persistence architecture.
+
+### Required Result
+
+Application services operate against domain repository contracts while production execution uses concrete persistence implementations.
+
+Repository capabilities must remain consistent with the lifecycle and aggregate boundaries established by IA-02.
+
+### Gate
+
+`IA-04 REPOSITORY INTEGRATION`
+
+Status: `COMPLETE`
+
+Progress: `100%`
+
+---
+
+## Phase IA-05 — Database Wiring
+
+### Objective
+
+Make the production persistence infrastructure executable and verify its database/session/transaction boundary.
+
+### Scope
+
+Establish and verify:
+
+* database configuration;
+* SQLAlchemy engine/session creation;
+* model metadata;
+* repository lifecycle;
+* transaction boundary;
+* production persistence wiring.
+
+Schema/migration concerns remain separate and must only be marked complete when independently verified.
+
+### Verified Result
+
+The production persistence infrastructure is executable.
+
+The concrete service wiring connects application services to:
+
+`LearningObject Repository → Version Repository → Audit Repository`
+
+using the SQLAlchemy persistence layer.
+
+A fresh SQLite runtime can create the required schema and persist LearningObject, Version and AuditRecord state.
+
+Transaction behavior has been verified through rollback-focused integration tests.
+
+### Gate
+
+`IA-05 DATABASE INTEGRATION`
+
+Status: `COMPLETE`
+
+Progress: `100%`
+
+### Closure Evidence
+
+* database engine creation verified;
+* session factory verified;
+* SQLAlchemy model metadata verified;
+* production repository wiring verified;
+* transaction boundary verified;
+* persistence rollback verified;
+* production persistence flow verified by E2E-07;
+* full test suite: `70 passed`;
+* checkpoint: `b00d5c7`.
+
+### Scope Boundary
+
+Persistent reload and recovery across a newly created session belong to E2E-08 and subsequent E2E phases.
+
+Schema/migration hardening remains pending unless separately verified.
+
+---
+
+## Phase IA-06 — Persistent Integration Tests
+
+### Objective
+
+Prove production persistence behavior rather than relying only on repository mocks or in-memory fixtures.
+
+### Verified Scope
 
 The following persistent behaviors are covered:
 
 * LearningObject persistence;
 * Version persistence;
 * Audit persistence;
+* Anchor relationships;
 * transaction rollback;
 * invalid lifecycle transition rollback;
 * atomic approve() persistence;
 * atomic update_knowledge() persistence;
-* multi-Version history preservation;
-* concrete production persistence flow;
+* multi-Version persistence and ordering;
 * persistent reload through a newly created session;
-* persistent Version history recovery after session reload;
-* persistent Audit history recovery after session reload;
-* complete persistent end-to-end lifecycle across session boundaries.
+* Version history recovery after session reload;
+* Audit history recovery after session reload;
+* complete persistent lifecycle across a session boundary.
 
-No remaining E2E test coverage gap is currently open within E2E-GATE-01.
+The production persistence flow and cross-session recovery are verified by dedicated integration coverage.
 
-The next conformance work is tracked by:
+### Gate
 
-`IA-08 — Implementation Conformance`
+`IA-06 PERSISTENCE TEST CONFORMANCE`
 
----
+Status: `COMPLETE`
 
-## Current Working Boundary
+Progress: `100%`
 
-The verified implementation reaches:
+### Closure Evidence
 
-`Domain → Application → Concrete Repository → Persistence Model → Database → New Session → Reconstructed Aggregate → Version History → Audit History`
+* E2E-07 Production Persistence — VERIFIED;
+* E2E-08 Persistent Reload — VERIFIED;
+* E2E-09 Version History Recovery — VERIFIED;
+* E2E-10 Audit History Recovery — VERIFIED;
+* E2E-11 Persistent End-to-End Test — VERIFIED;
+* latest verification result: `74 passed`;
+* latest checkpoint: `d679299`.
 
-LearningObject, Version and Audit persistence are implemented and verified.
-
-The persistent session reload boundary is verified:
-
-`Database → New Session → Repository → Reconstructed Aggregate`
-
-The complete persistent lifecycle across the session boundary is also verified by E2E-11.
-
-The current working boundary has therefore advanced beyond E2E-GATE-01 to:
-
-`IA-08 — Implementation Conformance`
+IA-06 is closed.
 
 ---
 
-## Lifecycle Boundary
+## Phase IA-07 — E2E-GATE-01
 
-The normative LearningObject lifecycle remains:
+### Objective
 
-`Candidate → Proposed → Active → Retired`
+Demonstrate and close the complete persistent LearningObject lifecycle.
 
-`Reviewed`, `Approved`, and `Rejected` are Change Proposal review decisions and are not LearningObject lifecycle states.
+### Verified Flow
 
-The lifecycle state must not be extended merely to represent modification or review outcomes.
+Anchor
+  ↓
+LearningObject
+  ↓
+KnowledgeStatement
+  ↓
+Candidate
+  ↓
+Proposed
+  ↓
+Active
+  ↓
+Retired
+  ↓
+Immutable Version
+  ↓
+Audit Record
+  ↓
+Database
+  ↓
+Reload
+  ↓
+Version History
+  ↓
+Audit History
+
+Change Proposal review decisions such as Reviewed, Approved, and Rejected are not LearningObject lifecycle states and do not appear in this lifecycle flow.
+
+### Gate Condition
+
+The complete flow succeeds without semantic loss or violation of the established lifecycle, aggregate, Version, and Audit boundaries.
+
+### Verified Prerequisites
+
+* E2E-07 Production Persistence — VERIFIED;
+* E2E-08 Persistent Reload — VERIFIED;
+* E2E-09 Version History Recovery — VERIFIED;
+* E2E-10 Audit History Recovery — VERIFIED;
+* E2E-11 Persistent End-to-End Test — VERIFIED.
+
+### Gate
+
+`IA-07 E2E-GATE-01`
+
+Status: `COMPLETE`
+
+Progress: `100%`
+
+### Closure Evidence
+
+* persistent LearningObject lifecycle verified;
+* cross-session aggregate reconstruction verified;
+* Version history recovery verified;
+* Audit history recovery verified;
+* final Retired state verified;
+* latest verification result: `74 passed`;
+* latest checkpoint: `d679299`.
+
+IA-07 is closed.
 
 ---
 
-## Version Boundary
+================================================================================
 
-LearningObject is the primary unit of knowledge versioning.
+# Phase IA-08 — Implementation Conformance
 
-KnowledgeStatement remains an aggregate member/value.
+================================================================================
 
-Version history remains explicitly LearningObject-centered.
+Status:
 
-Audit history remains operational history and must not replace immutable Version history.
+CURRENT — IN PROGRESS
 
----
+Current Finding:
 
-## Next Action
+IA-08-A02 — Transactional Event Record
 
-The next action is:
-
-**IA-08 — IMPLEMENTATION CONFORMANCE**
-
-The objective is to compare the resulting implementation against the authoritative normative corpus.
-
-The conformance pass must:
-
-1. compare the implementation against the authoritative normative specifications;
-2. identify only confirmed deviations;
-3. distinguish already-closed findings from genuinely remaining gaps;
-4. verify that no completed IA or E2E gate is reopened without contradictory evidence;
-5. resolve or explicitly document any remaining implementation deviation;
-6. establish the next authoritative gate only after the conformance assessment.
-
-The completed E2E-GATE-01 persistence lifecycle is evidence for conformance and is not an unresolved E2E gap.
-
----
-
-## Explicit Do-Not-Reopen Rule
-
-Unless new authoritative or repository evidence reveals a direct contradiction, the next session MUST NOT restart:
-
-* specification propagation review;
-* complete implementation inventory;
-* E2E gap discovery;
-* IA-01 Domain Semantic Alignment;
-* IA-02 Contract and Lifecycle Alignment;
-* IA-03 Persistence Model;
-* IA-04 Concrete Repository Integration;
-* IA-05 Database Wiring;
-* E2E-07 Production Persistence;
-* previously consolidated architectural decisions.
-
-These activities are already represented in this Bootstrap Pack as completed and verified work.
-
-The next session MUST resume at:
-
-`IA-08 — Implementation Conformance`
-
-If a contradiction is discovered, identify the authoritative source first and update the Bootstrap Pack only after the contradiction has been established and resolved.
-
----
-
-## Session Exit Criterion
-
-At the end of the next session, this document MUST be updated if any of the following changed:
-
-* current gate;
-* finding status;
-* implementation baseline;
-* E2E status;
-* roadmap position;
-* authoritative interpretation.
-
-The Bootstrap Pack MUST remain internally consistent after such an update.
-
-The historical E2E-GATE-01 checkpoint remains:
-
-d679299
-
-The historical E2E-GATE-01 verification result remains:
-
-74 passed
-
-The latest A01.6 implementation verification result is:
-
-79 passed
-
-The current working package is:
-
-IA-08 — Implementation Conformance
-
-The current responsibility is:
+Completed Finding:
 
 IA-08-A01 — Application Service
 
-A01.6 — Application Error Boundary is:
+Status:
 
-RESOLVED / VERIFIED
+COMPLETE / CLOSED
+
+IA-08-A01 Responsibility Status:
+
+A01.2 — Review / Change Proposal
+IMPLEMENTATION VERIFIED / RESOLVED
+
+A01.3 — Category Service
+CONFORMANT
+
+A01.4 — Version Service
+CONFORMANT
+
+A01.5 — Audit Service
+CONFORMANT
+
+A01.6 — Application Error Boundary
+RESOLVED
+
+A01.7 — Transaction Boundary
+IMPLEMENTATION VERIFIED / RESOLVED
+
+A01.2 — Review / Change Proposal
+
+Implementation and verification are complete.
+
+Verified:
+
+* Change Proposal representation;
+* Change Proposal persistence before evaluation;
+* Review decision / decision trace representation;
+* Learning Review application boundary;
+* Knowledge Validation success and rejection paths;
+* Repository Consistency success and rejection paths;
+* APPROVE coordination;
+* REJECT coordination;
+* REQUEST REVISION coordination;
+* ReviewDecisionTrace persistence;
+* final review outcomes through the LearningReviewAdapter.
+
+A01.2 is closed and shall not be reopened unless new contradictory evidence is
+discovered.
+
+A01.3 — Category Service
+
+The Category Service application boundary is implemented and verified.
+
+Verified:
+
+* category retrieval;
+* category-tree construction;
+* parent-child hierarchy construction;
+* orphan-category handling;
+* CategoryRepository abstraction;
+* dedicated CategoryService verification tests.
+
+A01.3 is CONFORMANT and shall not be reopened unless new contradictory
+evidence is discovered.
+
+A01.4 — Version Service
+
+Versioning behavior is implemented and verified.
+
+Verified:
+
+* Version domain entity;
+* immutable Version representation;
+* VersionRepository;
+* version history retrieval;
+* first-version creation during approval;
+* subsequent-version creation during knowledge update;
+* sequential version numbering;
+* immutable historical snapshots;
+* preservation of previous versions;
+* transactional integration with Learning Object persistence.
+
+No dedicated VersionService is required solely by naming difference.
+
+A01.4 is CONFORMANT and shall not be reopened unless new contradictory
+evidence is discovered.
+
+A01.5 — Audit Service
+
+Audit behavior is implemented and verified.
+
+Verified:
+
+* AuditRecord domain entity;
+* AuditRepository;
+* audit record creation;
+* audit persistence;
+* audit retrieval by entity;
+* actor attribution;
+* event type preservation;
+* metadata preservation;
+* transactional integration with approval.
+
+AuditRepository provides the required persistence boundary through:
+
+* record();
+* find_by_entity().
+
+No dedicated AuditService is required solely by naming difference.
+
+A01.5 is CONFORMANT and shall not be reopened unless new contradictory
+evidence is discovered.
+
+A01.6 — Application Error Boundary
+
+RESOLVED.
+
+The centralized application error boundary has been implemented and verified.
+
+A01.6 shall not be reopened unless new contradictory authoritative or
+repository evidence demonstrates a regression or contradiction.
+
+A01.7 — Transaction Boundary
+
+IMPLEMENTATION VERIFIED / RESOLVED.
+
+Verified:
+
+* existing transaction boundary infrastructure is reused;
+* LearningObjectService.approve() executes Learning Object persistence,
+  Version persistence, and Audit persistence within one transaction boundary;
+* the existing shared Session is preserved across the involved repositories;
+* rollback behavior when Audit persistence fails;
+* commit behavior when all persistence operations succeed;
+* existing approval behavior remains green.
+
+A01.7 is closed and shall not be reopened unless new contradictory evidence is
+discovered.
+
+IA-08-A01 Closure Evidence:
+
+* all currently identified A01 responsibilities have received a
+  responsibility-level disposition;
+* A01.2 is IMPLEMENTATION VERIFIED / RESOLVED;
+* A01.3 is CONFORMANT;
+* A01.4 is CONFORMANT;
+* A01.5 is CONFORMANT;
+* A01.6 is RESOLVED;
+* A01.7 is IMPLEMENTATION VERIFIED / RESOLVED;
+* full test suite: 123 passed.
+
+IA-08-A01 is therefore COMPLETE / CLOSED.
+
+### Gate
+
+`IMPLEMENTATION CONFORMANCE`
+
+Status: `IN PROGRESS`
+
+The gate remains open because IA-08-A02 and the subsequent IA-08 findings
+remain to be assessed.
+
+IA-08-A01 is complete and closed.
+
+Remaining IA-08 Findings:
+
+* IA-08-A02 — Transactional Event Record;
+* IA-08-A03 — Security and Authorization;
+* IA-08-A04 — API Implementation.
 
 ---
 
-================================================================================
-## Frozen Resume Point
-================================================================================
+## Current Roadmap Position
 
-**RESUME AT: IA-08 IMPLEMENTATION CONFORMANCE**
+M0.3.2 Specification Propagation
+│
+▼
+Implementation Baseline Inventory
+│
+▼
+E2E Gap Map
+│
+▼
+IA-01 Domain Semantic Alignment
+│
+│ COMPLETE — 100%
+▼
+IA-02 Contract and Lifecycle Alignment
+│
+│ COMPLETE — 100%
+▼
+IA-03 Persistence Model
+│
+│ COMPLETE — 100%
+▼
+IA-04 Concrete Repository Layer
+│
+│ COMPLETE — 100%
+▼
+IA-05 Database Wiring
+│
+│ COMPLETE — 100%
+▼
+E2E-07 Production Persistence
+│
+│ COMPLETE — VERIFIED
+│ checkpoint: b00d5c7
+│
+▼
+IA-06 Persistence Test Conformance
+│
+│ COMPLETE — 100%
+│ E2E-08 → E2E-11 VERIFIED
+│
+▼
+IA-07 E2E-GATE-01
+│
+│ COMPLETE — 100%
+│ checkpoint: d679299
+│ historical test suite: 74 passed
+│
+▼
+IA-08 Implementation Conformance
+│
+│ CURRENT — IN PROGRESS
+│
+│ IA-08-A01 — COMPLETE / CLOSED
+│
+│ IA-08-A02 — NEXT
+│
+│ Transactional Event Record
+│
+▼
+IA-08-A03
+│
+│ PENDING
+│
+│ Security and Authorization
+│
+▼
+IA-08-A04
+│
+│ PENDING
+│
+│ API Implementation
 
-**M0.3.2 SPECIFICATION PROPAGATION: COMPLETE**
+## Current Status Summary
 
-**IA-01 DOMAIN SEMANTIC ALIGNMENT: COMPLETE**
+| Phase                                  | Status      | Progress |
+| -------------------------------------- | ----------- | -------: |
+| IA-01 Domain Semantic Alignment        | COMPLETE    |     100% |
+| IA-02 Contract and Lifecycle Alignment | COMPLETE    |     100% |
+| IA-03 Persistence Model                | COMPLETE    |     100% |
+| IA-04 Concrete Repository Layer        | COMPLETE    |     100% |
+| IA-05 Database Wiring                  | COMPLETE    |     100% |
+| E2E-07 Production Persistence          | COMPLETE    |     100% |
+| E2E-08 Persistent Reload               | VERIFIED    |     100% |
+| E2E-09 Version History Recovery        | VERIFIED    |     100% |
+| E2E-10 Audit History Recovery          | VERIFIED    |     100% |
+| E2E-11 Persistent End-to-End Test      | VERIFIED    |     100% |
+| IA-06 Persistent Integration Tests     | COMPLETE    |     100% |
+| IA-07 E2E-GATE-01                      | COMPLETE    |     100% |
+| IA-08-A01 Application Service          | COMPLETE    |     100% |
+| IA-08-A02 Transactional Event Record   | NEXT        |        — |
+| IA-08-A03 Security and Authorization   | PENDING     |        — |
+| IA-08-A04 API Implementation           | PENDING     |        — |
+| IA-08 Implementation Conformance       | IN PROGRESS |        — |
 
-**IA-02 CONTRACT AND LIFECYCLE ALIGNMENT: COMPLETE — 100%**
+## Last Completed Gate
 
-**IA-03 PERSISTENCE MODEL: COMPLETE**
+`IA-08-A01 — APPLICATION SERVICE — COMPLETE / CLOSED`
 
-**IA-04 CONCRETE REPOSITORY INTEGRATION: COMPLETE**
+Verification:
 
-**IA-05 DATABASE WIRING: COMPLETE**
+`123 passed`
 
-**IA-06 PERSISTENCE TEST CONFORMANCE: COMPLETE — 100%**
+## Current Work Package
 
-**E2E-07 PRODUCTION PERSISTENCE: COMPLETE — VERIFIED**
+`IA-08 — IMPLEMENTATION CONFORMANCE — IN PROGRESS`
 
-**E2E-08 PERSISTENT RELOAD: VERIFIED**
+Current finding:
 
-**E2E-09 VERSION HISTORY RECOVERY: VERIFIED**
+`IA-08-A02 — Transactional Event Record`
 
-**E2E-10 AUDIT HISTORY RECOVERY: VERIFIED**
+Completed finding:
 
-**E2E-11 PERSISTENT END-TO-END TEST: VERIFIED**
+`IA-08-A01 — Application Service — COMPLETE / CLOSED`
 
-**IA-07 / E2E-GATE-01: COMPLETE — VERIFIED**
+## Next Action
 
-**HISTORICAL E2E TEST SUITE: 74 PASSED**
+Inspect IA-08-A02 — Transactional Event Record against the authoritative
+normative corpus and the current repository implementation.
 
-**HISTORICAL E2E GIT CHECKPOINT: d679299**
+The next implementation action shall:
 
-**IA-08 IMPLEMENTATION CONFORMANCE: IN PROGRESS**
+1. inspect the authoritative responsibility semantics;
+2. inspect the existing implementation boundary;
+3. identify only confirmed implementation deviations;
+4. preserve IA-08-A01 and all previously closed responsibilities;
+5. implement only a confirmed gap;
+6. verify focused tests;
+7. verify the complete test suite;
+8. update the corresponding implementation documentation;
+9. establish the next controlled action only after verification.
 
-**IA-08-A01 APPLICATION SERVICE: IN PROGRESS**
+Then proceed using:
 
-**A01.6 APPLICATION ERROR BOUNDARY: RESOLVED — VERIFIED**
+`inspect → responsibility disposition → implement only confirmed gap → test → verify → checkpoint → next finding`
 
-**A01.6 CURRENT VERIFICATION: 79 PASSED**
+## Operating Rule
 
-**REMAINING A01 RESPONSIBILITIES: A01.2 BLOCKED; A01.3 PARTIAL; A01.4 PARTIAL; A01.5 PARTIAL; A01.7 PARTIAL**
+No implementation change is considered complete until its focused test passes.
 
-**A01.6 MUST NOT BE REOPENED WITHOUT CONTRADICTORY AUTHORITATIVE OR REPOSITORY EVIDENCE**
+For an existing file with a small, localized change, identify only the sections
+that need modification instead of rewriting the whole file.
+
+For a new file, provide one complete block for that file.
+
+If a single-file change is too large for one block, split it into sequential
+blocks while keeping all blocks scoped to that same file.
+
+Distinct files are always handled as distinct blocks.
+
+If a repository read or search fails, automatically try alternative Git tree,
+path, or lookup methods before stopping.
+
+Do not reopen a completed IA phase unless new authoritative evidence establishes
+a direct contradiction with the normative architecture or roadmap.
+
+IA-01 through IA-07 are closed.
+
+IA-08-A01 is complete and closed.
+
+The next confirmed work package is:
+
+`IA-08-A02 — Transactional Event Record`
