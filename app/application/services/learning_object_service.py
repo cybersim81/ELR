@@ -16,6 +16,7 @@ from app.domain.repositories.learning_object_repository import (
     LearningObjectRepository,
 )
 from app.domain.repositories.version_repository import VersionRepository
+from contextlib import nullcontext
 
 
 
@@ -28,14 +29,16 @@ class LearningObjectService:
     """
 
     def __init__(
-        self,
-        learning_object_repository: LearningObjectRepository,
-        version_repository: VersionRepository,
-        audit_repository: AuditRepository,
-    ):
-        self.learning_object_repository = learning_object_repository
-        self.version_repository = version_repository
-        self.audit_repository = audit_repository
+    self,
+    learning_object_repository: LearningObjectRepository,
+    version_repository: VersionRepository,
+    audit_repository: AuditRepository,
+    transaction_factory=None,
+):
+    self.learning_object_repository = learning_object_repository
+    self.version_repository = version_repository
+    self.audit_repository = audit_repository
+    self.transaction_factory = transaction_factory or nullcontext
 
     def create_candidate(
         self,
@@ -103,20 +106,18 @@ class LearningObjectService:
         return learning_object
 
     def approve(
-        self,
-        learning_object_id: UUID,
-        actor: str,
-    ) -> LearningObject:
-        """
-        Proposed -> Active
+    self,
+    learning_object_id: UUID,
+    actor: str,
+) -> LearningObject:
+    """
+    Proposed -> Active.
 
-        Approval creates the first immutable Version
-        and records an audit event.
-        """
-
-        learning_object = self._get_or_raise(
-            learning_object_id
-        )
+    Approval creates the first immutable Version and records
+    the audit event within one transaction boundary.
+    """
+    with self.transaction_factory():
+        learning_object = self._get_or_raise(learning_object_id)
 
         try:
             learning_object.approve()
@@ -129,27 +130,18 @@ class LearningObjectService:
             learning_object_id=learning_object.id,
             number=1,
             snapshot={
-                "anchor_id": str(
-                    learning_object.anchor_id
-                ),
+                "anchor_id": str(learning_object.anchor_id),
                 "statement": {
                     "text": learning_object.statement.text,
                     "language": learning_object.statement.language,
                 },
-                "category_id": str(
-                    learning_object.category_id
-                ),
+                "category_id": str(learning_object.category_id),
                 "state": learning_object.state.value,
             },
         )
 
-        self.learning_object_repository.save(
-            learning_object
-        )
-
-        self.version_repository.save(
-            version
-        )
+        self.learning_object_repository.save(learning_object)
+        self.version_repository.save(version)
 
         self.audit_repository.record(
             AuditRecord(
