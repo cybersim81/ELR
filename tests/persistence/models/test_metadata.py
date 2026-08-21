@@ -5,6 +5,7 @@ from app.persistence.models.learning_object_value_models import (
     LearningObjectExampleModel,
     LearningObjectNoteModel,
 )
+from app.persistence.models.event_record_model import EventRecordModel
 
 
 def test_persistence_models_are_registered_in_base_metadata():
@@ -12,6 +13,7 @@ def test_persistence_models_are_registered_in_base_metadata():
     assert LearningObjectModel.__tablename__ in Base.metadata.tables
     assert LearningObjectExampleModel.__tablename__ in Base.metadata.tables
     assert LearningObjectNoteModel.__tablename__ in Base.metadata.tables
+    assert EventRecordModel.__tablename__ in Base.metadata.tables
 
 
 def test_learning_object_owned_collections_use_delete_orphan():
