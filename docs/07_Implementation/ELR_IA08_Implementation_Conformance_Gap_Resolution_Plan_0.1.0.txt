@@ -744,13 +744,84 @@ A01.3 — Category Service
 
 PARTIAL
 
+The Category Service boundary is implemented and provides category retrieval
+and category-tree construction.
+
+However, responsibility-level conformance has not yet been fully disposed.
+
+The implementation shall remain under focused inspection before A01.3 is
+classified as CONFORMANT or GAP.
+
 A01.4 — Version Service
 
-PARTIAL
+CONFORMANT
+
+Versioning behavior is implemented and verified.
+
+Implementation evidence includes:
+
+* Version domain entity;
+* immutable Version representation;
+* VersionRepository;
+* version history retrieval;
+* first-version creation during approval;
+* subsequent-version creation during knowledge update;
+* sequential version numbering;
+* immutable historical snapshots;
+* preservation of previous versions;
+* transactional integration with Learning Object persistence;
+* verification through the existing application-service test suite.
+
+No dedicated VersionService has been demonstrated as required by the
+authoritative specification.
+
+The absence of a class named VersionService is therefore not considered an
+implementation gap.
+
+The current LearningObjectService responsibility boundary is sufficient to
+coordinate the existing versioning behavior.
+
+A01.4 is therefore considered CONFORMANT.
+
+No VersionService shall be introduced solely to satisfy a naming difference.
 
 A01.5 — Audit Service
 
-PARTIAL
+CONFORMANT
+
+Audit behavior is implemented and verified.
+
+Implementation evidence includes:
+
+* AuditRecord domain entity;
+* AuditRepository;
+* audit record creation;
+* audit persistence;
+* audit retrieval by entity;
+* actor attribution;
+* event type preservation;
+* metadata preservation;
+* audit integration with significant Learning Object operations;
+* transactional integration with approval;
+* verification through the existing application-service test suite.
+
+The AuditRepository already provides the required persistence boundary through:
+
+* record();
+* find_by_entity().
+
+No dedicated AuditService has been demonstrated as required by the
+authoritative specification.
+
+The absence of a class named AuditService is therefore not considered an
+implementation gap.
+
+The current LearningObjectService responsibility boundary is sufficient to
+coordinate the existing audit behavior.
+
+A01.5 is therefore considered CONFORMANT.
+
+No AuditService shall be introduced solely to satisfy a naming difference.
 
 A01.7 — Transaction Boundary
 
