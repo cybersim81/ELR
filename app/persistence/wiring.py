@@ -11,6 +11,7 @@ from app.persistence.repositories.learning_object_repository import (
 from app.persistence.repositories.version_repository import (
     SQLAlchemyVersionRepository,
 )
+from app.persistence.transaction import transaction
 
 
 def create_learning_object_service(
@@ -28,6 +29,7 @@ def create_learning_object_service(
         audit_repository=SQLAlchemyAuditRepository(
             session
         ),
+        transaction_factory=lambda: transaction(session),
     )
 
     return service, session
