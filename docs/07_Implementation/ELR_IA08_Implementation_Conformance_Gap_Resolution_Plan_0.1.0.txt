@@ -904,12 +904,15 @@ Review semantics.
 
 Current Active Finding:
 
-IA-08-A01
+IA-08-A02 — Transactional Event Record
 
 Current Controlled Action:
 
-IA-08-A01 — Application Service has received a complete responsibility-level
-disposition.
+Inspect IA-08-A02 at responsibility level against the authoritative normative
+specifications and the current repository implementation.
+
+IA-08-A01 — Application Service has received a complete
+responsibility-level disposition.
 
 All currently identified A01 responsibilities have been inspected and
 disposed:
@@ -923,12 +926,43 @@ disposed:
 
 No remaining non-resolved A01 responsibility is currently identified.
 
-The A01 implementation resolution shall remain closed unless new
-contradictory evidence is discovered.
+IA-08-A01 is therefore considered COMPLETE / CLOSED.
 
-The resolution process may now proceed to IA-08-A02.
+The A01 implementation resolution shall remain closed unless new
+contradictory authoritative or repository evidence is discovered.
+
+The resolution process now proceeds to IA-08-A02 — Transactional Event Record.
+
+IA-08-A02 shall not be assumed to represent an implementation gap before
+focused responsibility-level inspection is completed.
+
+The next implementation action shall be selected only after inspection
+confirms that the required capability is missing or incomplete.
+
+The following responsibilities shall not be reopened as part of the next
+change:
+
+A01.2 — Review / Change Proposal
+
+A01.3 — Category Service
+
+A01.4 — Version Service
+
+A01.5 — Audit Service
+
+A01.6 — Application Error Boundary
+
+A01.7 — Transaction Boundary
+
+A01.2, A01.3, A01.4, A01.5, A01.6 and A01.7 have been implemented and
+verified and shall remain closed unless new contradictory evidence is
+discovered.
+
+The resolution process shall continue with IA-08-A02 before proceeding to
+IA-08-A03 or IA-08-A04.
 
 
 ================================================================================
 End of Document
 ===============
+ssss
