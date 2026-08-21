@@ -61,3 +61,52 @@ def test_save_does_not_commit():
 
     session.commit.assert_not_called()
     session.flush.assert_not_called()
+
+
+def test_get_returns_event_record():
+    session = Mock()
+    repository = SQLAlchemyEventRecordRepository(session)
+
+    event = make_event()
+
+    model = EventRecordModel(
+        event_id=event.event_id,
+        event_type=event.event_type,
+        event_source=event.event_source,
+        aggregate_type=event.aggregate_type,
+        aggregate_id=event.aggregate_id,
+        version=event.version,
+        payload=dict(event.payload),
+        occurred_at=event.occurred_at,
+        published_at=event.published_at,
+        created_at=event.created_at,
+        metadata_=dict(event.metadata),
+    )
+
+    session.scalar.return_value = model
+
+    restored = repository.get(event.event_id)
+
+    assert restored is not None
+    assert restored.event_id == event.event_id
+    assert restored.event_type == event.event_type
+    assert restored.event_source == event.event_source
+    assert restored.aggregate_type == event.aggregate_type
+    assert restored.aggregate_id == event.aggregate_id
+    assert restored.version == event.version
+    assert restored.payload == event.payload
+    assert restored.occurred_at == event.occurred_at
+    assert restored.published_at == event.published_at
+    assert restored.created_at == event.created_at
+    assert restored.metadata == event.metadata
+
+
+def test_get_returns_none_when_event_record_does_not_exist():
+    session = Mock()
+    repository = SQLAlchemyEventRecordRepository(session)
+
+    session.scalar.return_value = None
+
+    result = repository.get(uuid4())
+
+    assert result is None
