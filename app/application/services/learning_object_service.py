@@ -29,16 +29,16 @@ class LearningObjectService:
     """
 
     def __init__(
-    self,
-    learning_object_repository: LearningObjectRepository,
-    version_repository: VersionRepository,
-    audit_repository: AuditRepository,
-    transaction_factory=None,
-):
-    self.learning_object_repository = learning_object_repository
-    self.version_repository = version_repository
-    self.audit_repository = audit_repository
-    self.transaction_factory = transaction_factory or nullcontext
+        self,
+        learning_object_repository: LearningObjectRepository,
+        version_repository: VersionRepository,
+        audit_repository: AuditRepository,
+        transaction_factory=None,
+    ):
+        self.learning_object_repository = learning_object_repository
+        self.version_repository = version_repository
+        self.audit_repository = audit_repository
+        self.transaction_factory = transaction_factory or nullcontext
 
     def create_candidate(
         self,
