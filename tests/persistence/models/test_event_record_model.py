@@ -1,3 +1,5 @@
+from sqlalchemy.dialects.postgresql import JSONB
+
 from app.persistence.models.event_record_model import EventRecordModel
 
 
@@ -20,8 +22,8 @@ def test_event_record_model_metadata():
     assert columns["metadata"].nullable is True
 
 
-def test_event_record_model_uses_jsonb_for_payload_and_metadata():
+def test_event_record_model_uses_jsonb():
     columns = EventRecordModel.__table__.columns
 
-    assert columns["payload"].type.__class__.__name__ == "JSONB"
-    assert columns["metadata"].type.__class__.__name__ == "JSONB"
+    assert isinstance(columns["payload"].type, JSONB)
+    assert isinstance(columns["metadata"].type, JSONB)
