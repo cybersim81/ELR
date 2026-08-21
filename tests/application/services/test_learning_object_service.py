@@ -401,7 +401,7 @@ def test_retire_invalid_state_raises_invalid_operation():
 
 
 
-def test_approve_is_not_atomic_when_audit_persistence_fails():
+def test_approve_rolls_back_when_audit_persistence_fails():
     from copy import deepcopy
     from uuid import uuid4
 
@@ -415,6 +415,37 @@ def test_approve_is_not_atomic_when_audit_persistence_fails():
         LearningObject,
         LearningObjectState,
     )
+
+    class InMemoryTransaction:
+        def __init__(
+            self,
+            learning_object_repository,
+            version_repository,
+        ):
+            self.learning_object_repository = learning_object_repository
+            self.version_repository = version_repository
+            self.learning_object_snapshot = None
+            self.version_snapshot = None
+
+        def __enter__(self):
+            self.learning_object_snapshot = deepcopy(
+                self.learning_object_repository.persisted
+            )
+            self.version_snapshot = deepcopy(
+                self.version_repository.versions
+            )
+            return self
+
+        def __exit__(self, exc_type, exc_value, traceback):
+            if exc_type is not None:
+                self.learning_object_repository.persisted = deepcopy(
+                    self.learning_object_snapshot
+                )
+                self.version_repository.versions = deepcopy(
+                    self.version_snapshot
+                )
+
+            return False
 
     class InMemoryLearningObjectRepository:
         def __init__(self, learning_object):
@@ -446,9 +477,6 @@ def test_approve_is_not_atomic_when_audit_persistence_fails():
         def record(self, audit):
             raise RuntimeError("audit persistence failed")
 
-        def find_by_entity(self, entity_id):
-            return []
-
     learning_object = LearningObject(
         anchor_id=uuid4(),
         statement=KnowledgeStatement(
@@ -466,10 +494,16 @@ def test_approve_is_not_atomic_when_audit_persistence_fails():
     version_repository = InMemoryVersionRepository()
     audit_repository = FailingAuditRepository()
 
+    transaction = InMemoryTransaction(
+        learning_object_repository,
+        version_repository,
+    )
+
     service = LearningObjectService(
         learning_object_repository=learning_object_repository,
         version_repository=version_repository,
         audit_repository=audit_repository,
+        transaction_factory=lambda: transaction,
     )
 
     with pytest.raises(
@@ -481,15 +515,13 @@ def test_approve_is_not_atomic_when_audit_persistence_fails():
             actor="test-user",
         )
 
-    # Diagnostic evidence of the missing transaction boundary:
-    # the LearningObject and Version have already been persisted
-    # even though the final AuditRecord operation failed.
-    assert learning_object_repository.persisted.state == (
-        LearningObjectState.ACTIVE
-    )
+    persisted = learning_object_repository.persisted
 
-    assert len(
+    assert persisted.state != LearningObjectState.ACTIVE
+
+    assert (
         version_repository.get_history(
             learning_object.id,
         )
-    ) == 1
+        == []
+    )
