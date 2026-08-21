@@ -1,388 +1,487 @@
 # 07_Session_Prompt.txt
 
-================================================================================
-# ELR — Session Prompt
-================================================================================
+## Session Prompt
 
-This document is the operational entry point for any new implementation
-session in the ELR repository.
+### Purpose
 
-It provides the minimum authoritative context required to resume work without
-reconstructing the project state from chat history.
+This document is the operational entry point for a new ELR implementation
+session.
 
-The session must treat the repository contents, the normative corpus, and the
-implementation documentation as the authoritative sources of truth.
+A new session MUST read the complete Bootstrap Pack before making any
+implementation decision.
 
-Chat history is contextual only and must not override repository evidence or
-the normative corpus.
+The Bootstrap Pack provides:
 
+* normative baseline state;
+* implementation baseline inventory;
+* implementation finding register;
+* E2E gap map;
+* implementation alignment roadmap;
+* session continuity state;
+* this operational session prompt.
 
-================================================================================
-## Session Operating Rules
-================================================================================
+The authoritative normative specifications remain the final authority in case
+of contradiction.
 
-1. Inspect before modifying.
-
-2. Do not infer implementation state from documentation alone when repository
-   evidence can be inspected directly.
-
-3. Do not reopen a responsibility already marked RESOLVED / VERIFIED unless
-   new authoritative or repository evidence demonstrates a regression,
-   contradiction, or previously missed gap.
-
-4. Do not replace historical checkpoints with newer implementation
-   verification results. Historical checkpoints must remain identifiable as
-   historical.
-
-5. Every implementation change must be followed by focused verification and
-   complete test-suite verification where applicable.
-
-6. Implementation documentation must remain synchronized with verified
-   repository state.
-
-7. Work must proceed through controlled, evidence-based increments.
-
-8. When a gap is identified, distinguish clearly between:
-   - missing implementation;
-   - partial implementation;
-   - blocked implementation;
-   - documentation-only inconsistency;
-   - already-resolved responsibility.
-
-9. Do not expand scope beyond the confirmed gap.
-
-10. Preserve all previously verified E2E gates unless contradictory evidence
-    is found.
-
+---
 
 ================================================================================
-### Current Project Position
+
+# Current Implementation State
+
 ================================================================================
 
-The ELR implementation roadmap has completed the following stages:
+ELR is currently in:
 
-`IA-01 Domain Semantic Alignment → COMPLETE`
-
-`IA-02 Contract and Lifecycle Alignment → COMPLETE`
-
-`IA-03 Persistence Model → COMPLETE`
-
-`IA-04 Concrete Repository Layer → COMPLETE`
-
-`IA-05 Database Wiring → COMPLETE`
-
-`E2E-07 Production Persistence → COMPLETE — VERIFIED`
-
-`E2E-08 Persistent Reload → VERIFIED`
-
-`E2E-09 Version History Recovery → VERIFIED`
-
-`E2E-10 Audit History Recovery → VERIFIED`
-
-`E2E-11 Persistent End-to-End Test → VERIFIED`
-
-`IA-06 Persistence Test Conformance → COMPLETE`
-
-`IA-07 / E2E-GATE-01 → COMPLETE — VERIFIED`
-
-
-Historical E2E-GATE-01 checkpoint:
-
-`d679299`
-
-Historical E2E-GATE-01 verification:
-
-`74 passed`
-
-
-Current work package:
-
-`IA-08 — Implementation Conformance`
+`IA-08 — IMPLEMENTATION CONFORMANCE`
 
 Status:
 
 `IN PROGRESS`
 
+IA-01 through IA-07 are complete or verified according to the current
+implementation roadmap and continuity state.
 
-Current responsibility:
+The current implementation work is NOT a new architectural redesign.
 
-`IA-08-A01 — Application Service`
+The current task is responsibility-level conformance inspection against the
+authoritative normative corpus.
 
+---
 
-Current responsibility disposition:
-
-`A01.2 — Review / Change Proposal — BLOCKED`
-
-`A01.3 — Category Service — PARTIAL`
-
-`A01.4 — Version Service — PARTIAL`
-
-`A01.5 — Audit Service — PARTIAL`
-
-`A01.6 — Application Error Boundary — RESOLVED / VERIFIED`
-
-`A01.7 — Transaction Boundary — PARTIAL`
-
-
-Latest A01.6 implementation verification:
-
-`79 passed`
-
-
-A01.6 must remain closed unless new authoritative or repository evidence
-demonstrates a regression, contradiction, or previously missed implementation
-gap.
-
-
-================================================================================
-### Current Known Open Items
-================================================================================
-
-The current implementation-conformance work is limited to:
+## Completed IA-08 Finding
 
 `IA-08-A01 — Application Service`
-
-
-Known A01 responsibility states:
-
-`A01.2 — Review / Change Proposal`
 
 Status:
+
+`COMPLETE / CLOSED`
+
+A01 responsibility disposition:
+
+* A01.2 — Review / Change Proposal
+  `IMPLEMENTATION VERIFIED / RESOLVED`;
+
+* A01.3 — Category Service
+  `CONFORMANT`;
+
+* A01.4 — Version Service
+  `CONFORMANT`;
+
+* A01.5 — Audit Service
+  `CONFORMANT`;
+
+* A01.6 — Application Error Boundary
+  `RESOLVED`;
+
+* A01.7 — Transaction Boundary
+  `IMPLEMENTATION VERIFIED / RESOLVED`.
+
+No remaining non-resolved A01 responsibility is currently identified.
+
+A01 MUST NOT be reopened unless new authoritative or repository evidence
+demonstrates a direct contradiction, regression, or previously undiscovered
+responsibility.
+
+---
+
+## Verification State
+
+The completed A01 implementation has been verified through the existing
+application-service and focused verification tests.
+
+Current complete-suite result:
+
+`123 passed`
+
+A01 verification includes:
+
+* Review / Change Proposal coordination;
+* Category Service behavior;
+* Version behavior and persistence;
+* Audit behavior and persistence;
+* Application Error Boundary behavior;
+* transactional approval behavior;
+* rollback behavior when Audit persistence fails;
+* commit behavior when all persistence operations succeed.
+
+---
+
+================================================================================
+
+# Current Finding
+
+================================================================================
+
+`IA-08-A02 — Transactional Event Record`
+
+Status:
+
+`NEXT`
+
+The new session MUST begin by inspecting IA-08-A02.
+
+Do NOT begin by re-inspecting IA-08-A01 unless contradictory evidence is
+discovered.
+
+---
+
+## IA-08-A02 Objective
+
+Determine whether the repository implementation conforms to the authoritative
+normative responsibility for the Transactional Event Record.
+
+The inspection MUST establish:
+
+1. what the authoritative specifications require;
+2. what the current repository actually implements;
+3. which responsibilities already exist;
+4. which responsibilities are incomplete or absent;
+5. whether any apparent difference is architectural or merely naming;
+6. whether a confirmed implementation gap actually exists.
+
+Do not introduce a new service, entity, repository, boundary, or abstraction
+merely because a particular class or filename is absent.
+
+The absence of a named class is NOT sufficient evidence of non-conformance.
+
+Responsibility and behavior are authoritative; naming is secondary.
+
+---
+
+================================================================================
+
+# Required Working Method
+
+================================================================================
+
+Follow this sequence:
+
+`inspect → compare → responsibility disposition → implement only confirmed gap → test → verify → checkpoint → roadmap/bootstrap update → next finding`
+
+### Step 1 — Normative Inspection
+
+Read the authoritative normative specifications relevant to IA-08-A02.
+
+Identify:
+
+* required responsibility;
+* required semantics;
+* persistence expectations;
+* transaction expectations;
+* lifecycle/event expectations;
+* actor/context requirements;
+* required integration points;
+* explicit invariants.
+
+Do not infer requirements from filenames alone.
+
+### Step 2 — Repository Inspection
+
+Inspect the current repository implementation.
+
+Search for:
+
+* domain entities;
+* application services;
+* repositories;
+* persistence models;
+* transaction boundaries;
+* event or audit representations;
+* existing tests;
+* adapters;
+* wiring;
+* existing integration points.
+
+Prefer existing implementation boundaries when they already satisfy the
+normative responsibility.
+
+### Step 3 — Responsibility Disposition
+
+Classify the inspected responsibility as one of:
+
+`CONFORMANT`
+
+`IMPLEMENTATION VERIFIED / RESOLVED`
+
+`PARTIAL`
+
+`GAP`
 
 `BLOCKED`
 
-The responsibility remains blocked pending the authoritative conditions
-required for its implementation. No speculative implementation shall be
-introduced.
+Use the smallest classification supported by evidence.
 
+Do not create implementation work merely to eliminate a naming difference.
 
-`A01.3 — Category Service`
+### Step 4 — Implementation
 
-Status:
+If and only if a confirmed implementation gap exists:
 
-`PARTIAL`
+* modify only the necessary repository files;
+* preserve previously verified behavior;
+* preserve A01 closure;
+* avoid unrelated refactoring;
+* avoid speculative architecture;
+* keep the transaction model coherent;
+* maintain existing repository abstractions where sufficient.
 
-The actual repository implementation must be inspected before defining the
-remaining implementation gap.
+### Step 5 — Verification
 
+After implementation:
 
-`A01.4 — Version Service`
+* run focused tests for the changed responsibility;
+* run relevant application-service tests;
+* run the complete test suite;
+* record exact verification results.
 
-Status:
+A responsibility is not considered complete merely because the code appears
+correct.
 
-`PARTIAL`
+### Step 6 — Documentation
 
-The actual repository implementation must be inspected before defining the
-remaining implementation gap.
+After verification:
 
+* update the relevant IA-08 implementation roadmap;
+* update the current status;
+* update the Bootstrap Pack operational state;
+* update the session continuity state;
+* update the session prompt if the next resume point changes.
 
-`A01.5 — Audit Service`
+Do not modify baseline documents unless the baseline itself has materially
+changed.
 
-Status:
+### Step 7 — Checkpoint
 
-`PARTIAL`
+A checkpoint MUST be established after a responsibility receives a final
+disposition and verification is complete.
 
-The actual repository implementation must be inspected before defining the
-remaining implementation gap.
+The checkpoint MUST identify:
 
+* completed finding;
+* responsibility status;
+* verification result;
+* remaining findings;
+* next finding;
+* files changed;
+* relevant commit/checkpoint reference when available.
 
-`A01.6 — Application Error Boundary`
-
-Status:
-
-`RESOLVED / VERIFIED`
-
-Verified implementation characteristics include:
-
-* centralized application error taxonomy;
-* EntityNotFound translation at the application boundary;
-* InvalidOperation translation at the application boundary;
-* preservation of the original domain exception through exception chaining;
-* absence of catch-all exception translation;
-* focused tests passing;
-* complete test suite passing with `79 passed`.
-
-A01.6 is not a current implementation gap and must not be reopened without
-contradictory authoritative or repository evidence.
-
-
-`A01.7 — Transaction Boundary`
-
-Status:
-
-`PARTIAL`
-
-The actual repository implementation must be inspected before defining the
-remaining implementation gap.
-
-
-Current implementation-conformance rule:
-
-Only confirmed repository deviations shall be converted into implementation
-work.
-
-No responsibility shall be marked COMPLETE merely because its intended
-behavior is documented.
-
-No responsibility shall be marked FAILED merely because its implementation
-has not yet been inspected.
-
+---
 
 ================================================================================
-### Immediate Objective
+
+# Bootstrap Pack Consistency Rule
+
 ================================================================================
 
-Continue the controlled resolution of:
+The following operational documents MUST remain mutually consistent:
 
-`IA-08 — Implementation Conformance`
+`05_Implementation_Alignment_Roadmap.txt`
 
+`06_Session_Continuity_State.txt`
 
-Current active finding:
+`07_Session_Prompt.txt`
+
+They MUST describe the same:
+
+* current IA-08 finding;
+* completed IA-08 findings;
+* current status;
+* verification state;
+* next action.
+
+Baseline documents such as 01, 02, 03 and 04 MUST NOT be modified merely to
+reflect an operational checkpoint unless their actual baseline content has
+changed.
+
+---
+
+================================================================================
+
+# Current IA-08 Roadmap
+
+================================================================================
 
 `IA-08-A01 — Application Service`
+`COMPLETE / CLOSED`
 
+`IA-08-A02 — Transactional Event Record`
+`NEXT`
 
-The immediate objective is to inspect the remaining non-resolved A01
-responsibilities and determine the next confirmed implementation gap.
+`IA-08-A03 — Security and Authorization`
+`PENDING`
 
+`IA-08-A04 — API Implementation`
+`PENDING`
 
-The inspection order shall be:
+Current sequence:
 
-1. A01.3 — Category Service
-2. A01.4 — Version Service
-3. A01.5 — Audit Service
-4. A01.7 — Transaction Boundary
+`A01 CLOSED → A02 NEXT → A03 PENDING → A04 PENDING`
 
-
-A01.2 remains BLOCKED and shall not be implemented speculatively.
-
-
-For each responsibility:
-
-1. inspect the authoritative normative requirements;
-2. inspect the actual repository implementation;
-3. compare the implementation against the normative requirements;
-4. identify only confirmed deviations;
-5. determine whether the responsibility is CONFORMANT, PARTIAL, BLOCKED,
-   or requires implementation work;
-6. implement only the confirmed gap;
-7. run focused tests;
-8. run the complete test suite;
-9. update the corresponding implementation documentation;
-10. update the continuity documentation when the controlled state changes.
-
-
-The already-resolved responsibility:
-
-`A01.6 — Application Error Boundary`
-
-must remain closed throughout this process.
-
-
-Historical E2E-GATE-01 evidence must remain unchanged:
-
-checkpoint:
-
-`d679299`
-
-verification:
-
-`74 passed`
-
-
-Current A01.6 verification evidence:
-
-`79 passed`
-
-
-The next implementation decision must therefore be based on the repository
-inspection of the remaining A01 responsibilities, not on assumptions derived
-from the previous A01.6 work.
-
+---
 
 ================================================================================
-### Final Resume Instruction
-================================================================================
 
-Resume the ELR implementation work at:
-
-`IA-08 — Implementation Conformance`
-
-
-Current active finding:
-
-`IA-08-A01 — Application Service`
-
-
-Current resolved responsibility:
-
-`A01.6 — Application Error Boundary — RESOLVED / VERIFIED`
-
-
-Current remaining responsibility states:
-
-`A01.2 — BLOCKED`
-
-`A01.3 — PARTIAL`
-
-`A01.4 — PARTIAL`
-
-`A01.5 — PARTIAL`
-
-`A01.7 — PARTIAL`
-
-
-The next session must not reopen A01.6 unless new authoritative or
-repository evidence demonstrates a regression, contradiction, or previously
-missed implementation gap.
-
-
-The next controlled action is:
-
-1. inspect A01.3 — Category Service;
-2. verify the normative requirement;
-3. inspect the repository implementation;
-4. determine the actual conformance state;
-5. identify only confirmed implementation gaps;
-6. implement only the confirmed gap, if one exists;
-7. run focused verification;
-8. run the complete test suite;
-9. update the corresponding implementation documentation;
-10. update session-continuity documentation if the controlled state changes.
-
-
-If A01.3 is found conformant, proceed to A01.4 using the same controlled
-method.
-
-If A01.3 is found partial, define the smallest confirmed implementation gap
-before making any change.
-
-Do not infer missing behavior solely from the responsibility name.
-
-Do not introduce speculative abstractions.
-
-Do not modify unrelated responsibilities.
-
-Do not replace historical E2E-GATE-01 evidence.
-
-
-Historical E2E-GATE-01 checkpoint:
-
-`d679299`
-
-Historical E2E-GATE-01 verification:
-
-`74 passed`
-
-
-Latest A01.6 implementation verification:
-
-`79 passed`
-
-
-The implementation process remains:
-
-`inspect → identify gap → implement → focused test → full test suite → update documentation → verify → next responsibility`
-
+# Explicit Do-Not-Reopen Rule
 
 ================================================================================
+
+Unless new contradictory evidence is discovered, the next session MUST NOT
+restart:
+
+* specification propagation review;
+* implementation baseline inventory;
+* E2E gap discovery;
+* IA-01 Domain Semantic Alignment;
+* IA-02 Contract and Lifecycle Alignment;
+* IA-03 Persistence Model;
+* IA-04 Concrete Repository Integration;
+* IA-05 Database Wiring;
+* IA-06 Persistence Test Conformance;
+* IA-07 E2E-GATE-01;
+* IA-08-A01 Application Service.
+
+The following A01 responsibilities are closed:
+
+* A01.2;
+* A01.3;
+* A01.4;
+* A01.5;
+* A01.6;
+* A01.7.
+
+They MUST remain closed unless new authoritative or repository evidence
+establishes a contradiction or regression.
+
+---
+
+================================================================================
+
+# Repository Modification Rule
+
+================================================================================
+
+The user performs repository modifications directly.
+
+The assistant MUST NOT modify the repository directly unless explicitly
+authorized.
+
+When implementation changes are required, provide:
+
+* exact file path;
+* exact destination;
+* complete replacement block when appropriate;
+* exact insertion point;
+* test command;
+* expected verification purpose.
+
+If a file contains many dispersed changes and a complete rewrite is safer,
+provide the complete file content instead.
+
+Prefer minimal, controlled changes.
+
+---
+
+================================================================================
+
+# Test and Verification Rule
+
+================================================================================
+
+Every implementation change MUST be verified.
+
+Focused tests MUST pass before considering the responsibility complete.
+
+The complete test suite MUST be executed before declaring a finding resolved or
+conformant.
+
+Current baseline verification:
+
+`123 passed`
+
+Do not claim a new verification result until the test has actually been run.
+
+---
+
+================================================================================
+
+# New Session Resume Instruction
+
+================================================================================
+
+A new session MUST:
+
+1. read the complete Bootstrap Pack;
+2. read the current IA-08 implementation conformance roadmap;
+3. verify repository HEAD and current branch state;
+4. confirm that the Bootstrap Pack operational documents agree;
+5. resume at:
+
+`IA-08-A02 — Transactional Event Record`
+
+The new session MUST NOT assume that A02 is a gap.
+
+It MUST first inspect and compare the authoritative requirement with the
+existing implementation.
+
+---
+
+================================================================================
+
+# Frozen Resume Point
+
+================================================================================
+
+`IA-08 — IMPLEMENTATION CONFORMANCE`
+
+`IA-08-A01 — COMPLETE / CLOSED`
+
+`A01.2 — IMPLEMENTATION VERIFIED / RESOLVED`
+
+`A01.3 — CONFORMANT`
+
+`A01.4 — CONFORMANT`
+
+`A01.5 — CONFORMANT`
+
+`A01.6 — RESOLVED`
+
+`A01.7 — IMPLEMENTATION VERIFIED / RESOLVED`
+
+`A01 VERIFICATION — 123 PASSED`
+
+`IA-08-A02 — TRANSACTIONAL EVENT RECORD — NEXT`
+
+`IA-08-A03 — SECURITY AND AUTHORIZATION — PENDING`
+
+`IA-08-A04 — API IMPLEMENTATION — PENDING`
+
+---
+
+================================================================================
+
+# Final Resume Instruction
+
+================================================================================
+
+**RESUME AT: IA-08-A02 — TRANSACTIONAL EVENT RECORD**
+
+**DO NOT REOPEN IA-08-A01 WITHOUT CONTRADICTORY EVIDENCE.**
+
+**DO NOT ASSUME IA-08-A02 IS A GAP.**
+
+**INSPECT THE AUTHORITATIVE REQUIREMENT FIRST.**
+
+**INSPECT THE EXISTING REPOSITORY IMPLEMENTATION SECOND.**
+
+**DISPOSE THE RESPONSIBILITY BASED ON EVIDENCE.**
+
+**IMPLEMENT ONLY A CONFIRMED GAP.**
+
+**VERIFY FOCUSED TESTS.**
+
+**VERIFY THE COMPLETE TEST SUITE.**
+
+**UPDATE ROADMAP AND BOOTSTRAP STATE AFTER VERIFICATION.**
+
+**ESTABLISH THE NEXT CHECKPOINT BEFORE MOVING TO THE NEXT FINDING.**
