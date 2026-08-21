@@ -7,15 +7,9 @@ from app.events.event_record import EventRecord
 class EventRecordRepository(ABC):
 
     @abstractmethod
-    def save(
-        self,
-        event: EventRecord,
-    ) -> None:
-        pass
+    def save(self, event: EventRecord) -> None:
+        ...
 
     @abstractmethod
-    def get(
-        self,
-        event_id: UUID,
-    ) -> EventRecord | None:
-        pass
+    def get(self, event_id: UUID) -> EventRecord | None:
+        ...
