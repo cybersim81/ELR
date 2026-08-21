@@ -1,0 +1,325 @@
+================================================================================
+ELR
+
+A01.4 — Version Service
+Responsibility and Conformance Guide
+
+Version: 0.1.0
+Status: WORKING IMPLEMENTATION GUIDANCE
+=======================================
+
+# 1. Purpose
+
+================================================================================
+
+This document defines the controlled implementation and conformance guidance
+for A01.4 — Version Service.
+
+Its purpose is to establish the responsibility-level disposition of the
+Version Service boundary before any implementation restructuring is performed.
+
+This document does not introduce or redefine normative Version semantics.
+
+The authoritative ELR specification corpus remains the controlling authority.
+
+This document therefore distinguishes:
+
+* already implemented behavior;
+* already verified behavior;
+* application responsibility;
+* responsibility isolation;
+* implementation gaps;
+* optional implementation refactoring.
+
+================================================================================
+
+# 2. Current Disposition
+
+================================================================================
+
+A01.4 — Version Service
+
+Status:
+
+PARTIAL
+
+Reason:
+
+Versioning behavior is already implemented and tested through the existing
+LearningObjectService.
+
+However, the versioning responsibilities are currently coordinated directly
+inside LearningObjectService rather than through a dedicated VersionService
+boundary.
+
+The current evidence therefore does not justify classifying A01.4 as a
+functional versioning gap.
+
+The current finding concerns responsibility isolation and application-service
+boundary conformance.
+
+================================================================================
+
+# 3. Existing Implementation Evidence
+
+================================================================================
+
+The current implementation provides the following versioning capabilities:
+
+* Version domain entity exists;
+* Version entity is immutable;
+* VersionRepository exists;
+* version history can be retrieved;
+* first version is created during approval;
+* subsequent versions are created during knowledge update;
+* version numbers are incremented;
+* snapshots preserve the previous knowledge state;
+* previous versions remain preserved;
+* version history is exposed through the LearningObjectService;
+* transaction coordination includes version persistence.
+
+================================================================================
+
+# 4. Existing Verification Evidence
+
+================================================================================
+
+The existing application-service tests verify:
+
+* approval creates the first version;
+* first version number is 1;
+* first version references the correct Learning Object;
+* first version contains the expected snapshot;
+* knowledge update creates a second version;
+* second version number is 2;
+* previous version remains unchanged;
+* previous snapshot remains preserved;
+* updated knowledge is represented by the new version;
+* Learning Object remains Active after update.
+
+================================================================================
+
+# 5. Current Responsibility Boundary
+
+================================================================================
+
+The current implementation effectively performs the following:
+
+LearningObjectService
+->
+VersionRepository
+
+Within LearningObjectService, versioning responsibilities currently include:
+
+* retrieving version history;
+* determining the next version number;
+* constructing a Version;
+* constructing the Version snapshot;
+* persisting the Version.
+
+================================================================================
+
+# 6. Responsibility-Level Assessment
+
+================================================================================
+
+The following distinction shall be preserved.
+
+Versioning behavior:
+
+IMPLEMENTED
+
+Versioning persistence:
+
+IMPLEMENTED
+
+Version history:
+
+IMPLEMENTED
+
+Version immutability:
+
+IMPLEMENTED
+
+Version numbering:
+
+IMPLEMENTED
+
+Snapshot creation:
+
+IMPLEMENTED
+
+Responsibility isolation:
+
+PARTIAL
+
+A01.4 shall therefore not be treated as a missing-functionality finding.
+
+The evidence currently supports a PARTIAL conformance disposition.
+
+================================================================================
+
+# 7. Version Service Boundary
+
+================================================================================
+
+A dedicated VersionService may be introduced only if responsibility-level
+conformance requires an explicit application boundary for version creation
+and version-history coordination.
+
+The purpose of such a boundary would be responsibility isolation.
+
+A VersionService must not introduce new version semantics.
+
+If introduced, it shall coordinate existing behavior such as:
+
+* retrieving history;
+* determining the next version number;
+* creating Version records;
+* creating snapshots;
+* persisting Version records.
+
+================================================================================
+
+# 8. Prohibited Changes
+
+================================================================================
+
+The following changes are prohibited unless supported by authoritative
+specification or new implementation evidence:
+
+* changing Version numbering semantics;
+* changing Version immutability;
+* changing snapshot semantics;
+* changing historical preservation;
+* moving domain rules into VersionService;
+* introducing new Version domain rules;
+* changing VersionRepository semantics;
+* bypassing the existing transaction boundary;
+* replacing existing versioning tests without equivalent coverage;
+* introducing a VersionService solely because a class with that name is absent.
+
+================================================================================
+
+# 9. Transaction Boundary
+
+================================================================================
+
+Any VersionService introduced as part of A01.4 must preserve the existing
+transaction boundary.
+
+Version persistence must remain part of the same transaction as the
+originating Learning Object operation where transactional consistency is
+required.
+
+The introduction of a VersionService must not create an independent
+transaction that separates:
+
+Learning Object persistence
++
+Version persistence
++
+Audit persistence
+
+================================================================================
+
+# 10. Required Verification Before Resolution
+
+================================================================================
+
+Before A01.4 can be marked RESOLVED, the implementation must establish one
+of the following dispositions:
+
+CONFORMANT
+
+The existing LearningObjectService responsibility boundary is sufficient and
+no dedicated VersionService is required.
+
+or:
+
+IMPLEMENTATION VERIFIED
+
+A dedicated VersionService is required by the applicable implementation
+contract and has been introduced without changing Version semantics.
+
+In either case, existing versioning behavior must remain fully verified.
+
+================================================================================
+
+# 11. Required Tests
+
+================================================================================
+
+The following behaviors must remain covered:
+
+* approval creates Version 1;
+* update creates Version 2;
+* version numbers increment correctly;
+* previous versions remain unchanged;
+* snapshots preserve historical state;
+* Version records remain immutable;
+* version persistence occurs within the applicable transaction boundary;
+* version persistence failure produces the required rollback behavior.
+
+If a dedicated VersionService is introduced, additional tests shall verify:
+
+* VersionService responsibility isolation;
+* LearningObjectService delegation;
+* VersionRepository interaction through the intended boundary;
+* preservation of existing behavior.
+
+================================================================================
+
+# 12. Resolution Rule
+
+================================================================================
+
+A01.4 shall not be resolved by class existence alone.
+
+The resolution decision shall be based on responsibility-level conformance.
+
+The implementation team shall first determine whether the authoritative
+Application Service Implementation Specification requires a dedicated
+VersionService boundary.
+
+If the existing LearningObjectService responsibility is conformant, A01.4
+shall be marked CONFORMANT without unnecessary refactoring.
+
+If the specification requires explicit VersionService responsibility
+isolation, the implementation may introduce the boundary and preserve all
+existing behavior and tests.
+
+================================================================================
+
+# 13. Current Controlled Action
+
+================================================================================
+
+Do not modify the implementation solely to create a VersionService.
+
+First perform focused responsibility-level comparison against the
+authoritative Application Service Implementation Specification.
+
+The next implementation action shall be selected only after this comparison
+establishes that the current boundary is non-conformant.
+
+================================================================================
+
+# 14. Exit Criteria
+
+================================================================================
+
+A01.4 may be marked resolved only when:
+
+* the responsibility-level disposition is explicit;
+* the authoritative requirement has been identified;
+* existing Version behavior remains intact;
+* existing tests remain green;
+* required boundary tests pass;
+* transaction behavior remains intact;
+* no unnecessary domain semantics have been introduced;
+* the roadmap is updated with the final disposition.
+
+================================================================================
+End of Document
+===============
