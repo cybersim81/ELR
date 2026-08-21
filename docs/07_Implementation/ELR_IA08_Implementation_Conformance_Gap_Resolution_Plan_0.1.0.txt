@@ -113,55 +113,81 @@ explicit contradictory evidence and a separate disposition.
 
 ================================================================================
 
-The IA-08 analysis has identified four implementation-conformance findings.
+IA-08 contains four implementation-conformance findings.
 
 The findings do not all have the same evidence state.
 
-The distinction between a confirmed conformance finding and a confirmed
+The distinction between a completed conformance finding and an active
 implementation gap must be preserved.
 
 IA-08-A01
 
-Confirmed conformance finding.
+Completed conformance finding.
 
-The Application Service implementation does not yet provide sufficient
-evidence of complete conformance with the authoritative Application Service
-Implementation Specification.
+The Application Service responsibility boundary has been fully inspected and
+disposed at responsibility level.
 
-Responsibility-level implementation inspection is required before defining
-the concrete resolution.
+IA-08-A01 is:
+
+COMPLETE / CLOSED
+
+The following A01 responsibilities have been disposed:
+
+* A01.2 — Review / Change Proposal:
+  IMPLEMENTATION VERIFIED / RESOLVED;
+* A01.3 — Category Service:
+  CONFORMANT;
+* A01.4 — Version Service:
+  CONFORMANT;
+* A01.5 — Audit Service:
+  CONFORMANT;
+* A01.6 — Application Error Boundary:
+  RESOLVED;
+* A01.7 — Transaction Boundary:
+  IMPLEMENTATION VERIFIED / RESOLVED.
+
+No remaining non-resolved A01 responsibility is currently identified.
+
+IA-08-A01 must not be reopened unless new contradictory authoritative or
+repository evidence is discovered.
 
 IA-08-A02
 
-Confirmed implementation gap.
+Current implementation-conformance finding.
 
 The Transactional Event Record and the first Event Implementation layer
-required by the authoritative Event Implementation Specification are not
-implemented.
+required by the authoritative Event Implementation Specification require
+responsibility-level implementation inspection and resolution.
 
 IA-08-A03
 
-Confirmed implementation gap.
+Pending implementation-conformance finding.
 
 The Security and Authorization boundary required by the authoritative
-Security Implementation Specification is not implemented.
+Security Implementation Specification remains to be inspected and resolved
+after the applicable dependencies are confirmed.
 
 IA-08-A04
 
-Confirmed implementation gap.
+Pending implementation-conformance finding.
 
 The API Implementation Layer required by the authoritative API Implementation
-Specification is not implemented.
+Specification remains to be inspected and resolved after the applicable
+dependencies are confirmed.
 
 The implementation resolution process shall not treat the four findings as
 identical.
 
-IA-08-A01 requires evidence-based responsibility-level inspection before
-implementation changes are defined.
+IA-08-A01 is closed.
 
-IA-08-A02, IA-08-A03, and IA-08-A04 may proceed according to their respective
-resolution plans once their dependencies and implementation boundaries are
-confirmed.
+IA-08-A02 is the current finding.
+
+IA-08-A03 and IA-08-A04 remain pending.
+
+A finding must not be classified as an implementation gap solely because a
+dedicated class, service, repository, or file is absent.
+
+Conformance shall be assessed at the responsibility and boundary level.
 
 ================================================================================
 
@@ -169,576 +195,61 @@ confirmed.
 
 ================================================================================
 
-## 4.1 Current State
+## 4.1 Final Disposition
 
-The current implementation contains a LearningObjectService.
+IA-08-A01 has received a complete responsibility-level disposition.
 
-The service already coordinates several domain operations, repositories,
-version creation, and audit recording.
+Status:
 
-Existing capabilities include:
+COMPLETE / CLOSED
 
-* create_candidate();
-* submit_for_review();
-* approve();
-* update_knowledge();
-* retire();
-* get();
-* get_history().
+The current LearningObjectService responsibility boundary is sufficient to
+coordinate the verified application-service behavior.
 
-The implementation does not yet provide the complete Application Service
-surface defined by the current Application Service Implementation
-Specification.
+No dedicated service class shall be introduced solely to satisfy a naming
+difference where the required responsibility is already implemented.
 
-================================================================================
+The absence of a class named VersionService is not considered an
+implementation gap because the current LearningObjectService responsibility
+boundary is sufficient to coordinate the existing versioning behavior.
 
-## 4.2 Conformance Finding Under Inspection
+The absence of a class named AuditService is not considered an implementation
+gap because the current LearningObjectService responsibility boundary is
+sufficient to coordinate the existing audit behavior.
 
-================================================================================
+No dedicated VersionService or AuditService shall be introduced solely to
+satisfy a naming difference.
 
-The Application Service implementation currently provides a substantial part
-of the required Learning Object use-case coordination.
+The Application Service shall continue to coordinate Review outcomes and
+resulting domain operations.
 
-However, complete conformance with the authoritative Application Service
-Implementation Specification has not yet been established.
-
-The following responsibilities require evidence-based implementation
-inspection:
-
-* approve_change_proposal();
-* reject_change_proposal();
-* Category Service;
-* Version Service;
-* Audit Service;
-* explicit application transaction coordination;
-* application-level error translation.
-
-These responsibilities must not be classified as implementation gaps solely
-because a dedicated class or method is not yet visible.
-
-Conformance shall be assessed at the responsibility and boundary level.
-
-The result of the inspection shall determine whether each responsibility is:
-
-* CONFORMANT;
-* PARTIAL;
-* GAP;
-* BLOCKED.
-
-No implementation change shall be derived from an UNKNOWN or uninspected
-responsibility.
-
-## 4.3 Target State
-
-The Application Layer shall provide the application-service boundaries
-required by the authoritative Application Service Implementation
-Specification.
-
-Application Services shall:
-
-* coordinate use cases;
-* invoke domain behavior;
-* coordinate repositories;
-* coordinate versioning;
-* coordinate audit;
-* consume the applicable identity and authorization context where required;
-* define transaction boundaries;
-* translate domain failures into application-level failures.
-
-Application Services shall not:
-
-* contain HTTP-specific logic;
-* contain FastAPI dependencies;
-* contain SQLAlchemy-specific logic;
-* contain PostgreSQL-specific logic;
-* introduce new domain semantics;
-* independently decide Review or Lifecycle semantics.
-
-The Application Layer may consume an authorization decision or Identity
-Context provided by the Security boundary.
-
-The Application Layer must not independently implement or redefine the
-Security and Authorization model.
-
-The Security Layer remains responsible for authentication and authorization
-semantics according to the authoritative Security Implementation Specification.
-
-## 4.4 Invariants
-
-The following invariants must remain true:
-
-* Domain rules remain owned by the Domain Layer.
-* Lifecycle rules remain owned by the Lifecycle/Domain implementation.
-* Version validity remains owned by the Versioning model and its implementation.
-* Review decisions remain owned by the Review process.
-* Repository interfaces remain independent of infrastructure.
-* Audit remains distinct from transactional domain events.
-
-## 4.5 Verification
-
-A01 shall be considered resolved only when:
-
-* required application-service boundaries exist;
-* application services remain framework-independent;
-* use-case behavior is covered by tests;
-* domain rules remain delegated to the Domain Layer;
-* repository boundaries remain preserved;
-* transaction behavior is verified where required;
-* existing IA-07 persistence tests remain green.
+It shall not independently implement or redefine Review semantics.
 
 ================================================================================
 
-# 5. Finding A02 — Transactional Event Record
+## 4.2 A01 Responsibility Disposition
 
 ================================================================================
 
-## 5.1 Current State
-
-The implementation contains Audit Record handling.
-
-Audit Records are not equivalent to Transactional Event Records.
-
-The current Event Implementation Specification requires a separate transactional
-event persistence mechanism.
-
-## 5.2 Confirmed Gap
-
-The following Event Implementation responsibilities are not yet implemented:
-
-* event envelope;
-* transactional event record;
-* event_records persistence;
-* event source preservation;
-* event schema version preservation;
-* transactional creation of the event record;
-* subsequent event publication boundary.
-
-## 5.3 Target State
-
-The first Event Implementation shall provide a Transactional Event Record
-mechanism consistent with the authoritative Event Implementation
-Specification.
-
-The event record shall preserve at minimum:
-
-* event_id;
-* event_type;
-* event_source;
-* aggregate_type;
-* aggregate_id;
-* version;
-* payload;
-* occurred_at;
-* published_at;
-* created_at;
-* metadata.
-
-## 5.4 Transaction Rule
-
-A transactional event record produced by a domain/application operation shall
-be persisted within the same transaction as the domain change that produced
-the event.
-
-The external publication of the event shall not be required for domain
-transactional consistency.
-
-A publication failure must therefore not invalidate an already committed
-domain transaction.
-
-## 5.5 Separation Rule
-
-Transactional Event Records are infrastructure artifacts.
-
-They are not:
-
-* Learning Objects;
-* Knowledge Statements;
-* Versions;
-* Audit Records;
-* Repository knowledge entities.
-
-The Event implementation must not expand the semantic persistence boundary
-of the knowledge repository.
-
-## 5.6 Verification
-
-A02 shall be considered resolved only when tests demonstrate:
-
-* event creation;
-* event immutability;
-* correct event envelope mapping;
-* correct persistence mapping;
-* preservation of event_source;
-* preservation of version;
-* atomicity with the originating domain change;
-* separation from Audit Records;
-* behavior after transaction failure.
-
-================================================================================
-
-# 6. Finding A03 — Security and Authorization
-
-================================================================================
-
-## 6.1 Current State
-
-The current application service accepts actor information for audit purposes.
-
-A complete Identity Context and Authorization boundary is not yet implemented.
-
-## 6.2 Confirmed Gap
-
-The Security Implementation Specification requires:
-
-Authentication
-->
-Identity Context
-->
-Authorization
-->
-API
-->
-Application Services
-->
-Domain
-
-The implementation does not yet provide this boundary.
-
-## 6.3 Target State
-
-The implementation shall introduce the minimum security abstraction required
-by the authoritative Security and Access Model.
-
-The first implementation shall support:
-
-* Identity Context;
-* actor identity;
-* actor type;
-* roles;
-* authorization decisions;
-* explicit authorization failures;
-* Application Layer access to the authenticated identity context.
-
-## 6.4 Authentication Boundary
-
-Authentication must remain abstract.
-
-The first implementation shall not introduce a concrete external identity
-provider unless separately authorized by the applicable specification.
-
-An AuthenticationProvider abstraction is sufficient for the initial
-implementation boundary.
-
-## 6.5 Authorization Rules
-
-The implementation shall preserve the authoritative initial role model,
-including:
-
-* SYSTEM_ADMIN;
-* KNOWLEDGE_REVIEWER;
-* KNOWLEDGE_PRODUCER;
-* READ_ONLY_USER.
-
-Authorization must not be redefined independently inside the API layer.
-
-The API Layer shall invoke the authorization model rather than create a
-competing role or permission model.
-
-## 6.6 Auditability
-
-Significant knowledge modifications shall remain attributable to an actor.
-
-Security integration must enrich and protect auditability.
-
-It must not replace the Audit Model with the Event Model.
-
-## 6.7 Verification
-
-A03 shall be considered resolved only when tests demonstrate:
-
-* unauthenticated access rejection;
-* insufficient-role rejection;
-* authorized operation;
-* correct Identity Context propagation;
-* authorization before protected operation;
-* actor attribution in significant modifications.
-
-================================================================================
-
-# 7. Finding A04 — API Implementation
-
-================================================================================
-
-## 7.1 Current State
-
-The implementation does not yet contain the API layer required by the
-current API Implementation Specification.
-
-## 7.2 Confirmed Gap
-
-The required API boundary includes:
-
-* FastAPI;
-* REST endpoints;
-* /api/v1;
-* Learning Object access;
-* history access;
-* category access;
-* health endpoint;
-* protected write operations;
-* delegation to Application Services.
-
-## 7.3 Target State
-
-The API Layer shall be an adapter.
-
-It shall:
-
-* receive HTTP requests;
-* validate transport-level input;
-* establish or receive the Identity Context;
-* invoke authorization;
-* invoke Application Services;
-* translate application errors into HTTP responses;
-* return transport representations.
-
-The API Layer shall not:
-
-* contain domain rules;
-* contain lifecycle semantics;
-* contain versioning semantics;
-* directly access persistence infrastructure;
-* directly manipulate database models;
-* define an independent authorization model.
-
-## 7.4 Dependency Rule
-
-The intended dependency direction is:
-
-API
-->
-Application
-->
-Domain / Repository Interfaces
-
-Infrastructure implementations shall remain behind the appropriate
-application/repository boundaries.
-
-## 7.5 Verification
-
-A04 shall be considered resolved only when tests demonstrate:
-
-* endpoint availability;
-* request validation;
-* correct Application Service delegation;
-* authorization enforcement;
-* correct response mapping;
-* correct error mapping;
-* absence of direct persistence bypass.
-
-================================================================================
-
-# 8. Resolution Order
-
-================================================================================
-
-The confirmed findings shall be addressed in dependency-aware order.
-
-Phase A — Application Boundary
-
-Resolve:
-
-IA-08-A01
-
-Phase B — Transactional Event Boundary
-
-Resolve:
-
-IA-08-A02
-
-Phase C — Security Boundary
-
-Resolve:
-
-IA-08-A03
-
-Phase D — API Boundary
-
-Resolve:
-
-IA-08-A04
-
-The order may be revised only if implementation evidence demonstrates a
-dependency requiring a different sequence.
-
-Any such change must be recorded before implementation proceeds.
-
-================================================================================
-
-# 9. Implementation Control Rules
-
-================================================================================
-
-The following rules apply to all IA-08 implementation work.
-
-RULE-001
-
-One confirmed finding shall be implemented at a time.
-
-RULE-002
-
-Each implementation change shall have an explicit verification step.
-
-RULE-003
-
-No implementation change may introduce new domain semantics without a
-corresponding authoritative specification.
-
-RULE-004
-
-Previously verified IA-07 persistence behavior must remain green.
-
-RULE-005
-
-Audit Records and Transactional Event Records must remain distinct.
-
-RULE-006
-
-The API must not bypass Application Services.
-
-RULE-007
-
-Security must not redefine domain semantics.
-
-RULE-008
-
-Authentication providers remain abstract unless explicitly brought into
-scope.
-
-RULE-009
-
-Infrastructure dependencies must not leak into the Domain Layer.
-
-RULE-010
-
-The implementation must not modify the authoritative specification corpus
-as a substitute for resolving an implementation gap.
-
-RULE-011
-
-If implementation evidence contradicts this plan, stop and reconcile against
-the authoritative specification before proceeding.
-
-RULE-012
-
-Repository modifications are not performed as part of this planning
-document. Implementation changes are applied only through the controlled
-local development workflow.
-
-================================================================================
-
-# 10. Verification Matrix
-
-================================================================================
-
-| Finding   | Implementation | Unit Tests | Integration Tests | E2E           | Exit Gate |
-| --------- | -------------- | ---------- | ----------------- | ------------- | --------- |
-| IA-08-A01 | Required       | Required   | Required          | As applicable | A01 Gate  |
-| IA-08-A02 | Required       | Required   | Required          | Required      | A02 Gate  |
-| IA-08-A03 | Required       | Required   | Required          | Required      | A03 Gate  |
-| IA-08-A04 | Required       | Required   | Required          | Required      | A04 Gate  |
-
-Each gate must confirm that previously verified behavior remains intact.
-
-================================================================================
-
-# 11. Out of Scope
-
-================================================================================
-
-The following remain outside the scope of this gap-resolution plan unless a
-separate authoritative decision brings them into scope:
-
-* external OAuth2 implementation;
-* OpenID Connect provider integration;
-* enterprise identity management;
-* password management;
-* MFA;
-* Kafka;
-* RabbitMQ;
-* distributed event streaming;
-* distributed workflows;
-* Mastery Service;
-* KEP Service;
-* analytics pipelines;
-* semantic changes to the Domain Model.
-
-================================================================================
-
-# 12. IA-08 Exit Criteria
-
-================================================================================
-
-IA-08 shall not be considered complete until:
-
-1. every confirmed finding has a documented disposition;
-2. all required implementation changes are applied;
-3. all required unit tests pass;
-4. all required integration tests pass;
-5. required E2E tests pass;
-6. IA-07 persistence verification remains green;
-7. no unauthorized semantic change has been introduced;
-8. the implementation remains aligned with the authoritative specification
-   corpus;
-9. the final implementation state is recorded in the session continuity
-   state;
-10. a new implementation checkpoint is established.
-
-================================================================================
-
-# 13. Change Control
-
-================================================================================
-
-This document is a working implementation guide.
-
-Changes to this document must preserve the authority hierarchy:
-
-Authoritative Specification
->
-Implementation Conformance Finding
->
-Gap Resolution Plan
->
-Implementation
->
-Verification Evidence
-
-If a conflict is discovered, implementation must stop until the authoritative
-source is identified and the conflict is resolved.
-
-================================================================================
-
-# 14. Current Status
-
-================================================================================
-
-IA-08:
-
-IN PROGRESS
-
-Confirmed Findings:
-
-IA-08-A01 — Application Service
-IA-08-A02 — Transactional Event Record
-IA-08-A03 — Security and Authorization
-IA-08-A04 — API Implementation
-
-IA-08-A01 Responsibility Status:
-
-A01.6 — Application Error Boundary
-
-RESOLVED
+A01.2 — Review / Change Proposal
+
+IMPLEMENTATION VERIFIED / RESOLVED
+
+Implementation evidence includes:
+
+* Change Proposal representation;
+* Change Proposal persistence before evaluation;
+* Review decision / decision trace representation;
+* Learning Review application boundary;
+* Knowledge Validation success and rejection paths;
+* Repository Consistency success and rejection paths;
+* APPROVE coordination;
+* REJECT coordination;
+* REQUEST REVISION coordination;
+* ReviewDecisionTrace persistence;
+* final review outcomes through the LearningReviewAdapter.
+
+A01.2 is closed.
 
 A01.3 — Category Service
 
@@ -747,26 +258,9 @@ CONFORMANT
 The Category Service boundary is implemented and provides category retrieval
 and category-tree construction.
 
-Implementation evidence includes:
+Responsibility-level inspection has established sufficient conformance.
 
-* CategoryService application boundary;
-* category retrieval through CategoryRepository;
-* category-tree construction;
-* parent-child hierarchy construction;
-* orphan-category handling;
-* repository abstraction;
-* dedicated application-service verification tests.
-
-Verification evidence:
-
-* get_categories() behavior is verified;
-* get_category_tree() hierarchy construction is verified;
-* orphan categories are verified to remain roots;
-* dedicated CategoryService tests are present and passing.
-
-No additional CategoryService implementation is required.
-
-A01.3 is therefore considered CONFORMANT.
+A01.3 is closed.
 
 A01.4 — Version Service
 
@@ -797,7 +291,7 @@ implementation gap.
 The current LearningObjectService responsibility boundary is sufficient to
 coordinate the existing versioning behavior.
 
-A01.4 is therefore considered CONFORMANT.
+A01.4 is closed.
 
 No VersionService shall be introduced solely to satisfy a naming difference.
 
@@ -835,18 +329,30 @@ implementation gap.
 The current LearningObjectService responsibility boundary is sufficient to
 coordinate the existing audit behavior.
 
-A01.5 is therefore considered CONFORMANT.
+A01.5 is closed.
 
 No AuditService shall be introduced solely to satisfy a naming difference.
+
+A01.6 — Application Error Boundary
+
+RESOLVED
+
+The Application Error Boundary has been implemented and verified.
+
+The application layer translates applicable domain failures into the
+application-level failure boundary without introducing HTTP-specific logic
+into the application service.
+
+A01.6 is closed.
 
 A01.7 — Transaction Boundary
 
 IMPLEMENTATION VERIFIED / RESOLVED
 
-Implementation verified:
+Implementation evidence includes:
 
 * existing transaction boundary infrastructure is present and reused;
-* LearningObjectService.approve() now executes Learning Object persistence,
+* LearningObjectService.approve() executes Learning Object persistence,
   Version persistence, and Audit persistence within one transaction boundary;
 * the existing shared Session is preserved across the involved repositories;
 * rollback behavior when Audit persistence fails is verified;
@@ -860,47 +366,589 @@ Verification evidence:
 * approval test set passes;
 * full test suite: 123/123 passed.
 
-A01.7 is therefore considered IMPLEMENTATION VERIFIED and RESOLVED.
+A01.7 is closed.
+
+================================================================================
+
+## 4.3 A01 Closure Rule
+
+================================================================================
+
+IA-08-A01 is complete and closed.
+
+The following responsibilities shall remain closed:
+
+* A01.2 — Review / Change Proposal;
+* A01.3 — Category Service;
+* A01.4 — Version Service;
+* A01.5 — Audit Service;
+* A01.6 — Application Error Boundary;
+* A01.7 — Transaction Boundary.
+
+They shall not be reopened unless new contradictory authoritative or repository
+evidence is discovered.
+
+The resolution process shall not introduce a new abstraction solely because
+the repository does not contain a class with the exact name suggested by an
+implementation description.
+
+Responsibility and behavior are authoritative; naming is secondary.
+
+================================================================================
+
+# 5. Finding A02 — Transactional Event Record
+
+================================================================================
+
+## 5.1 Current State
+
+IA-08-A02 is the current implementation-conformance finding.
+
+Audit Records are already implemented.
+
+Audit Records are not equivalent to Transactional Event Records.
+
+The authoritative Event Implementation Specification defines a separate
+transactional event persistence mechanism.
+
+A02 must therefore be inspected against the authoritative event requirements
+and the current repository implementation before any implementation change is
+made.
+
+================================================================================
+
+## 5.2 Required Inspection
+
+================================================================================
+
+The A02 inspection shall establish:
+
+* required event envelope;
+* required Transactional Event Record semantics;
+* event persistence boundary;
+* event source semantics;
+* event schema version semantics;
+* aggregate identity semantics;
+* event payload semantics;
+* event timestamps;
+* transactional relationship with the originating domain change;
+* subsequent publication boundary;
+* relationship between Event Records and Audit Records.
+
+The repository inspection shall search existing:
+
+* event entities;
+* event records;
+* event repositories;
+* persistence models;
+* event adapters;
+* transaction boundaries;
+* tests;
+* wiring;
+* publication abstractions.
+
+No implementation gap shall be declared until the authoritative requirement
+and existing repository behavior have been compared.
+
+================================================================================
+
+## 5.3 Target State
+
+================================================================================
+
+If the inspection confirms the A02 gap, the first Event Implementation shall
+provide a Transactional Event Record mechanism consistent with the authoritative
+Event Implementation Specification.
+
+The event record shall preserve at minimum:
+
+* event_id;
+* event_type;
+* event_source;
+* aggregate_type;
+* aggregate_id;
+* version;
+* payload;
+* occurred_at;
+* published_at;
+* created_at;
+* metadata.
+
+================================================================================
+
+## 5.4 Transaction Rule
+
+================================================================================
+
+A transactional event record produced by a domain/application operation shall
+be persisted within the same transaction as the domain change that produced
+the event.
+
+The external publication of the event shall not be required for domain
+transactional consistency.
+
+A publication failure must therefore not invalidate an already committed
+domain transaction.
+
+The transactional event record is the durable bridge between the originating
+transaction and later event publication.
+
+================================================================================
+
+## 5.5 Separation Rule
+
+================================================================================
+
+Transactional Event Records are infrastructure artifacts.
+
+They are not:
+
+* Learning Objects;
+* Knowledge Statements;
+* Versions;
+* Audit Records;
+* repository knowledge entities.
+
+Audit Records and Transactional Event Records serve different responsibilities
+and must remain separate.
+
+Audit history must not be replaced by event history.
+
+Event persistence must not expand the semantic knowledge persistence boundary.
+
+================================================================================
+
+## 5.6 Verification
+
+================================================================================
+
+A02 shall be considered resolved only when verification demonstrates, as
+applicable to the confirmed implementation boundary:
+
+* event creation;
+* event immutability;
+* correct event envelope mapping;
+* correct persistence mapping;
+* preservation of event_source;
+* preservation of version;
+* atomicity with the originating domain change;
+* separation from Audit Records;
+* behavior after transaction failure;
+* compatibility with the existing transaction boundary;
+* existing application behavior remains green.
+
+Focused verification shall be performed first.
+
+The complete test suite shall be run before A02 is declared resolved.
+
+================================================================================
+
+# 6. Finding A03 — Security and Authorization
+
+================================================================================
+
+## 6.1 Current State
+
+================================================================================
+
+IA-08-A03 remains pending.
+
+The current application service accepts actor information for audit purposes.
+
+A complete Identity Context and Authorization boundary must be evaluated
+against the authoritative Security Implementation Specification.
+
+================================================================================
+
+## 6.2 Required Inspection
+
+================================================================================
+
+The Security Implementation Specification shall be inspected for:
+
+* authentication boundary;
+* Identity Context;
+* actor identity;
+* actor type;
+* roles;
+* authorization decisions;
+* authorization failure semantics;
+* protected operations;
+* Application Layer integration;
+* API Layer integration;
+* auditability requirements.
+
+================================================================================
+
+## 6.3 Target State
+
+================================================================================
+
+If the inspection confirms an implementation gap, the implementation shall
+introduce the minimum security abstraction required by the authoritative
+Security and Access Model.
+
+The first implementation shall support:
+
+* Identity Context;
+* actor identity;
+* actor type;
+* roles;
+* authorization decisions;
+* explicit authorization failures;
+* Application Layer access to the authenticated identity context.
+
+================================================================================
+
+## 6.4 Authentication Boundary
+
+================================================================================
+
+Authentication must remain abstract.
+
+The first implementation shall not introduce a concrete external identity
+provider unless separately authorized by the applicable specification.
+
+An AuthenticationProvider abstraction is sufficient for the initial
+implementation boundary where the authoritative requirements permit it.
+
+================================================================================
+
+## 6.5 Authorization Rules
+
+================================================================================
+
+The implementation shall preserve the authoritative initial role model,
+including:
+
+* SYSTEM_ADMIN;
+* KNOWLEDGE_REVIEWER;
+* KNOWLEDGE_PRODUCER;
+* READ_ONLY_USER.
+
+Authorization must not be redefined independently inside the API layer.
+
+The API Layer shall invoke the authorization model rather than create a
+competing role or permission model.
+
+================================================================================
+
+## 6.6 Auditability
+
+================================================================================
+
+Significant knowledge modifications shall remain attributable to an actor.
+
+Security integration must enrich and protect auditability.
+
+It must not replace the Audit Model with the Event Model.
+
+================================================================================
+
+## 6.7 Verification
+
+================================================================================
+
+A03 shall be considered resolved only when verification demonstrates the
+required security behavior, including as applicable:
+
+* unauthenticated access rejection;
+* insufficient-role rejection;
+* authorized operation;
+* correct Identity Context propagation;
+* authorization before protected operation;
+* actor attribution in significant modifications.
+
+Focused verification shall be performed first.
+
+The complete test suite shall be run before A03 is declared resolved.
+
+================================================================================
+
+# 7. Finding A04 — API Implementation
+
+================================================================================
+
+## 7.1 Current State
+
+================================================================================
+
+IA-08-A04 remains pending.
+
+The implementation shall be compared against the authoritative API
+Implementation Specification before API implementation changes are introduced.
+
+================================================================================
+
+## 7.2 Required Inspection
+
+================================================================================
+
+The inspection shall establish:
+
+* required FastAPI boundary;
+* required REST endpoints;
+* `/api/v1` boundary;
+* Learning Object access;
+* history access;
+* category access;
+* health endpoint;
+* protected write operations;
+* delegation to Application Services;
+* Identity Context integration;
+* authorization integration;
+* application error translation;
+* response mapping.
+
+================================================================================
+
+## 7.3 Target State
+
+================================================================================
+
+If the inspection confirms the API gap, the API Layer shall be an adapter.
+
+It shall:
+
+* receive HTTP requests;
+* validate transport-level input;
+* establish or receive the Identity Context;
+* invoke authorization;
+* invoke Application Services;
+* map application-level failures to HTTP responses;
+* return API response representations.
+
+It shall not:
+
+* implement domain rules;
+* implement lifecycle semantics;
+* implement Review semantics;
+* implement Version semantics;
+* implement Audit semantics;
+* implement transactional event semantics;
+* directly manipulate persistence models;
+* create a competing authorization model.
+
+================================================================================
+
+## 7.4 Verification
+
+================================================================================
+
+A04 shall be considered resolved only when verification demonstrates:
+
+* required endpoints exist;
+* request validation behaves correctly;
+* authorization is enforced;
+* Application Services are used as the application boundary;
+* domain semantics remain outside the API layer;
+* application failures are translated correctly;
+* successful responses conform to the authoritative API contract;
+* protected operations reject unauthorized access;
+* existing persistence and application tests remain green.
+
+Focused API verification shall be performed first.
+
+The complete test suite shall be run before A04 is declared resolved.
+
+================================================================================
+
+# 8. Dependency Order
+
+================================================================================
+
+The current IA-08 sequence is:
+
+IA-08-A01
+COMPLETE / CLOSED
+↓
+IA-08-A02
+CURRENT
+↓
+IA-08-A03
+PENDING
+↓
+IA-08-A04
+PENDING
+
+A01 shall not be reopened as part of A02 work unless contradictory evidence is
+discovered.
+
+A02 must be inspected and resolved before proceeding to A03 where the
+authoritative dependency model requires that order.
+
+A03 must be disposed before API protection is finalized where the API depends
+on the Security and Authorization boundary.
+
+A04 follows the confirmed application, event, and security boundaries.
+
+================================================================================
+
+# 9. Implementation Constraints
+
+================================================================================
+
+All implementation work shall follow these constraints:
+
+1. The authoritative normative specifications remain the final authority.
+
+2. Responsibility must be evaluated before naming.
+
+3. Existing repository abstractions shall be reused when they satisfy the
+   required responsibility.
+
+4. No new service shall be introduced solely to satisfy a class-name
+   expectation.
+
+5. Audit Records and Transactional Event Records shall remain distinct.
+
+6. Version history and Audit history shall remain distinct.
+
+7. Application Services shall not contain HTTP-specific logic.
+
+8. Application Services shall not contain persistence-framework-specific
+   logic.
+
+9. API adapters shall not implement domain semantics.
+
+10. Security semantics shall not be independently redefined by the API.
+
+11. Transaction boundaries shall remain explicit and testable.
+
+12. Existing verified IA-07 persistence behavior shall remain green.
+
+13. Previously closed IA-08-A01 responsibilities shall not be reopened
+    without contradictory evidence.
+
+14. Implementation changes shall remain minimal and responsibility-focused.
+
+15. The user performs repository modifications directly.
+
+16. The assistant must provide exact paths, replacement blocks, insertion
+    points, and test commands, but must not modify the repository directly
+    unless explicitly authorized.
+
+================================================================================
+
+# 10. Verification and Closure Protocol
+
+================================================================================
+
+For every IA-08 finding:
+
+1. Inspect the authoritative requirement.
+
+2. Inspect the current repository implementation.
+
+3. Compare responsibility and behavior.
+
+4. Determine the evidence state.
+
+5. Classify the responsibility.
+
+6. Implement only a confirmed gap.
+
+7. Run focused tests.
+
+8. Run relevant integration/application tests.
+
+9. Run the complete test suite.
+
+10. Record the exact verification result.
+
+11. Update the roadmap.
+
+12. Update session continuity state.
+
+13. Update the session prompt when the resume point changes.
+
+14. Establish a checkpoint.
+
+A finding is not resolved merely because the code appears correct.
+
+A finding is resolved only after implementation evidence and verification
+support the final disposition.
+
+================================================================================
+
+# 11. Checkpoint Protocol
+
+================================================================================
+
+After a responsibility receives a final disposition, establish a checkpoint
+containing:
+
+* finding identifier;
+* responsibility identifier;
+* final disposition;
+* implementation evidence;
+* verification evidence;
+* complete-suite result;
+* files changed;
+* repository checkpoint / commit reference when available;
+* next finding;
+* explicit do-not-reopen responsibilities.
+
+The checkpoint must be reflected consistently in:
+
+`docs/00_Bootstrap/05_Implementation_Alignment_Roadmap.txt`
+
+`docs/00_Bootstrap/06_Session_Continuity_State.txt`
+
+`docs/00_Bootstrap/07_Session_Prompt.txt`
+
+and, where required, this IA-08 implementation plan.
+
+================================================================================
+
+# 12. Current Status
+
+================================================================================
+
+IA-08:
+
+IN PROGRESS
+
+Confirmed Findings:
+
+IA-08-A01 — Application Service
+IA-08-A02 — Transactional Event Record
+IA-08-A03 — Security and Authorization
+IA-08-A04 — API Implementation
+
+IA-08-A01 Responsibility Status:
 
 A01.2 — Review / Change Proposal
 
 IMPLEMENTATION VERIFIED / RESOLVED
 
-Normative basis confirmed:
+A01.3 — Category Service
 
-* Knowledge Extraction Pipeline Specification 1.0.2;
-* Evidence Model Specification 1.0.1;
-* Learning Review Specification 1.0.0.
+CONFORMANT
 
-The authoritative specifications define the Change Proposal, Change Evidence,
-Review decisions, and Review process semantics required by A01.2.
+A01.4 — Version Service
 
-Implementation verified:
+CONFORMANT
 
-* Change Proposal representation is implemented;
-* Change Proposal persistence before evaluation is verified;
-* Review decision / decision trace representation is implemented;
-* Learning Review application boundary is implemented;
-* Knowledge Validation success and rejection paths are verified;
-* Repository Consistency success and rejection paths are verified;
-* APPROVE coordination is verified;
-* REJECT coordination is verified;
-* REQUEST REVISION coordination is verified;
-* ReviewDecisionTrace persistence is verified;
-* final review outcomes are exercised through the LearningReviewAdapter;
-* tests/application/review/test_learning_review_adapter.py contains the
-  corresponding verification coverage.
+A01.5 — Audit Service
 
-Verification evidence:
+CONFORMANT
 
-* review-specific verification tests pass;
-* full test suite: 123/123 passed.
+A01.6 — Application Error Boundary
 
-A01.2 is therefore considered IMPLEMENTATION VERIFIED and RESOLVED.
+RESOLVED
 
-The Application Service shall continue to coordinate Review outcomes and
-resulting domain operations. It shall not independently implement or redefine
-Review semantics.
+A01.7 — Transaction Boundary
+
+IMPLEMENTATION VERIFIED / RESOLVED
+
+IA-08-A01:
+
+COMPLETE / CLOSED
+
+Current Verification:
+
+123/123 passed
 
 Current Active Finding:
 
@@ -911,27 +959,13 @@ Current Controlled Action:
 Inspect IA-08-A02 at responsibility level against the authoritative normative
 specifications and the current repository implementation.
 
-IA-08-A01 — Application Service has received a complete
-responsibility-level disposition.
-
-All currently identified A01 responsibilities have been inspected and
-disposed:
-
-* A01.2 — Review / Change Proposal: IMPLEMENTATION VERIFIED / RESOLVED;
-* A01.3 — Category Service: CONFORMANT;
-* A01.4 — Version Service: CONFORMANT;
-* A01.5 — Audit Service: CONFORMANT;
-* A01.6 — Application Error Boundary: RESOLVED;
-* A01.7 — Transaction Boundary: IMPLEMENTATION VERIFIED / RESOLVED.
+IA-08-A01 has received a complete responsibility-level disposition.
 
 No remaining non-resolved A01 responsibility is currently identified.
 
-IA-08-A01 is therefore considered COMPLETE / CLOSED.
-
-The A01 implementation resolution shall remain closed unless new
-contradictory authoritative or repository evidence is discovered.
-
-The resolution process now proceeds to IA-08-A02 — Transactional Event Record.
+A01.2, A01.3, A01.4, A01.5, A01.6 and A01.7 are closed and shall not be
+reopened unless new contradictory authoritative or repository evidence is
+discovered.
 
 IA-08-A02 shall not be assumed to represent an implementation gap before
 focused responsibility-level inspection is completed.
@@ -954,15 +988,77 @@ A01.6 — Application Error Boundary
 
 A01.7 — Transaction Boundary
 
-A01.2, A01.3, A01.4, A01.5, A01.6 and A01.7 have been implemented and
-verified and shall remain closed unless new contradictory evidence is
-discovered.
-
 The resolution process shall continue with IA-08-A02 before proceeding to
 IA-08-A03 or IA-08-A04.
 
+================================================================================
+
+# 13. Session Resume Point
+
+================================================================================
+
+A new implementation session shall resume at:
+
+IA-08-A02 — Transactional Event Record
+
+Before making any implementation change, the session must:
+
+1. read the complete Bootstrap Pack;
+2. read this IA-08 implementation plan;
+3. read the authoritative Event Implementation Specification;
+4. inspect the current repository implementation;
+5. confirm the current branch and HEAD;
+6. verify that A01 remains closed;
+7. determine whether A02 is actually a gap;
+8. proceed only on evidence.
+
+================================================================================
+
+# 14. Final Operational State
+
+================================================================================
+
+Current IA-08 state:
+
+IA-08-A01
+COMPLETE / CLOSED
+
+IA-08-A02
+CURRENT / NEXT
+
+IA-08-A03
+PENDING
+
+IA-08-A04
+PENDING
+
+Current verification:
+
+123/123 passed
+
+Frozen A01 responsibilities:
+
+* A01.2 — Review / Change Proposal;
+* A01.3 — Category Service;
+* A01.4 — Version Service;
+* A01.5 — Audit Service;
+* A01.6 — Application Error Boundary;
+* A01.7 — Transaction Boundary.
+
+A01 closure rule:
+
+Do not reopen A01 without new contradictory evidence.
+
+A02 rule:
+
+Do not assume A02 is a gap without responsibility-level inspection against
+the authoritative specification.
+
+A03/A04 rule:
+
+Do not begin A03 or A04 implementation until the preceding responsibility
+boundaries and dependencies have been disposed.
 
 ================================================================================
 End of Document
 ===============
-ssss
