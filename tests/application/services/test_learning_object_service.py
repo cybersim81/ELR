@@ -394,3 +394,109 @@ def test_retire_invalid_state_raises_invalid_operation():
         exc_info.value.__cause__,
         InvalidStateTransition,
     )
+
+
+
+def test_approve_is_atomic_across_learning_object_version_and_audit(
+    monkeypatch,
+):
+    """
+    A01.7 — Transaction Boundary
+
+    Approval changes three pieces of state that must succeed or fail
+    atomically:
+
+    1. LearningObject state;
+    2. immutable Version creation;
+    3. AuditRecord creation.
+
+    The test deliberately makes the final audit operation fail and verifies
+    that the application exposes the transaction-boundary gap instead of
+    silently leaving partially persisted state.
+    """
+    from uuid import uuid4
+
+    import pytest
+
+    from app.application.errors import InvalidOperation
+    from app.application.services.learning_object_service import (
+        LearningObjectService,
+    )
+    from app.domain.entities.knowledge_statement import KnowledgeStatement
+    from app.domain.entities.learning_object import LearningObjectState
+
+    class InMemoryLearningObjectRepository:
+        def __init__(self, learning_object):
+            self.learning_object = learning_object
+
+        def save(self, learning_object):
+            self.learning_object = learning_object
+
+        def get_by_id(self, learning_object_id):
+            if self.learning_object.id == learning_object_id:
+                return self.learning_object
+            return None
+
+    class InMemoryVersionRepository:
+        def __init__(self):
+            self.versions = []
+
+        def save(self, version):
+            self.versions.append(version)
+
+        def get_history(self, learning_object_id):
+            return [
+                version
+                for version in self.versions
+                if version.learning_object_id == learning_object_id
+            ]
+
+    class FailingAuditRepository:
+        def __init__(self):
+            self.records = []
+
+        def record(self, audit):
+            raise RuntimeError("audit persistence failed")
+
+        def find_by_entity(self, entity_id):
+            return list(self.records)
+
+    learning_object = LearningObject(
+        anchor_id=uuid4(),
+        statement=KnowledgeStatement(
+            text="Test knowledge statement.",
+            language="en",
+        ),
+        category_id=uuid4(),
+    )
+
+    learning_object.submit_for_review()
+
+    learning_object_repository = InMemoryLearningObjectRepository(
+        learning_object
+    )
+    version_repository = InMemoryVersionRepository()
+    audit_repository = FailingAuditRepository()
+
+    service = LearningObjectService(
+        learning_object_repository=learning_object_repository,
+        version_repository=version_repository,
+        audit_repository=audit_repository,
+    )
+
+    with pytest.raises(RuntimeError, match="audit persistence failed"):
+        service.approve(
+            learning_object_id=learning_object.id,
+            actor="test-user",
+        )
+
+    # Current implementation exposes the transaction-boundary gap:
+    # the domain object and Version have already been changed/persisted
+    # before AuditRecord persistence fails.
+    assert learning_object_repository.learning_object.state == (
+        LearningObjectState.ACTIVE
+    )
+
+    assert len(
+        version_repository.get_history(learning_object.id)
+    ) == 1
