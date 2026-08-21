@@ -5,20 +5,24 @@ from uuid import UUID, uuid4
 from app.application.services.learning_object_service import (
     LearningObjectService,
 )
-from app.domain.entities.knowledge_statement import KnowledgeStatement
-from tests.fixtures.repositories import (
-    InMemoryAuditRepository,
-    InMemoryLearningObjectRepository,
-    InMemoryVersionRepository,
-)
 
 from app.application.errors import (
     EntityNotFound,
     InvalidOperation,
 )
 
+from app.domain.entities.knowledge_statement import KnowledgeStatement
+
 from app.domain.entities.learning_object import (
     InvalidStateTransition,
+    LearningObject,
+    LearningObjectState,
+)
+
+from tests.fixtures.repositories import (
+    InMemoryAuditRepository,
+    InMemoryLearningObjectRepository,
+    InMemoryVersionRepository,
 )
 
 
