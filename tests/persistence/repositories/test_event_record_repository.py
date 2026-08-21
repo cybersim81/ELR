@@ -1,24 +1,16 @@
 from datetime import datetime, timezone
+from unittest.mock import Mock
 from uuid import uuid4
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-
 from app.events.event_record import EventRecord
-from app.persistence.models.base import Base
+from app.persistence.models.event_record_model import EventRecordModel
 from app.persistence.repositories.event_record_repository import (
     SQLAlchemyEventRecordRepository,
 )
 
 
-def test_save_and_get_event_record():
-    engine = create_engine("sqlite:///:memory:")
-
-    Base.metadata.create_all(engine)
-
-    Session = sessionmaker(bind=engine)
-
-    event = EventRecord(
+def make_event() -> EventRecord:
+    return EventRecord(
         event_type="LearningObjectCreated",
         event_source="learning_object_service",
         aggregate_type="LearningObject",
@@ -34,26 +26,38 @@ def test_save_and_get_event_record():
         },
     )
 
-    with Session() as session:
-        repository = SQLAlchemyEventRecordRepository(session)
 
-        repository.save(event)
-        session.commit()
+def test_save_maps_event_record_to_persistence_model():
+    session = Mock()
+    repository = SQLAlchemyEventRecordRepository(session)
 
-    with Session() as session:
-        repository = SQLAlchemyEventRecordRepository(session)
+    event = make_event()
 
-        restored = repository.get(event.event_id)
+    repository.save(event)
 
-    assert restored is not None
-    assert restored.event_id == event.event_id
-    assert restored.event_type == event.event_type
-    assert restored.event_source == event.event_source
-    assert restored.aggregate_type == event.aggregate_type
-    assert restored.aggregate_id == event.aggregate_id
-    assert restored.version == event.version
-    assert restored.payload == event.payload
-    assert restored.metadata == event.metadata
-    assert restored.occurred_at == event.occurred_at
-    assert restored.published_at is None
-    assert restored.created_at == event.created_at
+    session.add.assert_called_once()
+
+    model = session.add.call_args.args[0]
+
+    assert isinstance(model, EventRecordModel)
+    assert model.event_id == event.event_id
+    assert model.event_type == event.event_type
+    assert model.event_source == event.event_source
+    assert model.aggregate_type == event.aggregate_type
+    assert model.aggregate_id == event.aggregate_id
+    assert model.version == event.version
+    assert model.payload == dict(event.payload)
+    assert model.occurred_at == event.occurred_at
+    assert model.published_at == event.published_at
+    assert model.created_at == event.created_at
+    assert model.metadata_ == dict(event.metadata)
+
+
+def test_save_does_not_commit():
+    session = Mock()
+    repository = SQLAlchemyEventRecordRepository(session)
+
+    repository.save(make_event())
+
+    session.commit.assert_not_called()
+    session.flush.assert_not_called()
