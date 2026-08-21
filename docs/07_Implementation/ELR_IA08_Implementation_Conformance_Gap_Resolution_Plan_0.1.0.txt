@@ -742,15 +742,31 @@ RESOLVED
 
 A01.3 — Category Service
 
-PARTIAL
+CONFORMANT
 
 The Category Service boundary is implemented and provides category retrieval
 and category-tree construction.
 
-However, responsibility-level conformance has not yet been fully disposed.
+Implementation evidence includes:
 
-The implementation shall remain under focused inspection before A01.3 is
-classified as CONFORMANT or GAP.
+* CategoryService application boundary;
+* category retrieval through CategoryRepository;
+* category-tree construction;
+* parent-child hierarchy construction;
+* orphan-category handling;
+* repository abstraction;
+* dedicated application-service verification tests.
+
+Verification evidence:
+
+* get_categories() behavior is verified;
+* get_category_tree() hierarchy construction is verified;
+* orphan categories are verified to remain roots;
+* dedicated CategoryService tests are present and passing.
+
+No additional CategoryService implementation is required.
+
+A01.3 is therefore considered CONFORMANT.
 
 A01.4 — Version Service
 
@@ -892,35 +908,26 @@ IA-08-A01
 
 Current Controlled Action:
 
-Continue responsibility-level inspection of the remaining non-resolved
-IA-08-A01 responsibilities.
+IA-08-A01 — Application Service has received a complete responsibility-level
+disposition.
 
-A01.2 — Review / Change Proposal is closed and shall not be reopened unless
-new contradictory evidence is discovered.
+All currently identified A01 responsibilities have been inspected and
+disposed:
 
-A01.6 — Application Error Boundary is closed and shall not be reopened unless
-new contradictory evidence is discovered.
+* A01.2 — Review / Change Proposal: IMPLEMENTATION VERIFIED / RESOLVED;
+* A01.3 — Category Service: CONFORMANT;
+* A01.4 — Version Service: CONFORMANT;
+* A01.5 — Audit Service: CONFORMANT;
+* A01.6 — Application Error Boundary: RESOLVED;
+* A01.7 — Transaction Boundary: IMPLEMENTATION VERIFIED / RESOLVED.
 
-A01.7 — Transaction Boundary is closed and shall not be reopened unless
-new contradictory evidence is discovered.
+No remaining non-resolved A01 responsibility is currently identified.
 
-The next implementation action shall be selected only after focused
-inspection confirms that the required capability is missing or incomplete.
+The A01 implementation resolution shall remain closed unless new
+contradictory evidence is discovered.
 
-The following responsibilities shall not be reopened as part of the next
-change:
+The resolution process may now proceed to IA-08-A02.
 
-A01.2 — Review / Change Proposal
-
-A01.6 — Application Error Boundary
-
-A01.7 — Transaction Boundary
-
-A01.2, A01.6, and A01.7 have been implemented and verified and shall remain
-closed unless new contradictory evidence is discovered.
-
-The resolution process shall not proceed to IA-08-A02 until IA-08-A01 has
-received a complete responsibility-level disposition.
 
 ================================================================================
 End of Document
