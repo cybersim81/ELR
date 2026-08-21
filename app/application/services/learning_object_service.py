@@ -106,55 +106,55 @@ class LearningObjectService:
         return learning_object
 
     def approve(
-    self,
-    learning_object_id: UUID,
-    actor: str,
-) -> LearningObject:
-    """
-    Proposed -> Active.
+        self,
+        learning_object_id: UUID,
+        actor: str,
+    ) -> LearningObject:
+        """
+        Proposed -> Active.
 
-    Approval creates the first immutable Version and records
-    the audit event within one transaction boundary.
-    """
-    with self.transaction_factory():
-        learning_object = self._get_or_raise(learning_object_id)
+        Approval creates the first immutable Version and records
+        the audit event within one transaction boundary.
+        """
+        with self.transaction_factory():
+            learning_object = self._get_or_raise(learning_object_id)
 
-        try:
-            learning_object.approve()
-        except InvalidStateTransition as exc:
-            raise InvalidOperation(
-                "Learning object cannot be approved."
-            ) from exc
+            try:
+                learning_object.approve()
+            except InvalidStateTransition as exc:
+                raise InvalidOperation(
+                    "Learning object cannot be approved."
+                ) from exc
 
-        version = Version(
-            learning_object_id=learning_object.id,
-            number=1,
-            snapshot={
-                "anchor_id": str(learning_object.anchor_id),
-                "statement": {
-                    "text": learning_object.statement.text,
-                    "language": learning_object.statement.language,
-                },
-                "category_id": str(learning_object.category_id),
-                "state": learning_object.state.value,
-            },
-        )
-
-        self.learning_object_repository.save(learning_object)
-        self.version_repository.save(version)
-
-        self.audit_repository.record(
-            AuditRecord(
-                entity_id=learning_object.id,
-                event_type="LearningObjectApproved",
-                actor=actor,
-                metadata={
-                    "version": version.number,
+            version = Version(
+                learning_object_id=learning_object.id,
+                number=1,
+                snapshot={
+                    "anchor_id": str(learning_object.anchor_id),
+                    "statement": {
+                        "text": learning_object.statement.text,
+                        "language": learning_object.statement.language,
+                    },
+                    "category_id": str(learning_object.category_id),
+                    "state": learning_object.state.value,
                 },
             )
-        )
 
-        return learning_object
+            self.learning_object_repository.save(learning_object)
+            self.version_repository.save(version)
+
+            self.audit_repository.record(
+                AuditRecord(
+                    entity_id=learning_object.id,
+                    event_type="LearningObjectApproved",
+                    actor=actor,
+                    metadata={
+                        "version": version.number,
+                    },
+                )
+            )
+
+            return learning_object
 
     def update_knowledge(
         self,
