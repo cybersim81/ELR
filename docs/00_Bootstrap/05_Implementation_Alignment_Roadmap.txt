@@ -400,58 +400,171 @@ IA-07 is closed.
 ---
 
 ================================================================================
+
 # Phase IA-08 — Implementation Conformance
+
 ================================================================================
 
 Status:
 
 CURRENT — IN PROGRESS
 
-
 Current Finding:
+
+IA-08-A02 — Transactional Event Record
+
+Completed Finding:
 
 IA-08-A01 — Application Service
 
+Status:
 
-Responsibility Status:
+COMPLETE / CLOSED
 
-A01.6 — Application Error Boundary
-RESOLVED / VERIFIED
+IA-08-A01 Responsibility Status:
 
 A01.2 — Review / Change Proposal
-BLOCKED
+IMPLEMENTATION VERIFIED / RESOLVED
 
 A01.3 — Category Service
-PARTIAL
+CONFORMANT
 
 A01.4 — Version Service
-PARTIAL
+CONFORMANT
 
 A01.5 — Audit Service
-PARTIAL
+CONFORMANT
+
+A01.6 — Application Error Boundary
+RESOLVED
 
 A01.7 — Transaction Boundary
-PARTIAL
+IMPLEMENTATION VERIFIED / RESOLVED
 
+A01.2 — Review / Change Proposal
 
-Verification Evidence:
+Implementation and verification are complete.
 
-A01.6 focused tests: PASS
+Verified:
 
-Full pytest suite: 79 passed
+* Change Proposal representation;
+* Change Proposal persistence before evaluation;
+* Review decision / decision trace representation;
+* Learning Review application boundary;
+* Knowledge Validation success and rejection paths;
+* Repository Consistency success and rejection paths;
+* APPROVE coordination;
+* REJECT coordination;
+* REQUEST REVISION coordination;
+* ReviewDecisionTrace persistence;
+* final review outcomes through the LearningReviewAdapter.
 
-E2E-GATE-01: VERIFIED / CLOSED
+A01.2 is closed and shall not be reopened unless new contradictory evidence is
+discovered.
 
+A01.3 — Category Service
 
-Current Rule:
+The Category Service application boundary is implemented and verified.
 
-A01.6 shall not be reopened unless new authoritative or repository evidence
-demonstrates a regression or contradiction.
+Verified:
 
-The next implementation action shall address one of the remaining
-non-resolved A01 responsibilities only after focused repository inspection
-confirms the actual implementation gap.
+* category retrieval;
+* category-tree construction;
+* parent-child hierarchy construction;
+* orphan-category handling;
+* CategoryRepository abstraction;
+* dedicated CategoryService verification tests.
 
+A01.3 is CONFORMANT and shall not be reopened unless new contradictory
+evidence is discovered.
+
+A01.4 — Version Service
+
+Versioning behavior is implemented and verified.
+
+Verified:
+
+* Version domain entity;
+* immutable Version representation;
+* VersionRepository;
+* version history retrieval;
+* first-version creation during approval;
+* subsequent-version creation during knowledge update;
+* sequential version numbering;
+* immutable historical snapshots;
+* preservation of previous versions;
+* transactional integration with Learning Object persistence.
+
+No dedicated VersionService is required solely by naming difference.
+
+A01.4 is CONFORMANT and shall not be reopened unless new contradictory
+evidence is discovered.
+
+A01.5 — Audit Service
+
+Audit behavior is implemented and verified.
+
+Verified:
+
+* AuditRecord domain entity;
+* AuditRepository;
+* audit record creation;
+* audit persistence;
+* audit retrieval by entity;
+* actor attribution;
+* event type preservation;
+* metadata preservation;
+* transactional integration with approval.
+
+AuditRepository provides the required persistence boundary through:
+
+* record();
+* find_by_entity().
+
+No dedicated AuditService is required solely by naming difference.
+
+A01.5 is CONFORMANT and shall not be reopened unless new contradictory
+evidence is discovered.
+
+A01.6 — Application Error Boundary
+
+RESOLVED.
+
+The centralized application error boundary has been implemented and verified.
+
+A01.6 shall not be reopened unless new contradictory authoritative or
+repository evidence demonstrates a regression or contradiction.
+
+A01.7 — Transaction Boundary
+
+IMPLEMENTATION VERIFIED / RESOLVED.
+
+Verified:
+
+* existing transaction boundary infrastructure is reused;
+* LearningObjectService.approve() executes Learning Object persistence,
+  Version persistence, and Audit persistence within one transaction boundary;
+* the existing shared Session is preserved across the involved repositories;
+* rollback behavior when Audit persistence fails;
+* commit behavior when all persistence operations succeed;
+* existing approval behavior remains green.
+
+A01.7 is closed and shall not be reopened unless new contradictory evidence is
+discovered.
+
+IA-08-A01 Closure Evidence:
+
+* all currently identified A01 responsibilities have received a
+  responsibility-level disposition;
+* A01.2 is IMPLEMENTATION VERIFIED / RESOLVED;
+* A01.3 is CONFORMANT;
+* A01.4 is CONFORMANT;
+* A01.5 is CONFORMANT;
+* A01.6 is RESOLVED;
+* A01.7 is IMPLEMENTATION VERIFIED / RESOLVED;
+* full test suite: 123 passed.
+
+IA-08-A01 is therefore COMPLETE / CLOSED.
 
 ### Gate
 
@@ -459,19 +572,16 @@ confirms the actual implementation gap.
 
 Status: `IN PROGRESS`
 
-The gate remains open until all applicable IA-08-A01 responsibilities have
-received a verified disposition.
+The gate remains open because IA-08-A02 and the subsequent IA-08 findings
+remain to be assessed.
 
-A01.6 — Application Error Boundary is already RESOLVED / VERIFIED and is not
-a remaining gate blocker.
+IA-08-A01 is complete and closed.
 
-Remaining A01 responsibilities:
+Remaining IA-08 Findings:
 
-* A01.2 — BLOCKED;
-* A01.3 — PARTIAL;
-* A01.4 — PARTIAL;
-* A01.5 — PARTIAL;
-* A01.7 — PARTIAL.
+* IA-08-A02 — Transactional Event Record;
+* IA-08-A03 — Security and Authorization;
+* IA-08-A04 — API Implementation.
 
 ---
 
@@ -522,111 +632,120 @@ IA-07 E2E-GATE-01
 │
 │ COMPLETE — 100%
 │ checkpoint: d679299
-│ test suite: 74 passed
+│ historical test suite: 74 passed
 │
 ▼
 IA-08 Implementation Conformance
 │
 │ CURRENT — IN PROGRESS
 │
-│ A01.6 — RESOLVED / VERIFIED
+│ IA-08-A01 — COMPLETE / CLOSED
 │
-│ NEXT WORK PACKAGE:
-│ Remaining IA-08-A01 responsibilities
+│ IA-08-A02 — NEXT
+│
+│ Transactional Event Record
+│
+▼
+IA-08-A03
+│
+│ PENDING
+│
+│ Security and Authorization
+│
+▼
+IA-08-A04
+│
+│ PENDING
+│
+│ API Implementation
 
 ## Current Status Summary
 
-| Phase                                  | Status       | Progress |
-| -------------------------------------- | ------------ | -------: |
-| IA-01 Domain Semantic Alignment        | COMPLETE     |     100% |
-| IA-02 Contract and Lifecycle Alignment | COMPLETE     |     100% |
-| IA-03 Persistence Model                | COMPLETE     |     100% |
-| IA-04 Concrete Repository Layer        | COMPLETE     |     100% |
-| IA-05 Database Wiring                  | COMPLETE     |     100% |
-| E2E-07 Production Persistence          | COMPLETE     |     100% |
-| E2E-08 Persistent Reload               | VERIFIED     |     100% |
-| E2E-09 Version History Recovery        | VERIFIED     |     100% |
-| E2E-10 Audit History Recovery          | VERIFIED     |     100% |
-| E2E-11 Persistent End-to-End Test      | VERIFIED     |     100% |
-| IA-06 Persistent Integration Tests     | COMPLETE     |     100% |
-| IA-07 E2E-GATE-01                      | COMPLETE     |     100% |
-| IA-08 Implementation Conformance       | IN PROGRESS  |        — |
+| Phase                                  | Status      | Progress |
+| -------------------------------------- | ----------- | -------: |
+| IA-01 Domain Semantic Alignment        | COMPLETE    |     100% |
+| IA-02 Contract and Lifecycle Alignment | COMPLETE    |     100% |
+| IA-03 Persistence Model                | COMPLETE    |     100% |
+| IA-04 Concrete Repository Layer        | COMPLETE    |     100% |
+| IA-05 Database Wiring                  | COMPLETE    |     100% |
+| E2E-07 Production Persistence          | COMPLETE    |     100% |
+| E2E-08 Persistent Reload               | VERIFIED    |     100% |
+| E2E-09 Version History Recovery        | VERIFIED    |     100% |
+| E2E-10 Audit History Recovery          | VERIFIED    |     100% |
+| E2E-11 Persistent End-to-End Test      | VERIFIED    |     100% |
+| IA-06 Persistent Integration Tests     | COMPLETE    |     100% |
+| IA-07 E2E-GATE-01                      | COMPLETE    |     100% |
+| IA-08-A01 Application Service          | COMPLETE    |     100% |
+| IA-08-A02 Transactional Event Record   | NEXT        |        — |
+| IA-08-A03 Security and Authorization   | PENDING     |        — |
+| IA-08-A04 API Implementation           | PENDING     |        — |
+| IA-08 Implementation Conformance       | IN PROGRESS |        — |
 
 ## Last Completed Gate
 
-`IA-07 / E2E-GATE-01 — PERSISTENT LEARNINGOBJECT LIFECYCLE — COMPLETE — VERIFIED`
-
-Checkpoint:
-
-`d679299`
+`IA-08-A01 — APPLICATION SERVICE — COMPLETE / CLOSED`
 
 Verification:
 
-`74 passed`
+`123 passed`
 
 ## Current Work Package
 
 `IA-08 — IMPLEMENTATION CONFORMANCE — IN PROGRESS`
 
-Current responsibility:
+Current finding:
 
-`IA-08-A01 — Application Service`
+`IA-08-A02 — Transactional Event Record`
 
-Resolved responsibility:
+Completed finding:
 
-`A01.6 — Application Error Boundary — RESOLVED / VERIFIED`
+`IA-08-A01 — Application Service — COMPLETE / CLOSED`
 
 ## Next Action
 
-Continue the IA-08-A01 conformance assessment.
+Inspect IA-08-A02 — Transactional Event Record against the authoritative
+normative corpus and the current repository implementation.
 
 The next implementation action shall:
 
-1. inspect one remaining A01 responsibility against the authoritative normative corpus;
-2. identify only confirmed implementation deviations;
-3. preserve already-resolved responsibilities as closed;
-4. avoid reopening A01.6 unless contradictory authoritative or repository evidence is found;
-5. implement only the confirmed gap;
-6. verify the focused tests;
+1. inspect the authoritative responsibility semantics;
+2. inspect the existing implementation boundary;
+3. identify only confirmed implementation deviations;
+4. preserve IA-08-A01 and all previously closed responsibilities;
+5. implement only a confirmed gap;
+6. verify focused tests;
 7. verify the complete test suite;
 8. update the corresponding implementation documentation;
 9. establish the next controlled action only after verification.
 
 Then proceed using:
 
-`inspect → block/sections → verify → test → percentage → next gap`
+`inspect → responsibility disposition → implement only confirmed gap → test → verify → checkpoint → next finding`
 
 ## Operating Rule
 
 No implementation change is considered complete until its focused test passes.
 
-For an existing file with a small, localized change, identify only the sections that need modification instead of rewriting the whole file.
+For an existing file with a small, localized change, identify only the sections
+that need modification instead of rewriting the whole file.
 
 For a new file, provide one complete block for that file.
 
-If a single-file change is too large for one block, split it into sequential blocks while keeping all blocks scoped to that same file.
+If a single-file change is too large for one block, split it into sequential
+blocks while keeping all blocks scoped to that same file.
 
 Distinct files are always handled as distinct blocks.
 
-If a repository read or search fails, automatically try alternative Git tree, path, or lookup methods before stopping.
+If a repository read or search fails, automatically try alternative Git tree,
+path, or lookup methods before stopping.
 
-After a focused test passes, advance automatically to the next confirmed gap and update the completion percentage.
+Do not reopen a completed IA phase unless new authoritative evidence establishes
+a direct contradiction with the normative architecture or roadmap.
 
-Do not reopen a completed IA phase unless new authoritative evidence establishes a direct contradiction with the normative architecture or roadmap.
+IA-01 through IA-07 are closed.
 
+IA-08-A01 is complete and closed.
 
-IA-01, IA-02, IA-03, IA-04 and IA-05 are closed.
+The next confirmed work package is:
 
-E2E-07 Production Persistence is complete and verified at checkpoint `b00d5c7` with `70 passed`.
-
-The current implementation boundary is:
-
-`Application → Concrete Repository → Persistence Model → Database`
-
-The next unclosed boundary is:
-
-`Database → New Session → Repository → Reconstructed Aggregate`
-
-Therefore the next confirmed gap is:
-
-`E2E-08 — Persistent Reload`
+`IA-08-A02 — Transactional Event Record`
