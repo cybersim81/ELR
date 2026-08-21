@@ -525,3 +525,123 @@ def test_approve_rolls_back_when_audit_persistence_fails():
         )
         == []
     )
+
+
+def test_approve_commits_when_all_persistence_operations_succeed():
+    from copy import deepcopy
+    from uuid import uuid4
+
+    from app.application.services.learning_object_service import (
+        LearningObjectService,
+    )
+    from app.domain.entities.knowledge_statement import KnowledgeStatement
+    from app.domain.entities.learning_object import (
+        LearningObject,
+        LearningObjectState,
+    )
+
+    class InMemoryTransaction:
+        def __init__(
+            self,
+            learning_object_repository,
+            version_repository,
+        ):
+            self.learning_object_repository = learning_object_repository
+            self.version_repository = version_repository
+            self.committed = False
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc_value, traceback):
+            if exc_type is None:
+                self.committed = True
+
+            return False
+
+    class InMemoryLearningObjectRepository:
+        def __init__(self, learning_object):
+            self.persisted = deepcopy(learning_object)
+
+        def save(self, learning_object):
+            self.persisted = deepcopy(learning_object)
+
+        def get_by_id(self, learning_object_id):
+            if self.persisted.id == learning_object_id:
+                return deepcopy(self.persisted)
+            return None
+
+    class InMemoryVersionRepository:
+        def __init__(self):
+            self.versions = []
+
+        def save(self, version):
+            self.versions.append(deepcopy(version))
+
+        def get_history(self, learning_object_id):
+            return [
+                deepcopy(version)
+                for version in self.versions
+                if version.learning_object_id == learning_object_id
+            ]
+
+    class InMemoryAuditRepository:
+        def __init__(self):
+            self.records = []
+
+        def record(self, audit):
+            self.records.append(deepcopy(audit))
+
+    learning_object = LearningObject(
+        anchor_id=uuid4(),
+        statement=KnowledgeStatement(
+            text="Test knowledge statement.",
+            language="en",
+        ),
+        category_id=uuid4(),
+    )
+
+    learning_object.submit_for_review()
+
+    learning_object_repository = InMemoryLearningObjectRepository(
+        learning_object
+    )
+    version_repository = InMemoryVersionRepository()
+    audit_repository = InMemoryAuditRepository()
+
+    transaction = InMemoryTransaction(
+        learning_object_repository,
+        version_repository,
+    )
+
+    service = LearningObjectService(
+        learning_object_repository=learning_object_repository,
+        version_repository=version_repository,
+        audit_repository=audit_repository,
+        transaction_factory=lambda: transaction,
+    )
+
+    result = service.approve(
+        learning_object_id=learning_object.id,
+        actor="test-user",
+    )
+
+    assert transaction.committed is True
+
+    assert result.state == LearningObjectState.ACTIVE
+
+    persisted = learning_object_repository.persisted
+
+    assert persisted.state == LearningObjectState.ACTIVE
+
+    history = version_repository.get_history(
+        learning_object.id,
+    )
+
+    assert len(history) == 1
+    assert history[0].number == 1
+
+    assert len(audit_repository.records) == 1
+    assert audit_repository.records[0].event_type == (
+        "LearningObjectApproved"
+    )
