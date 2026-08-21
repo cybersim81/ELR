@@ -6,8 +6,7 @@ Gap Resolution Plan
 
 Version: 0.1.0
 Status: WORKING IMPLEMENTATION GUIDANCE
-================================================================================
-
+=======================================
 
 # Document Identity
 
@@ -41,7 +40,9 @@ This document must therefore be interpreted together with the authoritative
 ELR specification corpus.
 
 ================================================================================
+
 # 1. Purpose
+
 ================================================================================
 
 This document provides the controlled implementation plan for resolving the
@@ -61,9 +62,10 @@ This document is a guide for implementation work.
 
 It is not itself an implementation specification.
 
-
 ================================================================================
+
 # 2. IA-08 Baseline
+
 ================================================================================
 
 IA-08 — Implementation Conformance compares the current implementation against
@@ -84,19 +86,19 @@ contradictory evidence is discovered:
 The verified persistence boundary remains:
 
 Application
-    ->
+->
 Concrete Repository
-    ->
+->
 Persistence Model
-    ->
+->
 Database
-    ->
+->
 New Session
-    ->
+->
 Reconstructed Aggregate
-    ->
+->
 Version History
-    ->
+->
 Audit History
 
 IA-08 must not reopen these areas merely because additional implementation
@@ -105,9 +107,10 @@ layers are now being introduced.
 Any change that would invalidate a previously verified boundary requires
 explicit contradictory evidence and a separate disposition.
 
-
 ================================================================================
+
 # 3. Confirmed Findings
+
 ================================================================================
 
 The IA-08 analysis has identified four implementation-conformance findings.
@@ -160,9 +163,10 @@ IA-08-A02, IA-08-A03, and IA-08-A04 may proceed according to their respective
 resolution plans once their dependencies and implementation boundaries are
 confirmed.
 
-
 ================================================================================
+
 # 4. Finding A01 — Application Service Conformance
+
 ================================================================================
 
 ## 4.1 Current State
@@ -186,9 +190,10 @@ The implementation does not yet provide the complete Application Service
 surface defined by the current Application Service Implementation
 Specification.
 
-
 ================================================================================
+
 ## 4.2 Conformance Finding Under Inspection
+
 ================================================================================
 
 The Application Service implementation currently provides a substantial part
@@ -222,7 +227,6 @@ The result of the inspection shall determine whether each responsibility is:
 
 No implementation change shall be derived from an UNKNOWN or uninspected
 responsibility.
-
 
 ## 4.3 Target State
 
@@ -259,7 +263,6 @@ Security and Authorization model.
 The Security Layer remains responsible for authentication and authorization
 semantics according to the authoritative Security Implementation Specification.
 
-
 ## 4.4 Invariants
 
 The following invariants must remain true:
@@ -270,7 +273,6 @@ The following invariants must remain true:
 * Review decisions remain owned by the Review process.
 * Repository interfaces remain independent of infrastructure.
 * Audit remains distinct from transactional domain events.
-
 
 ## 4.5 Verification
 
@@ -284,9 +286,10 @@ A01 shall be considered resolved only when:
 * transaction behavior is verified where required;
 * existing IA-07 persistence tests remain green.
 
-
 ================================================================================
+
 # 5. Finding A02 — Transactional Event Record
+
 ================================================================================
 
 ## 5.1 Current State
@@ -297,7 +300,6 @@ Audit Records are not equivalent to Transactional Event Records.
 
 The current Event Implementation Specification requires a separate transactional
 event persistence mechanism.
-
 
 ## 5.2 Confirmed Gap
 
@@ -310,7 +312,6 @@ The following Event Implementation responsibilities are not yet implemented:
 * event schema version preservation;
 * transactional creation of the event record;
 * subsequent event publication boundary.
-
 
 ## 5.3 Target State
 
@@ -332,7 +333,6 @@ The event record shall preserve at minimum:
 * created_at;
 * metadata.
 
-
 ## 5.4 Transaction Rule
 
 A transactional event record produced by a domain/application operation shall
@@ -344,7 +344,6 @@ transactional consistency.
 
 A publication failure must therefore not invalidate an already committed
 domain transaction.
-
 
 ## 5.5 Separation Rule
 
@@ -361,7 +360,6 @@ They are not:
 The Event implementation must not expand the semantic persistence boundary
 of the knowledge repository.
 
-
 ## 5.6 Verification
 
 A02 shall be considered resolved only when tests demonstrate:
@@ -376,9 +374,10 @@ A02 shall be considered resolved only when tests demonstrate:
 * separation from Audit Records;
 * behavior after transaction failure.
 
-
 ================================================================================
+
 # 6. Finding A03 — Security and Authorization
+
 ================================================================================
 
 ## 6.1 Current State
@@ -387,25 +386,23 @@ The current application service accepts actor information for audit purposes.
 
 A complete Identity Context and Authorization boundary is not yet implemented.
 
-
 ## 6.2 Confirmed Gap
 
 The Security Implementation Specification requires:
 
 Authentication
-    ->
+->
 Identity Context
-    ->
+->
 Authorization
-    ->
+->
 API
-    ->
+->
 Application Services
-    ->
+->
 Domain
 
 The implementation does not yet provide this boundary.
-
 
 ## 6.3 Target State
 
@@ -422,7 +419,6 @@ The first implementation shall support:
 * explicit authorization failures;
 * Application Layer access to the authenticated identity context.
 
-
 ## 6.4 Authentication Boundary
 
 Authentication must remain abstract.
@@ -432,7 +428,6 @@ provider unless separately authorized by the applicable specification.
 
 An AuthenticationProvider abstraction is sufficient for the initial
 implementation boundary.
-
 
 ## 6.5 Authorization Rules
 
@@ -449,7 +444,6 @@ Authorization must not be redefined independently inside the API layer.
 The API Layer shall invoke the authorization model rather than create a
 competing role or permission model.
 
-
 ## 6.6 Auditability
 
 Significant knowledge modifications shall remain attributable to an actor.
@@ -457,7 +451,6 @@ Significant knowledge modifications shall remain attributable to an actor.
 Security integration must enrich and protect auditability.
 
 It must not replace the Audit Model with the Event Model.
-
 
 ## 6.7 Verification
 
@@ -470,16 +463,16 @@ A03 shall be considered resolved only when tests demonstrate:
 * authorization before protected operation;
 * actor attribution in significant modifications.
 
-
 ================================================================================
+
 # 7. Finding A04 — API Implementation
+
 ================================================================================
 
 ## 7.1 Current State
 
 The implementation does not yet contain the API layer required by the
 current API Implementation Specification.
-
 
 ## 7.2 Confirmed Gap
 
@@ -494,7 +487,6 @@ The required API boundary includes:
 * health endpoint;
 * protected write operations;
 * delegation to Application Services.
-
 
 ## 7.3 Target State
 
@@ -519,20 +511,18 @@ The API Layer shall not:
 * directly manipulate database models;
 * define an independent authorization model.
 
-
 ## 7.4 Dependency Rule
 
 The intended dependency direction is:
 
 API
-    ->
+->
 Application
-    ->
+->
 Domain / Repository Interfaces
 
 Infrastructure implementations shall remain behind the appropriate
 application/repository boundaries.
-
 
 ## 7.5 Verification
 
@@ -546,9 +536,10 @@ A04 shall be considered resolved only when tests demonstrate:
 * correct error mapping;
 * absence of direct persistence bypass.
 
-
 ================================================================================
+
 # 8. Resolution Order
+
 ================================================================================
 
 The confirmed findings shall be addressed in dependency-aware order.
@@ -577,15 +568,15 @@ Resolve:
 
 IA-08-A04
 
-
 The order may be revised only if implementation evidence demonstrates a
 dependency requiring a different sequence.
 
 Any such change must be recorded before implementation proceeds.
 
-
 ================================================================================
+
 # 9. Implementation Control Rules
+
 ================================================================================
 
 The following rules apply to all IA-08 implementation work.
@@ -644,24 +635,25 @@ Repository modifications are not performed as part of this planning
 document. Implementation changes are applied only through the controlled
 local development workflow.
 
-
 ================================================================================
+
 # 10. Verification Matrix
+
 ================================================================================
 
-| Finding    | Implementation | Unit Tests | Integration Tests | E2E | Exit Gate |
-|------------|----------------|------------|-------------------|-----|-----------|
-| IA-08-A01 | Required       | Required   | Required          | As applicable | A01 Gate |
-| IA-08-A02 | Required       | Required   | Required          | Required     | A02 Gate |
-| IA-08-A03 | Required       | Required   | Required          | Required     | A03 Gate |
-| IA-08-A04 | Required       | Required   | Required          | Required     | A04 Gate |
-
+| Finding   | Implementation | Unit Tests | Integration Tests | E2E           | Exit Gate |
+| --------- | -------------- | ---------- | ----------------- | ------------- | --------- |
+| IA-08-A01 | Required       | Required   | Required          | As applicable | A01 Gate  |
+| IA-08-A02 | Required       | Required   | Required          | Required      | A02 Gate  |
+| IA-08-A03 | Required       | Required   | Required          | Required      | A03 Gate  |
+| IA-08-A04 | Required       | Required   | Required          | Required      | A04 Gate  |
 
 Each gate must confirm that previously verified behavior remains intact.
 
-
 ================================================================================
+
 # 11. Out of Scope
+
 ================================================================================
 
 The following remain outside the scope of this gap-resolution plan unless a
@@ -681,9 +673,10 @@ separate authoritative decision brings them into scope:
 * analytics pipelines;
 * semantic changes to the Domain Model.
 
-
 ================================================================================
+
 # 12. IA-08 Exit Criteria
+
 ================================================================================
 
 IA-08 shall not be considered complete until:
@@ -701,9 +694,10 @@ IA-08 shall not be considered complete until:
    state;
 10. a new implementation checkpoint is established.
 
-
 ================================================================================
+
 # 13. Change Control
+
 ================================================================================
 
 This document is a working implementation guide.
@@ -711,27 +705,27 @@ This document is a working implementation guide.
 Changes to this document must preserve the authority hierarchy:
 
 Authoritative Specification
-        >
+>
 Implementation Conformance Finding
-        >
+>
 Gap Resolution Plan
-        >
+>
 Implementation
-        >
+>
 Verification Evidence
 
 If a conflict is discovered, implementation must stop until the authoritative
 source is identified and the conflict is resolved.
 
-
 ================================================================================
+
 # 14. Current Status
+
 ================================================================================
 
 IA-08:
 
 IN PROGRESS
-
 
 Confirmed Findings:
 
@@ -740,32 +734,46 @@ IA-08-A02 — Transactional Event Record
 IA-08-A03 — Security and Authorization
 IA-08-A04 — API Implementation
 
-
 IA-08-A01 Responsibility Status:
 
 A01.6 — Application Error Boundary
 
 RESOLVED
 
-
 A01.3 — Category Service
 
 PARTIAL
-
 
 A01.4 — Version Service
 
 PARTIAL
 
-
 A01.5 — Audit Service
 
 PARTIAL
 
-
 A01.7 — Transaction Boundary
 
-PARTIAL
+IMPLEMENTATION VERIFIED / RESOLVED
+
+Implementation verified:
+
+* existing transaction boundary infrastructure is present and reused;
+* LearningObjectService.approve() now executes Learning Object persistence,
+  Version persistence, and Audit persistence within one transaction boundary;
+* the existing shared Session is preserved across the involved repositories;
+* rollback behavior when Audit persistence fails is verified;
+* commit behavior when all persistence operations succeed is verified;
+* existing approval behavior remains green.
+
+Verification evidence:
+
+* rollback test passes;
+* commit test passes;
+* approval test set passes;
+* full test suite: 123/123 passed.
+
+A01.7 is therefore considered IMPLEMENTATION VERIFIED and RESOLVED.
 
 A01.2 — Review / Change Proposal
 
@@ -798,8 +806,8 @@ Implementation verified:
 
 Verification evidence:
 
-* 10 review-specific tests pass;
-* 121 tests pass in the full test suite.
+* review-specific verification tests pass;
+* full test suite: 123/123 passed.
 
 A01.2 is therefore considered IMPLEMENTATION VERIFIED and RESOLVED.
 
@@ -807,11 +815,9 @@ The Application Service shall continue to coordinate Review outcomes and
 resulting domain operations. It shall not independently implement or redefine
 Review semantics.
 
-
 Current Active Finding:
 
 IA-08-A01
-
 
 Current Controlled Action:
 
@@ -821,9 +827,14 @@ IA-08-A01 responsibilities.
 A01.2 — Review / Change Proposal is closed and shall not be reopened unless
 new contradictory evidence is discovered.
 
+A01.6 — Application Error Boundary is closed and shall not be reopened unless
+new contradictory evidence is discovered.
+
+A01.7 — Transaction Boundary is closed and shall not be reopened unless
+new contradictory evidence is discovered.
+
 The next implementation action shall be selected only after focused
 inspection confirms that the required capability is missing or incomplete.
-
 
 The following responsibilities shall not be reopened as part of the next
 change:
@@ -832,15 +843,14 @@ A01.2 — Review / Change Proposal
 
 A01.6 — Application Error Boundary
 
+A01.7 — Transaction Boundary
 
-A01.2 and A01.6 have been implemented and verified and shall remain closed
-unless new contradictory evidence is discovered.
-
+A01.2, A01.6, and A01.7 have been implemented and verified and shall remain
+closed unless new contradictory evidence is discovered.
 
 The resolution process shall not proceed to IA-08-A02 until IA-08-A01 has
 received a complete responsibility-level disposition.
 
-
 ================================================================================
 End of Document
-================================================================================
+===============
