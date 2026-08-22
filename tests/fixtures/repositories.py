@@ -1,6 +1,7 @@
 from app.domain.entities.audit_record import AuditRecord
 from app.domain.entities.learning_object import LearningObject
 from app.domain.entities.version import Version
+from app.events.event_record import EventRecord
 
 
 class InMemoryLearningObjectRepository:
@@ -75,3 +76,32 @@ class InMemoryAuditRepository:
             for audit in self.items
             if audit.entity_id == entity_id
         ]
+
+
+class InMemoryEventRecordRepository:
+    """
+    In-memory implementation of the EventRecordRepository
+    contract for tests.
+    """
+
+    def __init__(self):
+        self.items: list[EventRecord] = []
+
+    def save(
+        self,
+        event: EventRecord,
+    ) -> None:
+        self.items.append(event)
+
+    def get(
+        self,
+        event_id,
+    ) -> EventRecord | None:
+        return next(
+            (
+                event
+                for event in self.items
+                if event.event_id == event_id
+            ),
+            None,
+        )
