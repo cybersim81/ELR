@@ -1,9 +1,14 @@
 from sqlalchemy.orm import Session
 
-from app.application.services.learning_object_service import LearningObjectService
+from app.application.services.learning_object_service import (
+    LearningObjectService,
+)
 from app.persistence.database import SessionFactory
 from app.persistence.repositories.audit_repository import (
     SQLAlchemyAuditRepository,
+)
+from app.persistence.repositories.event_record_repository import (
+    SQLAlchemyEventRecordRepository,
 )
 from app.persistence.repositories.learning_object_repository import (
     SQLAlchemyLearningObjectRepository,
@@ -20,14 +25,25 @@ def create_learning_object_service(
     session = session or SessionFactory()
 
     service = LearningObjectService(
-        learning_object_repository=SQLAlchemyLearningObjectRepository(
-            session
+        learning_object_repository=(
+            SQLAlchemyLearningObjectRepository(
+                session
+            )
         ),
-        version_repository=SQLAlchemyVersionRepository(
-            session
+        version_repository=(
+            SQLAlchemyVersionRepository(
+                session
+            )
         ),
-        audit_repository=SQLAlchemyAuditRepository(
-            session
+        audit_repository=(
+            SQLAlchemyAuditRepository(
+                session
+            )
+        ),
+        event_record_repository=(
+            SQLAlchemyEventRecordRepository(
+                session
+            )
         ),
         transaction_factory=lambda: transaction(session),
     )

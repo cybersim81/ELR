@@ -1,8 +1,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from sqlalchemy import DateTime, String
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy import DateTime, JSON, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.persistence.models.base import Base
@@ -41,7 +40,7 @@ class EventRecordModel(Base):
     )
 
     payload: Mapped[dict] = mapped_column(
-        JSONB,
+        JSON,
         nullable=False,
     )
 
@@ -62,6 +61,6 @@ class EventRecordModel(Base):
 
     metadata_: Mapped[dict | None] = mapped_column(
         "metadata",
-        JSONB,
+        JSON,
         nullable=True,
     )

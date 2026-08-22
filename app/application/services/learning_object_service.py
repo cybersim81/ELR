@@ -163,6 +163,7 @@ class LearningObjectService:
 
             return learning_object
 
+
     def update_knowledge(
         self,
         learning_object_id: UUID,
@@ -177,89 +178,85 @@ class LearningObjectService:
         previous Version remains preserved in history.
         """
 
-        with self.transaction_factory():
-            learning_object = self._get_or_raise(
-                learning_object_id
+        learning_object = self._get_or_raise(
+            learning_object_id
+        )
+
+        try:
+            learning_object.update_knowledge(
+                statement
             )
+        except InvalidStateTransition as exc:
+            raise InvalidOperation(
+                "Learning object cannot be updated."
+            ) from exc
 
-            try:
-                learning_object.update_knowledge(
-                    statement
-                )
-            except InvalidStateTransition as exc:
-                raise InvalidOperation(
-                    "Learning object cannot be updated."
-                ) from exc
+        history = self.version_repository.get_history(
+            learning_object_id
+        )
 
-            history = self.version_repository.get_history(
-                learning_object_id
+        next_version_number = (
+            max(
+                (version.number for version in history),
+                default=0,
             )
+            + 1
+        )
 
-            next_version_number = (
-                max(
-                    (version.number for version in history),
-                    default=0,
-                )
-                + 1
-            )
+        version = Version(
+            learning_object_id=learning_object.id,
+            number=next_version_number,
+            snapshot={
+                "anchor_id": str(
+                    learning_object.anchor_id
+                ),
+                "statement": {
+                    "text": learning_object.statement.text,
+                    "language": learning_object.statement.language,
+                },
+                "category_id": str(
+                    learning_object.category_id
+                ),
+                "state": learning_object.state.value,
+            },
+        )
 
-            version = Version(
-                learning_object_id=learning_object.id,
-                number=next_version_number,
-                snapshot={
-                    "anchor_id": str(
-                        learning_object.anchor_id
+        self.learning_object_repository.save(
+            learning_object
+        )
+
+        self.version_repository.save(
+            version
+        )
+
+        self.event_record_repository.save(
+            EventRecord(
+                event_type="LearningObjectUpdated",
+                event_source="LearningObjectService",
+                aggregate_type="LearningObject",
+                aggregate_id=learning_object.id,
+                version=version.number,
+                payload={
+                    "learning_object_id": str(
+                        learning_object.id
                     ),
-                    "statement": {
-                        "text": learning_object.statement.text,
-                        "language": learning_object.statement.language,
-                    },
-                    "category_id": str(
-                        learning_object.category_id
-                    ),
-                    "state": learning_object.state.value,
+                    "new_version": version.number,
                 },
             )
+        )
 
-            self.learning_object_repository.save(
-                learning_object
+        self.audit_repository.record(
+            AuditRecord(
+                entity_id=learning_object.id,
+                event_type="LearningObjectUpdated",
+                actor=actor,
+                metadata={
+                    "version": version.number,
+                },
             )
+        )
 
-            self.version_repository.save(
-                version
-            )
-
-            self.audit_repository.record(
-                AuditRecord(
-                    entity_id=learning_object.id,
-                    event_type="LearningObjectUpdated",
-                    actor=actor,
-                    metadata={
-                        "version": version.number,
-                    },
-                )
-            )
-
-            self.event_record_repository.save(
-                EventRecord(
-                    event_type="LearningObjectUpdated",
-                    event_source="LearningObjectService",
-                    aggregate_type="LearningObject",
-                    aggregate_id=learning_object.id,
-                    version=version.number,
-                    payload={
-                        "learning_object_id": str(
-                            learning_object.id
-                        ),
-                        "new_version": version.number,
-                    },
-                    metadata={
-                        "actor": actor,
-                    },
-                )
-            )
-
-            return learning_object
+        return learning_object
 
     def retire(
         self,
