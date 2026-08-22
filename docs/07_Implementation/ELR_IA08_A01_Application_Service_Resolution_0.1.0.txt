@@ -391,44 +391,78 @@ A01.6 is therefore considered RESOLVED.
 
 ================================================================================
 
-# 22.9 A01.7 — Transaction Boundary
+# 22.9 A01.7 — Transaction Boundary Conformance Correction
 
 ================================================================================
 
-Status:
 
-CONFORMANT
+**STATUS:** PARTIAL — CORRECTION REQUIRED
 
-The implementation uses the existing transaction infrastructure and shared
-SQLAlchemy Session.
+### Finding
 
-The Application Service does not autonomously commit externally supplied
-Sessions for operations whose transaction is owned by the caller.
+The transactional infrastructure is implemented and available through `transaction_factory`.
 
-In particular, knowledge update persistence is performed without an
-application-local commit.
+However, transaction-boundary application is not yet consistent across the Application Service use cases.
 
-The transaction boundary therefore remains controlled by the existing
-transaction abstraction and the caller-owned Session.
+`LearningObjectService.update_knowledge()` performs multiple persistence operations:
 
-The following persistence operations participate in the same transaction
-where applicable:
+1. Learning Object update;
+2. Version creation;
+3. Event Record persistence;
+4. Audit Record persistence;
 
-* Learning Object persistence;
-* Version persistence;
-* Audit persistence;
-* Event Record persistence.
+but the complete sequence is currently executed outside `with self.transaction_factory():`.
 
-Event Record persistence introduced by A02 uses the same Session and does not
-introduce an independent commit boundary.
+This creates a conformance gap: a failure occurring after one or more persistence operations may leave the operation partially persisted.
 
-Rollback behavior has been verified by the persistence test suite: an
-uncommitted knowledge update followed by Session rollback does not persist
-the updated Learning Object state or its newly created Version.
+### Required Correction
 
-No replacement transaction infrastructure has been introduced.
+`update_knowledge()` SHALL execute its complete state-changing workflow inside the same transaction boundary:
 
-A01.7 is therefore considered RESOLVED.
+```text
+transaction begin
+    retrieve Learning Object
+    apply knowledge update
+    determine next Version
+    create Version
+    persist Learning Object
+    persist Version
+    persist Event Record
+    persist Audit Record
+transaction commit
+```
+
+Any exception occurring during the workflow SHALL cause the transaction to roll back as a single unit.
+
+The correction SHALL preserve the existing domain behavior, version-history semantics, event-record semantics, and audit semantics.
+
+### Verification Requirements
+
+The implementation SHALL demonstrate that:
+
+* the Learning Object update and Version creation are atomic;
+* Event Record persistence participates in the same transaction;
+* Audit Record persistence participates in the same transaction;
+* a failure in a downstream persistence operation rolls back all preceding writes;
+* successful execution commits all records together;
+* existing application and persistence tests remain green.
+
+### Documentation Correction
+
+The previous statement that A01.7 is fully conformant SHALL NOT be considered authoritative until the implementation and rollback verification above are present.
+
+**Checkpoint status after correction:**
+
+```text
+A01.7 — Transaction Boundary Conformance
+Status: PARTIAL
+Blocking correction: update_knowledge transaction boundary
+Required evidence: success + rollback integration test
+```
+
+### Exit Criterion
+
+A01.7 may be promoted to `CONFORMANT` only when the transaction boundary is applied to the complete `update_knowledge()` workflow and automated tests demonstrate atomic commit/rollback behavior.
 
 
 ================================================================================
