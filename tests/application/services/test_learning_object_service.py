@@ -21,6 +21,7 @@ from app.domain.entities.learning_object import (
 
 from tests.fixtures.repositories import (
     InMemoryAuditRepository,
+    InMemoryEventRecordRepository,
     InMemoryLearningObjectRepository,
     InMemoryVersionRepository,
 )
@@ -45,6 +46,9 @@ def create_service():
         ),
         audit_repository=(
             InMemoryAuditRepository()
+        ),
+        event_record_repository=(
+            InMemoryEventRecordRepository()
         ),
     )
 
@@ -144,6 +148,9 @@ def test_approval_creates_version():
         audit_repository=(
             InMemoryAuditRepository()
         ),
+        event_record_repository=(
+            InMemoryEventRecordRepository()
+        ),
     )
 
     learning_object = create_candidate(service)
@@ -187,6 +194,9 @@ def test_update_creates_second_version():
         audit_repository=(
             InMemoryAuditRepository()
         ),
+        event_record_repository=(
+            InMemoryEventRecordRepository()
+        ),
     )
 
     learning_object = approve_candidate(service)
@@ -220,6 +230,51 @@ def test_update_creates_second_version():
     assert learning_object.state.value == "Active"
 
 
+def test_update_creates_learning_object_updated_event():
+
+    event_record_repository = InMemoryEventRecordRepository()
+
+    service = LearningObjectService(
+        learning_object_repository=(
+            InMemoryLearningObjectRepository()
+        ),
+        version_repository=(
+            InMemoryVersionRepository()
+        ),
+        audit_repository=(
+            InMemoryAuditRepository()
+        ),
+        event_record_repository=event_record_repository,
+    )
+
+    learning_object = approve_candidate(service)
+
+    service.update_knowledge(
+        learning_object.id,
+        statement=create_statement(
+            "Updated example statement"
+        ),
+        actor="reviewer",
+    )
+
+    assert len(event_record_repository.items) == 1
+
+    event = event_record_repository.items[0]
+
+    assert event.event_type == "LearningObjectUpdated"
+    assert event.event_source == "LearningObjectService"
+    assert event.aggregate_type == "LearningObject"
+    assert event.aggregate_id == learning_object.id
+    assert event.version == 2
+
+    assert event.payload == {
+        "learning_object_id": str(
+            learning_object.id
+        ),
+        "new_version": 2,
+    }
+
+
 def test_update_preserves_previous_version():
 
     version_repository = InMemoryVersionRepository()
@@ -231,6 +286,9 @@ def test_update_preserves_previous_version():
         version_repository=version_repository,
         audit_repository=(
             InMemoryAuditRepository()
+        ),
+        event_record_repository=(
+            InMemoryEventRecordRepository()
         ),
     )
 
@@ -274,6 +332,9 @@ def test_operations_create_audit_records():
             InMemoryVersionRepository()
         ),
         audit_repository=audit_repository,
+        event_record_repository=(
+            InMemoryEventRecordRepository()
+        ),
     )
 
     learning_object = create_candidate(service)
@@ -319,6 +380,7 @@ def test_retire():
 
     assert learning_object.state.value == "Retired"
 
+
 def test_get_missing_learning_object_raises_entity_not_found():
     service = create_service()
 
@@ -326,6 +388,7 @@ def test_get_missing_learning_object_raises_entity_not_found():
 
     with pytest.raises(EntityNotFound):
         service.get(missing_id)
+
 
 def test_submit_for_review_invalid_state_raises_invalid_operation():
     service = create_service()
@@ -348,6 +411,7 @@ def test_submit_for_review_invalid_state_raises_invalid_operation():
         InvalidStateTransition,
     )
 
+
 def test_approve_invalid_state_raises_invalid_operation():
     service = create_service()
 
@@ -363,6 +427,7 @@ def test_approve_invalid_state_raises_invalid_operation():
         exc_info.value.__cause__,
         InvalidStateTransition,
     )
+
 
 def test_update_knowledge_invalid_state_raises_invalid_operation():
     service = create_service()
@@ -383,6 +448,7 @@ def test_update_knowledge_invalid_state_raises_invalid_operation():
         InvalidStateTransition,
     )
 
+
 def test_retire_invalid_state_raises_invalid_operation():
     service = create_service()
 
@@ -400,21 +466,8 @@ def test_retire_invalid_state_raises_invalid_operation():
     )
 
 
-
 def test_approve_rolls_back_when_audit_persistence_fails():
     from copy import deepcopy
-    from uuid import uuid4
-
-    import pytest
-
-    from app.application.services.learning_object_service import (
-        LearningObjectService,
-    )
-    from app.domain.entities.knowledge_statement import KnowledgeStatement
-    from app.domain.entities.learning_object import (
-        LearningObject,
-        LearningObjectState,
-    )
 
     class InMemoryTransaction:
         def __init__(
@@ -422,7 +475,9 @@ def test_approve_rolls_back_when_audit_persistence_fails():
             learning_object_repository,
             version_repository,
         ):
-            self.learning_object_repository = learning_object_repository
+            self.learning_object_repository = (
+                learning_object_repository
+            )
             self.version_repository = version_repository
             self.learning_object_snapshot = None
             self.version_snapshot = None
@@ -436,13 +491,22 @@ def test_approve_rolls_back_when_audit_persistence_fails():
             )
             return self
 
-        def __exit__(self, exc_type, exc_value, traceback):
+        def __exit__(
+            self,
+            exc_type,
+            exc_value,
+            traceback,
+        ):
             if exc_type is not None:
-                self.learning_object_repository.persisted = deepcopy(
-                    self.learning_object_snapshot
+                self.learning_object_repository.persisted = (
+                    deepcopy(
+                        self.learning_object_snapshot
+                    )
                 )
-                self.version_repository.versions = deepcopy(
-                    self.version_snapshot
+                self.version_repository.versions = (
+                    deepcopy(
+                        self.version_snapshot
+                    )
                 )
 
             return False
@@ -470,12 +534,15 @@ def test_approve_rolls_back_when_audit_persistence_fails():
             return [
                 deepcopy(version)
                 for version in self.versions
-                if version.learning_object_id == learning_object_id
+                if version.learning_object_id
+                == learning_object_id
             ]
 
     class FailingAuditRepository:
         def record(self, audit):
-            raise RuntimeError("audit persistence failed")
+            raise RuntimeError(
+                "audit persistence failed"
+            )
 
     learning_object = LearningObject(
         anchor_id=uuid4(),
@@ -488,11 +555,16 @@ def test_approve_rolls_back_when_audit_persistence_fails():
 
     learning_object.submit_for_review()
 
-    learning_object_repository = InMemoryLearningObjectRepository(
-        learning_object
+    learning_object_repository = (
+        InMemoryLearningObjectRepository(
+            learning_object
+        )
     )
     version_repository = InMemoryVersionRepository()
     audit_repository = FailingAuditRepository()
+    event_record_repository = (
+        InMemoryEventRecordRepository()
+    )
 
     transaction = InMemoryTransaction(
         learning_object_repository,
@@ -503,6 +575,7 @@ def test_approve_rolls_back_when_audit_persistence_fails():
         learning_object_repository=learning_object_repository,
         version_repository=version_repository,
         audit_repository=audit_repository,
+        event_record_repository=event_record_repository,
         transaction_factory=lambda: transaction,
     )
 
@@ -529,16 +602,6 @@ def test_approve_rolls_back_when_audit_persistence_fails():
 
 def test_approve_commits_when_all_persistence_operations_succeed():
     from copy import deepcopy
-    from uuid import uuid4
-
-    from app.application.services.learning_object_service import (
-        LearningObjectService,
-    )
-    from app.domain.entities.knowledge_statement import KnowledgeStatement
-    from app.domain.entities.learning_object import (
-        LearningObject,
-        LearningObjectState,
-    )
 
     class InMemoryTransaction:
         def __init__(
@@ -546,14 +609,21 @@ def test_approve_commits_when_all_persistence_operations_succeed():
             learning_object_repository,
             version_repository,
         ):
-            self.learning_object_repository = learning_object_repository
+            self.learning_object_repository = (
+                learning_object_repository
+            )
             self.version_repository = version_repository
             self.committed = False
 
         def __enter__(self):
             return self
 
-        def __exit__(self, exc_type, exc_value, traceback):
+        def __exit__(
+            self,
+            exc_type,
+            exc_value,
+            traceback,
+        ):
             if exc_type is None:
                 self.committed = True
 
@@ -582,7 +652,8 @@ def test_approve_commits_when_all_persistence_operations_succeed():
             return [
                 deepcopy(version)
                 for version in self.versions
-                if version.learning_object_id == learning_object_id
+                if version.learning_object_id
+                == learning_object_id
             ]
 
     class InMemoryAuditRepository:
@@ -603,11 +674,16 @@ def test_approve_commits_when_all_persistence_operations_succeed():
 
     learning_object.submit_for_review()
 
-    learning_object_repository = InMemoryLearningObjectRepository(
-        learning_object
+    learning_object_repository = (
+        InMemoryLearningObjectRepository(
+            learning_object
+        )
     )
     version_repository = InMemoryVersionRepository()
     audit_repository = InMemoryAuditRepository()
+    event_record_repository = (
+        InMemoryEventRecordRepository()
+    )
 
     transaction = InMemoryTransaction(
         learning_object_repository,
@@ -618,6 +694,7 @@ def test_approve_commits_when_all_persistence_operations_succeed():
         learning_object_repository=learning_object_repository,
         version_repository=version_repository,
         audit_repository=audit_repository,
+        event_record_repository=event_record_repository,
         transaction_factory=lambda: transaction,
     )
 
