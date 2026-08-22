@@ -166,13 +166,8 @@ No downstream item should be marked COMPLETE without corresponding repository
 evidence and passing verification.
 
 ================================================================================
-
-# CURRENT CHECKPOINT STATUS UPDATE
-
+# CURRENT CHECKPOINT VERIFICATION STATUS
 ================================================================================
-
-The IA-08 implementation checkpoint has been re-verified against the current
-repository state.
 
 Current verification baseline:
 
@@ -185,50 +180,27 @@ Result:
 The previous verification baseline is superseded by the current 138-test
 baseline.
 
-Resolved implementation areas:
+A01.6 — Application Error Boundary:
+RESOLVED / CONFORMANT
 
-* A01.6 — Application Error Boundary
-* A01.7 — Transaction Boundary
-* A02 — Transactional Event Record and Event Implementation
+A01.7 — Transaction Boundary:
+RESOLVED / CONFORMANT
 
-A01.6 is confirmed CONFORMANT following verification of the centralized
-Application Error Boundary and Domain-to-Application exception translation.
+A02 — Transactional Event Record and Event Implementation:
+COMPLETE / CLOSED
 
-A01.7 is confirmed CONFORMANT following verification that application-service
-operations do not autonomously commit caller-owned Sessions and that rollback
-behavior prevents uncommitted Learning Object and Version changes from being
-persisted.
+The remaining unresolved A01 responsibilities retain their existing status
+and require separate focused verification.
 
-A02 is COMPLETE / CLOSED. Transactional Event Record persistence is integrated
-through the dedicated repository and participates in the existing transaction
-boundary.
-
-The following areas remain unresolved and must not be marked complete without
-additional implementation evidence:
-
-* A01.4 — Version Service Responsibility
-* A01.3 — Category Service Responsibility
-* A01.5 — Audit Service Responsibility
-
-A01.2 remains blocked pending the required authoritative review/change
-proposal boundary.
-
-NEXT CONTROLLED IMPLEMENTATION AREA:
+The next controlled implementation area is:
 
 A03 — Security & Authorization
 
-A03 is the next checkpoint area after completion of the currently resolved
-A01/A02 work.
-
-A04 — API Implementation remains a subsequent area and is not part of the
-current implementation action.
+A04 — API Implementation remains subsequent to A03.
 
 No Bootstrap Pack update is required at this intermediate checkpoint.
-
-The Bootstrap Pack shall be updated only after the current checkpoint reaches
-its final consolidated state.
-
-================================================================================
+The Bootstrap Pack shall be updated after the current checkpoint reaches its
+final consolidated state.
 
 
 ================================================================================
