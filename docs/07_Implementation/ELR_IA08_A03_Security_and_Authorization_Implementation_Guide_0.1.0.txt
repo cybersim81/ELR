@@ -1,0 +1,458 @@
+================================================================================
+English Learning Repository (ELR)
+
+IA-08-A03 — Security and Authorization
+Implementation Guide
+
+Version: 0.1.0
+Status: DRAFT / IMPLEMENTATION GUIDE
+====================================
+
+# 1. Purpose
+
+This document defines the controlled implementation approach for
+IA-08-A03 — Security and Authorization.
+
+The purpose of A03 is to establish the security boundary required by the
+authoritative ELR Security and Access Model and Security Implementation
+Specifications before the downstream API implementation is undertaken.
+
+This document is an implementation guide.
+
+It does not replace the authoritative Security and Access Model Specification,
+Security Implementation Specification, Application Service Implementation
+Specification, API Implementation Specification, or applicable architectural
+decisions.
+
+# 2. Scope
+
+A03 covers:
+
+* authentication boundary;
+* authenticated identity representation;
+* Identity Context creation and propagation;
+* actor identity;
+* actor type;
+* role representation;
+* permission evaluation;
+* authorization checks;
+* authorization enforcement for protected application operations;
+* security-related application errors;
+* authorization boundary between API/security infrastructure and Application
+  Services;
+* audit identity propagation where required;
+* focused security and authorization verification.
+
+A03 does not implement the external HTTP/API surface.
+
+IA-08-A04 remains the subsequent implementation area for API routes, request
+validation, response mapping, API error mapping, and API-level integration.
+
+# 3. Authoritative Sources
+
+The implementation shall remain subordinate to the following sources:
+
+1. ELR Specification Authority Matrix 1.0.0;
+2. ELR Security and Access Model Specification 1.0.0;
+3. ELR Security Implementation Specification 0.1.0;
+4. ELR Application Service Implementation Specification 0.1.0;
+5. ELR Core Repository Implementation Plan 0.1.0;
+6. ELR Architecture Specification 1.1.0;
+7. ELR Architecture Baseline 1.0.0;
+8. ELR Architecture Decision Log 1.0.0;
+9. IA-08 Implementation Conformance Gap Resolution Plan 0.1.1.
+
+Where implementation convenience conflicts with an authoritative requirement,
+the authoritative specification prevails.
+
+# 4. Current Implementation Gap
+
+The current repository does not contain an implemented security subsystem
+corresponding to the A03 contract.
+
+The implementation search found no existing implementation of:
+
+* IdentityContext;
+* AuthenticationProvider;
+* actor_id propagation;
+* actor_type propagation;
+* explicit role model;
+* explicit permission model;
+* authorization evaluator;
+* authorization middleware/boundary;
+* security authorization checks;
+* authenticated identity propagation into Application Services.
+
+The existing application error taxonomy contains an authorization-related
+error definition, but this alone does not constitute an implemented
+authorization boundary.
+
+Therefore A03 is classified as:
+
+NOT IMPLEMENTED / CONTRACT DEFINED
+
+# 5. Security Flow
+
+The implementation shall follow the security flow defined by the
+authoritative specifications:
+
+Authentication
+|
+v
+Identity Context
+|
+v
+Role / Permission derivation
+|
+v
+Authorization
+|
+v
+Application Service authorization boundary
+|
+v
+Domain operation
+|
+v
+Repository / persistence boundary
+
+The API/security boundary is responsible for establishing the authenticated
+identity and security context.
+
+The Application Layer shall receive the resulting Identity Context and enforce
+the authorization requirement of protected use cases.
+
+The Domain Layer remains responsible for domain semantics and valid state
+transitions.
+
+Repositories must not become the primary authorization boundary.
+
+# 6. Identity Context
+
+A03 shall introduce an explicit Identity Context representation.
+
+The Identity Context must preserve, at minimum:
+
+* actor_id;
+* actor_type;
+* roles;
+* effective permissions where required by the implementation contract.
+
+The Identity Context must be passed explicitly across the application boundary.
+
+Security-sensitive application operations must not reconstruct identity from
+untrusted operation parameters.
+
+# 7. Authentication Boundary
+
+A03 shall introduce an authentication abstraction rather than coupling the
+Application Layer directly to a concrete authentication mechanism.
+
+The implementation shall provide an AuthenticationProvider boundary capable of
+resolving the authenticated identity required to construct the Identity
+Context.
+
+The initial implementation may use a minimal concrete provider suitable for
+the current repository, provided that:
+
+* the abstraction remains stable;
+* the Application Layer does not depend on transport-specific credentials;
+* authentication remains separable from authorization;
+* a future external authentication mechanism can replace the initial provider
+  without redesigning application use cases.
+
+# 8. Role Model
+
+The implementation shall represent the roles defined by the authoritative
+Security and Access Model.
+
+The initial role set includes the roles specified by the Security
+Implementation Specification, including:
+
+* SYSTEM_ADMIN;
+* KNOWLEDGE_REVIEWER;
+* KNOWLEDGE_PRODUCER;
+* READ_ONLY_USER.
+
+Role names must not be duplicated independently inside API handlers or
+application services.
+
+The role model must remain centrally defined so that authorization decisions
+can be tested consistently.
+
+# 9. Permission Model
+
+Authorization shall be expressed in terms of permissions rather than
+transport-specific checks.
+
+The implementation shall derive effective permissions from the Identity
+Context according to the authoritative Security and Access Model.
+
+The implementation must preserve the distinction between:
+
+* Actor Type;
+* Role;
+* Permission.
+
+A read permission is a permission.
+
+It is not itself an Actor Type or Role.
+
+# 10. Authorization Boundary
+
+Authorization must be evaluated before the protected application operation
+is executed.
+
+The Application Service must not:
+
+1. load the aggregate;
+2. mutate the aggregate;
+3. create a new version;
+4. persist the mutation;
+5. emit audit or event records
+
+before the required authorization check has succeeded.
+
+Authorization failure must terminate the operation without applying the
+protected state transition.
+
+# 11. Protected Operations
+
+A03 shall establish authorization requirements for the protected application
+operations defined by the Security and Access Model.
+
+The initial protected operation set includes, where applicable:
+
+* create candidate;
+* submit review;
+* approve;
+* reject;
+* retrieve/read;
+* other explicitly protected application-service operations identified by
+  the authoritative specification.
+
+The permission matrix must be implemented from the authoritative specification
+rather than inferred from the current service implementation.
+
+# 12. Application Service Integration
+
+The Application Service shall receive the Identity Context as part of the
+security-aware application contract.
+
+Authorization checks shall occur at the Application boundary before the
+protected use case proceeds.
+
+The Application Service remains responsible for orchestration.
+
+The Domain remains responsible for semantic validity.
+
+A03 must not duplicate domain state-transition rules as authorization logic.
+
+# 13. Error Contract
+
+The implementation shall preserve the distinction between authentication
+failure and authorization failure.
+
+The security implementation must support the authoritative security error
+categories:
+
+* UNAUTHENTICATED;
+* UNAUTHORIZED;
+* FORBIDDEN_OPERATION.
+
+Existing application authorization errors may be retained or adapted where
+they are compatible with the authoritative error contract.
+
+API-facing error mapping belongs to A04 unless required earlier as part of the
+security boundary.
+
+# 14. Audit Integration
+
+Security-sensitive state changes must preserve actor identity for auditability.
+
+Where an operation creates an AuditRecord, the authenticated actor identity
+must be propagated into the audit boundary.
+
+The audit identity must represent the authenticated actor and must not be
+taken from an untrusted request payload.
+
+EventRecord and AuditRecord remain distinct responsibilities.
+
+A03 shall not collapse the two persistence concepts.
+
+# 15. Stable Aggregate Identity
+
+Authorization and audit/event propagation must remain compatible with the
+stable identity architecture.
+
+For LearningObject operations:
+
+* aggregate identity remains stable;
+* authorization refers to the authenticated actor;
+* aggregate_id continues to identify the stable LearningObject identity;
+* Knowledge updates must not generate a new aggregate identity.
+
+This remains consistent with ADR-004 — Stable Identity.
+
+# 16. Architectural Placement
+
+The implementation should introduce the smallest coherent set of security
+components required by the authoritative specifications.
+
+Expected responsibilities are:
+
+Security / Infrastructure boundary
+
+* AuthenticationProvider;
+* authentication result handling;
+* Identity Context construction.
+
+Authorization component
+
+* role/permission evaluation;
+* authorization decisions.
+
+Application boundary
+
+* protected-operation authorization checks;
+* Identity Context propagation;
+* application error generation.
+
+Domain
+
+* domain invariants;
+* state transitions;
+* domain semantics.
+
+Persistence
+
+* no independent authorization responsibility;
+* audit/event persistence remains delegated to the existing repositories.
+
+# 17. Repository Boundary
+
+Repositories must not be treated as the authoritative security boundary.
+
+A caller must not be able to bypass application authorization merely by
+obtaining a repository instance.
+
+The security model is therefore enforced before repository mutation or
+retrieval is performed for protected operations.
+
+# 18. Test Strategy
+
+A03 verification shall include focused tests for:
+
+## Authentication
+
+* authenticated identity produces a valid Identity Context;
+* missing authentication produces the appropriate unauthenticated result;
+* authentication provider abstraction remains replaceable.
+
+## Identity Context
+
+* actor_id is preserved;
+* actor_type is preserved;
+* roles are preserved;
+* effective permissions are derived consistently.
+
+## Authorization
+
+* authorized role/permission succeeds;
+* unauthorized role/permission is rejected;
+* forbidden operation does not execute;
+* authorization occurs before protected mutation;
+* authorization cannot be bypassed through direct application-service invocation.
+
+## Application Service
+
+* Identity Context is propagated;
+* protected operations enforce authorization;
+* failed authorization produces the correct application error;
+* successful operations preserve existing domain behavior.
+
+## Audit
+
+* authenticated actor identity reaches audit recording;
+* audit identity is not taken from an untrusted operation parameter.
+
+## Regression
+
+* existing tests continue to pass;
+* A01 and A02 behavior remains unchanged.
+
+# 19. Conformance Matrix
+
+## Requirement                         Component                  Evidence
+
+Identity Context                   Security boundary         Focused unit tests
+AuthenticationProvider             Authentication boundary   Provider tests
+Role model                         Authorization             Role tests
+Permission model                   Authorization             Permission tests
+Authorization evaluation          Authorization             Decision tests
+Protected operations               Application Service       Service tests
+Identity propagation               Application Service       Integration tests
+Security errors                    Application/API boundary Error tests
+Audit actor identity               Audit boundary            Audit tests
+Stable aggregate identity          Domain/Application        Regression tests
+Repository protection              Application boundary     Boundary tests
+
+# 20. Implementation Sequence
+
+The implementation shall proceed in the following controlled order:
+
+1. define Identity Context;
+2. define authentication abstraction;
+3. implement the minimal authentication provider;
+4. define role and permission representations;
+5. implement authorization evaluation;
+6. define application authorization boundary;
+7. integrate Identity Context with protected Application Services;
+8. align security error behavior;
+9. integrate authenticated actor identity with audit;
+10. add focused A03 tests;
+11. run the complete test suite;
+12. run git diff --check;
+13. record verification evidence;
+14. update the A03 conformance status in the roadmap only after evidence exists.
+
+A04 API implementation must remain downstream of this boundary.
+
+# 21. Definition of Done
+
+A03 may be marked COMPLETE only when:
+
+* Identity Context is implemented;
+* authentication boundary is implemented;
+* role and permission model is implemented;
+* authorization evaluation is implemented;
+* protected application operations enforce authorization;
+* Identity Context reaches the Application Layer;
+* security errors conform to the authoritative contract;
+* audit identity propagation is verified;
+* repository access cannot bypass the application authorization boundary;
+* focused A03 tests pass;
+* complete pytest suite passes;
+* git diff --check passes;
+* repository evidence is sufficient to demonstrate conformance.
+
+# 22. Current Status
+
+A03 implementation status:
+
+PENDING / IMPLEMENTATION NOT STARTED
+
+Current repository baseline:
+
+pytest -q
+138 passed
+
+The 138-test baseline must remain green throughout A03 implementation.
+
+No Bootstrap Pack update is required at this intermediate checkpoint.
+
+================================================================================
+
+# End of IA-08-A03 Implementation Guide
+
+================================================================================
