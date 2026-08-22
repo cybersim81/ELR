@@ -84,18 +84,37 @@ The current implementation provides the following versioning capabilities:
 
 ================================================================================
 
-The existing application-service tests verify:
+The current application-service and persistence test suite verifies the
+following Version behavior:
 
-* approval creates the first version;
-* first version number is 1;
-* first version references the correct Learning Object;
-* first version contains the expected snapshot;
-* knowledge update creates a second version;
-* second version number is 2;
-* previous version remains unchanged;
-* previous snapshot remains preserved;
-* updated knowledge is represented by the new version;
-* Learning Object remains Active after update.
+* approval creates the first Version;
+* first Version number is 1;
+* first Version references the correct Learning Object;
+* first Version contains the expected snapshot;
+* knowledge update creates a subsequent Version;
+* Version numbers increment correctly;
+* previous versions remain unchanged;
+* previous snapshots remain preserved;
+* updated knowledge is represented by the new Version;
+* Learning Object remains Active after knowledge update;
+* Version persistence participates in the existing transaction boundary;
+* rollback behavior prevents an uncommitted knowledge update and Version from
+  being persisted.
+
+The implementation has been re-verified after the IA-08-A02 implementation
+changes.
+
+Current full-suite verification:
+
+pytest -q
+
+Result:
+
+138 passed
+
+No test failures remain at the current implementation checkpoint.
+
+
 
 ================================================================================
 
@@ -205,21 +224,32 @@ specification or new implementation evidence:
 
 ================================================================================
 
-Any VersionService introduced as part of A01.4 must preserve the existing
-transaction boundary.
+The existing transaction boundary remains authoritative for Version
+persistence.
 
-Version persistence must remain part of the same transaction as the
-originating Learning Object operation where transactional consistency is
-required.
+LearningObjectService does not autonomously commit the knowledge update.
 
-The introduction of a VersionService must not create an independent
-transaction that separates:
+The originating application operation remains responsible for establishing
+the transaction boundary when an externally supplied Session is used.
+
+Version persistence therefore remains part of the same persistence operation
+as:
 
 Learning Object persistence
 +
 Version persistence
 +
 Audit persistence
++
+Event Record persistence
+
+The introduction of a dedicated VersionService, if later required by the
+authoritative implementation specification, must preserve this transaction
+boundary.
+
+A VersionService must not introduce an independent transaction that separates
+Version persistence from the originating Learning Object operation.
+
 
 ================================================================================
 
@@ -295,13 +325,34 @@ existing behavior and tests.
 
 ================================================================================
 
-Do not modify the implementation solely to create a VersionService.
+Do not introduce a dedicated VersionService solely to satisfy class existence.
 
-First perform focused responsibility-level comparison against the
+The current implementation already provides the required Version behavior,
+persistence, history, numbering and snapshot semantics.
+
+The remaining A01.4 finding concerns responsibility isolation rather than
+missing Version functionality.
+
+The next action is therefore a responsibility-level comparison against the
 authoritative Application Service Implementation Specification.
 
-The next implementation action shall be selected only after this comparison
-establishes that the current boundary is non-conformant.
+If that specification requires explicit VersionService responsibility
+isolation, the boundary may be introduced as a focused refactoring while
+preserving:
+
+* existing Version semantics;
+* Version immutability;
+* historical preservation;
+* Version numbering;
+* snapshot semantics;
+* repository behavior;
+* transaction behavior;
+* existing test coverage.
+
+If the authoritative specification does not require a dedicated VersionService
+boundary, A01.4 may be resolved as CONFORMANT without introducing unnecessary
+application-service refactoring.
+
 
 ================================================================================
 
