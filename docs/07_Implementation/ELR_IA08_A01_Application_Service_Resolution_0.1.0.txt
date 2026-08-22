@@ -341,20 +341,16 @@ AuditRepository contracts.
 
 
 ================================================================================
+
 # 22.8 A01.6 — Application Error Boundary
+
 ================================================================================
 
 Status:
 
 CONFORMANT
 
-Confirmed finding:
-
-The Application Layer previously had an incomplete error boundary.
-
-Resolution:
-
-The Application Layer now provides a centralized error taxonomy including:
+The Application Layer provides a centralized error taxonomy including:
 
 * ApplicationError;
 * EntityNotFound;
@@ -374,61 +370,77 @@ No catch-all exception translation has been introduced.
 
 No Domain lifecycle semantics have been changed.
 
-
 Evidence:
 
 * app/application/errors.py;
 * app/application/services/learning_object_service.py;
-* app/application/services/__init__.py;
-* tests/application/services/test_learning_object_service.py.
-
+* application-service tests.
 
 Verification:
 
-* focused A01.6 tests pass;
-* complete pytest suite passes with 79 tests;
-* E2E-GATE-01 is VERIFIED / CLOSED according to
-  docs/00_Bootstrap/04_End_to_End_Gap_Map.txt.
+The complete test suite currently passes:
 
+pytest -q
 
-Resolution:
+Result:
 
-A01.6 is RESOLVED.
+138 passed
+
+A01.6 is therefore considered RESOLVED.
 
 
 ================================================================================
+
 # 22.9 A01.7 — Transaction Boundary
+
 ================================================================================
 
 Status:
 
-PARTIAL
+CONFORMANT
 
-Existing Persistence infrastructure includes:
+The implementation uses the existing transaction infrastructure and shared
+SQLAlchemy Session.
 
-* transaction context;
-* commit;
-* rollback;
-* session ownership;
-* repository session wiring.
+The Application Service does not autonomously commit externally supplied
+Sessions for operations whose transaction is owned by the caller.
 
-The remaining conformance question is whether Application-level write
-use cases explicitly own transaction coordination as required by IA-08-A01.
+In particular, knowledge update persistence is performed without an
+application-local commit.
 
-No replacement transaction infrastructure shall be introduced until this
-boundary is verified.
+The transaction boundary therefore remains controlled by the existing
+transaction abstraction and the caller-owned Session.
+
+The following persistence operations participate in the same transaction
+where applicable:
+
+* Learning Object persistence;
+* Version persistence;
+* Audit persistence;
+* Event Record persistence.
+
+Event Record persistence introduced by A02 uses the same Session and does not
+introduce an independent commit boundary.
+
+Rollback behavior has been verified by the persistence test suite: an
+uncommitted knowledge update followed by Session rollback does not persist
+the updated Learning Object state or its newly created Version.
+
+No replacement transaction infrastructure has been introduced.
+
+A01.7 is therefore considered RESOLVED.
 
 
 ================================================================================
+
 # 22.10 Implementation Priority
+
 ================================================================================
+
+RESOLVED:
 
 A01.6 — Application Error Boundary
-
-Status:
-
-RESOLVED
-
+A01.7 — Transaction Boundary
 
 The following findings remain PARTIAL and require subsequent focused
 verification:
@@ -436,16 +448,13 @@ verification:
 A01.3 — Category Service
 A01.4 — Version Service
 A01.5 — Audit Service
-A01.7 — Transaction Boundary
-
 
 The following finding remains BLOCKED:
 
 A01.2 — Review / Change Proposal
 
-
-No further implementation work is required for A01.6 unless new evidence
-demonstrates a regression or a conflict with the authoritative specification.
+A01.6 and A01.7 require no further implementation work unless new evidence
+demonstrates a regression or conflict with the authoritative specification.
 
 
 ================================================================================
@@ -477,7 +486,9 @@ A finding may move from GAP or PARTIAL to CONFORMANT only after:
 
 
 ================================================================================
+
 # 22.13 Current Status
+
 ================================================================================
 
 Finding:
@@ -488,51 +499,54 @@ Status:
 
 IN PROGRESS
 
-
 RESOLVED:
 
 A01.6 — Application Error Boundary
-
+A01.7 — Transaction Boundary
 
 PARTIAL:
 
 A01.3 — Category Service
 A01.4 — Version Service
 A01.5 — Audit Service
-A01.7 — Transaction Boundary
-
 
 BLOCKED:
 
 A01.2 — Review / Change Proposal
 
+Current verification baseline:
+
+138 passed
+
+The current implementation checkpoint is regression-clean.
+
 
 
 ================================================================================
+
 # 22.14 Next Controlled Action
+
 ================================================================================
 
 A01.6 — Application Error Boundary is RESOLVED.
 
-The next implementation action shall address the next confirmed
-non-resolved A01 responsibility according to the verified conformance
-matrix.
+A01.7 — Transaction Boundary is RESOLVED.
+
+The next implementation action shall address the next confirmed non-resolved
+A01 responsibility according to the verified conformance matrix.
 
 Current candidates are:
 
 A01.3 — Category Service
 A01.4 — Version Service
 A01.5 — Audit Service
-A01.7 — Transaction Boundary
-
 
 The next action shall be selected only after focused inspection of the
 relevant responsibility and confirmation that the required capability is
 actually missing or incomplete.
 
-No A01.3, A01.4, A01.5, or A01.7 implementation shall be mixed into the
-resolved A01.6 change.
-
+No further changes shall be introduced into the resolved A01.6 or A01.7
+areas unless new implementation evidence requires them.
 
 ================================================================================
 End of Document
