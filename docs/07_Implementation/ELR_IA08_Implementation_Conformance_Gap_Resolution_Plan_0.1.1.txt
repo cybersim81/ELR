@@ -1,0 +1,172 @@
+================================================================================
+English Learning Repository (ELR)
+
+IA-08 Implementation Conformance Gap Resolution Plan
+
+Roadmap / Conformance Status Update
+
+Version: 0.1.1
+Status: ACTIVE
+==============
+
+# 1. Current Conformance Position
+
+The IA-08 implementation sequence has progressed through the transactional
+Event Record implementation.
+
+Completed:
+
+IA-08-A01 — Core Learning Object / Version / Audit implementation
+STATUS: COMPLETE / CLOSED
+
+IA-08-A02 — Transactional Event Record and Event Implementation
+STATUS: COMPLETE / CLOSED
+
+Next:
+
+IA-08-A03 — Security and Authorization
+STATUS: PENDING / NEXT
+
+Following:
+
+IA-08-A04 — API Implementation
+STATUS: PENDING
+
+================================================================================
+
+# 2. IA-08-A02 Closure
+
+IA-08-A02 is formally closed following implementation and verification of the
+transactional Event Record boundary.
+
+Resolved responsibilities include:
+
+* immutable EventRecord representation;
+* EventRecord repository contract;
+* SQLAlchemy EventRecord persistence repository;
+* event_records persistence model;
+* application-service EventRecord creation;
+* persistence wiring;
+* transactional integration with the existing Session boundary;
+* separation between EventRecord and AuditRecord.
+
+Verification result:
+
+pytest -q
+
+138 passed in 0.87s
+
+The implementation also passes the repository diff hygiene check:
+
+git diff --check
+
+No whitespace errors were reported.
+
+Implementation checkpoint:
+
+0fb845d — Add transactional event record persistence
+
+================================================================================
+
+# 3. IA-08-A03 — Security and Authorization
+
+================================================================================
+
+STATUS:
+
+PENDING / NEXT
+
+A03 is the next implementation-conformance area.
+
+Scope to inspect before implementation:
+
+* authentication boundary;
+* authorization boundary;
+* actor identity propagation;
+* permission checks;
+* protected application-service operations;
+* security-related error behavior;
+* consistency with the authoritative ELR Security Implementation Specification.
+
+No A03 implementation should be inferred solely from the existing application
+service behavior.
+
+The authoritative specification remains the source of truth for the required
+security boundary.
+
+================================================================================
+
+# 4. IA-08-A04 — API Implementation
+
+================================================================================
+
+STATUS:
+
+PENDING
+
+A04 remains blocked behind the A03 security and authorization boundary.
+
+API implementation is expected to address the externally exposed application
+boundary after the required security model has been established.
+
+Potential responsibilities include:
+
+* HTTP/API routes;
+* request validation;
+* response mapping;
+* application-service invocation;
+* API error mapping;
+* authentication and authorization enforcement at the appropriate boundary;
+* API-level integration tests.
+
+These responsibilities are not yet marked complete and should not be
+implemented ahead of the applicable A03 security decisions.
+
+================================================================================
+
+# 5. Current Roadmap
+
+================================================================================
+
+IA-08-A01
+COMPLETE / CLOSED
+↓
+IA-08-A02
+COMPLETE / CLOSED
+↓
+IA-08-A03
+PENDING / NEXT
+↓
+IA-08-A04
+PENDING
+↓
+Further IA-08 findings
+PENDING / TO BE ASSESSED
+
+================================================================================
+
+# 6. Implementation Discipline
+
+================================================================================
+
+The roadmap is a conformance-resolution plan, not an authorization to
+implement every downstream responsibility immediately.
+
+For each remaining finding:
+
+1. inspect the authoritative specification;
+2. identify the exact implementation gap;
+3. implement only the required responsibility;
+4. add or update focused verification;
+5. run the complete test suite;
+6. record the verified result;
+7. close the finding only after evidence is available.
+
+No downstream item should be marked COMPLETE without corresponding repository
+evidence and passing verification.
+
+================================================================================
+
+# End of Roadmap Update
+
+================================================================================
