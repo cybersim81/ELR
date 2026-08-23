@@ -555,23 +555,19 @@ Verify E2E-GATE-01.
 
 
 ================================================================================
-# 19. Verification Status
+
+# 19. Verification Evidence / Resolution Status
+
 ================================================================================
-
-Finding:
-
-IA-08-A01.6 — Application Error Boundary
 
 Status:
 
-RESOLVED
+RESOLVED / CONFORMANT
 
-Implementation Status:
+The Application Error Boundary implementation has been verified against the
+current Application Service implementation.
 
-IMPLEMENTED AND VERIFIED
-
-
-Verification Evidence:
+The following behaviors are confirmed:
 
 * centralized Application error taxonomy implemented;
 * EntityNotFound implemented;
@@ -580,17 +576,40 @@ Verification Evidence:
 * original Domain exception preserved through __cause__;
 * no catch-all exception translation introduced;
 * focused A01.6 tests pass;
-* complete pytest suite passes with 79 tests;
+* complete pytest suite passes with 138 tests;
 * E2E-GATE-01 is already VERIFIED / CLOSED in the Bootstrap End-to-End
   Gap Map.
 
+The current implementation is therefore considered conformant for A01.6.
 
-Verification Result:
+Verification was performed against the complete current test suite.
 
-The Application Layer now provides the required stable error boundary for
-the verified A01.6 cases without changing Domain lifecycle semantics,
-repository contracts, persistence behavior, or successful Application Service
-behavior.
+Command:
+
+pytest -q
+
+Result:
+
+138 passed
+
+Repository diff hygiene was also verified with:
+
+git --no-pager diff --check
+
+Result:
+
+PASS
+
+The previous verification baseline of 79 tests is superseded by the current
+138-test implementation baseline.
+
+No additional implementation work is required for A01.6 unless subsequent
+changes introduce a regression or new authoritative conformance requirement.
+
+A01.6 STATUS: RESOLVED / CONFORMANT
+
+================================================================================
+
 
 
 ================================================================================
