@@ -1,24 +1,23 @@
 ================================================================================
 English Learning Repository (ELR)
 
-IA-08-A01.6 Application Error Boundary
-Implementation Guidance
+IA-08-A01 Application Service
+Implementation Conformance Resolution
 
-Version: 0.2.0
+Version: 0.1.0
 Status: WORKING IMPLEMENTATION GUIDANCE
 ================================================================================
 
 
 # Document Identity
-================================================================================
 
 Document Name:
 
-ELR IA-08-A01.6 Application Error Boundary
+ELR IA-08-A01 Application Service Resolution
 
 Document Version:
 
-0.2.0
+0.1.0
 
 Status:
 
@@ -26,11 +25,11 @@ WORKING IMPLEMENTATION GUIDANCE
 
 Parent Plan:
 
-ELR IA-08-A01 Application Service Resolution
+ELR IA-08 Implementation Conformance Gap Resolution Plan 0.1.0
 
 Finding:
 
-IA-08-A01.6 — Application Error Boundary
+IA-08-A01 — Application Service Conformance
 
 Authority Status:
 
@@ -46,70 +45,312 @@ In case of conflict, the applicable authoritative specification prevails.
 # 1. Purpose
 ================================================================================
 
-This document defines the controlled implementation guidance for the confirmed
-IA-08-A01.6 Application Error Boundary gap.
+This document defines the controlled implementation resolution for:
 
-The objective is to establish a stable Application Layer error boundary while
-preserving:
+IA-08-A01 — Application Service Conformance.
 
-* Domain ownership of domain rules and domain exceptions;
-* existing LearningObject lifecycle behavior;
-* existing repository contracts;
-* existing persistence behavior;
-* existing API behavior.
+The objective is to bring the Application Layer into conformance with the
+authoritative ELR Application Service Implementation Specification while
+preserving all previously verified domain and persistence behavior.
 
 The implementation shall be minimal.
 
-No unrelated Application, Domain, Persistence, Security, Review, or API
-changes are authorized by this document.
+No unrelated architectural or semantic changes are authorized by this
+document.
 
 
 ================================================================================
-# 2. Confirmed Finding
+# 2. Conformance Finding Under Inspection
 ================================================================================
 
-The current Application Layer has an incomplete error boundary.
+The current implementation contains a LearningObjectService and already
+coordinates several Learning Object operations.
 
-Confirmed issues:
+Existing capabilities include:
 
-* LearningObjectNotFound is defined locally in LearningObjectService;
-* InvalidStateTransition is owned by the Domain Layer;
-* InvalidStateTransition currently crosses the Application boundary without
-  translation;
-* no centralized Application error taxonomy is confirmed.
+* create_candidate();
+* submit_for_review();
+* approve();
+* update_knowledge();
+* retire();
+* get();
+* get_history().
+
+The current implementation does not yet provide the complete Application
+Service structure required by the Application Service Implementation
+Specification.
+
+The suspected missing or incomplete areas requiring implementation
+inspection are:
+
+* Change Proposal approval/rejection coordination;
+* Category Service boundary;
+* Version Service boundary;
+* Audit Service boundary;
+* explicit application transaction coordination;
+* application-level error translation.
 
 
 ================================================================================
-# 3. Required Boundary
+# 3. Authoritative Requirements
 ================================================================================
 
-The intended error flow is:
+The Application Layer is responsible for coordinating:
 
-Domain exception
-    ->
-Application Service
-    ->
-Application error
-    ->
-Application consumer
-
-
-The Domain Layer remains responsible for:
-
+* API requests;
+* use cases;
 * domain rules;
-* domain invariants;
-* domain exception ownership.
+* persistence;
+* audit.
 
-The Application Layer is responsible for translating known Domain failures
-into stable Application errors.
+The Application Layer is not responsible for:
+
+* cognitive logic;
+* database schema;
+* HTTP details.
+
+Application Services must:
+
+* represent explicit use cases;
+* preserve Domain Layer authority;
+* define transaction boundaries;
+* coordinate components without replacing their responsibilities.
 
 
 ================================================================================
-# 4. Application Error Taxonomy
+# 4. Current Implementation Baseline
 ================================================================================
 
-The Application Layer shall provide the following centralized exception
-types:
+The current LearningObjectService already demonstrates the intended basic
+dependency direction.
+
+It depends on:
+
+* Domain entities;
+* Repository interfaces.
+
+It does not directly depend on:
+
+* FastAPI;
+* SQLAlchemy;
+* PostgreSQL.
+
+This dependency direction must be preserved.
+
+
+================================================================================
+# 5. Resolution Strategy
+================================================================================
+
+The A01 resolution shall be handled according to the verified Application
+Service conformance matrix.
+
+The implementation sequence follows the responsibilities defined by IA-08-A01:
+
+A01.1 — Candidate / Learning Object
+A01.2 — Review / Change Proposal
+A01.3 — Category Service
+A01.4 — Version Service
+A01.5 — Audit Service
+A01.6 — Application Error Boundary
+A01.7 — Transaction Boundary
+
+The current implementation shall be reconciled against each responsibility
+before source changes are introduced.
+
+The resolution strategy is:
+
+1. preserve responsibilities already satisfied by the current implementation;
+2. identify confirmed partial boundaries;
+3. identify confirmed gaps;
+4. keep unsupported responsibilities blocked;
+5. implement only confirmed gaps or verified incomplete boundaries;
+6. verify each implementation increment before proceeding.
+
+No implementation shall be introduced solely to satisfy a naming difference
+between the specification and the existing implementation.
+
+No Domain, Review, Security, persistence, or API semantics shall be invented
+inside the Application Layer.
+
+
+================================================================================
+# 22. Implementation Inspection Matrix
+================================================================================
+
+This matrix records the verified implementation state of IA-08-A01.
+
+The matrix reconciles:
+
+* the Bootstrap Pack;
+* the authoritative IA-08 Application Service specification;
+* the current repository structure;
+* the current Application Layer implementation;
+* the Domain Layer contracts;
+* the Persistence Layer capabilities.
+
+A classification shall be based on confirmed implementation evidence.
+
+A structural naming difference alone is not sufficient to establish a gap.
+
+
+================================================================================
+# 22.1 Classification
+================================================================================
+
+CONFORMANT
+
+The required responsibility is already satisfied by the current implementation.
+
+PARTIAL
+
+The required responsibility is substantially present, but an explicit
+application boundary, capability, or integration remains incomplete.
+
+GAP
+
+A required responsibility is confirmed missing or incorrectly exposed.
+
+BLOCKED
+
+The responsibility cannot be implemented correctly because a required
+authoritative upstream capability is not currently available.
+
+
+================================================================================
+# 22.2 Verified Matrix
+================================================================================
+
+| Area | Status | Evidence / Finding |
+|------|--------|--------------------|
+| Candidate / LearningObject use cases | CONFORMANT | LearningObjectService already coordinates candidate creation, retrieval, lifecycle operations, knowledge updates, version coordination, history, and audit recording. |
+| Review / Change Proposal | BLOCKED | LearningObject lifecycle operations exist, but no confirmed ChangeProposal / LearningReview process exists to support approve_change_proposal() and reject_change_proposal(). |
+| Category Service | PARTIAL | KnowledgeCategory and CategoryRepository exist. The required Application Service boundary exposing get_categories() and get_category_tree() is not yet confirmed. |
+| Version Service | PARTIAL | Version entity, VersionRepository, version creation, sequencing, and history coordination already exist through LearningObjectService. Explicit Version Service boundary is not separately established. |
+| Audit Service | PARTIAL | AuditRecord, AuditRepository, recording, and retrieval capabilities exist. Explicit Audit Service boundary is not separately established. |
+| Application Error Boundary | GAP | LearningObjectNotFound is local to LearningObjectService and InvalidStateTransition crosses the Application boundary without translation. No centralized Application error taxonomy is confirmed. |
+| Transaction Boundary | PARTIAL | Persistence transaction infrastructure exists, including transaction context, commit, rollback, and shared session wiring. Explicit Application ownership of the transaction boundary requires further verification. |
+
+
+================================================================================
+# 22.3 A01.1 — Candidate / Learning Object
+================================================================================
+
+Status:
+
+CONFORMANT
+
+The existing LearningObjectService already coordinates the implemented
+Learning Object use cases.
+
+No new service shall be introduced solely to satisfy a naming difference.
+
+
+================================================================================
+# 22.4 A01.2 — Review / Change Proposal
+================================================================================
+
+Status:
+
+BLOCKED
+
+The required operations are:
+
+* approve_change_proposal();
+* reject_change_proposal().
+
+No confirmed Change Proposal / Learning Review model or equivalent process
+currently exists.
+
+The Application Layer shall not invent replacement Review semantics.
+
+Existing LearningObject lifecycle behavior shall remain unchanged.
+
+
+================================================================================
+# 22.5 A01.3 — Category Service
+================================================================================
+
+Status:
+
+PARTIAL
+
+Existing:
+
+* KnowledgeCategory;
+* CategoryRepository;
+* persistence support.
+
+Required Application boundary:
+
+* get_categories();
+* get_category_tree().
+
+Further implementation requires only the minimum Application coordination
+needed to expose the existing Category contract.
+
+No new taxonomy semantics shall be introduced.
+
+
+================================================================================
+# 22.6 A01.4 — Version Service
+================================================================================
+
+Status:
+
+PARTIAL
+
+Existing LearningObjectService already coordinates:
+
+* Version creation;
+* version sequencing;
+* version history;
+* VersionRepository access.
+
+The existence of these responsibilities means that a separate VersionService
+shall not be created merely because the specification names a service.
+
+Further action requires confirming whether an explicit Version Service
+boundary provides a materially required application responsibility.
+
+
+================================================================================
+# 22.7 A01.5 — Audit Service
+================================================================================
+
+Status:
+
+PARTIAL
+
+Existing capabilities include:
+
+* AuditRecord;
+* AuditRepository;
+* audit recording;
+* audit retrieval.
+
+The explicit Application Service boundary:
+
+* record_event();
+* get_events();
+
+is not separately established.
+
+Further implementation shall preserve the existing AuditRecord and
+AuditRepository contracts.
+
+
+================================================================================
+
+# 22.8 A01.6 — Application Error Boundary
+
+================================================================================
+
+Status:
+
+CONFORMANT
+
+The Application Layer provides a centralized error taxonomy including:
 
 * ApplicationError;
 * EntityNotFound;
@@ -117,474 +358,27 @@ types:
 * ValidationFailure;
 * UnauthorizedOperation.
 
+The service-local LearningObjectNotFound exception has been removed and
+replaced by EntityNotFound.
 
-ApplicationError shall be the common Application Layer base exception.
+InvalidStateTransition is translated at the Application boundary into
+InvalidOperation.
 
-These exceptions shall contain no:
+The original Domain exception is preserved through exception chaining.
 
-* HTTP behavior;
-* FastAPI dependencies;
-* SQLAlchemy dependencies;
-* database-driver dependencies;
-* transport-specific response behavior.
+No catch-all exception translation has been introduced.
 
+No Domain lifecycle semantics have been changed.
 
-================================================================================
-# 5. Not-Found Boundary
-================================================================================
+Evidence:
 
-The current service-local LearningObjectNotFound exception shall be replaced
-by the centralized Application error:
+* app/application/errors.py;
+* app/application/services/learning_object_service.py;
+* application-service tests.
 
-EntityNotFound
+Verification:
 
-
-The Application Service shall raise EntityNotFound when a requested
-Learning Object does not exist.
-
-Unexpected repository or infrastructure failures shall not be converted into
-EntityNotFound.
-
-
-================================================================================
-# 6. Domain-to-Application Translation
-================================================================================
-
-The confirmed initial Domain-to-Application translation is:
-
-InvalidStateTransition
-    ->
-InvalidOperation
-
-
-The Domain exception shall remain defined and owned by the Domain Layer.
-
-The Application Service shall translate the known exception at the
-Application boundary.
-
-
-================================================================================
-# 7. Exception Cause Preservation
-================================================================================
-
-Domain-to-Application translation shall preserve the original Domain
-exception as the exception cause.
-
-Conceptually:
-
-try:
-    domain_operation()
-except InvalidStateTransition as exc:
-    raise InvalidOperation(...) from exc
-
-
-The original InvalidStateTransition must therefore remain available through:
-
-exception.__cause__
-
-
-No catch-all exception translation is permitted.
-
-
-================================================================================
-# 8. Affected Application Operations
-================================================================================
-
-The following LearningObjectService operations shall be inspected for
-InvalidStateTransition translation:
-
-* submit_for_review();
-* approve();
-* update_knowledge();
-* retire().
-
-
-Only operations that can actually raise InvalidStateTransition shall receive
-the translation boundary.
-
-Successful behavior shall remain unchanged.
-
-
-================================================================================
-# 9. ValidationFailure
-================================================================================
-
-ValidationFailure shall exist as part of the centralized Application error
-taxonomy.
-
-This implementation does not introduce a new Domain-to-Application mapping
-for ValidationFailure.
-
-No existing validation behavior shall be changed solely to exercise this
-exception.
-
-
-================================================================================
-# 10. UnauthorizedOperation
-================================================================================
-
-UnauthorizedOperation shall exist as part of the centralized Application
-error taxonomy.
-
-This implementation does not introduce authorization logic.
-
-Authorization remains outside the scope of A01.6.
-
-
-================================================================================
-# 11. Exception Scope
-================================================================================
-
-Only known, explicitly handled Domain exceptions shall be translated.
-
-The implementation shall not introduce:
-
-except Exception:
-
-or equivalent catch-all translation.
-
-Unexpected programming, persistence, infrastructure, or system errors shall
-remain distinguishable from known Application failures.
-
-
-================================================================================
-# 12. Proposed Source Changes
-================================================================================
-
-The preferred Application error module is:
-
-app/application/errors.py
-
-
-The existing Application Service is:
-
-app/application/services/learning_object_service.py
-
-
-The implementation shall:
-
-1. create the centralized Application error taxonomy;
-2. remove the local LearningObjectNotFound definition;
-3. replace its use with EntityNotFound;
-4. import InvalidStateTransition from the Domain Layer;
-5. translate InvalidStateTransition into InvalidOperation at the Application
-   boundary;
-6. preserve the original exception as __cause__.
-
-
-No new Application Service shall be created.
-
-
-================================================================================
-# 13. Architectural Constraints
-================================================================================
-
-The implementation must preserve:
-
-Application
-    ->
-Domain
-    ->
-Repository Interfaces
-
-
-The Application Layer shall not import:
-
-* FastAPI;
-* SQLAlchemy;
-* PostgreSQL drivers;
-* concrete persistence repositories;
-* HTTP response classes.
-
-
-The Domain Layer shall not be modified merely to support the Application
-error translation.
-
-
-================================================================================
-# 14. Tests
-================================================================================
-
-Focused tests shall verify the following.
-
-
-## 14.1 Missing Learning Object
-
-Given a missing Learning Object:
-
-LearningObjectService.get()
-
-shall raise:
-
-EntityNotFound
-
-
-## 14.2 Invalid Submission
-
-Given an invalid lifecycle state:
-
-LearningObjectService.submit_for_review()
-
-shall raise:
-
-InvalidOperation
-
-
-The cause shall be:
-
-InvalidStateTransition
-
-
-## 14.3 Invalid Approval
-
-Given an invalid lifecycle state:
-
-LearningObjectService.approve()
-
-shall raise:
-
-InvalidOperation
-
-
-The cause shall be:
-
-InvalidStateTransition
-
-
-## 14.4 Invalid Knowledge Update
-
-Given an invalid lifecycle state:
-
-LearningObjectService.update_knowledge()
-
-shall raise:
-
-InvalidOperation
-
-
-The cause shall be:
-
-InvalidStateTransition
-
-
-## 14.5 Invalid Retirement
-
-Given an invalid lifecycle state:
-
-LearningObjectService.retire()
-
-shall raise:
-
-InvalidOperation
-
-
-The cause shall be:
-
-InvalidStateTransition
-
-
-## 14.6 Successful Operations
-
-Existing successful tests shall continue to pass for:
-
-* candidate creation;
-* review submission;
-* approval;
-* knowledge update;
-* retirement;
-* retrieval;
-* version history.
-
-
-================================================================================
-# 15. Regression Requirements
-================================================================================
-
-After implementation:
-
-1. Application tests shall pass;
-2. Domain tests shall pass;
-3. Persistence tests shall pass;
-4. the complete regression suite shall pass;
-5. E2E-GATE-01 shall remain green.
-
-
-No existing test shall be weakened or removed to achieve conformance.
-
-
-================================================================================
-# 16. Explicit Non-Goals
-================================================================================
-
-A01.6 does not implement:
-
-* Review / Change Proposal;
-* Category Service;
-* Version Service;
-* Audit Service;
-* transaction coordination;
-* Security;
-* authorization;
-* API error handlers;
-* persistence exception normalization;
-* new Domain exceptions.
-
-
-================================================================================
-# 17. Acceptance Criteria
-================================================================================
-
-AC-001
-
-A centralized Application error taxonomy exists.
-
-
-AC-002
-
-The service-local LearningObjectNotFound definition is removed and replaced
-by EntityNotFound.
-
-
-AC-003
-
-Missing Learning Objects raise EntityNotFound.
-
-
-AC-004
-
-InvalidStateTransition is translated into InvalidOperation at the
-Application boundary.
-
-
-AC-005
-
-The original InvalidStateTransition remains available through exception
-chaining.
-
-
-AC-006
-
-ValidationFailure and UnauthorizedOperation exist without introducing
-unrelated semantics.
-
-
-AC-007
-
-No catch-all exception translation exists.
-
-
-AC-008
-
-No Domain lifecycle semantics change.
-
-
-AC-009
-
-No repository or persistence behavior changes.
-
-
-AC-010
-
-Existing successful Application Service behavior remains unchanged.
-
-
-AC-011
-
-Focused tests pass.
-
-
-AC-012
-
-The complete regression suite passes.
-
-
-AC-013
-
-E2E-GATE-01 remains green.
-
-
-================================================================================
-# 18. Implementation Order
-================================================================================
-
-STEP 1
-
-Inspect existing Application error definitions and test imports.
-
-STEP 2
-
-Create app/application/errors.py if no equivalent centralized taxonomy
-already exists.
-
-STEP 3
-
-Remove the service-local LearningObjectNotFound definition.
-
-STEP 4
-
-Replace its usage with EntityNotFound.
-
-STEP 5
-
-Import InvalidStateTransition into LearningObjectService.
-
-STEP 6
-
-Add translation only around Domain operations that can raise
-InvalidStateTransition.
-
-STEP 7
-
-Preserve the Domain exception using exception chaining.
-
-STEP 8
-
-Add or update focused tests.
-
-STEP 9
-
-Run focused tests.
-
-STEP 10
-
-Run the complete regression suite.
-
-STEP 11
-
-Verify E2E-GATE-01.
-
-
-================================================================================
-
-# 19. Verification Evidence / Resolution Status
-
-================================================================================
-
-Status:
-
-RESOLVED / CONFORMANT
-
-The Application Error Boundary implementation has been verified against the
-current Application Service implementation.
-
-The following behaviors are confirmed:
-
-* centralized Application error taxonomy implemented;
-* EntityNotFound implemented;
-* service-local LearningObjectNotFound removed;
-* InvalidStateTransition translated into InvalidOperation;
-* original Domain exception preserved through __cause__;
-* no catch-all exception translation introduced;
-* focused A01.6 tests pass;
-* complete pytest suite passes with 138 tests;
-* E2E-GATE-01 is already VERIFIED / CLOSED in the Bootstrap End-to-End
-  Gap Map.
-
-The current implementation is therefore considered conformant for A01.6.
-
-Verification was performed against the complete current test suite.
-
-Command:
+The complete test suite currently passes:
 
 pytest -q
 
@@ -592,25 +386,210 @@ Result:
 
 138 passed
 
-Repository diff hygiene was also verified with:
+A01.6 is therefore considered RESOLVED.
 
-git --no-pager diff --check
 
-Result:
+================================================================================
 
-PASS
-
-The previous verification baseline of 79 tests is superseded by the current
-138-test implementation baseline.
-
-No additional implementation work is required for A01.6 unless subsequent
-changes introduce a regression or new authoritative conformance requirement.
-
-A01.6 STATUS: RESOLVED / CONFORMANT
+# 22.9 A01.7 — Transaction Boundary Conformance Correction
 
 ================================================================================
 
 
+STATUS:
+
+CONFORMANT
+
+### Finding
+
+The transactional infrastructure is implemented through `transaction_factory`
+and the shared Session transaction boundary.
+
+`LearningObjectService.update_knowledge()` now executes the complete
+state-changing workflow inside the same transaction boundary, including:
+
+1. Learning Object retrieval;
+2. domain knowledge update;
+3. Learning Object persistence;
+4. Version creation and persistence;
+5. Event Record persistence;
+6. Audit Record persistence.
+
+### Verified Transaction Flow
+
+transaction begin
+    retrieve Learning Object
+    apply knowledge update
+    persist Learning Object
+    create Version
+    persist Version
+    persist Event Record
+    persist Audit Record
+transaction commit
+
+
+Any exception occurring during the workflow is handled by the transaction
+boundary and causes the transaction to roll back.
+
+### Verification Evidence
+
+The implementation has been verified through focused persistence tests covering:
+
+* successful knowledge update persistence;
+* Version persistence;
+* Event Record persistence;
+* Audit persistence;
+* rollback when downstream persistence fails;
+* preservation of previous Version history;
+* transaction behavior across Session boundaries.
+
+Focused persistence verification:
+
+
+17 passed
+
+
+Complete regression verification:
+
+
+pytest -q
+
+138 passed
+
+
+### Exit Criterion
+
+A01.7 is therefore promoted from PARTIAL to:
+
+
+CONFORMANT
+
+
+The transaction boundary is applied to the complete `update_knowledge()`
+workflow and automated tests demonstrate successful commit and rollback
+behavior.
+
+
+================================================================================
+
+# 22.10 Implementation Priority
+
+================================================================================
+
+RESOLVED:
+
+A01.6 — Application Error Boundary
+A01.7 — Transaction Boundary
+
+The following findings remain PARTIAL and require subsequent focused
+verification:
+
+A01.3 — Category Service
+A01.4 — Version Service
+A01.5 — Audit Service
+
+The following finding remains BLOCKED:
+
+A01.2 — Review / Change Proposal
+
+A01.6 and A01.7 require no further implementation work unless new evidence
+demonstrates a regression or conflict with the authoritative specification.
+
+
+================================================================================
+# 22.11 Explicit Non-Goals
+================================================================================
+
+This inspection does not authorize implementation of:
+
+* ChangeProposal;
+* LearningReview;
+* Security policy;
+* authorization mechanisms;
+* replacement transaction infrastructure;
+* new Category domain semantics;
+* new Version domain semantics;
+* API error handlers.
+
+
+================================================================================
+# 22.12 Verification Rule
+================================================================================
+
+A finding may move from GAP or PARTIAL to CONFORMANT only after:
+
+1. implementation evidence is confirmed;
+2. focused tests pass;
+3. regression tests pass;
+4. the relevant architectural boundary remains intact.
+
+
+================================================================================
+
+# 22.13 Current Status
+
+================================================================================
+
+Finding:
+
+IA-08-A01 — Application Service Conformance
+
+Status:
+
+IN PROGRESS
+
+RESOLVED:
+
+A01.6 — Application Error Boundary
+A01.7 — Transaction Boundary
+
+PARTIAL:
+
+A01.3 — Category Service
+A01.4 — Version Service
+A01.5 — Audit Service
+
+BLOCKED:
+
+A01.2 — Review / Change Proposal
+
+Current verification baseline:
+
+138 passed
+
+Focused persistence verification:
+
+17 passed
+
+The current implementation checkpoint is regression-clean.
+
+
+
+================================================================================
+
+# 22.14 Next Controlled Action
+
+================================================================================
+
+A01.6 — Application Error Boundary is RESOLVED.
+
+A01.7 — Transaction Boundary is CONFORMANT.
+
+The next implementation action shall address the next confirmed non-resolved
+A01 responsibility according to the verified conformance matrix.
+
+Current candidates are:
+
+A01.3 — Category Service
+A01.4 — Version Service
+A01.5 — Audit Service
+
+The next action shall be selected only after focused inspection of the
+relevant responsibility and confirmation that the required capability is
+actually missing or incomplete.
+
+No further changes shall be introduced into the resolved A01.6 or A01.7
+areas unless new implementation evidence requires them.
 
 ================================================================================
 End of Document
