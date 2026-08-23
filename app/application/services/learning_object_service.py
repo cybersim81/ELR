@@ -217,7 +217,7 @@ class LearningObjectService:
                 learning_object
             )
 
-            self.audit_service.record(
+            self.audit_service.record_event(
                 entity_id=learning_object.id,
                 event_type="LearningObjectUpdated",
                 actor=actor,
