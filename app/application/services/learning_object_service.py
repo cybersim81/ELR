@@ -226,7 +226,7 @@ class LearningObjectService:
             },
         )
 
-        self.event_record_repository.record(
+        self.event_record_repository.save(
             EventRecord(
                 event_type="LearningObjectUpdated",
                 event_source="LearningObjectService",
