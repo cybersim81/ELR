@@ -226,6 +226,22 @@ class LearningObjectService:
             },
         )
 
+        self.event_record_repository.record(
+            EventRecord(
+                event_type="LearningObjectUpdated",
+                event_source="LearningObjectService",
+                aggregate_type="LearningObject",
+                aggregate_id=learning_object.id,
+                version=version.number,
+                payload={
+                    "learning_object_id": str(
+                        learning_object.id
+                    ),
+                    "new_version": version.number,
+                },
+            )
+        )
+
         return learning_object
 
 
