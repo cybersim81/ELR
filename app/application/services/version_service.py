@@ -31,7 +31,7 @@ class VersionService:
                 ),
                 default=0,
             )
-            \+ 1
+            + 1
         )
 
         version = Version(
