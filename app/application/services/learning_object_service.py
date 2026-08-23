@@ -21,6 +21,9 @@ from app.domain.repositories.learning_object_repository import (
 from app.domain.repositories.version_repository import VersionRepository
 from app.events.event_record import EventRecord
 from contextlib import nullcontext
+from app.application.services.audit_service import AuditService
+from app.application.services.version_service import VersionService
+
 
 
 class LearningObjectService:
@@ -32,18 +35,33 @@ class LearningObjectService:
     """
 
     def __init__(
-        self,
-        learning_object_repository: LearningObjectRepository,
-        version_repository: VersionRepository,
-        audit_repository: AuditRepository,
-        event_record_repository: EventRecordRepository,
-        transaction_factory=None,
+    self,
+    learning_object_repository: LearningObjectRepository,
+    version_repository: VersionRepository,
+    audit_repository: AuditRepository,
+    event_record_repository: EventRecordRepository,
+    transaction_factory=None,
+    version_service: VersionService | None = None,
+    audit_service: AuditService | None = None,
     ):
-        self.learning_object_repository = learning_object_repository
-        self.version_repository = version_repository
-        self.audit_repository = audit_repository
-        self.event_record_repository = event_record_repository
-        self.transaction_factory = transaction_factory or nullcontext
+    self.learning_object_repository = learning_object_repository
+    self.version_repository = version_repository
+    self.audit_repository = audit_repository
+    self.event_record_repository = event_record_repository
+    self.transaction_factory = (
+    transaction_factory or nullcontext
+    )
+
+    self.version_service = (
+        version_service
+        or VersionService(version_repository)
+    )
+
+    self.audit_service = (
+        audit_service
+        or AuditService(audit_repository)
+    )
+
 
     def create_candidate(
         self,
@@ -164,19 +182,20 @@ class LearningObjectService:
             return learning_object
 
     def update_knowledge(
-        self,
-        learning_object_id: UUID,
-        statement: KnowledgeStatement,
-        actor: str,
+    self,
+    learning_object_id: UUID,
+    statement: KnowledgeStatement,
+    actor: str,
     ) -> LearningObject:
-        """
-        Update the knowledge of an Active Learning Object.
+    """
+    Update the knowledge of an Active Learning Object.
 
-        The LearningObject remains Active.
-        A new immutable Version is created and the
-        previous Version remains preserved in history.
-        """
+    The LearningObject remains Active.
+    A new immutable Version is created and the
+    previous Version remains preserved in history.
+    """
 
+    with self.transaction_factory():
         learning_object = self._get_or_raise(
             learning_object_id
         )
@@ -190,75 +209,26 @@ class LearningObjectService:
                 "Learning object cannot be updated."
             ) from exc
 
-        history = self.version_repository.get_history(
-            learning_object_id
-        )
-
-        next_version_number = (
-            max(
-                (version.number for version in history),
-                default=0,
-            )
-            + 1
-        )
-
-        version = Version(
-            learning_object_id=learning_object.id,
-            number=next_version_number,
-            snapshot={
-                "anchor_id": str(
-                    learning_object.anchor_id
-                ),
-                "statement": {
-                    "text": learning_object.statement.text,
-                    "language": learning_object.statement.language,
-                },
-                "category_id": str(
-                    learning_object.category_id
-                ),
-                "state": learning_object.state.value,
-            },
-        )
-
         self.learning_object_repository.save(
             learning_object
         )
 
-        self.version_repository.save(
-            version
+        version = self.version_service.create_version(
+            learning_object
         )
 
-        self.audit_repository.record(
-            AuditRecord(
-                entity_id=learning_object.id,
-                event_type="LearningObjectUpdated",
-                actor=actor,
-                metadata={
-                    "version": version.number,
-                },
-            )
-        )
+        self.audit_service.record(
+            entity_id=learning_object.id,
+            event_type="LearningObjectUpdated",
+            actor=actor,
+            metadata={
+                "version": version.number,
+            },
+         )
 
-        self.event_record_repository.save(
-            EventRecord(
-                event_type="LearningObjectUpdated",
-                event_source="LearningObjectService",
-                aggregate_type="LearningObject",
-                aggregate_id=learning_object.id,
-                version=version.number,
-                payload={
-                    "learning_object_id": str(
-                        learning_object.id
-                    ),
-                    "new_version": version.number,
-                },
-                metadata={
-                    "actor": actor,
-                },
-            )
-        )
+         return learning_object
 
-        return learning_object
+
 
     def retire(
         self,
