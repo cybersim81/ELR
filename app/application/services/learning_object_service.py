@@ -181,6 +181,7 @@ class LearningObjectService:
 
             return learning_object
 
+
     def update_knowledge(
         self,
         learning_object_id: UUID,
@@ -195,38 +196,38 @@ class LearningObjectService:
         previous Version remains preserved in history.
         """
 
-        with self.transaction_factory():
-            learning_object = self._get_or_raise(
-                learning_object_id
+        learning_object = self._get_or_raise(
+            learning_object_id
+        )
+
+        try:
+            learning_object.update_knowledge(
+                statement
             )
+        except InvalidStateTransition as exc:
+            raise InvalidOperation(
+                "Learning object cannot be updated."
+            ) from exc
 
-            try:
-                learning_object.update_knowledge(
-                    statement
-                )
-            except InvalidStateTransition as exc:
-                raise InvalidOperation(
-                    "Learning object cannot be updated."
-                ) from exc
+        self.learning_object_repository.save(
+            learning_object
+        ) 
 
-            self.learning_object_repository.save(
-                learning_object
-            )
+        version = self.version_service.create_version(
+            learning_object
+        )
 
-            version = self.version_service.create_version(
-                learning_object
-            )
+        self.audit_service.record_event(
+            entity_id=learning_object.id,
+            event_type="LearningObjectUpdated",
+            actor=actor,
+            metadata={
+                "version": version.number,
+            },
+        )
 
-            self.audit_service.record_event(
-                entity_id=learning_object.id,
-                event_type="LearningObjectUpdated",
-                actor=actor,
-                metadata={
-                    "version": version.number,
-                },
-            )
+        return learning_object
 
-            return learning_object
 
 
 
