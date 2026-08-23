@@ -224,9 +224,9 @@ class LearningObjectService:
                 metadata={
                     "version": version.number,
                 },
-             )
+            )
 
-             return learning_object
+            return learning_object
 
 
 
