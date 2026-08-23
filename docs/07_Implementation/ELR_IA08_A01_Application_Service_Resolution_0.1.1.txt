@@ -1,0 +1,149 @@
+# IA-08-A01 — Application Service Resolution
+
+**Version:** 0.1.1
+**Status:** ACTIVE — PARTIAL CONFORMANCE
+
+## Current Disposition
+
+IA-08-A01 is **not fully closed**.
+
+The application-service layer contains implemented responsibilities for:
+
+* Learning Object creation;
+* Learning Object submission for review;
+* Learning Object approval;
+* immutable Version creation;
+* Learning Object knowledge update;
+* AuditRecord creation;
+* EventRecord creation for Learning Object updates;
+* ChangeProposal creation;
+* Learning Review invocation;
+* transactional persistence boundaries where explicitly verified.
+
+The remaining A01 status shall therefore be assessed **by responsibility**, rather than by treating the entire A01 area as either open or closed.
+
+## Responsibility Status
+
+### A01.1 — Learning Object Creation
+
+**CONFORMANT**
+
+Evidence includes:
+
+* `LearningObjectService.create_candidate()`;
+* Learning Object repository persistence;
+* creation audit record;
+* corresponding application-service tests.
+
+### A01.2 — Change Proposal / Learning Review Boundary
+
+**IMPLEMENTED / REQUIRES CONFORMANCE VERIFICATION**
+
+The repository contains:
+
+* `ChangeProposal`;
+* `ChangeType`, including `CREATE`, `UPDATE`, and `MERGE`;
+* `ChangeProposalService`;
+* `LearningReviewService`;
+* `LearningReviewAdapter`;
+* ChangeProposal persistence;
+* review validation and decision services;
+* focused application, domain, and persistence tests.
+
+The existence of these implementation components removes the previous implementation-level `BLOCKED` disposition.
+
+However, implementation presence alone does not establish architectural conformance.
+
+The remaining verification question is whether the implemented `CREATE`, `UPDATE`, and `MERGE` proposal semantics and their review/application boundaries conform to the authoritative ELR process and system specifications.
+
+Therefore A01.2 shall remain open for **conformance verification**, not implementation discovery.
+
+### A01.3 — Learning Object Approval
+
+**CONFORMANT**
+
+Approval transitions a proposed Learning Object to Active and creates the initial immutable Version.
+
+Evidence includes:
+
+* `LearningObject.approve()`;
+* `LearningObjectService.approve()`;
+* Version creation;
+* AuditRecord creation;
+* transactional persistence tests;
+* rollback verification.
+
+### A01.4 — Version Responsibility
+
+**CONFORMANT**
+
+Version creation is implemented through `VersionService`.
+
+The service determines the next Version number from the repository and persists a new immutable Version.
+
+The existing Version history is preserved.
+
+### A01.5 — Learning Object Update
+
+**CONFORMANT**
+
+`LearningObjectService.update_knowledge()`:
+
+* validates the domain state transition;
+* updates the Learning Object;
+* creates a new immutable Version;
+* records the corresponding AuditRecord;
+* records a `LearningObjectUpdated` EventRecord.
+
+Persistence and rollback behavior are covered by focused tests.
+
+### A01.6 — Application Error Boundary
+
+**RESOLVED / CONFORMANT**
+
+The application service translates domain state-transition failures into application-level `InvalidOperation` errors.
+
+The detailed responsibility remains documented by:
+
+`ELR_IA08_A01_06_Application_Error_Boundary_0.2.0.txt`
+
+### A01.7 — Transaction Boundary
+
+**RESOLVED / CONFORMANT**
+
+The verified transactional boundary uses the existing SQLAlchemy Session.
+
+Application services do not autonomously commit the relevant operations.
+
+Rollback tests verify that Learning Object, Version, AuditRecord and EventRecord persistence participate in the expected transaction boundary.
+
+## Final A01 Position
+
+A01 shall **not** be marked `COMPLETE / CLOSED` until the remaining responsibility-level conformance questions have been verified.
+
+In particular:
+
+**A01.2 — Change Proposal / Learning Review / CREATE / UPDATE / MERGE semantics**
+
+remains the principal open A01 verification area.
+
+This is a **conformance verification gap**, not evidence that the corresponding implementation is absent.
+
+## Verification Discipline
+
+Before A01 closure:
+
+1. inspect the authoritative `03_Processes` documentation;
+2. inspect the authoritative `06_System` specifications;
+3. map `CREATE`, `UPDATE`, and `MERGE` semantics to the current implementation;
+4. identify any semantic or boundary mismatches;
+5. add focused verification where required;
+6. run the complete test suite;
+7. record the evidence;
+8. close A01 only when all responsibility-level findings are resolved.
+
+## Status
+
+**IA-08-A01 — ACTIVE / PARTIAL CONFORMANCE**
+
+**Primary remaining verification area: A01.2 — Change Proposal / Learning Review / CREATE / UPDATE / MERGE**
