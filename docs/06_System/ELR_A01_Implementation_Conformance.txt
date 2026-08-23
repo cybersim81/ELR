@@ -1,0 +1,159 @@
+# 1. A01 — Conformance Status
+
+## Semantic Conformance
+
+**STATUS: CONFORMANT**
+
+The architectural semantics for CREATE, MERGE, and UPDATE are defined by the
+authoritative ELR process and system specifications.
+
+The semantic distinction is:
+
+* **CREATE** — creation of a new Learning Object;
+* **MERGE** — consolidation into an existing Learning Object while preserving
+  target identity, history, and relationships;
+* **UPDATE** — modification of an existing Learning Object while preserving
+  its identity and creating a new immutable Version.
+
+## Implementation Conformance
+
+**STATUS: PARTIAL / OPEN**
+
+The current implementation contains domain and application primitives for
+Learning Object creation and update, and the Change Proposal model supports
+CREATE, MERGE, and UPDATE.
+
+However, the complete approved Change Proposal execution path is not yet
+implemented for all three change types.
+
+### Current position
+
+| Change Type | Current Implementation                                                                                                 | Conformance |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------- | ----------- |
+| CREATE      | `create_candidate()` exists, but is not yet the execution path for an approved CREATE proposal                         | PARTIAL     |
+| MERGE       | `ChangeType.MERGE` exists, but no corresponding application/domain execution operation was identified                  | MISSING     |
+| UPDATE      | `update_knowledge()` exists with Version/Audit/Event integration, but can bypass the approved Change Proposal workflow | PARTIAL     |
+
+## A01 Conclusion
+
+A01 must **not** be considered fully implementation-conformant yet.
+
+This does **not** invalidate the semantic model and does not require reopening
+the architectural definition of CREATE/MERGE/UPDATE.
+
+The remaining work is an **implementation-conformance gap**:
+
+```text
+Approved Change Proposal
+        |
+        v
+Learning Review
+        |
+        v
+Application Service
+        |
+        +---- CREATE ----> create new Learning Object
+        |
+        +---- MERGE -----> merge into existing Learning Object
+        |
+        +---- UPDATE ----> update existing Learning Object
+        |
+        v
+Version / Audit / Event
+```
+
+A01 should remain open until the approved Change Proposal execution boundary is
+verified for all required change types.
+
+
+# 2. A01 — Implementation-Conformance Verification Plan
+
+## Objective
+
+Verify the complete execution path from an approved Change Proposal to the
+corresponding ELR state mutation.
+
+## Verification Sequence
+
+### 1. CREATE
+
+Verify that an APPROVED CREATE proposal:
+
+1. identifies the requested new Learning Object;
+2. passes through the Application Service;
+3. creates the correct domain entity;
+4. persists the entity;
+5. produces the required Version/Audit/Event records;
+6. preserves the transaction boundary.
+
+### 2. MERGE
+
+Verify that an APPROVED MERGE proposal:
+
+1. identifies an existing target Learning Object;
+2. validates the merge operation;
+3. preserves target identity;
+4. preserves history and relationships;
+5. does not create an unrelated new Learning Object;
+6. persists the resulting state atomically;
+7. records the required Version/Audit/Event information.
+
+### 3. UPDATE
+
+Verify that an APPROVED UPDATE proposal:
+
+1. identifies the existing Learning Object;
+2. applies the approved knowledge change;
+3. preserves Learning Object identity;
+4. creates the next immutable Version;
+5. records Audit/Event information;
+6. executes through the approved Change Proposal workflow rather than
+   bypassing Learning Review.
+
+## Completion Criterion
+
+A01 implementation conformance can be closed only when all required paths have
+repository evidence and focused tests:
+
+```text
+CREATE  → VERIFIED
+MERGE   → VERIFIED
+UPDATE  → VERIFIED
+                |
+                v
+       A01 COMPLETE / CLOSED
+```
+
+Until then:
+
+```text
+A01 = OPEN / IMPLEMENTATION-CONFORMANCE GAP
+```
+
+
+
+# 3. A01 — Architectural Interpretation Note
+
+The distinction between **semantic conformance** and **implementation
+conformance** must be preserved in the consolidated ELR documentation.
+
+The existence of `ChangeType.CREATE`, `ChangeType.MERGE`, and
+`ChangeType.UPDATE` demonstrates that the implementation recognizes the three
+change categories.
+
+It does not, by itself, demonstrate that the complete approved Change Proposal
+workflow is implemented.
+
+Similarly, the existence of `LearningObjectService.create_candidate()` and
+`LearningObjectService.update_knowledge()` demonstrates application/domain
+operations, but does not by itself prove that these operations are reached
+through the authoritative Learning Review → Approved Change Proposal boundary.
+
+Therefore:
+
+> **A01 semantic definition is conformant; A01 implementation conformance
+> remains open pending verification of the complete CREATE/MERGE/UPDATE
+> execution path.**
+
+This interpretation should be used when updating the IA-08 roadmap and the
+eventual consolidated implementation-conformance document.
