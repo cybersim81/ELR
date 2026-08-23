@@ -169,11 +169,21 @@ Additional verification:
 
 IA-08-A01:
 
-PRESERVED / CLOSED
+**PRESERVED — NO A01 RESPONSIBILITY REOPENED BY A02**
 
-No A01 responsibility was reopened by A02.
+A02 does not reopen or invalidate any A01 implementation responsibility.
 
-The implementation does not introduce:
+The A02 implementation establishes the transactional Event Record boundary independently of the remaining A01 conformance verification.
+
+A01 remains under responsibility-level conformance assessment where applicable.
+
+In particular, the following A01 verification area remains outside the scope of A02:
+
+**A01.2 — Change Proposal / Learning Review / CREATE / UPDATE / MERGE semantic conformance**
+
+The existence of this outstanding A01 verification does not change the closed status of A02.
+
+The A02 implementation does not introduce:
 
 * HTTP/API behavior;
 * authentication or authorization;
@@ -189,29 +199,35 @@ The implementation does not introduce:
 
 Repository:
 
-cybersim81/ELR
+`cybersim81/ELR`
 
 Checkpoint commit:
 
-0fb845d — Add transactional event record persistence
+`0fb845d — Add transactional event record persistence`
 
 Verification:
 
-pytest -q -> 138 passed in 0.87s
+`pytest -q -> 138 passed in 0.87s`
 
 Current IA-08 sequence:
 
 IA-08-A01
-COMPLETE / CLOSED
+**ACTIVE / PARTIAL CONFORMANCE — A01.2 VERIFICATION REMAINS**
+
 ↓
+
 IA-08-A02
-COMPLETE / CLOSED
+**COMPLETE / CLOSED**
+
 ↓
+
 IA-08-A03
-PENDING / NEXT
+**PENDING**
+
 ↓
+
 IA-08-A04
-PENDING
+**PENDING**
 
 ================================================================================
 
@@ -219,15 +235,20 @@ PENDING
 
 ================================================================================
 
-Next implementation-conformance finding:
+The next controlled verification area is:
 
-IA-08-A03 — Security and Authorization
+**IA-08-A01.2 — Change Proposal / Learning Review / CREATE / UPDATE / MERGE semantic conformance**
 
-A03 shall be inspected against the authoritative Security Implementation
-Specification before implementation changes are introduced.
+This verification shall be performed against the authoritative ELR process and system documentation.
 
-A04 remains pending and shall not be implemented ahead of the applicable A03
-security and authorization boundary.
+IA-08-A02 remains:
+
+**COMPLETE / CLOSED**
+
+The A02 closure is not dependent on completion of the remaining A01.2 verification.
+
+IA-08-A03 remains a separate pending security and authorization area.
+
 
 ================================================================================
 
