@@ -14,10 +14,24 @@ Status: ACTIVE
 The IA-08 implementation sequence has progressed through the transactional
 Event Record implementation.
 
-Completed:
-
 IA-08-A01 — Core Learning Object / Version / Audit implementation
-STATUS: COMPLETE / CLOSED
+STATUS: PARTIAL / OPEN
+
+A01 semantic conformance:
+CONFORMANT
+
+A01 implementation conformance:
+PARTIAL / OPEN
+
+Remaining implementation-conformance scope:
+* CREATE — PARTIAL
+* MERGE — MISSING
+* UPDATE — PARTIAL
+
+A01 shall be closed only after the approved Change Proposal execution
+boundary has been verified for CREATE, MERGE, and UPDATE.
+
+Completed:
 
 IA-08-A02 — Transactional Event Record and Event Implementation
 STATUS: COMPLETE / CLOSED
@@ -129,7 +143,7 @@ implemented ahead of the applicable A03 security decisions.
 ================================================================================
 
 IA-08-A01
-COMPLETE / CLOSED
+PARTIAL / OPEN
 ↓
 IA-08-A02
 COMPLETE / CLOSED
