@@ -182,51 +182,51 @@ class LearningObjectService:
             return learning_object
 
     def update_knowledge(
-    self,
-    learning_object_id: UUID,
-    statement: KnowledgeStatement,
-    actor: str,
+        self,
+        learning_object_id: UUID,
+        statement: KnowledgeStatement,
+        actor: str,
     ) -> LearningObject:
-    """
-    Update the knowledge of an Active Learning Object.
+        """
+        Update the knowledge of an Active Learning Object.
 
-    The LearningObject remains Active.
-    A new immutable Version is created and the
-    previous Version remains preserved in history.
-    """
+        The LearningObject remains Active.
+        A new immutable Version is created and the
+        previous Version remains preserved in history.
+        """
 
-    with self.transaction_factory():
-        learning_object = self._get_or_raise(
-            learning_object_id
-        )
-
-        try:
-            learning_object.update_knowledge(
-                statement
+        with self.transaction_factory():
+            learning_object = self._get_or_raise(
+                learning_object_id
             )
-        except InvalidStateTransition as exc:
-            raise InvalidOperation(
-                "Learning object cannot be updated."
-            ) from exc
 
-        self.learning_object_repository.save(
-            learning_object
-        )
+            try:
+                learning_object.update_knowledge(
+                    statement
+                )
+            except InvalidStateTransition as exc:
+                raise InvalidOperation(
+                    "Learning object cannot be updated."
+                ) from exc
 
-        version = self.version_service.create_version(
-            learning_object
-        )
+            self.learning_object_repository.save(
+                learning_object
+            )
 
-        self.audit_service.record(
-            entity_id=learning_object.id,
-            event_type="LearningObjectUpdated",
-            actor=actor,
-            metadata={
-                "version": version.number,
-            },
-         )
+            version = self.version_service.create_version(
+                learning_object
+            )
 
-         return learning_object
+            self.audit_service.record(
+                entity_id=learning_object.id,
+                event_type="LearningObjectUpdated",
+                actor=actor,
+                metadata={
+                    "version": version.number,
+                },
+             )
+
+             return learning_object
 
 
 
