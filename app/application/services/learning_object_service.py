@@ -35,32 +35,32 @@ class LearningObjectService:
     """
 
     def __init__(
-    self,
-    learning_object_repository: LearningObjectRepository,
-    version_repository: VersionRepository,
-    audit_repository: AuditRepository,
-    event_record_repository: EventRecordRepository,
-    transaction_factory=None,
-    version_service: VersionService | None = None,
-    audit_service: AuditService | None = None,
+        self,
+        learning_object_repository: LearningObjectRepository,
+        version_repository: VersionRepository,
+        audit_repository: AuditRepository,
+        event_record_repository: EventRecordRepository,
+        transaction_factory=None,
+        version_service: VersionService | None = None,
+        audit_service: AuditService | None = None,
     ):
-    self.learning_object_repository = learning_object_repository
-    self.version_repository = version_repository
-    self.audit_repository = audit_repository
-    self.event_record_repository = event_record_repository
-    self.transaction_factory = (
-    transaction_factory or nullcontext
-    )
+        self.learning_object_repository = learning_object_repository
+        self.version_repository = version_repository
+        self.audit_repository = audit_repository
+        self.event_record_repository = event_record_repository
+        self.transaction_factory = (
+        transaction_factory or nullcontext
+        )
 
-    self.version_service = (
-        version_service
-        or VersionService(version_repository)
-    )
+        self.version_service = (
+            version_service
+            or VersionService(version_repository)
+        )
 
-    self.audit_service = (
-        audit_service
-        or AuditService(audit_repository)
-    )
+        self.audit_service = (
+            audit_service
+            or AuditService(audit_repository)
+        )
 
 
     def create_candidate(
