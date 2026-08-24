@@ -172,21 +172,21 @@ def test_review_rejects_proposal_without_change_payload():
 def test_review_rejects_proposal_without_change_evidence():
     adapter, _, traces = create_adapter()
 
-    try:
-        ChangeProposal(
-            change_type=ChangeType.CREATE,
-            change_payload={
-                "statement": "Test statement",
-            },
-            proposal_rationale="Test rationale.",
-            change_evidence=(),
-        )
-    except ValueError as exc:
-        assert str(exc) == "Change Evidence is required."
-    else:
-        raise AssertionError(
-            "ChangeProposal should reject empty change_evidence."
-        )
+    proposal = ChangeProposal(
+        change_type=ChangeType.CREATE,
+        change_payload={
+            "statement": "Test statement",
+        },
+        proposal_rationale="Test rationale.",
+        change_evidence=(),
+    )
+
+    trace = adapter.review(proposal)
+
+    assert trace.decision is ReviewDecision.REJECT
+    assert trace.rationale == "Change Evidence is required."
+    assert traces[-1] is trace
+
 
 
 def test_review_approves_valid_proposal():
