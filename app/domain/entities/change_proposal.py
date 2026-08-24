@@ -37,16 +37,6 @@ class ChangeProposal:
     revision_number: int = 1
 
     def __post_init__(self) -> None:
-        if not self.change_payload:
-            raise ValueError(
-                "Change Proposal payload cannot be empty."
-            )
-
-        if not self.proposal_rationale.strip():
-            raise ValueError(
-                "Change Proposal rationale cannot be empty."
-            )
-
         if not self.change_evidence:
             raise ValueError(
                 "Change Evidence is required."
@@ -67,7 +57,8 @@ class ChangeProposal:
         if self.revision_number == 1:
             if has_previous_proposal or has_previous_trace:
                 raise ValueError(
-                    "Initial Change Proposal cannot reference a previous revision."
+                    "Initial Change Proposal cannot reference "
+                    "a previous revision."
                 )
         else:
             if not has_previous_proposal:
