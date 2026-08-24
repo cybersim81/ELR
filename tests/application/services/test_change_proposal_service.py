@@ -61,15 +61,14 @@ def test_change_proposal_service_requires_change_evidence():
         learning_review_service=review_service,
     )
 
-    trace = service.propose(
-        change_type=ChangeType.CREATE,
-        change_payload={
-            "statement": "Test statement",
-        },
-        proposal_rationale="Test rationale.",
-    )
-
-    assert trace.decision is ReviewDecision.APPROVE
+    with pytest.raises(TypeError):
+        service.propose(
+            change_type=ChangeType.CREATE,
+            change_payload={
+                "statement": "Test statement",
+            },
+            proposal_rationale="Test rationale.",
+        )
 
 
 def test_change_proposal_service_creates_revision_with_provenance():
