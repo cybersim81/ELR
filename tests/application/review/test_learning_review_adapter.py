@@ -1,3 +1,4 @@
+```python
 from app.application.review.learning_review_adapter import (
     LearningReviewAdapter,
 )
@@ -150,23 +151,23 @@ def test_review_rejects_proposal_without_change_type():
 def test_review_rejects_proposal_without_change_payload():
     adapter, _, traces = create_adapter()
 
-    try:
-        ChangeProposal(
-            change_type=ChangeType.CREATE,
-            change_payload={},
-            proposal_rationale="Test rationale.",
-            change_evidence=(
-                {
-                    "source": "test",
-                },
-            ),
-        )
-    except ValueError as exc:
-        assert str(exc) == "Change Proposal payload cannot be empty."
-    else:
-        raise AssertionError(
-            "ChangeProposal should reject an empty change_payload."
-        )
+    proposal = ChangeProposal(
+        change_type=ChangeType.CREATE,
+        change_payload={},
+        proposal_rationale="Test rationale.",
+        change_evidence=(
+            {
+                "source": "test",
+            },
+        ),
+    )
+
+    trace = adapter.review(proposal)
+
+    assert trace.decision is ReviewDecision.REJECT
+    assert trace.rationale == "Change Payload is required."
+    assert traces[-1] is trace
+
 
 
 def test_review_rejects_proposal_without_change_evidence():
@@ -260,3 +261,4 @@ def test_review_returns_reject_from_review_decision_service():
     assert trace.decision is ReviewDecision.REJECT
     assert trace.rationale == "Final decision rejected."
     assert traces.get_by_id(trace.id) is trace
+```
