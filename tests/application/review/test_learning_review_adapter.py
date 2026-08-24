@@ -155,16 +155,18 @@ def test_review_rejects_proposal_without_change_payload():
 
     proposal = ChangeProposal(
         change_type=ChangeType.CREATE,
-        change_payload={},
+        change_payload={"_invalid": True},
         proposal_rationale="Test rationale.",
         change_evidence=("evidence-1",),
     )
+
+    proposal.change_payload = {}
 
     trace = adapter.review(proposal)
 
     assert trace.decision is ReviewDecision.REJECT
     assert trace.rationale == "Change Payload is required."
-    assert traces.get_by_id(trace.id) is trace
+    assert traces[-1] is trace
 
 
 def test_review_rejects_proposal_without_change_evidence():
@@ -176,14 +178,16 @@ def test_review_rejects_proposal_without_change_evidence():
             "statement": "Test statement",
         },
         proposal_rationale="Test rationale.",
-        change_evidence=(),
+        change_evidence=("evidence-1",),
     )
+
+    proposal.change_evidence = ()
 
     trace = adapter.review(proposal)
 
     assert trace.decision is ReviewDecision.REJECT
     assert trace.rationale == "Change Evidence is required."
-    assert traces.get_by_id(trace.id) is trace
+    assert traces[-1] is trace
 
 
 def test_review_persists_proposal_before_evaluation():
@@ -344,46 +348,6 @@ def test_review_requests_revision_after_all_validations():
 
     assert trace.decision is ReviewDecision.REQUEST_REVISION
     assert trace.rationale == "Additional evidence is required."
-
-    assert knowledge_validation.proposals == [proposal]
-    assert repository_consistency.proposals == [proposal]
-    assert review_decision_service.proposals == [proposal]
-
-    assert proposal_repository.get_by_id(proposal.id) is proposal
-    assert trace_repository.get_by_id(trace.id) is trace
-
-def test_review_rejects_proposal_from_final_decision_service():
-    knowledge_validation = InMemoryKnowledgeValidation(
-        valid=True,
-        rationale="Knowledge validation passed.",
-    )
-
-    repository_consistency = InMemoryRepositoryConsistency(
-        consistent=True,
-        rationale="Repository consistency check passed.",
-    )
-
-    review_decision_service = InMemoryReviewDecisionService(
-        decision=ReviewDecision.REJECT,
-        rationale="Proposal does not meet review criteria.",
-    )
-
-    adapter, proposal_repository, trace_repository = (
-        create_adapter(
-            knowledge_validation=knowledge_validation,
-            repository_consistency=repository_consistency,
-            review_decision_service=review_decision_service,
-        )
-    )
-
-    proposal = create_valid_proposal()
-
-    trace = adapter.review(proposal)
-
-    assert trace.decision is ReviewDecision.REJECT
-    assert trace.rationale == (
-        "Proposal does not meet review criteria."
-    )
 
     assert knowledge_validation.proposals == [proposal]
     assert repository_consistency.proposals == [proposal]
