@@ -37,10 +37,12 @@ class ChangeProposal:
     revision_number: int = 1
 
     def __post_init__(self) -> None:
-        if not self.change_evidence:
-            raise ValueError(
-                "Change Evidence is required."
-            )
+        """
+        Validate only invariants intrinsic to the proposal itself.
+
+        Proposal completeness and review eligibility belong to the
+        Learning Review process, not to ChangeProposal construction.
+        """
 
         if self.revision_number < 1:
             raise ValueError(
