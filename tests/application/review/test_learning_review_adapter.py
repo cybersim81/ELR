@@ -1,4 +1,3 @@
-```python
 from app.application.review.learning_review_adapter import (
     LearningReviewAdapter,
 )
@@ -261,4 +260,3 @@ def test_review_returns_reject_from_review_decision_service():
     assert trace.decision is ReviewDecision.REJECT
     assert trace.rationale == "Final decision rejected."
     assert traces.get_by_id(trace.id) is trace
-```
