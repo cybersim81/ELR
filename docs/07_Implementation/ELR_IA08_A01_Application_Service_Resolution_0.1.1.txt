@@ -37,8 +37,6 @@ Evidence includes:
 
 ### A01.2 — Change Proposal / Learning Review Boundary
 
-### A01.2 — Change Proposal / Learning Review Boundary
-
 **IMPLEMENTED / CONFORMANCE VERIFICATION IN PROGRESS**
 
 The current application-service implementation establishes the Change Proposal / Learning Review boundary.
