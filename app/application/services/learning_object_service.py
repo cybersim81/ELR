@@ -172,19 +172,22 @@ class LearningObjectService:
 
 
     def update_knowledge(
-        self,
-        learning_object_id: UUID,
-        statement: KnowledgeStatement,
-        actor: str,
-    ) -> LearningObject:
-        """
-        Update the knowledge of an Active Learning Object.
+    self,
+    learning_object_id: UUID,
+    statement: KnowledgeStatement,
+    actor: str,
+) -> LearningObject:
+    """
+    Update the knowledge of an Active Learning Object.
 
-        The LearningObject remains Active.
-        A new immutable Version is created and the
-        previous Version remains preserved in history.
-        """
+    The LearningObject remains Active.
+    A new immutable Version is created and the
+    previous Version remains preserved in history.
 
+    The aggregate update, version creation, audit record,
+    and event record share one transaction boundary.
+    """
+    with self.transaction_factory():
         learning_object = self._get_or_raise(
             learning_object_id
         )
@@ -200,7 +203,7 @@ class LearningObjectService:
 
         self.learning_object_repository.save(
             learning_object
-        ) 
+        )
 
         version = self.version_service.create_version(
             learning_object
