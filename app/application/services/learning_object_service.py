@@ -171,6 +171,7 @@ class LearningObjectService:
             return learning_object
 
 
+    
     def update_knowledge(
         self,
         learning_object_id: UUID,
@@ -184,58 +185,58 @@ class LearningObjectService:
         A new immutable Version is created and the
         previous Version remains preserved in history.
 
-        The aggregate update, version creation, audit record,
-        and event record share one transaction boundary.
+        Persistence is coordinated through the current repository
+        session. The service does not commit autonomously; the
+        transaction boundary is owned by the caller.
         """
-        with self.transaction_factory():
-            learning_object = self._get_or_raise(
-                learning_object_id
+
+        learning_object = self._get_or_raise(
+            learning_object_id
+        )
+
+        try:
+            learning_object.update_knowledge(
+                statement
             )
+        except InvalidStateTransition as exc:
+            raise InvalidOperation(
+                "Learning object cannot be updated."
+            ) from exc
 
-            try:
-                learning_object.update_knowledge(
-                    statement
-                )
-            except InvalidStateTransition as exc:
-                raise InvalidOperation(
-                    "Learning object cannot be updated."
-                ) from exc
+        self.learning_object_repository.save(
+            learning_object
+        )
 
-            self.learning_object_repository.save(
-                learning_object
-            )
+        version = self.version_service.create_version(
+            learning_object
+        )
 
-            version = self.version_service.create_version(
-                learning_object
-            )
+        self.audit_service.record_event(
+            entity_id=learning_object.id,
+            event_type="LearningObjectUpdated",
+            actor=actor,
+            metadata={
+                "version": version.number,
+            },
+        )
 
-            self.audit_service.record_event(
-                entity_id=learning_object.id,
+        self.event_record_repository.save(
+            EventRecord(
                 event_type="LearningObjectUpdated",
-                actor=actor,
-                metadata={
-                    "version": version.number,
+                event_source="LearningObjectService",
+                aggregate_type="LearningObject",
+                aggregate_id=learning_object.id,
+                version=version.number,
+                payload={
+                    "learning_object_id": str(
+                        learning_object.id
+                    ),
+                    "new_version": version.number,
                 },
             )
+        )
 
-            self.event_record_repository.save(
-                EventRecord(
-                    event_type="LearningObjectUpdated",
-                    event_source="LearningObjectService",
-                    aggregate_type="LearningObject",
-                    aggregate_id=learning_object.id,
-                    version=version.number,
-                    payload={
-                        "learning_object_id": str(
-                            learning_object.id
-                        ),
-                        "new_version": version.number,
-                    },
-                )
-            )
-
-            return learning_object
-
+        return learning_object
 
 
 
