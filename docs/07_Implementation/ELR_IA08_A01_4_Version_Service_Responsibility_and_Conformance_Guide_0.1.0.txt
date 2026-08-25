@@ -356,11 +356,9 @@ Version persistence from the originating Learning Object operation.
 ================================================================================
 
 A01.4 is marked RESOLVED based on the verification recorded below.
-The implementation must establish
-conformance of the explicit Version Service application boundary defined by
-the applicable Application Service Implementation Specification.
+The implementation establishes conformance with the A01.4 Version Service responsibility requirements through the responsibility placement and service boundaries documented and verified below.
 
-The verification must establish that:
+The verification confirms that:
 
 Version creation is coordinated through VersionService;
 Version history access is coordinated through VersionService;
@@ -376,7 +374,7 @@ VersionService boundary behavior is covered by appropriate tests.
 Resolution therefore requires verification of responsibility-level conformance,
 not merely verification that a class named VersionService exists.
 
-A01.4 shall be considered resolved only when the explicit VersionService
+A01.4 is considered resolved because the following conditions have been verified: the explicit VersionService
 boundary is implemented consistently with the applicable specification and the
 existing Version behavior remains fully verified.
 The verification items above are recorded as satisfied; no additional implementation action is required for A01.4.
