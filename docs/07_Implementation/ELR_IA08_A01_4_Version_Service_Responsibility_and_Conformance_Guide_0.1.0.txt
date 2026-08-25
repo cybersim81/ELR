@@ -41,22 +41,34 @@ A01.4 — Version Service
 
 Status:
 
-PARTIAL
+IMPLEMENTATION VERIFIED
 
 Reason:
 
-Versioning behavior is already implemented and tested through the existing
-LearningObjectService.
+The current implementation provides the Versioning behavior required by the
+applicable Application Service Implementation Specification.
 
-However, the versioning responsibilities are currently coordinated directly
-inside LearningObjectService rather than through a dedicated VersionService
-boundary.
+The authoritative Application Service Implementation Specification defines an
+explicit Version Service boundary with the following responsibilities:
 
-The current evidence therefore does not justify classifying A01.4 as a
-functional versioning gap.
+create_version();
+get_versions().
 
-The current finding concerns responsibility isolation and application-service
-boundary conformance.
+The Version Service is therefore an explicit application responsibility and is
+not merely an optional refactoring introduced to improve responsibility
+isolation.
+
+The existing implementation evidence confirms that Version behavior,
+Version persistence, version history, version numbering, snapshot creation and
+transaction participation are already implemented and verified.
+
+The remaining conformance assessment concerns the alignment between the
+documented Version Service responsibility and the concrete application
+implementation boundary.
+
+A01.4 shall therefore be treated as an implementation-conformance item whose
+required boundary is already established by the applicable specification,
+rather than as a missing-functionality or optional-refactoring item.
 
 ================================================================================
 
