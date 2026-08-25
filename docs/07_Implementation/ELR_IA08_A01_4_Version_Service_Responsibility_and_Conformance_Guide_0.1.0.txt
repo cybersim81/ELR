@@ -194,21 +194,48 @@ The evidence currently supports a PARTIAL conformance disposition.
 
 ================================================================================
 
-A dedicated VersionService may be introduced only if responsibility-level
-conformance requires an explicit application boundary for version creation
-and version-history coordination.
+The Version Service is an explicit application-service responsibility defined
+by the applicable ELR Application Service Implementation Specification.
 
-The purpose of such a boundary would be responsibility isolation.
+The Version Service boundary exists to isolate the application coordination of
+Version operations from the broader Learning Object use cases.
 
-A VersionService must not introduce new version semantics.
+Its responsibility includes:
 
-If introduced, it shall coordinate existing behavior such as:
+coordinating Version creation;
+coordinating access to Version history;
+determining the required Version operation according to the applicable
+Versioning Model;
+delegating Version persistence to VersionRepository;
+preserving the existing transaction boundary established by the originating
+application use case.
 
-* retrieving history;
-* determining the next version number;
-* creating Version records;
-* creating snapshots;
-* persisting Version records.
+The Version Service does not own independent Version semantics.
+
+Version domain rules remain authoritative in the Domain Layer and the
+Versioning Model.
+
+In particular, the Version Service must not independently redefine:
+
+Version numbering semantics;
+Version immutability;
+snapshot semantics;
+historical preservation;
+Learning Object lifecycle semantics.
+
+The responsibility boundary is therefore:
+
+LearningObjectService
+        │
+        └── VersionService
+                │
+                └── VersionRepository
+
+The Version Service participates in the same application operation and
+transaction boundary as the originating Learning Object use case.
+
+The Version Service must not introduce an independent transaction or commit
+Version persistence separately from the originating operation.
 
 ================================================================================
 
@@ -269,22 +296,83 @@ Version persistence from the originating Learning Object operation.
 
 ================================================================================
 
-Before A01.4 can be marked RESOLVED, the implementation must establish one
-of the following dispositions:
+Before A01.4 can be marked RESOLVED, the implementation must establish
+conformance of the explicit Version Service application boundary defined by
+the applicable Application Service Implementation Specification.
 
-CONFORMANT
+The verification must establish that:
 
-The existing LearningObjectService responsibility boundary is sufficient and
-no dedicated VersionService is required.
+Version creation is coordinated through VersionService;
+Version history access is coordinated through VersionService;
+LearningObjectService does not retain Version Service responsibilities that
+belong to the explicit VersionService boundary;
+VersionService delegates persistence to VersionRepository;
+Version domain semantics remain owned by the Domain Layer and Versioning Model;
+Version persistence remains within the originating application transaction;
+existing Version behavior remains unchanged;
+existing Version tests remain green;
+VersionService boundary behavior is covered by appropriate tests.
 
-or:
+Resolution therefore requires verification of responsibility-level conformance,
+not merely verification that a class named VersionService exists.
 
-IMPLEMENTATION VERIFIED
+A01.4 shall be considered resolved only when the explicit VersionService
+boundary is implemented consistently with the applicable specification and the
+existing Version behavior remains fully verified.
 
-A dedicated VersionService is required by the applicable implementation
-contract and has been introduced without changing Version semantics.
+================================================================================
 
-In either case, existing versioning behavior must remain fully verified.
+# 10.B Responsibility Mapping
+
+================================================================================
+
+The current application responsibility mapping for Version-related operations is:
+
+| Responsibility                           | Responsible Component       |
+| ---------------------------------------- | --------------------------- |
+| Coordinate Learning Object use cases     | LearningObjectService       |
+| Coordinate Version creation              | VersionService              |
+| Coordinate Version history access        | VersionService              |
+| Enforce Version domain invariants        | Domain Layer                |
+| Define Version semantics                 | Versioning Model            |
+| Persist Version state                    | VersionRepository           |
+| Apply an approved Learning Object change | LearningObjectChangeApplier |
+| Record operational audit information     | AuditService                |
+
+The VersionService is therefore an explicit application responsibility.
+
+The mapping does not transfer Version domain ownership to VersionService.
+
+The boundaries remain:
+
+```text
+LearningObjectService
+        │
+        ├── Learning Review
+        │
+        ├── LearningObjectChangeApplier
+        │
+        └── VersionService
+                │
+                └── VersionRepository
+```
+
+The responsibility separation is:
+
+* `LearningObjectService` coordinates the application use case;
+* `VersionService` coordinates Version operations;
+* the Domain Layer enforces Version invariants;
+* the Versioning Model defines Version semantics;
+* `VersionRepository` persists Version state;
+* `LearningObjectChangeApplier` applies an already authorized change;
+* `AuditService` records the corresponding operational audit information.
+
+No responsibility listed above shall be duplicated across application
+components merely to preserve a legacy implementation structure.
+
+The purpose of this mapping is to establish responsibility-level conformance
+between the current implementation and the applicable ELR specifications.
+
 
 ================================================================================
 
@@ -292,23 +380,61 @@ In either case, existing versioning behavior must remain fully verified.
 
 ================================================================================
 
-The following behaviors must remain covered:
+The existing Version behavior must remain covered by the current test suite.
 
-* approval creates Version 1;
-* update creates Version 2;
-* version numbers increment correctly;
-* previous versions remain unchanged;
-* snapshots preserve historical state;
-* Version records remain immutable;
-* version persistence occurs within the applicable transaction boundary;
-* version persistence failure produces the required rollback behavior.
+The existing behavioral coverage includes:
 
-If a dedicated VersionService is introduced, additional tests shall verify:
+approval creates Version 1;
+update creates the subsequent Version;
+version numbers increment correctly;
+previous versions remain unchanged;
+snapshots preserve historical state;
+Version records remain immutable;
+Version persistence occurs within the applicable transaction boundary;
+Version persistence failure produces the required rollback behavior.
 
-* VersionService responsibility isolation;
-* LearningObjectService delegation;
-* VersionRepository interaction through the intended boundary;
-* preservation of existing behavior.
+These tests verify Version behavior and must not be replaced by responsibility
+boundary tests.
+
+Because VersionService is an explicit application responsibility, the
+implementation must additionally verify the application boundary itself.
+
+The boundary verification must establish that:
+
+Version creation is coordinated through VersionService;
+Version history access is coordinated through VersionService;
+LearningObjectService delegates Version responsibilities to VersionService
+rather than implementing those responsibilities directly;
+VersionService uses VersionRepository for persistence;
+VersionService does not duplicate or redefine Domain Version invariants;
+VersionService does not introduce an independent transaction boundary;
+existing Version behavior remains unchanged after delegation.
+
+The test suite must therefore distinguish:
+
+Behavioral Conformance
+        │
+        ├── Version semantics
+        ├── Version numbering
+        ├── Snapshot preservation
+        ├── Immutability
+        └── Transaction / rollback behavior
+
+Responsibility Conformance
+        │
+        ├── LearningObjectService
+        │       └── delegates Version operations
+        │
+        └── VersionService
+                └── VersionRepository
+
+A boundary test failure shall be treated as a responsibility-conformance
+failure and shall not be interpreted as evidence that Version behavior itself
+is missing.
+
+The introduction of VersionService must therefore preserve all existing
+behavioral tests while adding only the tests necessary to demonstrate the
+explicit application responsibility boundary.
 
 ================================================================================
 
@@ -316,20 +442,61 @@ If a dedicated VersionService is introduced, additional tests shall verify:
 
 ================================================================================
 
-A01.4 shall not be resolved by class existence alone.
+A01.4 shall be resolved on the basis of responsibility-level conformance,
+not on the basis of class existence alone.
 
-The resolution decision shall be based on responsibility-level conformance.
+The authoritative implementation contract establishes Version Service as an
+explicit application responsibility.
 
-The implementation team shall first determine whether the authoritative
-Application Service Implementation Specification requires a dedicated
-VersionService boundary.
+The resolution therefore requires verification that the concrete
+implementation provides that responsibility through the intended application
+boundary.
 
-If the existing LearningObjectService responsibility is conformant, A01.4
-shall be marked CONFORMANT without unnecessary refactoring.
+The following conditions must all be satisfied:
 
-If the specification requires explicit VersionService responsibility
-isolation, the implementation may introduce the boundary and preserve all
-existing behavior and tests.
+Version creation responsibility is isolated behind VersionService;
+Version history coordination is isolated behind VersionService;
+LearningObjectService delegates Version responsibilities to VersionService;
+VersionService delegates persistence to VersionRepository;
+Version domain semantics remain owned by the Version domain model;
+existing Version behavior remains unchanged;
+existing transaction semantics remain unchanged;
+existing behavioral verification remains green;
+responsibility-boundary tests pass.
+
+A01.4 shall be considered:
+
+RESOLVED / CONFORMANT
+
+when the above responsibility boundary has been established and verified.
+
+A01.4 shall not be reopened merely because the implementation uses a different
+internal structure from an earlier implementation checkpoint, provided that
+the authoritative responsibility boundary and all required behavior remain
+satisfied.
+
+No additional refactoring is required once responsibility-level conformance
+has been demonstrated.
+
+In particular, resolution does not require:
+
+additional Version abstractions;
+additional domain services;
+changes to Version semantics;
+changes to VersionRepository semantics;
+changes to transaction ownership;
+restructuring unrelated application services.
+
+The resolution decision must therefore remain narrowly scoped to A01.4:
+
+Version responsibility
+        ↓
+VersionService
+        ↓
+VersionRepository
+
+with LearningObjectService acting as the originating application-service
+coordinator rather than the owner of Version-specific coordination logic.
 
 ================================================================================
 
@@ -337,33 +504,75 @@ existing behavior and tests.
 
 ================================================================================
 
-Do not introduce a dedicated VersionService solely to satisfy class existence.
+A01.4 is currently an implementation-conformance item concerning the
+responsibility boundary of Version handling.
 
-The current implementation already provides the required Version behavior,
-persistence, history, numbering and snapshot semantics.
+The current controlled action is to align the concrete application structure
+with the established Version Service responsibility without changing existing
+Version behavior.
 
-The remaining A01.4 finding concerns responsibility isolation rather than
-missing Version functionality.
+The implementation boundary to be maintained is:
 
-The next action is therefore a responsibility-level comparison against the
-authoritative Application Service Implementation Specification.
+LearningObjectService
+        │
+        └── VersionService
+                │
+                └── VersionRepository
 
-If that specification requires explicit VersionService responsibility
-isolation, the boundary may be introduced as a focused refactoring while
-preserving:
+LearningObjectService remains responsible for coordinating the originating
+Learning Object operation.
 
-* existing Version semantics;
-* Version immutability;
-* historical preservation;
-* Version numbering;
-* snapshot semantics;
-* repository behavior;
-* transaction behavior;
-* existing test coverage.
+VersionService is responsible for coordinating Version-specific application
+operations, including:
 
-If the authoritative specification does not require a dedicated VersionService
-boundary, A01.4 may be resolved as CONFORMANT without introducing unnecessary
-application-service refactoring.
+creation of a Version;
+retrieval of Version history;
+determination of the next Version number;
+construction of the Version snapshot;
+delegation of Version persistence to VersionRepository.
+
+The Version domain model remains responsible for its own domain invariants.
+
+VersionRepository remains responsible for Version persistence.
+
+The controlled implementation change must therefore be limited to
+responsibility isolation.
+
+The following behavior must remain unchanged:
+
+Version numbering;
+Version immutability;
+snapshot semantics;
+historical preservation;
+VersionRepository behavior;
+transaction participation;
+rollback behavior;
+existing behavioral test coverage.
+
+No additional domain semantics shall be introduced.
+
+No independent transaction shall be introduced by VersionService.
+
+No unrelated application-service responsibility shall be moved as part of
+A01.4.
+
+Once the VersionService boundary and its responsibility-level tests are in
+place, A01.4 can proceed directly to resolution according to the exit criteria
+defined in §14.
+
+The controlled action is therefore:
+
+Responsibility Mapping
+        ↓
+VersionService boundary
+        ↓
+LearningObjectService delegation
+        ↓
+VersionService → VersionRepository
+        ↓
+Boundary verification
+        ↓
+A01.4 resolution
 
 
 ================================================================================
@@ -372,16 +581,57 @@ application-service refactoring.
 
 ================================================================================
 
-A01.4 may be marked resolved only when:
+A01.4 may be marked RESOLVED only when responsibility-level conformance has
+been explicitly established and verified.
 
-* the responsibility-level disposition is explicit;
-* the authoritative requirement has been identified;
-* existing Version behavior remains intact;
-* existing tests remain green;
-* required boundary tests pass;
-* transaction behavior remains intact;
-* no unnecessary domain semantics have been introduced;
-* the roadmap is updated with the final disposition.
+The following conditions are mandatory:
+
+the Version Service responsibility mapping is explicit;
+Version creation is coordinated through VersionService;
+Version history coordination is provided through VersionService;
+LearningObjectService delegates Version-specific responsibilities to
+VersionService;
+VersionService delegates persistence to VersionRepository;
+Version domain invariants remain unchanged;
+existing Version behavior remains intact;
+existing Version tests remain green;
+VersionService boundary tests pass;
+transaction behavior remains unchanged;
+rollback behavior remains intact;
+no independent transaction is introduced by VersionService;
+no unnecessary domain semantics are introduced;
+no unrelated responsibility is moved as part of A01.4;
+the final A01.4 disposition is recorded in the applicable implementation
+roadmap/conformance documentation.
+
+The minimum conformance chain is:
+
+LearningObjectService
+        ↓
+VersionService
+        ↓
+VersionRepository
+        ↓
+Version persistence
+
+with the following invariant:
+
+VersionService changes responsibility placement,
+not Version semantics.
+
+A01.4 is resolved only after this chain has been verified by implementation
+evidence and tests.
+
+Class existence alone is not sufficient evidence of resolution.
+
+Likewise, preservation of existing behavior alone is not sufficient evidence
+of resolution when the responsibility boundary itself has not been verified.
+
+The final resolution status shall therefore be:
+
+A01.4 — RESOLVED / CONFORMANT
+
+when all mandatory criteria above are satisfied.
 
 ================================================================================
 End of Document
