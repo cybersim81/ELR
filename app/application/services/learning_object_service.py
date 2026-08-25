@@ -129,112 +129,112 @@ class LearningObjectService:
         return learning_object
 
     def approve(
-    self,
-    learning_object_id: UUID,
-    actor: str,
-) -> LearningObject:
-    """
-    Proposed -> Active.
+        self,
+        learning_object_id: UUID,
+        actor: str,
+    ) -> LearningObject:
+        """
+        Proposed -> Active.
 
-    Approval creates the first immutable Version and records
-    the audit event within one transaction boundary.
-    """
-    with self.transaction_factory():
-        learning_object = self._get_or_raise(
-            learning_object_id
-        )
+        Approval creates the first immutable Version and records
+        the audit event within one transaction boundary.
+        """
+        with self.transaction_factory():
+            learning_object = self._get_or_raise(
+                learning_object_id
+            )
 
-        try:
-            learning_object.approve()
-        except InvalidStateTransition as exc:
-            raise InvalidOperation(
-                "Learning object cannot be approved."
-            ) from exc
+            try:
+                learning_object.approve()
+            except InvalidStateTransition as exc:
+                raise InvalidOperation(
+                    "Learning object cannot be approved."
+                ) from exc
 
-        version = self.version_service.create_version(
-            learning_object
-        )
+            version = self.version_service.create_version(
+                learning_object
+            )
 
-        self.learning_object_repository.save(
-            learning_object
-        )
+            self.learning_object_repository.save(
+                learning_object
+            )
 
-        self.audit_service.record_event(
-            entity_id=learning_object.id,
-            event_type="LearningObjectApproved",
-            actor=actor,
-            metadata={
-                "version": version.number,
-            },
-        )
+            self.audit_service.record_event(
+                entity_id=learning_object.id,
+                event_type="LearningObjectApproved",
+                actor=actor,
+                metadata={
+                    "version": version.number,
+                },
+            )
 
-        return learning_object
+            return learning_object
 
 
     def update_knowledge(
-    self,
-    learning_object_id: UUID,
-    statement: KnowledgeStatement,
-    actor: str,
-) -> LearningObject:
-    """
-    Update the knowledge of an Active Learning Object.
+        self,
+        learning_object_id: UUID,
+        statement: KnowledgeStatement,
+        actor: str,
+    ) -> LearningObject:
+        """
+        Update the knowledge of an Active Learning Object.
 
-    The LearningObject remains Active.
-    A new immutable Version is created and the
-    previous Version remains preserved in history.
+        The LearningObject remains Active.
+        A new immutable Version is created and the
+        previous Version remains preserved in history.
 
-    The aggregate update, version creation, audit record,
-    and event record share one transaction boundary.
-    """
-    with self.transaction_factory():
-        learning_object = self._get_or_raise(
-            learning_object_id
-        )
-
-        try:
-            learning_object.update_knowledge(
-                statement
+        The aggregate update, version creation, audit record,
+        and event record share one transaction boundary.
+        """
+        with self.transaction_factory():
+            learning_object = self._get_or_raise(
+                learning_object_id
             )
-        except InvalidStateTransition as exc:
-            raise InvalidOperation(
-                "Learning object cannot be updated."
-            ) from exc
 
-        self.learning_object_repository.save(
-            learning_object
-        )
+            try:
+                learning_object.update_knowledge(
+                    statement
+                )
+            except InvalidStateTransition as exc:
+                raise InvalidOperation(
+                    "Learning object cannot be updated."
+                ) from exc
 
-        version = self.version_service.create_version(
-            learning_object
-        )
+            self.learning_object_repository.save(
+                learning_object
+            )
 
-        self.audit_service.record_event(
-            entity_id=learning_object.id,
-            event_type="LearningObjectUpdated",
-            actor=actor,
-            metadata={
-                "version": version.number,
-            },
-        )
+            version = self.version_service.create_version(
+                learning_object
+            )
 
-        self.event_record_repository.save(
-            EventRecord(
+            self.audit_service.record_event(
+                entity_id=learning_object.id,
                 event_type="LearningObjectUpdated",
-                event_source="LearningObjectService",
-                aggregate_type="LearningObject",
-                aggregate_id=learning_object.id,
-                version=version.number,
-                payload={
-                    "learning_object_id": str(
-                        learning_object.id
-                    ),
-                    "new_version": version.number,
+                actor=actor,
+                metadata={
+                    "version": version.number,
                 },
             )
-        )
 
-        return learning_object
+            self.event_record_repository.save(
+                EventRecord(
+                    event_type="LearningObjectUpdated",
+                    event_source="LearningObjectService",
+                    aggregate_type="LearningObject",
+                    aggregate_id=learning_object.id,
+                    version=version.number,
+                    payload={
+                        "learning_object_id": str(
+                            learning_object.id
+                        ),
+                        "new_version": version.number,
+                    },
+                )
+            )
+
+            return learning_object
 
 
 
