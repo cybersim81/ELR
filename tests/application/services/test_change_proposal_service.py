@@ -29,6 +29,23 @@ class StubLearningReview(LearningReview):
             reviewer="test-reviewer",
         )
 
+class StubChangeApplier:
+    def __init__(self):
+        self.calls = []
+
+    def apply(
+        self,
+        proposal: ChangeProposal,
+        review_trace: ReviewDecisionTrace,
+        actor: str,
+    ):
+        self.calls.append(
+            (
+                proposal,
+                review_trace,
+                actor,
+            )
+        )
 
 def test_change_proposal_service_creates_and_reviews_proposal():
     review_service = LearningReviewService(
