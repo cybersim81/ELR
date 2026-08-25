@@ -37,7 +37,11 @@ Evidence includes:
 
 ### A01.2 — Change Proposal / Learning Review Boundary
 
-**IMPLEMENTED / REQUIRES CONFORMANCE VERIFICATION**
+### A01.2 — Change Proposal / Learning Review Boundary
+
+**IMPLEMENTED / CONFORMANCE VERIFICATION IN PROGRESS**
+
+The current application-service implementation establishes the Change Proposal / Learning Review boundary.
 
 The repository contains:
 
@@ -46,17 +50,42 @@ The repository contains:
 * `ChangeProposalService`;
 * `LearningReviewService`;
 * `LearningReviewAdapter`;
+* `ChangeApplier`;
 * ChangeProposal persistence;
+* Review Decision Trace persistence;
 * review validation and decision services;
-* focused application, domain, and persistence tests.
+* focused application and review tests.
 
-The existence of these implementation components removes the previous implementation-level `BLOCKED` disposition.
+`ChangeProposalService` coordinates the use case in the following order:
 
-However, implementation presence alone does not establish architectural conformance.
+```text
+Change Proposal
+        │
+        v
+Learning Review
+        │
+        ├── APPROVE ───────────→ ChangeApplier.apply()
+        │
+        ├── REJECT ────────────→ no apply()
+        │
+        └── REQUEST_REVISION ──→ no apply()
+```
 
-The remaining verification question is whether the implemented `CREATE`, `UPDATE`, and `MERGE` proposal semantics and their review/application boundaries conform to the authoritative ELR process and system specifications.
+The application service therefore does not apply a Change Proposal before Learning Review has produced an `APPROVE` decision.
 
-Therefore A01.2 shall remain open for **conformance verification**, not implementation discovery.
+`REJECT` and `REQUEST_REVISION` do not invoke the application boundary.
+
+Revision handling preserves proposal provenance through:
+
+* `previous_proposal_id`;
+* `previous_review_trace_id`;
+* incremented `revision_number`.
+
+The current implementation and focused tests therefore resolve the previous implementation-level `BLOCKED` condition for the Change Proposal / Learning Review application boundary.
+
+The remaining A01.2 activity is **responsibility-level conformance verification**: the implemented semantics for `CREATE`, `UPDATE`, and `MERGE` must still be compared against the authoritative `03_Processes` and `06_System` specifications before A01.2 can be declared fully conformant.
+
+Therefore A01.2 remains open as a **conformance verification item**, but it is no longer blocked by absence of the required application boundary or by absence of the APPROVE / REJECT / REQUEST_REVISION gating behavior.
 
 ### A01.3 — Learning Object Approval
 
