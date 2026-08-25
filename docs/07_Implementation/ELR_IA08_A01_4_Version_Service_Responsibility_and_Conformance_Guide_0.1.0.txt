@@ -341,7 +341,7 @@ Audit persistence
 +
 Event Record persistence
 
-The current implementation uses VersionService as the explicit application-layer transaction boundary for version-related operations. VersionService coordinates version creation and persistence without redefining domain semantics or moving persistence responsibility out of VersionRepository.
+VersionService participates in the existing application-layer transaction boundary established by the originating Learning Object use case. VersionService coordinates Version creation and persistence within that existing transaction boundary; it does not own, establish, commit, or independently terminate the transaction. VersionService coordinates version creation and persistence without redefining domain semantics or moving persistence responsibility out of VersionRepository.
 
 VersionService must not introduce an additional transaction boundary that conflicts with the existing application-layer orchestration. Its responsibility is limited to coordinating the versioning operation and preserving the established separation between application orchestration, domain semantics, and persistence.
 
