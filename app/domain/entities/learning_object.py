@@ -9,6 +9,8 @@ from .note import Note
 
 
 class LearningObjectState(str, Enum):
+    CANDIDATE = "Candidate"
+    PROPOSED = "Proposed"
     ACTIVE = "Active"
     RETIRED = "Retired"
 
@@ -22,11 +24,13 @@ class LearningObject:
     """
     Aggregate root representing persistent ELR knowledge.
 
-    A LearningObject represents knowledge that has already passed
-    the proposal/review boundary and entered the ELR.
+    The Learning Object has an explicit lifecycle:
 
-    Change Proposal creation and Learning Review are therefore not
-    part of this aggregate's lifecycle.
+        Candidate -> Proposed -> Active -> Retired
+
+    Review decisions such as APPROVE, REJECT and REQUEST_REVISION
+    belong to the Change Proposal / Learning Review process and are
+    not Learning Object states.
 
     KnowledgeStatement is owned by this aggregate.
     """
@@ -40,7 +44,7 @@ class LearningObject:
 
     id: UUID = field(default_factory=uuid4)
 
-    state: LearningObjectState = LearningObjectState.ACTIVE
+    state: LearningObjectState = LearningObjectState.CANDIDATE
 
     created_at: datetime = field(
         default_factory=lambda: datetime.now(timezone.utc)
@@ -49,6 +53,38 @@ class LearningObject:
     updated_at: datetime = field(
         default_factory=lambda: datetime.now(timezone.utc)
     )
+
+    def submit_for_review(self) -> None:
+        """
+        Candidate -> Proposed.
+
+        The Learning Object enters the proposed lifecycle state.
+        The actual review decision remains owned by Learning Review.
+        """
+
+        self._transition(
+            LearningObjectState.PROPOSED,
+            allowed=[
+                LearningObjectState.CANDIDATE,
+            ],
+        )
+
+    def approve(self) -> None:
+        """
+        Proposed -> Active.
+
+        This method performs only the domain lifecycle transition.
+
+        It does not decide whether a Change Proposal is approved.
+        That decision belongs to the Learning Review process.
+        """
+
+        self._transition(
+            LearningObjectState.ACTIVE,
+            allowed=[
+                LearningObjectState.PROPOSED,
+            ],
+        )
 
     def retire(self) -> None:
         """
@@ -69,11 +105,11 @@ class LearningObject:
         """
         Replace the aggregate's current knowledge value.
 
-        Knowledge updates are performed against an existing active
-        LearningObject. Version creation/history preservation is
-        handled by the application versioning boundary.
+        The Learning Object must already be Active.
 
         Lifecycle state remains Active.
+        Version creation and history preservation are handled by
+        the application/versioning boundary.
         """
 
         if self.state != LearningObjectState.ACTIVE:
