@@ -47,6 +47,22 @@ class StubChangeApplier:
             )
         )
 
+class RejectingLearningReview(LearningReview):
+    def __init__(self, decision, rationale):
+        self.decision = decision
+        self.rationale = rationale
+
+    def review(
+        self,
+        proposal: ChangeProposal,
+    ) -> ReviewDecisionTrace:
+        return ReviewDecisionTrace(
+            proposal_id=proposal.id,
+            decision=self.decision,
+            rationale=self.rationale,
+            reviewer="test-reviewer",
+        )
+
 def test_change_proposal_service_creates_and_reviews_proposal():
     review_service = LearningReviewService(
         learning_review=StubLearningReview(),
@@ -158,3 +174,60 @@ def test_change_proposal_service_creates_revision_with_provenance():
     assert proposal.revision_number == 2
     assert applied_trace is trace
     assert actor == "test-actor"
+
+def test_change_proposal_service_does_not_apply_rejected_proposal():
+    review_service = LearningReviewService(
+        learning_review=RejectingLearningReview(
+            decision=ReviewDecision.REJECT,
+            rationale="Rejected for testing.",
+        ),
+    )
+
+    change_applier = StubChangeApplier()
+
+    service = ChangeProposalService(
+        learning_review_service=review_service,
+        change_applier=change_applier,
+    )
+
+    trace = service.propose(
+        change_type=ChangeType.CREATE,
+        change_payload={"statement": "Test statement"},
+        proposal_rationale="Test proposal.",
+        change_evidence=(
+            {"type": "change", "source": "test"},
+        ),
+        actor="test-actor",
+    )
+
+    assert trace.decision is ReviewDecision.REJECT
+    assert change_applier.calls == []
+
+
+def test_change_proposal_service_does_not_apply_revision_request():
+    review_service = LearningReviewService(
+        learning_review=RejectingLearningReview(
+            decision=ReviewDecision.REQUEST_REVISION,
+            rationale="Revision required.",
+        ),
+    )
+
+    change_applier = StubChangeApplier()
+
+    service = ChangeProposalService(
+        learning_review_service=review_service,
+        change_applier=change_applier,
+    )
+
+    trace = service.propose(
+        change_type=ChangeType.CREATE,
+        change_payload={"statement": "Test statement"},
+        proposal_rationale="Test proposal.",
+        change_evidence=(
+            {"type": "change", "source": "test"},
+        ),
+        actor="test-actor",
+    )
+
+    assert trace.decision is ReviewDecision.REQUEST_REVISION
+    assert change_applier.calls == []
