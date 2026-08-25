@@ -1,4 +1,3 @@
-```python
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from enum import Enum
@@ -99,4 +98,3 @@ class LearningObject:
 
         self.state = target
         self.updated_at = datetime.now(timezone.utc)
-```
