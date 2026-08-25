@@ -341,12 +341,9 @@ Audit persistence
 +
 Event Record persistence
 
-The introduction of a dedicated VersionService, if later required by the
-authoritative implementation specification, must preserve this transaction
-boundary.
+The current implementation uses VersionService as the explicit application-layer transaction boundary for version-related operations. VersionService coordinates version creation and persistence without redefining domain semantics or moving persistence responsibility out of VersionRepository.
 
-A VersionService must not introduce an independent transaction that separates
-Version persistence from the originating Learning Object operation.
+VersionService must not introduce an additional transaction boundary that conflicts with the existing application-layer orchestration. Its responsibility is limited to coordinating the versioning operation and preserving the established separation between application orchestration, domain semantics, and persistence.
 
 
 ================================================================================
@@ -355,8 +352,9 @@ Version persistence from the originating Learning Object operation.
 
 ================================================================================
 
-A01.4 is marked RESOLVED based on the verification recorded below.
-The implementation establishes conformance with the A01.4 Version Service responsibility requirements through the responsibility placement and service boundaries documented and verified below.
+A01.4 is marked RESOLVED based on the verified implementation state recorded in this section.
+
+The implementation establishes conformance with the A01.4 Version Service responsibility requirements through the responsibility placement and service boundaries verified in the current implementation.
 
 The verification confirms that:
 
@@ -371,13 +369,11 @@ existing Version behavior remains unchanged;
 existing Version tests remain green;
 VersionService boundary behavior is covered by appropriate tests.
 
-Resolution therefore requires verification of responsibility-level conformance,
-not merely verification that a class named VersionService exists.
+The verification confirms responsibility-level conformance and is not based merely on the existence of a class named VersionService.
 
-A01.4 is considered resolved because the following conditions have been verified: the explicit VersionService
-boundary is implemented consistently with the applicable specification and the
-existing Version behavior remains fully verified.
-The verification items above are recorded as satisfied; no additional implementation action is required for A01.4.
+A01.4 is considered resolved because the explicit VersionService boundary is implemented consistently with the applicable specification and the existing Version behavior remains fully verified.
+
+The verification items recorded above are satisfied. No additional implementation action is required for A01.4.
 
 ================================================================================
 
