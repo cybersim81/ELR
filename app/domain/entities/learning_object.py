@@ -1,3 +1,4 @@
+```python
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from enum import Enum
@@ -9,8 +10,6 @@ from .note import Note
 
 
 class LearningObjectState(str, Enum):
-    CANDIDATE = "Candidate"
-    PROPOSED = "Proposed"
     ACTIVE = "Active"
     RETIRED = "Retired"
 
@@ -24,8 +23,13 @@ class LearningObject:
     """
     Aggregate root representing persistent ELR knowledge.
 
+    A LearningObject represents knowledge that has already passed
+    the proposal/review boundary and entered the ELR.
+
+    Change Proposal creation and Learning Review are therefore not
+    part of this aggregate's lifecycle.
+
     KnowledgeStatement is owned by this aggregate.
-    Lifecycle state belongs to the LearningObject.
     """
 
     anchor_id: UUID
@@ -36,7 +40,8 @@ class LearningObject:
     notes: set[Note] = field(default_factory=set)
 
     id: UUID = field(default_factory=uuid4)
-    state: LearningObjectState = LearningObjectState.CANDIDATE
+
+    state: LearningObjectState = LearningObjectState.ACTIVE
 
     created_at: datetime = field(
         default_factory=lambda: datetime.now(timezone.utc)
@@ -46,42 +51,15 @@ class LearningObject:
         default_factory=lambda: datetime.now(timezone.utc)
     )
 
-    def submit_for_review(self) -> None:
-        """
-        Candidate -> Proposed
-        """
-
-        self._transition(
-            LearningObjectState.PROPOSED,
-            allowed=[
-                LearningObjectState.CANDIDATE
-            ],
-        )
-
-    def approve(self) -> None:
-        """
-        Proposed -> Active
-
-        Review decision belongs to the application/review process.
-        The LearningObject lifecycle itself has no Reviewed state.
-        """
-
-        self._transition(
-            LearningObjectState.ACTIVE,
-            allowed=[
-                LearningObjectState.PROPOSED
-            ],
-        )
-
     def retire(self) -> None:
         """
-        Active -> Retired
+        Active -> Retired.
         """
 
         self._transition(
             LearningObjectState.RETIRED,
             allowed=[
-                LearningObjectState.ACTIVE
+                LearningObjectState.ACTIVE,
             ],
         )
 
@@ -92,8 +70,9 @@ class LearningObject:
         """
         Replace the aggregate's current knowledge value.
 
-        Version creation/history preservation is handled by the
-        versioning/application boundary.
+        Knowledge updates are performed against an existing active
+        LearningObject. Version creation/history preservation is
+        handled by the application versioning boundary.
 
         Lifecycle state remains Active.
         """
@@ -120,3 +99,4 @@ class LearningObject:
 
         self.state = target
         self.updated_at = datetime.now(timezone.utc)
+```
