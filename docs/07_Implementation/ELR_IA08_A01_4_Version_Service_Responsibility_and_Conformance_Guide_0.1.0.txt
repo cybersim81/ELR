@@ -239,12 +239,13 @@ Version-specific application responsibility is isolated through VersionService.
 The resolution criterion is responsibility placement and delegation, not the
 existence of a class named VersionService alone.
 
-The current disposition is:
+The current disposition is: 
 
-RESOLVED / CONFORMANT
+RESOLVED / CONFORMANT 
 
-provided that the implementation evidence and corresponding verification
-remain consistent with the responsibility boundary documented in this guide.
+The implementation evidence and verification recorded in this guide establish the required Version Service responsibility boundary. 
+No conditional implementation action remains open under A01.4. 
+Any future change affecting the documented responsibility boundary shall be assessed as a new implementation change and shall not reopen the resolved A01.4 disposition unless new evidence demonstrates non-conformance.
 
 
 ================================================================================
@@ -354,7 +355,12 @@ VersionService must not introduce an additional transaction boundary that confli
 
 A01.4 is marked RESOLVED based on the verified implementation state recorded in this section.
 
-The implementation establishes conformance with the A01.4 Version Service responsibility requirements through the responsibility placement and service boundaries verified in the current implementation.
+The implementation establishes conformance with the A01.4 Version Service
+responsibility requirements through the responsibility placement and service
+boundaries verified in the current implementation.
+
+The required responsibility boundary is implemented, verified, and closed.
+No unresolved responsibility-placement gap remains under A01.4.
 
 The verification confirms that:
 
@@ -373,7 +379,11 @@ The verification confirms responsibility-level conformance and is not based mere
 
 A01.4 is considered resolved because the explicit VersionService boundary is implemented consistently with the applicable specification and the existing Version behavior remains fully verified.
 
-The verification items recorded above are satisfied. No additional implementation action is required for A01.4.
+The verification items recorded above are satisfied.
+
+A01.4 is therefore closed at the implementation-conformance level.
+
+No additional implementation action is required for A01.4.
 
 ================================================================================
 
@@ -486,9 +496,10 @@ Responsibility Conformance
 └── Version persistence
 └── VersionRepository
 
-A01.4 is considered verified at the responsibility level when the above
-implementation boundary is supported by the applicable implementation evidence
-and the existing behavioral verification remains green.
+A01.4 is verified at the responsibility level.
+
+The implementation boundary is supported by the applicable implementation
+evidence, and the existing behavioral verification remains green.
 
 
 ================================================================================
@@ -536,7 +547,7 @@ existing transaction semantics remain unchanged;
 existing behavioral verification remains green;
 responsibility-boundary verification is satisfied.
 
-A01.4 shall therefore be considered:
+The resulting A01.4 disposition is:
 
 RESOLVED / CONFORMANT
 
@@ -577,7 +588,9 @@ VersionService coordinates Version-specific application operations.
 LearningObjectService remains the originating application-service coordinator
 and does not retain Version-specific history coordination responsibility.
 
-The controlled action associated with A01.4 is therefore complete.
+The controlled action associated with A01.4 is complete.
+
+The implementation-conformance action is closed.
 
 No further implementation restructuring is required by this item.
 
