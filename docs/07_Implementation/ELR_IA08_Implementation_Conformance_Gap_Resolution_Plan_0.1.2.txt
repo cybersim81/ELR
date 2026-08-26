@@ -5,7 +5,7 @@
 
 ## 1. Current Conformance Position
 
-The IA-08 implementation sequence has progressed through the transactional Event Record implementation.
+The IA-08 implementation sequence has completed the transactional Event Record implementation, with IA-08-A02 formally closed.
 
 Current responsibility-level position:
 
@@ -82,7 +82,7 @@ Additional verification includes:
 
 No A01 responsibility was reopened by the A02 implementation.
 
-## 4. A01 Verification Before A03 Closure of the Sequence
+## 4. A01.2 Conformance Verification Before A01 Closure
 
 Before the IA-08 implementation roadmap treats A01 as closed, the following controlled verification shall be completed:
 
@@ -139,7 +139,7 @@ IA-08-A01
 IA-08-A02
 **COMPLETE / CLOSED**
 ↓
-A01.2 conformance verification
+IA-08-A01.2 conformance verification
 **ACTIVE / NEXT CONTROLLED VERIFICATION**
 ↓
 IA-08-A03
