@@ -145,21 +145,28 @@ collision with the persistence repository test.
 
 Final verification command:
 
-pytest -q
+`pytest -q`
 
 Result:
 
-138 passed in 0.87s
+`138 passed in 0.87s`
 
-Additional verification:
+The repository-wide test result above is treated as regression evidence for the current repository state.
 
-* git diff --check: PASS
+A02-specific verification:
+
 * EventRecord immutability: PASS
 * repository save-without-commit behavior: PASS
 * repository read-back mapping: PASS
 * LearningObjectUpdated event creation: PASS
 * persistence integration: PASS
 * rollback behavior: PASS
+
+Additional repository hygiene verification:
+
+* `git diff --check`: PASS
+
+The repository-wide test result is not treated as A02-specific evidence by itself; A02 conformance is established by the A02-specific verification items listed above.
 
 ================================================================================
 
@@ -205,7 +212,11 @@ Checkpoint commit:
 
 `0fb845d — Add transactional event record persistence`
 
-Verification:
+The commit above identifies the implementation checkpoint at which the A02 transactional Event Record persistence capability was established.
+
+It is an implementation checkpoint and not a claim that this commit represents the latest repository state.
+
+Current repository verification baseline:
 
 `pytest -q -> 138 passed in 0.87s`
 
@@ -235,11 +246,13 @@ IA-08-A04
 
 ================================================================================
 
-The next controlled verification area is:
+The remaining controlled verification area identified in the current IA-08 implementation sequence is:
 
 **IA-08-A01.2 — Change Proposal / Learning Review / CREATE / UPDATE / MERGE semantic conformance**
 
-This verification shall be performed against the authoritative ELR process and system documentation.
+This is an A01 responsibility-level verification activity and is independent of the closed A02 implementation.
+
+A02 does not reopen, modify or invalidate the A01.2 responsibility.
 
 IA-08-A02 remains:
 
@@ -247,7 +260,15 @@ IA-08-A02 remains:
 
 The A02 closure is not dependent on completion of the remaining A01.2 verification.
 
-IA-08-A03 remains a separate pending security and authorization area.
+Once the outstanding A01.2 verification is resolved, the next implementation sequence proceeds independently to:
+
+**IA-08-A03 — Security and Authorization**
+
+IA-08-A03 remains:
+
+**PENDING**
+
+The A02 document therefore records no new implementation finding beyond the already identified A01.2 verification activity.
 
 
 ================================================================================
