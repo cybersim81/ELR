@@ -102,8 +102,7 @@ This boundary is implemented and verified for the currently identified A01.6 res
 # 4. Application Error Taxonomy
 ================================================================================
 
-The Application Layer shall provide the following centralized exception
-types:
+The current Application Layer provides a centralized application-error taxonomy for errors crossing the Application boundary. The taxonomy is implemented through dedicated Application-layer exception definitions and is used consistently by the relevant Application Services.
 
 * ApplicationError;
 * EntityNotFound;
@@ -242,10 +241,10 @@ remain distinguishable from known Application failures.
 
 
 ================================================================================
-# 12. Proposed Source Changes
+# 12. Implemented Source Changes
 ================================================================================
 
-The IA-08-A01.6 implementation is present in the current repository.
+The IA-08-A01.6 implementation is present in the current repository and the following source files constitute the implemented Application error boundary:
 
 The centralized Application error taxonomy is implemented at:
 
@@ -513,7 +512,7 @@ The completed sequence was:
 4. `InvalidStateTransition` imported from the Domain Layer;
 5. known Domain state-transition failures translated into `InvalidOperation`;
 6. exception chaining preserved;
-7. focused Application Service tests added or updated;
+7. focused Application Service tests verified as part of the completed A01.6 implementation and conformance verification;
 8. focused tests executed;
 9. complete regression suite executed;
 10. E2E-GATE-01 verification maintained.
