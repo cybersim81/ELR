@@ -5,7 +5,7 @@ A01.4 — Version Service
 Responsibility and Conformance Guide
 
 Version: 0.1.0
-Status: WORKING IMPLEMENTATION GUIDANCE
+Status: RESOLVED / CONFORMANT
 =======================================
 
 # 1. Purpose
@@ -62,13 +62,11 @@ The existing implementation evidence confirms that Version behavior,
 Version persistence, version history, version numbering, snapshot creation and
 transaction participation are already implemented and verified.
 
-The remaining conformance assessment concerns the alignment between the
-documented Version Service responsibility and the concrete application
-implementation boundary.
+The documented Version Service responsibility has been assessed against the concrete application implementation boundary.
 
-A01.4 shall therefore be treated as an implementation-conformance item whose
-required boundary is already established by the applicable specification,
-rather than as a missing-functionality or optional-refactoring item.
+The assessment confirms that the required Version Service responsibility is established through VersionService and that Version persistence remains delegated to VersionRepository within the originating application transaction.
+
+A01.4 is therefore treated as an implementation-conformance item whose required responsibility boundary is established and verified, rather than as a missing-functionality or optional-refactoring item.
 
 ================================================================================
 
@@ -508,7 +506,7 @@ evidence, and the existing behavioral verification remains green.
 
 ================================================================================
 
-A01.4 shall be resolved on the basis of responsibility-level conformance,
+A01.4 was resolved on the basis of responsibility-level conformance,
 not on the basis of class existence alone.
 
 The authoritative implementation contract establishes VersionService as an
