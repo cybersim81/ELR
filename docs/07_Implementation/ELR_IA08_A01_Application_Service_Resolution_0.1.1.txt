@@ -37,9 +37,13 @@ Evidence includes:
 
 ### A01.2 — Change Proposal / Learning Review Boundary
 
-**IMPLEMENTED / CONFORMANCE VERIFICATION IN PROGRESS**
+**IMPLEMENTED / CONFORMANCE VERIFICATION PENDING**
 
-The current application-service implementation establishes the Change Proposal / Learning Review boundary.
+The current application-service implementation establishes the required Change Proposal / Learning Review boundary.
+
+The previous implementation-level `BLOCKED` condition has been resolved.
+
+The remaining A01.2 activity is limited to responsibility-level conformance verification of the implemented `CREATE`, `UPDATE`, and `MERGE` semantics against the authoritative `03_Processes` and `06_System` specifications.
 
 The repository contains the application components required to establish the review-gated change flow:
 
@@ -140,15 +144,11 @@ Rollback tests verify that Learning Object, Version, AuditRecord and EventRecord
 
 ## Final A01 Position
 
-A01 shall **not** be marked `COMPLETE / CLOSED` until the remaining responsibility-level conformance questions have been verified.
+A01 remains **ACTIVE / PARTIAL CONFORMANCE**.
 
-The principal remaining verification area is:
+The implementation-level `BLOCKED` condition previously associated with the Change Proposal / Learning Review application boundary is **RESOLVED**.
 
-**A01.2 — Change Proposal / Learning Review / CREATE / UPDATE / MERGE semantics**
-
-The implementation-level `BLOCKED` condition previously associated with the Change Proposal / Learning Review application boundary is resolved.
-
-The current implementation establishes the required review-gated application flow:
+The current implementation establishes and verifies the required decision gate:
 
 ```text
 APPROVE
@@ -164,9 +164,9 @@ REQUEST_REVISION
 no apply()
 ```
 
-Accordingly, the remaining A01.2 status represents a **conformance verification gap**, not an implementation absence and not an implementation blocker.
+The remaining open activity is **responsibility-level conformance verification** of the `CREATE`, `UPDATE`, and `MERGE` semantics against the authoritative `03_Processes` and `06_System` specifications.
 
-A01 remains partially conformant only because the responsibility-level semantic comparison of `CREATE`, `UPDATE`, and `MERGE` against the authoritative specifications has not yet been recorded as complete.
+This remaining activity is a **conformance verification gap**, not an implementation absence and not an implementation blocker.
 
 ## Status
 
@@ -174,8 +174,10 @@ A01 remains partially conformant only because the responsibility-level semantic 
 
 **Implementation-level BLOCKED condition:** RESOLVED
 
+**Implementation status of Change Proposal / Learning Review boundary:** IMPLEMENTED AND VERIFIED
+
 **Primary remaining verification area:** A01.2 — Change Proposal / Learning Review / CREATE / UPDATE / MERGE semantics
 
-The Change Proposal / Learning Review application boundary is implemented and the decision gate is verified.
-
 A01 remains open solely pending responsibility-level conformance verification against the authoritative `03_Processes` and `06_System` specifications.
+
+No implementation blocker remains for the Change Proposal / Learning Review application boundary.
