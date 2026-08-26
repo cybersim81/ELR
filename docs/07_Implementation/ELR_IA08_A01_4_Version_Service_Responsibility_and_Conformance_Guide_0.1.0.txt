@@ -66,8 +66,6 @@ The documented Version Service responsibility has been assessed against the conc
 
 The assessment confirms that the required Version Service responsibility is established through VersionService and that Version persistence remains delegated to VersionRepository within the originating application transaction.
 
-A01.4 is therefore treated as an implementation-conformance item whose required responsibility boundary is established and verified, rather than as a missing-functionality or optional-refactoring item.
-
 ================================================================================
 
 # 3. Existing Implementation Evidence
