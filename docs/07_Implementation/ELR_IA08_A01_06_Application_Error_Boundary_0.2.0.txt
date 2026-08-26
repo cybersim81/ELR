@@ -192,7 +192,7 @@ InvalidStateTransition translation:
 Only operations that can actually raise InvalidStateTransition receive the
 translation boundary.
 
-Successful behavior shall remain unchanged.
+Successful behavior remains unchanged.
 
 
 ================================================================================
