@@ -22,7 +22,7 @@ Document Version:
 
 Status:
 
-WORKING IMPLEMENTATION GUIDANCE
+RESOLVED / CONFORMANT
 
 Parent Plan:
 
@@ -34,10 +34,9 @@ IA-08-A01.6 — Application Error Boundary
 
 Authority Status:
 
-This document is an implementation coordination artifact.
+This document records the implemented and verified IA-08-A01.6 Application Error Boundary.
 
-It does not supersede, amend, or introduce normative domain, lifecycle,
-versioning, persistence, API, event, security, or architectural rules.
+It is an implementation/conformance record and does not supersede, amend, or introduce normative domain, lifecycle, versioning, persistence, API, event, security, or architectural rules.
 
 In case of conflict, the applicable authoritative specification prevails.
 
@@ -46,11 +45,9 @@ In case of conflict, the applicable authoritative specification prevails.
 # 1. Purpose
 ================================================================================
 
-This document defines the controlled implementation guidance for the confirmed
-IA-08-A01.6 Application Error Boundary gap.
+This document records the implemented IA-08-A01.6 Application Error Boundary and its verified conformance status.
 
-The objective is to establish a stable Application Layer error boundary while
-preserving:
+The Application Layer provides a stable error boundary while preserving:
 
 * Domain ownership of domain rules and domain exceptions;
 * existing LearningObject lifecycle behavior;
@@ -58,50 +55,47 @@ preserving:
 * existing persistence behavior;
 * existing API behavior.
 
-The implementation shall be minimal.
-
-No unrelated Application, Domain, Persistence, Security, Review, or API
-changes are authorized by this document.
+No additional implementation work is currently required for IA-08-A01.6.
 
 
 ================================================================================
 # 2. Confirmed Finding
 ================================================================================
 
-The current Application Layer has an incomplete error boundary.
+The previously identified IA-08-A01.6 Application Error Boundary gap has been resolved.
 
-Confirmed issues:
+The current implementation provides:
 
-* LearningObjectNotFound is defined locally in LearningObjectService;
-* InvalidStateTransition is owned by the Domain Layer;
-* InvalidStateTransition currently crosses the Application boundary without
-  translation;
-* no centralized Application error taxonomy is confirmed.
+* a centralized Application error taxonomy;
+* `EntityNotFound` for missing Learning Objects;
+* `InvalidOperation` for translated known domain state-transition failures;
+* preservation of the original Domain exception through exception chaining;
+* no catch-all exception translation.
+
+The current Application Service implementation therefore establishes the required Domain-to-Application error boundary.
 
 
 ================================================================================
 # 3. Required Boundary
 ================================================================================
 
-The intended error flow is:
+The implemented error flow is:
 
+```text
 Domain exception
-    ->
+    ↓
 Application Service
-    ->
+    ↓
 Application error
-    ->
+    ↓
 Application consumer
+```
 
+The Domain Layer retains ownership of domain rules, invariants, and domain exceptions.
 
-The Domain Layer remains responsible for:
+The Application Layer translates only known Domain failures at the Application boundary.
 
-* domain rules;
-* domain invariants;
-* domain exception ownership.
-
-The Application Layer is responsible for translating known Domain failures
-into stable Application errors.
+This boundary is implemented and verified for the currently identified A01.6 responsibilities.
 
 
 ================================================================================
@@ -251,28 +245,30 @@ remain distinguishable from known Application failures.
 # 12. Proposed Source Changes
 ================================================================================
 
-The preferred Application error module is:
+The IA-08-A01.6 implementation is present in the current repository.
 
-app/application/errors.py
+The centralized Application error taxonomy is implemented at:
 
+`app/application/errors.py`
 
-The existing Application Service is:
+The affected Application Service is:
 
-app/application/services/learning_object_service.py
+`app/application/services/learning_object_service.py`
 
+The current implementation provides:
 
-The implementation shall:
+1. centralized Application error types;
+2. `EntityNotFound` for missing Learning Objects;
+3. `InvalidOperation` for translated `InvalidStateTransition` failures;
+4. explicit Domain-to-Application exception translation;
+5. preservation of the original Domain exception through `__cause__`;
+6. no catch-all exception translation.
 
-1. create the centralized Application error taxonomy;
-2. remove the local LearningObjectNotFound definition;
-3. replace its use with EntityNotFound;
-4. import InvalidStateTransition from the Domain Layer;
-5. translate InvalidStateTransition into InvalidOperation at the Application
-   boundary;
-6. preserve the original exception as __cause__.
+No additional Application Service is introduced.
 
+No Domain lifecycle semantics are changed by the error boundary.
 
-No new Application Service shall be created.
+No transport-specific or persistence-specific error behavior is introduced by this responsibility.
 
 
 ================================================================================
@@ -504,54 +500,25 @@ E2E-GATE-01 remains green.
 
 
 ================================================================================
-# 18. Implementation Order
+# 18. Implementation and Verification Record
 ================================================================================
 
-STEP 1
+The implementation sequence described by the original guidance has been completed.
 
-Inspect existing Application error definitions and test imports.
+The completed sequence was:
 
-STEP 2
+1. centralized Application error taxonomy established;
+2. service-local `LearningObjectNotFound` removed;
+3. `EntityNotFound` adopted for missing Learning Objects;
+4. `InvalidStateTransition` imported from the Domain Layer;
+5. known Domain state-transition failures translated into `InvalidOperation`;
+6. exception chaining preserved;
+7. focused Application Service tests added or updated;
+8. focused tests executed;
+9. complete regression suite executed;
+10. E2E-GATE-01 verification maintained.
 
-Create app/application/errors.py if no equivalent centralized taxonomy
-already exists.
-
-STEP 3
-
-Remove the service-local LearningObjectNotFound definition.
-
-STEP 4
-
-Replace its usage with EntityNotFound.
-
-STEP 5
-
-Import InvalidStateTransition into LearningObjectService.
-
-STEP 6
-
-Add translation only around Domain operations that can raise
-InvalidStateTransition.
-
-STEP 7
-
-Preserve the Domain exception using exception chaining.
-
-STEP 8
-
-Add or update focused tests.
-
-STEP 9
-
-Run focused tests.
-
-STEP 10
-
-Run the complete regression suite.
-
-STEP 11
-
-Verify E2E-GATE-01.
+No further implementation step is pending for IA-08-A01.6.
 
 
 ================================================================================
@@ -564,53 +531,57 @@ Status:
 
 RESOLVED / CONFORMANT
 
-The Application Error Boundary implementation has been verified against the
-current Application Service implementation.
+The current repository implementation establishes the required IA-08-A01.6
+Application Error Boundary.
 
-The following behaviors are confirmed:
+Verified responsibilities include:
 
-* centralized Application error taxonomy implemented;
-* EntityNotFound implemented;
-* service-local LearningObjectNotFound removed;
-* InvalidStateTransition translated into InvalidOperation;
-* original Domain exception preserved through __cause__;
-* no catch-all exception translation introduced;
-* focused A01.6 tests pass;
-* complete pytest suite passes with 138 tests;
-* E2E-GATE-01 is already VERIFIED / CLOSED in the Bootstrap End-to-End
-  Gap Map.
+* centralized Application error taxonomy;
+* `EntityNotFound`;
+* removal of service-local `LearningObjectNotFound`;
+* translation of `InvalidStateTransition` into `InvalidOperation`;
+* preservation of the original Domain exception through `__cause__`;
+* absence of catch-all exception translation;
+* preservation of successful Application Service behavior.
 
-The current implementation is therefore considered conformant for A01.6.
+The current repository implementation is therefore considered conformant for
+IA-08-A01.6.
 
-Verification was performed against the complete current test suite.
+Verification evidence:
 
-Command:
+Command executed:
 
+```
 pytest -q
+```
 
 Result:
 
+```
 138 passed
+```
 
 Repository diff hygiene was also verified with:
 
+```
 git --no-pager diff --check
+```
 
 Result:
 
+```
 PASS
+```
 
 The previous verification baseline of 79 tests is superseded by the current
 138-test implementation baseline.
 
-No additional implementation work is required for A01.6 unless subsequent
-changes introduce a regression or new authoritative conformance requirement.
+The recorded verification evidence confirms the current implementation state.
+No additional implementation work is required for A01.6 unless a subsequent
+authoritative specification change or implementation regression creates a new
+conformance requirement.
 
 A01.6 STATUS: RESOLVED / CONFORMANT
-
-================================================================================
-
-
 
 ================================================================================
 End of Document
