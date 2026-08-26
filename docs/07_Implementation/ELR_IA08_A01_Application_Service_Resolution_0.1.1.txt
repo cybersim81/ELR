@@ -144,9 +144,9 @@ Rollback tests verify that Learning Object, Version, AuditRecord and EventRecord
 
 A01 remains **ACTIVE / PARTIAL CONFORMANCE**.
 
-The implementation-level `BLOCKED` condition previously associated with the Change Proposal / Learning Review application boundary is **RESOLVED**.
+The previous implementation-level `BLOCKED` condition associated with the Change Proposal / Learning Review application boundary is **RESOLVED**.
 
-The current implementation establishes and verifies the required decision gate:
+The implemented decision gate has been verified at implementation level:
 
 ```text
 APPROVE
@@ -162,9 +162,10 @@ REQUEST_REVISION
 no apply()
 ```
 
-The remaining open activity is **responsibility-level conformance verification** of the `CREATE`, `UPDATE`, and `MERGE` semantics against the authoritative `03_Processes` and `06_System` specifications.
+The remaining A01.2 activity is **responsibility-level conformance verification** of the implemented `CREATE`, `UPDATE`, and `MERGE` semantics against the authoritative `03_Processes` and `06_System` specifications.
 
-This remaining activity is a **conformance verification gap**, not an implementation absence and not an implementation blocker.
+Accordingly, A01.2 is **not implementation-blocked**. Its remaining status is limited to conformance verification.
+
 
 ## Status
 
