@@ -1,0 +1,611 @@
+# ELR IA-08 A01 — Guida alla verifica e chiusura della conformità di implementazione
+
+## 1. Scopo
+
+Questo documento definisce la procedura operativa per verificare e chiudere il gap di **implementation conformance** di A01.
+
+L'obiettivo è dimostrare, con evidenza repository e test focalizzati, che ogni **Change Proposal APPROVED** attraversa il confine applicativo autorizzato e produce la corretta mutazione dello stato ELR.
+
+La verifica deve coprire tutti e tre i tipi di modifica:
+
+* CREATE
+* MERGE
+* UPDATE
+
+La distinzione architetturale tra CREATE, MERGE e UPDATE non viene ridefinita da questa procedura.
+
+---
+
+## 2. Principio fondamentale
+
+La catena autorizzativa da verificare è:
+
+```text
+Knowledge Candidate
+        |
+        v
+Change Proposal
+        |
+        v
+Learning Review
+        |
+        v
+Review Decision Trace
+        |
+        +---- REJECT ----------> nessuna mutazione
+        |
+        +---- REQUEST_REVISION -> nessuna mutazione
+        |
+        +---- APPROVE ---------> Change Applier
+                                      |
+                                      +-- CREATE
+                                      +-- MERGE
+                                      +-- UPDATE
+                                      |
+                                      v
+                              Version / Audit / Event
+```
+
+Il punto fondamentale è che la presenza di primitive di dominio o di servizi applicativi non dimostra, da sola, la conformità.
+
+Deve essere verificabile che l'operazione sia raggiungibile attraverso il percorso:
+
+```text
+Learning Review
+      ->
+APPROVED Change Proposal
+      ->
+ChangeApplier
+      ->
+mutazione ELR
+```
+
+---
+
+## 3. Componenti da verificare
+
+La verifica deve considerare almeno i seguenti componenti.
+
+### 3.1 ChangeProposal
+
+`ChangeProposal` rappresenta la modifica proposta.
+
+Deve contenere:
+
+* `change_type`;
+* `change_payload`;
+* `proposal_rationale`;
+* `change_evidence`;
+* eventuali metadata;
+* provenance della revisione, quando applicabile.
+
+`ChangeProposal` non deve decidere se una modifica è approvabile.
+
+---
+
+### 3.2 LearningReviewService
+
+`LearningReviewService` costituisce il boundary applicativo della Learning Review.
+
+Il suo compito è coordinare la review, non applicare direttamente la mutazione del repository.
+
+Il risultato deve essere un `ReviewDecisionTrace`.
+
+---
+
+### 3.3 ChangeProposalService
+
+`ChangeProposalService` coordina:
+
+1. costruzione del Change Proposal;
+2. Learning Review;
+3. verifica della decisione;
+4. applicazione della proposta approvata.
+
+La regola fondamentale è:
+
+```python
+if trace.decision is ReviewDecision.APPROVE:
+    change_applier.apply(...)
+```
+
+Una proposta:
+
+* REJECTED
+* REQUEST_REVISION
+
+non deve produrre alcuna mutazione dell'ELR.
+
+---
+
+### 3.4 ChangeApplier
+
+`ChangeApplier` rappresenta il boundary applicativo successivo alla Learning Review.
+
+Non deve:
+
+* eseguire Learning Review;
+* generare Change Proposal;
+* decidere autonomamente l'accettabilità della conoscenza.
+
+Deve applicare esclusivamente una proposta già approvata.
+
+---
+
+### 3.5 LearningObjectChangeApplier
+
+`LearningObjectChangeApplier` deve implementare l'applicazione concreta dei tre tipi di modifica.
+
+Il comportamento atteso è:
+
+```text
+CREATE -> creazione nuovo Learning Object
+MERGE  -> consolidamento nell'esistente
+UPDATE -> modifica dell'esistente
+```
+
+La validazione della decisione deve precedere qualsiasi mutazione.
+
+Devono essere verificati almeno:
+
+```text
+review_trace.proposal_id == proposal.id
+review_trace.decision == APPROVE
+```
+
+---
+
+## 4. Verifica CREATE
+
+### 4.1 Obiettivo
+
+Dimostrare che una proposta CREATE approvata crea un nuovo Learning Object attraverso il Change Applier.
+
+### 4.2 Procedura
+
+Verificare che:
+
+1. venga costruito un `ChangeProposal` con `ChangeType.CREATE`;
+2. il proposal venga sottoposto a `LearningReviewService`;
+3. la review produca `APPROVE`;
+4. il `ChangeProposalService` invochi `ChangeApplier.apply()`;
+5. il Change Applier crei il Learning Object;
+6. il Learning Object venga persistito;
+7. venga creata la prima `Version`;
+8. venga registrato l'evento/audit richiesto;
+9. la mutazione avvenga nel corretto transaction boundary.
+
+### 4.3 Test minimo
+
+Il test deve dimostrare contemporaneamente:
+
+```text
+APPROVED CREATE
+      ->
+ChangeApplier
+      ->
+LearningObject
+      ->
+Version #1
+      ->
+Audit/Event
+```
+
+Deve inoltre verificare che una CREATE non approvata non produca alcuna persistenza.
+
+### 4.4 Evidenza richiesta
+
+Sono sufficienti:
+
+* implementazione del percorso;
+* test applicativo focalizzato;
+* eventuale test persistence/integration;
+* evidenza della transaction boundary.
+
+---
+
+## 5. Verifica MERGE
+
+### 5.1 Obiettivo
+
+Dimostrare che una proposta MERGE consolida una nuova evidenza in un Learning Object esistente senza sostituirne l'identità.
+
+### 5.2 Condizione fondamentale
+
+Il Learning Object target deve essere identificabile.
+
+Il MERGE non deve creare un Learning Object indipendente quando esiste già il target concettualmente equivalente.
+
+### 5.3 Procedura
+
+Verificare che:
+
+1. il proposal sia di tipo `MERGE`;
+2. il target Learning Object venga identificato;
+3. il target esista nel repository;
+4. l'operazione MERGE venga validata;
+5. l'identità del target rimanga invariata;
+6. anchor e relazioni fondamentali vengano preservati;
+7. la nuova informazione venga consolidata nel target secondo le regole del dominio;
+8. venga prodotta la corretta Version, quando richiesta dal modello;
+9. vengano registrati Audit/Event;
+10. l'operazione sia atomica.
+
+### 5.4 Test fondamentali
+
+Il test MERGE deve verificare almeno:
+
+```text
+target.id prima == target.id dopo
+```
+
+e:
+
+```text
+target non viene sostituito da un nuovo Learning Object
+```
+
+Devono inoltre essere verificati:
+
+* conservazione dell'identità;
+* conservazione dello storico;
+* conservazione delle relazioni;
+* persistenza del risultato;
+* Version/Audit/Event richiesti.
+
+### 5.5 Caso negativo
+
+Deve essere verificato il comportamento quando:
+
+* il target non esiste;
+* il payload MERGE è invalido;
+* la review non approva;
+* il proposal e il review trace non corrispondono.
+
+Nessuna mutazione parziale deve rimanere persistita.
+
+---
+
+## 6. Verifica UPDATE
+
+### 6.1 Obiettivo
+
+Dimostrare che una proposta UPDATE modifica un Learning Object esistente preservandone l'identità e creando una nuova Version immutabile.
+
+### 6.2 Procedura
+
+Verificare che:
+
+1. il proposal sia di tipo `UPDATE`;
+2. il Learning Object target venga identificato;
+3. il target esista;
+4. il target venga modificato esclusivamente dopo APPROVE;
+5. l'identità del Learning Object rimanga invariata;
+6. la rappresentazione della conoscenza venga aggiornata;
+7. venga creata la Version successiva;
+8. le Version precedenti rimangano immutate;
+9. venga registrato l'Audit;
+10. venga registrato l'Event;
+11. l'intera operazione rispetti il transaction boundary.
+
+### 6.3 Versioning
+
+Se il Learning Object possiede:
+
+```text
+Version 1
+```
+
+dopo UPDATE deve risultare:
+
+```text
+Version 1  -> immutata
+Version 2  -> nuovo snapshot
+```
+
+Non è sufficiente modificare il Learning Object corrente.
+
+La nuova Version deve rappresentare lo stato risultante dalla modifica.
+
+### 6.4 Test fondamentale
+
+Il test deve dimostrare:
+
+```text
+APPROVED UPDATE
+      ->
+ChangeApplier
+      ->
+stesso Learning Object
+      ->
+nuova Version
+      ->
+Audit/Event
+```
+
+e:
+
+```text
+learning_object.id non cambia
+```
+
+---
+
+## 7. Transaction Boundary
+
+La verifica A01 deve controllare non solo il risultato finale, ma anche la consistenza della persistenza.
+
+Quando una mutazione coinvolge:
+
+* Learning Object;
+* Version;
+* Audit;
+* Event;
+
+le operazioni devono rispettare il transaction boundary definito dall'applicazione/persistence layer.
+
+Il principio è:
+
+```text
+successo completo
+    ->
+commit
+
+errore durante il processo
+    ->
+rollback
+```
+
+Non deve essere possibile ottenere, per esempio:
+
+```text
+Learning Object persistito
+Version persistita
+Audit fallito
+```
+
+lasciando il repository in uno stato parziale.
+
+### Test richiesti
+
+Deve esistere almeno un test che dimostri il rollback quando una delle operazioni di persistenza fallisce.
+
+Deve esistere almeno un test che dimostri il commit quando tutte le operazioni hanno successo.
+
+---
+
+## 8. Verifica del bypass
+
+La presenza di metodi come:
+
+```text
+LearningObjectService.create_candidate()
+LearningObjectService.update_knowledge()
+```
+
+non costituisce automaticamente evidenza di conformance A01.
+
+Occorre verificare che il percorso autorizzato non venga bypassato.
+
+Il percorso conforme deve essere:
+
+```text
+Change Proposal
+    ->
+Learning Review
+    ->
+APPROVE
+    ->
+ChangeApplier
+    ->
+Learning Object mutation
+```
+
+Non deve essere considerato sufficiente:
+
+```text
+caller
+  ->
+LearningObjectService.update_knowledge()
+```
+
+se tale chiamata permette di effettuare una modifica che, secondo il processo ELR, dovrebbe essere preceduta da Learning Review.
+
+---
+
+## 9. Matrice di conformità
+
+La chiusura deve utilizzare la seguente matrice:
+
+| Verifica                     | Evidenza richiesta         | Stato |
+| ---------------------------- | -------------------------- | ----- |
+| CREATE proposal              | ChangeProposal + test      | ☐     |
+| CREATE review                | APPROVE trace + test       | ☐     |
+| CREATE application           | ChangeApplier              | ☐     |
+| CREATE Version               | Version #1                 | ☐     |
+| CREATE Audit/Event           | test                       | ☐     |
+| MERGE proposal               | ChangeProposal + test      | ☐     |
+| MERGE target resolution      | repository/domain evidence | ☐     |
+| MERGE identity preservation  | test                       | ☐     |
+| MERGE history preservation   | test                       | ☐     |
+| MERGE Version/Audit/Event    | test                       | ☐     |
+| UPDATE proposal              | ChangeProposal + test      | ☐     |
+| UPDATE application           | ChangeApplier              | ☐     |
+| UPDATE identity preservation | test                       | ☐     |
+| UPDATE immutable Version     | test                       | ☐     |
+| UPDATE Audit/Event           | test                       | ☐     |
+| REJECT no mutation           | test                       | ☐     |
+| REQUEST_REVISION no mutation | test                       | ☐     |
+| rollback                     | test                       | ☐     |
+| successful commit            | test                       | ☐     |
+| no unauthorized bypass       | repository evidence        | ☐     |
+
+---
+
+## 10. Regola per la raccolta delle evidenze
+
+Per ogni verifica devono essere raccolti:
+
+### A. Implementazione
+
+Il file e il metodo che realizzano il comportamento.
+
+### B. Test
+
+Il test che dimostra il comportamento.
+
+### C. Risultato
+
+Il risultato effettivo dell'esecuzione dei test.
+
+### D. Interpretazione
+
+Una breve spiegazione del motivo per cui l'evidenza dimostra la conformità.
+
+La semplice presenza di una classe, enum o metodo non deve essere considerata sufficiente.
+
+---
+
+## 11. Sequenza operativa consigliata
+
+La verifica deve essere eseguita nell'ordine seguente:
+
+```text
+1. Repository inspection
+          |
+          v
+2. Change Proposal boundary
+          |
+          v
+3. Learning Review boundary
+          |
+          v
+4. CREATE
+          |
+          v
+5. MERGE
+          |
+          v
+6. UPDATE
+          |
+          v
+7. Versioning
+          |
+          v
+8. Audit/Event
+          |
+          v
+9. Transaction / rollback
+          |
+          v
+10. Bypass verification
+          |
+          v
+11. Focused test suite
+          |
+          v
+12. Conformance decision
+```
+
+Non dichiarare A01 chiuso prima di completare tutti i passaggi.
+
+---
+
+## 12. Criterio di chiusura
+
+A01 può essere dichiarato:
+
+```text
+COMPLETE / CLOSED
+```
+
+solo se tutte le seguenti condizioni sono vere:
+
+```text
+CREATE  = VERIFIED
+MERGE   = VERIFIED
+UPDATE  = VERIFIED
+```
+
+e inoltre:
+
+```text
+APPROVED proposal
+       ->
+Learning Review
+       ->
+ChangeApplier
+       ->
+correct ELR mutation
+       ->
+Version/Audit/Event
+```
+
+è dimostrato con evidenza repository e test.
+
+---
+
+## 13. Stato intermedio
+
+Se anche una sola delle tre categorie non è verificata:
+
+```text
+A01 = OPEN
+```
+
+con classificazione:
+
+```text
+IMPLEMENTATION-CONFORMANCE GAP
+```
+
+Questo stato non implica un problema nella definizione architetturale di CREATE/MERGE/UPDATE.
+
+Indica esclusivamente che l'implementazione non ha ancora dimostrato il percorso completo richiesto.
+
+---
+
+## 14. Decisione finale
+
+Al termine della procedura produrre una conclusione esplicita.
+
+### Caso conforme
+
+```text
+A01 implementation conformance verified.
+
+CREATE: VERIFIED
+MERGE: VERIFIED
+UPDATE: VERIFIED
+
+Approved Change Proposals reach the corresponding
+ChangeApplier execution boundary and produce the
+required ELR mutation with Version/Audit/Event
+integration and transaction consistency.
+
+A01 may be CLOSED.
+```
+
+### Caso non conforme
+
+```text
+A01 implementation conformance remains OPEN.
+
+The repository does not yet provide sufficient evidence
+for one or more required CREATE/MERGE/UPDATE execution
+paths.
+
+A01 remains an implementation-conformance gap.
+```
+
+---
+
+## 15. Principio conclusivo
+
+La chiusura di A01 non deve basarsi sulla quantità di codice presente, ma sulla dimostrazione della catena comportamentale.
+
+La domanda conclusiva è:
+
+> **Un Change Proposal approvato attraversa effettivamente il boundary autorizzato e produce la corretta mutazione ELR per CREATE, MERGE e UPDATE, preservando identità, storico, versioning e consistenza transazionale?**
+
+Solo una risposta positiva, supportata da test ed evidenze repository, consente di chiudere A01.
