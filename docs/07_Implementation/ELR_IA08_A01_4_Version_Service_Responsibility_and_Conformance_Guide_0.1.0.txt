@@ -231,8 +231,7 @@ Responsibility isolation:
 
 IMPLEMENTED
 
-A01.4 shall therefore be treated as an implementation-conformance item whose
-Version-specific application responsibility is isolated through VersionService.
+A01.4 is therefore treated as an implementation-conformance item whose required responsibility boundary is established and verified, rather than as a missing-functionality or optional-refactoring item.
 
 The resolution criterion is responsibility placement and delegation, not the
 existence of a class named VersionService alone.
