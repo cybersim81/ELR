@@ -164,8 +164,6 @@ no apply()
 
 The remaining A01.2 activity is **responsibility-level conformance verification** of the implemented `CREATE`, `UPDATE`, and `MERGE` semantics against the authoritative `03_Processes` and `06_System` specifications.
 
-Accordingly, A01.2 is **not implementation-blocked**. Its remaining status is limited to conformance verification.
-
 
 ## Status
 
