@@ -60,15 +60,14 @@ The implementation shall remain subordinate to the following sources:
 6. ELR Architecture Specification 1.1.0;
 7. ELR Architecture Baseline 1.0.0;
 8. ELR Architecture Decision Log 1.0.0;
-9. IA-08 Implementation Conformance Gap Resolution Plan 0.1.1.
+9. ELR IA-08 Implementation Conformance Gap Resolution Plan 0.1.2.
 
 Where implementation convenience conflicts with an authoritative requirement,
 the authoritative specification prevails.
 
 # 4. Current Implementation Gap
 
-The current repository does not contain an implemented security subsystem
-corresponding to the A03 contract.
+The current repository state does not yet contain an implemented security subsystem corresponding to the A03 contract. This is a repository-state finding used to establish the current implementation baseline; it is not, by itself, an authoritative specification requirement.
 
 The implementation search found no existing implementation of:
 
@@ -398,6 +397,12 @@ Stable aggregate identity          Domain/Application        Regression tests
 Repository protection              Application boundary     Boundary tests
 
 # 20. Implementation Sequence
+
+Sequence dependency:
+
+IA-08-A03 is the next implementation area after completion of the currently outstanding IA-08-A01.2 controlled verification activity. The A01.2 activity remains an A01 responsibility-level conformance verification and is not reopened or modified by this A03 guide.
+
+Accordingly, A03 remains a pending implementation area and must not be interpreted as evidence that the A01.2 verification has been completed.
 
 The implementation shall proceed in the following controlled order:
 
