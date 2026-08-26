@@ -157,7 +157,7 @@ The Application Service translates the known exception at the Application bounda
 # 7. Exception Cause Preservation
 ================================================================================
 
-Domain-to-Application translation shall preserve the original Domain
+Domain-to-Application translation preserves the original Domain
 exception as the exception cause.
 
 Conceptually:
@@ -304,7 +304,7 @@ Given a missing Learning Object:
 
 LearningObjectService.get()
 
-shall raise:
+raises:
 
 EntityNotFound
 
@@ -315,7 +315,7 @@ Given an invalid lifecycle state:
 
 LearningObjectService.submit_for_review()
 
-shall raise:
+raises:
 
 InvalidOperation
 
@@ -331,7 +331,7 @@ Given an invalid lifecycle state:
 
 LearningObjectService.approve()
 
-shall raise:
+raises:
 
 InvalidOperation
 
@@ -347,7 +347,7 @@ Given an invalid lifecycle state:
 
 LearningObjectService.update_knowledge()
 
-shall raise:
+raises:
 
 InvalidOperation
 
@@ -363,7 +363,7 @@ Given an invalid lifecycle state:
 
 LearningObjectService.retire()
 
-shall raise:
+raises:
 
 InvalidOperation
 
