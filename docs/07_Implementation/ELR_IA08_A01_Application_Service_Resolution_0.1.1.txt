@@ -79,6 +79,8 @@ The remaining A01.2 activity is responsibility-level conformance verification of
 
 Therefore A01.2 remains open only as a **conformance verification item**. It is no longer blocked by absence of the required application boundary or by absence of the `APPROVE` / `REJECT` / `REQUEST_REVISION` gating behavior.
 
+### A01.3 — Learning Object Approval
+
 **CONFORMANT**
 
 Approval transitions a proposed Learning Object to Active and creates the initial immutable Version.
