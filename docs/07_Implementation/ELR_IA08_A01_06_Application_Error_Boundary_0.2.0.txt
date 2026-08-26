@@ -111,9 +111,9 @@ The current Application Layer provides a centralized application-error taxonomy 
 * UnauthorizedOperation.
 
 
-ApplicationError shall be the common Application Layer base exception.
+ApplicationError is the common Application Layer base exception.
 
-These exceptions shall contain no:
+These exceptions contain no:
 
 * HTTP behavior;
 * FastAPI dependencies;
@@ -135,8 +135,7 @@ EntityNotFound
 The Application Service raises EntityNotFound when a requested Learning
 Object does not exist.
 
-Unexpected repository or infrastructure failures shall not be converted into
-EntityNotFound.
+Unexpected repository or infrastructure failures are not converted into EntityNotFound.
 
 
 ================================================================================
@@ -150,11 +149,9 @@ InvalidStateTransition
 InvalidOperation
 
 
-The Domain exception shall remain defined and owned by the Domain Layer.
+The Domain exception remains defined and owned by the Domain Layer.
 
-The Application Service shall translate the known exception at the
-Application boundary.
-
+The Application Service translates the known exception at the Application boundary.
 
 ================================================================================
 # 7. Exception Cause Preservation
@@ -202,8 +199,7 @@ Successful behavior shall remain unchanged.
 # 9. ValidationFailure
 ================================================================================
 
-ValidationFailure shall exist as part of the centralized Application error
-taxonomy.
+ValidationFailure exists as part of the centralized Application error taxonomy.
 
 This implementation does not introduce a new Domain-to-Application mapping
 for ValidationFailure.
@@ -216,8 +212,7 @@ exception.
 # 10. UnauthorizedOperation
 ================================================================================
 
-UnauthorizedOperation shall exist as part of the centralized Application
-error taxonomy.
+UnauthorizedOperation exists as part of the centralized Application error taxonomy.
 
 This implementation does not introduce authorization logic.
 
@@ -230,7 +225,7 @@ Authorization remains outside the scope of A01.6.
 
 Only known, explicitly handled Domain exceptions shall be translated.
 
-The implementation shall not introduce:
+The implementation does not introduce:
 
 except Exception:
 
