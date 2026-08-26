@@ -393,7 +393,7 @@ Existing successful tests shall continue to pass for:
 
 
 ================================================================================
-# 15. Regression Verifications
+# 15. Regression Verification
 ================================================================================
 
 The completed regression verification established that:
