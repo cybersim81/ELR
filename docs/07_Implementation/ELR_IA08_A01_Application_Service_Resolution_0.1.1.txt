@@ -43,8 +43,6 @@ The current application-service implementation establishes the required Change P
 
 The previous implementation-level `BLOCKED` condition has been resolved.
 
-The remaining A01.2 activity is limited to responsibility-level conformance verification of the implemented `CREATE`, `UPDATE`, and `MERGE` semantics against the authoritative `03_Processes` and `06_System` specifications.
-
 The repository contains the application components required to establish the review-gated change flow:
 
 * `ChangeProposal`;
