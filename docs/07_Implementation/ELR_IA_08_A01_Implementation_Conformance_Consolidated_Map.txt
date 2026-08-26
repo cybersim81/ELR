@@ -1,0 +1,811 @@
+# ELR IA-08 A01 — Implementation Conformance Consolidated Map
+
+**Document Version:** 0.1.0
+**Status:** CONSOLIDATION BASELINE
+**Scope:** A01 — Implementation Conformance
+**Purpose:** Consolidamento della mappa di conformità implementativa prima della chiusura del gap A01.
+
+---
+
+## 1. Scopo
+
+Questo documento consolida la lettura dell'architettura, del modello di dominio e dell'implementazione corrente relativa al flusso di **ELR Change Proposal → Learning Review → applicazione della modifica approvata**.
+
+Il documento non introduce nuove decisioni architetturali.
+
+Il suo scopo è fornire una baseline operativa unica per:
+
+* verificare la conformità dell'implementazione;
+* identificare i gap residui;
+* guidare le modifiche implementative;
+* definire i criteri oggettivi di chiusura di A01.
+
+La distinzione semantica tra `CREATE`, `MERGE` e `UPDATE` deriva dai documenti architetturali e di dominio esistenti e non viene ridefinita qui.
+
+---
+
+## 2. Authority e fonti
+
+La verifica A01 deve mantenere coerenza con almeno:
+
+* ELR Architecture Specification;
+* ELR Architecture Baseline;
+* ELR Domain Model Specification;
+* Learning Object Specification;
+* Learning Review Specification;
+* ELR Lifecycle Specification;
+* ELR Versioning Model Specification;
+* ELR Persistence Model Specification;
+* ELR Event Model Specification;
+* ELR Application Service Implementation Specification;
+* ELR Core Domain Implementation Specification;
+* ELR Persistence Implementation Specification;
+* ELR API Implementation Specification;
+* ELR IA-08 A01 Implementation Conformance Closure Guide.
+
+I documenti di stato, handoff e continuity possono fornire contesto, ma non devono essere utilizzati per introdurre una decisione semantica in contrasto con le specifiche proprietarie.
+
+---
+
+## 3. Canonical Execution Path
+
+Il percorso autorizzato da verificare è:
+
+```text
+Knowledge Candidate
+        |
+        v
+ELR Change Proposal
+        |
+        v
+Learning Review
+        |
+        v
+Review Decision Trace
+        |
+        +---- REJECT ----------------------> NO MUTATION
+        |
+        +---- REQUEST_REVISION ------------> NO MUTATION
+        |
+        +---- APPROVE
+                  |
+                  v
+          ChangeProposalService
+                  |
+                  v
+             ChangeApplier
+                  |
+          +-------+-------+
+          |       |       |
+          v       v       v
+        CREATE  MERGE   UPDATE
+          |       |       |
+          +-------+-------+
+                  |
+                  v
+          Version / Audit / Event
+```
+
+Il punto di conformità fondamentale non è l'esistenza delle singole primitive.
+
+Deve essere dimostrabile il percorso completo:
+
+```text
+APPROVED Change Proposal
+        ↓
+ChangeApplier
+        ↓
+ELR mutation
+```
+
+---
+
+## 4. Responsibility Map
+
+### 4.1 ChangeProposal
+
+`ChangeProposal` rappresenta una modifica atomica proposta al repository.
+
+Contiene almeno:
+
+* `change_type`;
+* `change_payload`;
+* `proposal_rationale`;
+* `change_evidence`;
+* `change_metadata`;
+* eventuale provenance della revisione.
+
+`ChangeProposal` non:
+
+* approva;
+* rifiuta;
+* decide l'accettabilità della conoscenza;
+* persiste autonomamente la modifica.
+
+La classificazione `CREATE`, `MERGE` e `UPDATE` descrive la relazione tra Knowledge Candidate e Learning Object esistenti.
+
+---
+
+### 4.2 LearningReview
+
+La Learning Review è il proprietario della decisione di review.
+
+Produce un:
+
+```text
+ReviewDecisionTrace
+```
+
+La decisione può essere:
+
+```text
+APPROVE
+REJECT
+REQUEST_REVISION
+```
+
+La Learning Review non deve applicare direttamente la mutazione del repository.
+
+---
+
+### 4.3 LearningReviewService
+
+`LearningReviewService` costituisce il boundary applicativo della Learning Review.
+
+Responsabilità:
+
+```text
+ChangeProposal
+      ↓
+LearningReview
+      ↓
+ReviewDecisionTrace
+```
+
+Non deve implementare autonomamente la semantica della review.
+
+---
+
+### 4.4 ChangeProposalService
+
+`ChangeProposalService` coordina:
+
+1. costruzione della Change Proposal;
+2. invio alla Learning Review;
+3. ricezione del `ReviewDecisionTrace`;
+4. applicazione della proposta esclusivamente quando approvata.
+
+La regola di controllo è:
+
+```python
+if trace.decision is ReviewDecision.APPROVE:
+    change_applier.apply(
+        proposal=proposal,
+        review_trace=trace,
+        actor=actor,
+    )
+```
+
+Una proposta `REJECT` o `REQUEST_REVISION` non deve raggiungere la mutazione ELR.
+
+`ChangeProposalService` non deve:
+
+* decidere semanticamente se una proposta è corretta;
+* sostituire la Learning Review;
+* implementare direttamente CREATE/MERGE/UPDATE;
+* bypassare il `ChangeApplier`.
+
+---
+
+### 4.5 ChangeApplier
+
+`ChangeApplier` rappresenta il boundary applicativo di applicazione della modifica già approvata.
+
+Deve ricevere almeno:
+
+```text
+proposal
+review_trace
+actor
+```
+
+Prima della mutazione deve essere verificato che:
+
+```text
+review_trace.proposal_id == proposal.id
+```
+
+e:
+
+```text
+review_trace.decision == APPROVE
+```
+
+Il Change Applier non deve:
+
+* eseguire Learning Review;
+* generare Change Proposal;
+* decidere autonomamente l'accettabilità della conoscenza.
+
+---
+
+### 4.6 LearningObjectChangeApplier
+
+`LearningObjectChangeApplier` è l'implementazione concreta del Change Applier per i Learning Object.
+
+Deve applicare i tre tipi:
+
+```text
+CREATE → creazione di un nuovo Learning Object
+
+MERGE  → consolidamento in un Learning Object esistente
+
+UPDATE → modifica della rappresentazione di un Learning Object esistente
+```
+
+La validazione dell'approvazione deve precedere qualsiasi mutazione.
+
+---
+
+### 4.7 LearningObjectService
+
+`LearningObjectService` coordina i casi d'uso relativi ai Learning Object e alle relative operazioni di dominio, persistenza, versioning e audit.
+
+Le primitive esistenti, quali:
+
+```text
+create_candidate()
+approve()
+update_knowledge()
+```
+
+non costituiscono da sole evidenza di conformance A01.
+
+La conformance deve essere verificata rispetto al percorso autorizzato delle Change Proposal.
+
+---
+
+### 4.8 VersionService
+
+`VersionService` coordina la creazione delle versioni secondo il Versioning Model.
+
+Non decide:
+
+* se una Change Proposal sia approvabile;
+* quale conoscenza debba essere accettata;
+* quale modifica sia semanticamente corretta.
+
+---
+
+### 4.9 AuditService / Event Model
+
+L'audit registra l'operazione applicativa.
+
+Gli eventi devono rimanere coerenti con l'Event Model.
+
+Audit e Event non devono sostituire la decisione di Learning Review.
+
+---
+
+## 5. CREATE / MERGE / UPDATE — Canonical Semantics
+
+### 5.1 CREATE
+
+`CREATE` introduce una nuova identità conoscitiva.
+
+Condizioni concettuali:
+
+* non esiste un Learning Object concettualmente equivalente;
+* la conoscenza è atomica;
+* la conoscenza è riutilizzabile;
+* l'Anchor è valido.
+
+Risultato:
+
+```text
+APPROVED CREATE
+      ↓
+new Learning Object
+      ↓
+first Version
+      ↓
+Audit/Event
+```
+
+---
+
+### 5.2 MERGE
+
+`MERGE` conserva l'identità del Learning Object esistente.
+
+La nuova evidenza viene integrata nel Learning Object già presente.
+
+Devono essere preservati:
+
+* identità;
+* Anchor;
+* storia evolutiva.
+
+Può cambiare la rappresentazione della conoscenza, secondo le regole del dominio.
+
+Risultato:
+
+```text
+APPROVED MERGE
+      ↓
+existing Learning Object
+      ↓
+consolidated knowledge
+      ↓
+new Version when required
+      ↓
+Audit/Event
+```
+
+Il MERGE non deve creare un nuovo Learning Object indipendente quando il target concettualmente equivalente esiste già.
+
+---
+
+### 5.3 UPDATE
+
+`UPDATE` conserva l'identità conoscitiva esistente migliorandone o correggendone la rappresentazione.
+
+Esempi:
+
+* correzione di formulazione ambigua;
+* miglioramento della precisione;
+* eliminazione di una spiegazione fuorviante.
+
+Risultato:
+
+```text
+APPROVED UPDATE
+      ↓
+existing Learning Object
+      ↓
+updated representation
+      ↓
+new Version when required
+      ↓
+Audit/Event
+```
+
+L'identità del Learning Object rimane invariata.
+
+---
+
+## 6. Repository Comparison e Classification
+
+La classificazione `CREATE / MERGE / UPDATE` appartiene al processo KEP.
+
+La KEP deve verificare la relazione tra Knowledge Candidate e Learning Object esistenti.
+
+Un `Negative Retrieval` non dimostra automaticamente che una conoscenza sia nuova.
+
+Prima di proporre `CREATE`, devono essere escluse almeno:
+
+* equivalenze concettuali già presenti;
+* Anchor alternativi che rappresentano la stessa conoscenza;
+* differenze dovute esclusivamente alla formulazione del Knowledge Statement.
+
+La Change Proposal risultante viene quindi sottoposta alla Learning Review.
+
+La classificazione proposta dalla KEP può essere modificata durante la Learning Review.
+
+---
+
+## 7. Current Implementation Conformance Map
+
+La situazione implementativa consolidata è:
+
+| Area                                            | Stato                              | Evidenza                                          |
+| ----------------------------------------------- | ---------------------------------- | ------------------------------------------------- |
+| `ChangeType.CREATE`                             | PRESENTE                           | Enum + Change Proposal + Applier                  |
+| `ChangeType.MERGE`                              | RICONOSCIUTO                       | Enum + dominio/documentazione                     |
+| `ChangeType.UPDATE`                             | RICONOSCIUTO                       | Enum + dominio + primitive applicative            |
+| Learning Review boundary                        | PRESENTE                           | `LearningReviewService` + `LearningReviewAdapter` |
+| Review Decision Trace                           | PRESENTE                           | `ReviewDecisionTrace`                             |
+| APPROVE gating                                  | PRESENTE                           | `ChangeProposalService`                           |
+| Proposal/trace ownership check                  | PRESENTE                           | `LearningObjectChangeApplier`                     |
+| CREATE execution                                | PRESENTE                           | `LearningObjectChangeApplier`                     |
+| CREATE Version                                  | PRESENTE                           | `VersionService`                                  |
+| CREATE Audit/Event                              | PRESENTE                           | Applier services                                  |
+| MERGE execution through ChangeApplier           | GAP                                | execution path non completato                     |
+| UPDATE execution through ChangeApplier          | GAP                                | execution path non completato                     |
+| REJECT → no mutation                            | DA DIMOSTRARE CON TEST FOCALIZZATO | test boundary                                     |
+| REQUEST_REVISION → no mutation                  | DA DIMOSTRARE CON TEST FOCALIZZATO | test boundary                                     |
+| Transaction boundary for approved proposal flow | DA CONSOLIDARE/VERIFICARE          | application/persistence wiring                    |
+| CREATE persistence integration                  | DA VERIFICARE/CONSOLIDARE          | persistence/integration tests                     |
+| MERGE persistence integration                   | GAP                                | dipendente dall'implementazione MERGE             |
+| UPDATE persistence integration                  | GAP                                | dipendente dall'implementazione UPDATE            |
+
+---
+
+## 8. Primary A01 Gap
+
+Il gap principale non è l'assenza dei valori:
+
+```text
+CREATE
+MERGE
+UPDATE
+```
+
+nel modello.
+
+Il gap è l'assenza di una execution path completa e conforme per tutti e tre i tipi.
+
+La situazione attuale può essere rappresentata come:
+
+```text
+CREATE
+
+ChangeProposal
+      ↓
+LearningReview
+      ↓
+APPROVE
+      ↓
+ChangeProposalService
+      ↓
+LearningObjectChangeApplier
+      ↓
+CREATE LearningObject
+      ↓
+Version
+      ↓
+Audit/Event
+```
+
+Questo percorso è presente.
+
+Per `MERGE` e `UPDATE`, invece:
+
+```text
+ChangeProposal
+      ↓
+LearningReview
+      ↓
+APPROVE
+      ↓
+ChangeProposalService
+      ↓
+LearningObjectChangeApplier
+      ↓
+[execution missing]
+```
+
+Questa è la condizione che impedisce la chiusura completa di A01.
+
+---
+
+## 9. Closure Strategy
+
+La chiusura A01 deve procedere senza modificare la semantica architetturale.
+
+### Step 1 — Consolidare il Change Applier boundary
+
+Mantenere:
+
+```text
+Learning Review
+      ↓
+APPROVED Change Proposal
+      ↓
+ChangeProposalService
+      ↓
+ChangeApplier
+```
+
+come unico percorso autorizzato.
+
+---
+
+### Step 2 — Implementare MERGE
+
+Il Change Applier deve:
+
+1. validare `APPROVE`;
+2. identificare il Learning Object target;
+3. verificare che il target esista;
+4. applicare il consolidamento previsto dal dominio;
+5. preservare l'identità;
+6. creare la Version quando richiesta;
+7. registrare Audit/Event;
+8. operare nel corretto transaction boundary.
+
+---
+
+### Step 3 — Implementare UPDATE
+
+Il Change Applier deve:
+
+1. validare `APPROVE`;
+2. identificare il Learning Object target;
+3. verificare che il target esista;
+4. applicare la modifica tramite la responsabilità di dominio appropriata;
+5. preservare l'identità;
+6. creare la Version quando richiesta;
+7. registrare Audit/Event;
+8. operare nel corretto transaction boundary.
+
+---
+
+### Step 4 — Eliminare qualsiasi bypass
+
+Non deve esistere un percorso alternativo in cui una Change Proposal approvata venga applicata:
+
+* direttamente dal servizio API;
+* direttamente dal repository;
+* direttamente da un componente infrastrutturale;
+* bypassando `ChangeApplier`.
+
+---
+
+### Step 5 — Verificare il transaction boundary
+
+Ogni use case applicativo di modifica deve essere atomico:
+
+```text
+BEGIN TRANSACTION
+
+validate authorization
+load proposal
+validate review decision
+apply authorized change
+create Version when required
+persist
+audit/event
+
+COMMIT
+```
+
+In caso di errore:
+
+```text
+ROLLBACK
+```
+
+Il transaction boundary deve rimanere coerente con la responsabilità definita dall'Application Service Implementation Specification.
+
+---
+
+## 10. Required Test Matrix
+
+La chiusura deve essere dimostrata con test focalizzati.
+
+### CREATE
+
+```text
+APPROVED CREATE
+    ↓
+ChangeApplier.apply()
+    ↓
+LearningObject created
+    ↓
+Version created
+    ↓
+Audit/Event recorded
+```
+
+### MERGE
+
+```text
+APPROVED MERGE
+    ↓
+ChangeApplier.apply()
+    ↓
+existing LearningObject selected
+    ↓
+identity preserved
+    ↓
+knowledge consolidated
+    ↓
+Version created when required
+    ↓
+Audit/Event recorded
+```
+
+### UPDATE
+
+```text
+APPROVED UPDATE
+    ↓
+ChangeApplier.apply()
+    ↓
+existing LearningObject selected
+    ↓
+identity preserved
+    ↓
+knowledge representation updated
+    ↓
+Version created when required
+    ↓
+Audit/Event recorded
+```
+
+### Rejection
+
+```text
+REJECT
+    ↓
+no ChangeApplier.apply()
+    ↓
+no Learning Object mutation
+    ↓
+no Version mutation
+    ↓
+no mutation Audit/Event
+```
+
+### Revision
+
+```text
+REQUEST_REVISION
+    ↓
+no ChangeApplier.apply()
+    ↓
+no Learning Object mutation
+    ↓
+no Version mutation
+```
+
+### Trace integrity
+
+Ogni applicazione deve verificare:
+
+```text
+review_trace.proposal_id == proposal.id
+```
+
+e:
+
+```text
+review_trace.decision == APPROVE
+```
+
+---
+
+## 11. Architectural Constraints
+
+Durante la chiusura del gap non devono essere introdotte nuove responsabilità nei componenti esistenti.
+
+In particolare:
+
+### Application Layer
+
+Può:
+
+* coordinare use case;
+* invocare Domain Layer;
+* invocare repository interfaces;
+* coordinare Version e Audit;
+* definire il transaction boundary.
+
+Non deve:
+
+* contenere logica cognitiva;
+* contenere logica HTTP;
+* contenere schema database;
+* decidere semanticamente l'approvabilità.
+
+### Domain Layer
+
+Rimane proprietario delle regole di dominio.
+
+### Learning Review
+
+Rimane proprietaria della decisione:
+
+```text
+APPROVE / REJECT / REQUEST_REVISION
+```
+
+### KEP
+
+Rimane proprietaria della produzione e classificazione della Change Proposal.
+
+### Persistence
+
+Rimane responsabile della persistenza attraverso le repository interfaces.
+
+### Infrastructure
+
+Non deve diventare parte della logica applicativa o semantica.
+
+---
+
+## 12. Definition of Done
+
+A01 può essere dichiarato conforme quando sono dimostrabili contemporaneamente:
+
+```text
+CREATE
+  APPROVED → APPLY → CREATE → VERSION → AUDIT/EVENT
+
+MERGE
+  APPROVED → APPLY → EXISTING LO → MERGE → VERSION → AUDIT/EVENT
+
+UPDATE
+  APPROVED → APPLY → EXISTING LO → UPDATE → VERSION → AUDIT/EVENT
+```
+
+e:
+
+```text
+REJECT
+  → NO MUTATION
+
+REQUEST_REVISION
+  → NO MUTATION
+```
+
+oltre a:
+
+```text
+proposal.id == review_trace.proposal_id
+review_trace.decision == APPROVE
+```
+
+per ogni applicazione effettiva.
+
+La persistenza deve avvenire nel corretto transaction boundary e il percorso deve essere raggiungibile esclusivamente attraverso il boundary applicativo autorizzato.
+
+---
+
+## 13. Non-Goals
+
+Questo documento non:
+
+* ridefinisce CREATE/MERGE/UPDATE;
+* modifica il Domain Model;
+* modifica il Learning Review Model;
+* modifica la KEP Specification;
+* introduce nuove regole di equivalenza concettuale;
+* introduce un nuovo lifecycle model;
+* introduce nuove regole di versioning;
+* sostituisce l'Event Model;
+* definisce autenticazione completa;
+* introduce workflow distribuiti.
+
+---
+
+## 14. Consolidation Principle
+
+La chiusura di A01 non consiste nel dimostrare che l'implementazione possiede primitive chiamate `CREATE`, `MERGE` e `UPDATE`.
+
+La conformità consiste nel dimostrare che una decisione:
+
+```text
+APPROVE
+```
+
+prodotta dalla Learning Review attraversa il boundary applicativo autorizzato e raggiunge una mutazione ELR coerente con il tipo di Change Proposal.
+
+Il principio operativo consolidato è quindi:
+
+```text
+KEP
+  ↓
+Change Proposal
+  ↓
+Learning Review
+  ↓
+Review Decision Trace
+  ↓
+APPROVE
+  ↓
+ChangeProposalService
+  ↓
+ChangeApplier
+  ↓
+CREATE / MERGE / UPDATE
+  ↓
+Version / Audit / Event
+```
+
+Questo documento costituisce la baseline consolidata da utilizzare prima dell'implementazione dei gap residui A01.
+
+---
+
+**Fine documento**
