@@ -178,3 +178,192 @@ The remaining A01.2 activity is **responsibility-level conformance verification*
 A01 remains open solely pending responsibility-level conformance verification against the authoritative `03_Processes` and `06_System` specifications.
 
 No implementation blocker remains for the Change Proposal / Learning Review application boundary.
+
+
+================================================================================
+Current A01 Verification State
+==============================
+
+Questo blocco aggiorna lo stato documentale di A01 sulla base dell'evidenza
+repository e test disponibile al checkpoint corrente.
+
+Le sezioni precedenti che descrivono A01.2 come "CONFORMANCE VERIFICATION
+PENDING", "EXECUTION PATH MISSING" o equivalente rappresentano la fotografia
+precedente al completamento dell'implementazione e non costituiscono più lo
+stato corrente.
+
+## A01.2 — Current Verified Position
+
+**STATUS: IMPLEMENTED / VERIFIED**
+
+Il boundary applicativo Change Proposal → Learning Review → ChangeApplier è
+presente e verificato.
+
+Il percorso corrente è:
+
+```text
+ChangeProposal
+        |
+        v
+Learning Review
+        |
+        v
+ReviewDecisionTrace
+        |
+        +---- REJECT -------------> no mutation
+        |
+        +---- REQUEST_REVISION ---> no mutation
+        |
+        +---- APPROVE
+                  |
+                  v
+          ChangeProposalService
+                  |
+                  v
+       LearningObjectChangeApplier
+                  |
+          +-------+-------+
+          |       |       |
+          v       v       v
+        CREATE  MERGE   UPDATE
+          |       |       |
+          +-------+-------+
+                  |
+                  v
+          Version / Audit
+````
+
+`LearningObjectChangeApplier` verifica inoltre:
+
+```text
+review_trace.proposal_id == proposal.id
+review_trace.decision == APPROVE
+```
+
+prima dell'applicazione della modifica.
+
+## CREATE
+
+**STATUS: VERIFIED**
+
+Una Change Proposal `CREATE` approvata:
+
+* crea un nuovo Learning Object;
+* lo persiste;
+* crea la Version iniziale;
+* registra l'Audit richiesto.
+
+Evidenza focalizzata:
+
+`tests/application/services/test_learning_object_change_applier.py`
+
+## MERGE
+
+**STATUS: VERIFIED**
+
+Una Change Proposal `MERGE` approvata:
+
+* risolve il Learning Object target;
+* modifica il target esistente;
+* preserva la sua identità;
+* crea la nuova Version;
+* registra l'Audit richiesto.
+
+Il percorso è implementato attraverso `LearningObjectChangeApplier`.
+
+## UPDATE
+
+**STATUS: VERIFIED**
+
+Una Change Proposal `UPDATE` approvata:
+
+* risolve il Learning Object target;
+* modifica il target esistente;
+* preserva la sua identità;
+* crea la nuova Version;
+* registra l'Audit richiesto.
+
+Il percorso è implementato attraverso `LearningObjectChangeApplier`.
+
+## Negative Paths
+
+Sono verificati i casi in cui:
+
+* la proposta non è APPROVE;
+* il Review Decision Trace appartiene a una proposal diversa;
+* il target Learning Object non esiste;
+* il target identifier è invalido;
+* il Knowledge Statement è invalido.
+
+Le proposte non approvate non vengono applicate.
+
+## Verification Evidence
+
+Focused Application Service tests:
+
+`8 passed`
+
+Application test suite:
+
+`48 passed`
+
+Complete repository test suite:
+
+`148 passed`
+
+Risultato:
+
+```text
+pytest -q
+148 passed
+```
+
+## Current A01 Disposition
+
+Alla luce dell'evidenza corrente:
+
+```text
+A01.1  CONFORMANT
+A01.2  IMPLEMENTED / VERIFIED
+A01.3  CONFORMANT
+A01.4  CONFORMANT
+A01.5  CONFORMANT
+A01.6  RESOLVED / CONFORMANT
+A01.7  RESOLVED / CONFORMANT
+```
+
+La precedente condizione implementation-level `BLOCKED` relativa al boundary
+Change Proposal / Learning Review è risolta.
+
+La precedente condizione A01.2 relativa all'assenza dei percorsi applicativi
+CREATE / MERGE / UPDATE è risolta.
+
+## Closure Position
+
+L'evidenza repository e test disponibile al checkpoint corrente è sufficiente
+a considerare risolto il gap implementativo A01 verificato.
+
+```text
+IMPLEMENTATION       VERIFIED
+CREATE               VERIFIED
+MERGE                VERIFIED
+UPDATE               VERIFIED
+REVIEW GATE          VERIFIED
+VERSIONING           VERIFIED
+AUDIT                VERIFIED
+APPLICATION TESTS    48 PASSED
+FULL TEST SUITE      148 PASSED
+```
+
+**Current A01 Status: COMPLETE / CLOSED**
+
+La chiusura si riferisce alla conformità implementativa verificata nel
+perimetro A01.
+
+Le successive aree IA-08-A03 e IA-08-A04 rimangono indipendenti e non vengono
+chiuse o inferite dalla presente decisione.
+
+================================================================================
+End Current A01 Verification State
+==================================
+
