@@ -5,12 +5,13 @@
 
 ## 1. Current Conformance Position
 
-The IA-08 implementation sequence has completed the transactional Event Record implementation, with IA-08-A02 formally closed.
+The IA-08 implementation sequence has completed the transactional Event
+Record implementation, with IA-08-A02 formally closed.
 
-Current responsibility-level position:
+The current responsibility-level position is:
 
 **IA-08-A01 — Core Learning Object / Application Service Conformance**
-STATUS: **ACTIVE / PARTIAL CONFORMANCE**
+STATUS: **COMPLETE / CLOSED**
 
 **IA-08-A02 — Transactional Event Record and Event Implementation**
 STATUS: **COMPLETE / CLOSED**
@@ -23,17 +24,17 @@ STATUS: **PENDING**
 
 A01 is not reopened because of A02.
 
-A01 remains open because responsibility-level conformance verification is still required for the Change Proposal / Learning Review boundary, particularly the semantics associated with:
+A01 has now reached closure because the previously open responsibility-level
+conformance verification for the Change Proposal / Learning Review boundary
+and its `CREATE`, `UPDATE`, and `MERGE` semantics has been completed and
+verified.
 
-* `CREATE`;
-* `UPDATE`;
-* `MERGE`.
+## 2. IA-08-A01 Final Position
 
-## 2. IA-08-A01 Current Position
+A01 implementation evidence exists for the principal application-service and
+review components.
 
-A01 implementation evidence exists for the principal application-service and review components.
-
-The repository contains implementation for:
+The repository contains verified implementation for:
 
 * Learning Object creation;
 * submission and approval;
@@ -44,21 +45,62 @@ The repository contains implementation for:
 * ChangeProposal creation;
 * ChangeType handling;
 * Learning Review invocation;
-* review validation and decision boundaries.
+* review validation and decision boundaries;
+* review-gated ChangeApplier execution;
+* CREATE;
+* UPDATE;
+* MERGE.
 
-The remaining A01 issue is therefore not whether these components exist.
-
-The remaining issue is whether their behavior and boundaries conform to the authoritative ELR process and system documentation.
+The previous A01.2 implementation/conformance gap is resolved.
 
 ### Current A01 disposition
 
-**A01 — ACTIVE / PARTIAL CONFORMANCE**
+**A01 — COMPLETE / CLOSED**
 
-### Principal remaining finding
+### A01.2 disposition
 
-**A01.2 — Change Proposal / Learning Review / CREATE / UPDATE / MERGE semantic conformance verification**
+**A01.2 — COMPLETE / CLOSED**
 
-No implementation-level `BLOCKED` status shall be inferred solely from the existence of an unresolved conformance question.
+The previously open question concerning the Change Proposal / Learning Review
+boundary and the execution paths for `CREATE`, `UPDATE`, and `MERGE` has been
+resolved.
+
+The verified path is:
+
+```text
+ChangeProposal
+        |
+        v
+Learning Review
+        |
+        v
+ReviewDecisionTrace
+        |
+        +---- REJECT -------------> no mutation
+        |
+        +---- REQUEST_REVISION ---> no mutation
+        |
+        +---- APPROVE
+                  |
+                  v
+          ChangeProposalService
+                  |
+                  v
+       LearningObjectChangeApplier
+                  |
+          +-------+-------+
+          |       |       |
+          v       v       v
+        CREATE  MERGE   UPDATE
+          |       |       |
+          +-------+-------+
+                  |
+                  v
+          Version / Audit
+````
+
+The ChangeApplier verifies proposal/trace ownership and requires an
+`APPROVE` decision before applying a mutation.
 
 ## 3. IA-08-A02 Closure
 
@@ -66,11 +108,11 @@ IA-08-A02 remains formally closed.
 
 The transactional Event Record boundary has been implemented and verified.
 
-Final verification recorded for A02:
+Previous verification recorded for A02 remains historical evidence:
 
 `pytest -q` → `138 passed in 0.87s`
 
-Additional verification includes:
+Additional verification included:
 
 * `git diff --check`;
 * EventRecord immutability;
@@ -82,336 +124,23 @@ Additional verification includes:
 
 No A01 responsibility was reopened by the A02 implementation.
 
-## 4. A01.2 Conformance Verification Before A01 Closure
-
-Before the IA-08 implementation roadmap treats A01 as closed, the following controlled verification shall be completed:
-
-1. inspect the authoritative `docs/03_Processes` definitions;
-2. inspect the authoritative `docs/06_System` specifications;
-3. map `CREATE`, `UPDATE`, and `MERGE` to the ChangeProposal and Learning Review implementation;
-4. determine whether the current implementation matches the required process semantics;
-5. implement only confirmed gaps;
-6. add focused verification;
-7. run the complete test suite;
-8. record the resulting evidence.
-
-## 5. IA-08-A03 — Security and Authorization
-
-**STATUS: PENDING**
-
-A03 remains a separate implementation-conformance area.
-
-Its scope includes:
-
-* authentication boundary;
-* authorization boundary;
-* actor identity propagation;
-* permission checks;
-* protected application-service operations;
-* security-related error behavior;
-* consistency with the authoritative ELR Security Implementation Specification.
-
-A03 shall be assessed independently.
-
-No A03 implementation shall be inferred solely from the existing application-service behavior.
-
-## 6. IA-08-A04 — API Implementation
-
-**STATUS: PENDING**
-
-A04 remains subsequent to the applicable security and authorization decisions.
-
-Potential responsibilities include:
-
-* HTTP/API routes;
-* request validation;
-* response mapping;
-* application-service invocation;
-* API error mapping;
-* authentication and authorization enforcement;
-* API-level integration tests.
-
-## 7. Current Roadmap
-
-IA-08-A01
-**ACTIVE / PARTIAL CONFORMANCE**
-↓
-IA-08-A02
-**COMPLETE / CLOSED**
-↓
-IA-08-A01.2 conformance verification
-**ACTIVE / NEXT CONTROLLED VERIFICATION**
-↓
-IA-08-A03
-**PENDING**
-↓
-IA-08-A04
-**PENDING**
-↓
-Further IA-08 findings
-**PENDING / TO BE ASSESSED**
-
-## 8. Implementation Discipline
-
-The roadmap is a conformance-resolution plan, not an authorization to implement every downstream responsibility immediately.
-
-For each remaining finding:
-
-1. inspect the authoritative specification;
-2. identify the exact implementation or conformance gap;
-3. implement only the confirmed responsibility;
-4. add or update focused verification;
-5. run the complete test suite;
-6. record the verified result;
-7. close the finding only after evidence is available.
-
-No responsibility shall be marked `COMPLETE / CLOSED` without corresponding repository evidence and passing verification.
-
-## 9. Current Verification Baseline
-
-Current recorded baseline:
-
-`pytest -q`
-
-Result:
-
-`138 passed`
-
-A01.6 — Application Error Boundary:
-**RESOLVED / CONFORMANT**
-
-A01.7 — Transaction Boundary:
-**RESOLVED / CONFORMANT**
-
-A02 — Transactional Event Record and Event Implementation:
-**COMPLETE / CLOSED**
-
-A01.2 — Change Proposal / Learning Review / CREATE / UPDATE / MERGE:
-**ACTIVE / CONFORMANCE VERIFICATION REQUIRED**
-
-No Bootstrap Pack update is required until the current checkpoint reaches its consolidated state.
-
-## IA-08-A01.2 — Consolidated Execution Path Map
-
-**STATUS: ACTIVE / CONFORMANCE VERIFICATION REQUIRED**
-
-La verifica repository ha consolidato la seguente posizione.
-
-Il problema residuo non è l'assenza generale di primitive CREATE, MERGE o
-UPDATE, ma la conformità del loro **execution path** rispetto al boundary
-autorizzato dalla Learning Review.
-
-### CREATE
-
-Il percorso è già presente:
-
-```text
-ChangeProposalService.propose()
-        |
-        v
-LearningReviewService.review()
-        |
-        v
-ReviewDecisionTrace
-        |
-        +-- APPROVE
-        |
-        v
-LearningObjectChangeApplier.apply()
-        |
-        v
-CREATE LearningObject
-        |
-        +--> Version
-        +--> Audit
-        +--> Event
-```
-
-**Position: CONFORMANT PATH**
-
-La closure definitiva richiede comunque evidenza test focalizzata sul
-percorso completo e sul comportamento di una CREATE non approvata.
-
-### UPDATE
-
-Esiste una capability applicativa:
-
-```text
-LearningObjectService.update_knowledge()
-        |
-        +--> LearningObject.update_knowledge()
-        +--> Version
-        +--> Audit
-        +--> Event
-```
-
-Tuttavia questa capability non costituisce ancora il percorso autorizzato di
-una Change Proposal UPDATE.
-
-Il percorso richiesto è:
-
-```text
-APPROVED ChangeProposal(UPDATE)
-        |
-        v
-ChangeApplier
-        |
-        v
-LearningObject update
-        |
-        +--> Version
-        +--> Audit
-        +--> Event
-```
-
-**Position: PARTIAL / EXECUTION PATH MISSING**
-
-Non deve essere introdotta una nuova semantica UPDATE: deve essere verificato
-e, se necessario, collegato il percorso applicativo già esistente al boundary
-autorizzato.
-
-### MERGE
-
-Il modello definisce `ChangeType.MERGE`, ma non è stato identificato un
-execution path applicativo equivalente:
-
-```text
-APPROVED ChangeProposal(MERGE)
-        |
-        v
-ChangeApplier
-        |
-        X
-```
-
-**Position: MISSING / EXECUTION PATH TO BE IMPLEMENTED**
-
-L'implementazione dovrà essere determinata esclusivamente sulla base delle
-specifiche autoritative relative a Learning Object evolution, repository
-comparison, identity preservation, Versioning e Audit/Event.
-
-Non deve essere introdotta una nuova interpretazione semantica di MERGE.
-
-### Consolidated A01.2 Map
-
-```text
-                    Learning Review
-                          |
-                          v
-                 APPROVED Proposal
-                          |
-                          v
-                    ChangeApplier
-                          |
-             +------------+------------+
-             |            |            |
-             v            v            v
-           CREATE       MERGE        UPDATE
-             |            |            |
-             v            X            X
-          verified      missing     partial
-             |
-             v
-      Version / Audit / Event
-```
-
-### Controlled next step
-
-La prossima attività implementativa deve quindi essere limitata a:
-
-1. verificare il contratto applicativo del ChangeApplier;
-2. determinare il corretto mapping di UPDATE verso la capability esistente;
-3. determinare il corretto execution path di MERGE;
-4. aggiungere test focalizzati sui tre percorsi;
-5. verificare che REJECT e REQUEST_REVISION non producano mutazioni;
-6. eseguire la suite completa;
-7. aggiornare lo stato A01.2 solo dopo evidenza verificata.
-
-A01.2 **non è ancora CLOSED**.
-
-La presente mappa costituisce la baseline consolidata per la successiva
-implementazione e impedisce di considerare una capability isolata equivalente
-a un execution path conforme.
-
-
-================================================================================
-Current IA-08 Conformance State
-================================
-
-Questo blocco costituisce l'aggiornamento dello stato corrente del Resolution
-Plan sulla base dell'evidenza implementativa e di test disponibile al checkpoint
-corrente.
-
-Le sezioni precedenti che descrivono A01.2 come attività ancora necessaria per
-l'implementazione di MERGE/UPDATE rappresentano una fotografia precedente e
-devono essere considerate superate dalla presente verifica.
-
-## IA-08-A01 — Final Verified Position
-
-**STATUS: COMPLETE / CLOSED**
-
-A01 è stato verificato a livello implementativo attraverso:
-
-* Change Proposal boundary;
-* Learning Review decision gate;
-* Review Decision Trace;
-* ChangeApplier;
-* CREATE;
-* MERGE;
-* UPDATE;
-* Version integration;
-* Audit integration;
-* application-level error boundary;
-* transaction/persistence integration;
-* negative paths.
-
-## IA-08-A01.2
-
-**STATUS: COMPLETE / CLOSED**
-
-La precedente condizione:
-
-```text
-ACTIVE / CONFORMANCE VERIFICATION REQUIRED
-````
-
-è stata risolta.
-
-La precedente classificazione di:
-
-```text
-UPDATE = execution path missing
-MERGE  = execution path missing
-```
-
-non rappresenta più lo stato corrente.
-
-Il repository contiene ora l'execution path applicativo:
-
-```text
-Approved Change Proposal
-        |
-        v
-ChangeProposalService
-        |
-        v
-LearningObjectChangeApplier
-        |
-        +----------+----------+
-        |          |          |
-        v          v          v
-      CREATE     MERGE      UPDATE
-        |          |          |
-        +----------+----------+
-                   |
-                   v
-            Version / Audit
-```
-
-Il ChangeApplier verifica inoltre la corrispondenza tra proposal e review
-trace e richiede una decisione `APPROVE` prima della mutazione.
-
-## Verification Evidence
+## 4. A01.2 Closure Evidence
+
+The controlled verification sequence defined for A01.2 has been completed.
+
+Completed controls:
+
+1. authoritative `docs/03_Processes` definitions inspected;
+2. authoritative `docs/06_System` specifications inspected;
+3. `CREATE`, `UPDATE`, and `MERGE` mapped to the ChangeProposal and Learning
+   Review implementation;
+4. execution-path conformance verified;
+5. only confirmed implementation gaps were addressed;
+6. focused verification added;
+7. complete repository test suite executed;
+8. resulting evidence recorded.
+
+### Verification results
 
 Focused ChangeApplier tests:
 
@@ -428,20 +157,13 @@ Application Service suite:
 Complete repository suite:
 
 ```text
-148 passed
-```
-
-Current verification baseline:
-
-```text
 pytest -q
 148 passed
 ```
 
-L'evidenza corrente dimostra che non rimane un implementation blocker nel
-perimetro A01 verificato.
+No implementation blocker remains in the verified A01 scope.
 
-## Current Responsibility Map
+## 5. IA-08-A01 Responsibility Map
 
 ```text
 IA-08-A01
@@ -467,20 +189,49 @@ IA-08-A01.6
 
 IA-08-A01.7
     RESOLVED / CONFORMANT
-
-IA-08-A02
-    COMPLETE / CLOSED
-
-IA-08-A03
-    PENDING
-
-IA-08-A04
-    PENDING
 ```
 
-## Current Roadmap
+A01.2 is a responsibility within A01 and is not a separate downstream
+roadmap phase.
 
-La roadmap corrente è:
+## 6. IA-08-A03 — Security and Authorization
+
+**STATUS: PENDING**
+
+A03 remains a separate implementation-conformance area.
+
+Its scope includes:
+
+* authentication boundary;
+* authorization boundary;
+* actor identity propagation;
+* permission checks;
+* protected application-service operations;
+* security-related error behavior;
+* consistency with the authoritative ELR Security Implementation Specification.
+
+A03 shall be assessed independently.
+
+No A03 implementation shall be inferred solely from the existing
+application-service behavior.
+
+## 7. IA-08-A04 — API Implementation
+
+**STATUS: PENDING**
+
+A04 remains subsequent to the applicable security and authorization decisions.
+
+Potential responsibilities include:
+
+* HTTP/API routes;
+* request validation;
+* response mapping;
+* application-service invocation;
+* API error mapping;
+* authentication and authorization enforcement;
+* API-level integration tests.
+
+## 8. Current Roadmap
 
 ```text
 IA-08-A01
@@ -500,48 +251,107 @@ PENDING
         |
         v
 Further IA-08 findings
-TO BE ASSESSED
+PENDING / TO BE ASSESSED
 ```
 
-A01 non deve essere riaperto per effetto della chiusura di A02.
+A01 is closed independently of A02.
 
-A03 e A04 devono essere valutati indipendentemente secondo le rispettive
-specifiche proprietarie.
+A01.2 is already closed as part of A01 and is therefore not represented as
+a future roadmap phase.
 
-## Closure Decision
+A03 and A04 remain independent responsibilities.
 
-Il gap di implementation conformance A01 verificato nel presente Resolution
-Plan è risolto.
+## 9. Implementation Discipline
 
-La decisione corrente è:
+The roadmap is a conformance-resolution plan, not an authorization to
+implement every downstream responsibility immediately.
+
+For each remaining finding:
+
+1. inspect the authoritative specification;
+2. identify the exact implementation or conformance gap;
+3. implement only the confirmed responsibility;
+4. add or update focused verification;
+5. run the complete test suite;
+6. record the verified result;
+7. close the finding only after evidence is available.
+
+No responsibility shall be marked `COMPLETE / CLOSED` without corresponding
+repository evidence and passing verification.
+
+## 10. Current Verification Baseline
+
+Current repository verification baseline:
+
+```text
+pytest -q
+148 passed
+```
+
+Current A01 evidence:
+
+```text
+A01.1  CONFORMANT
+A01.2  COMPLETE / CLOSED
+A01.3  CONFORMANT
+A01.4  CONFORMANT
+A01.5  CONFORMANT
+A01.6  RESOLVED / CONFORMANT
+A01.7  RESOLVED / CONFORMANT
+```
+
+Current A02 evidence:
+
+```text
+A02  COMPLETE / CLOSED
+```
+
+Current downstream position:
+
+```text
+A03  PENDING
+A04  PENDING
+```
+
+## 11. Closure Decision
+
+The IA-08-A01 implementation-conformance gap is resolved.
+
+The current decision is:
 
 ```text
 A01 = COMPLETE / CLOSED
 ```
 
-con evidenza repository e test:
+with the following verified evidence:
 
 ```text
 CREATE  = VERIFIED
 MERGE   = VERIFIED
 UPDATE  = VERIFIED
 
-Review Gate       = VERIFIED
-Versioning        = VERIFIED
-Audit             = VERIFIED
-Transaction Path  = VERIFIED
+Review Gate        = VERIFIED
+Versioning         = VERIFIED
+Audit              = VERIFIED
+Error Boundary     = VERIFIED
+Transaction Path   = VERIFIED
+Identity           = PRESERVED
 
-Application Tests = 48 PASSED
-Full Test Suite   = 148 PASSED
+Focused Tests      = 8 PASSED
+Application Tests  = 48 PASSED
+Full Test Suite    = 148 PASSED
 ```
 
-Non è richiesta una nuova implementazione A01.
+The closure is limited to the IA-08-A01 implementation-conformance scope.
 
-Eventuali modifiche future che interessino A01 dovranno essere trattate come
-nuovi cambiamenti e sottoposte a una nuova verifica di conformità; non devono
-essere interpretate come prosecuzione del gap qui chiuso.
+No new A01 implementation is required.
+
+Future changes affecting A01 shall be evaluated as new changes and shall
+receive a new conformance assessment rather than reopening this historical
+gap automatically.
+
+A03 and A04 remain pending and must be assessed independently.
 
 ================================================================================
-End Current IA-08 Conformance State
-===================================
-
+End IA-08 Implementation Conformance Gap Resolution Plan
+========================================================
