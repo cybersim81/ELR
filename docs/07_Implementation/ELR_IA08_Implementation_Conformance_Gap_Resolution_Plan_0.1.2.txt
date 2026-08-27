@@ -190,3 +190,146 @@ A01.2 — Change Proposal / Learning Review / CREATE / UPDATE / MERGE:
 **ACTIVE / CONFORMANCE VERIFICATION REQUIRED**
 
 No Bootstrap Pack update is required until the current checkpoint reaches its consolidated state.
+
+## IA-08-A01.2 — Consolidated Execution Path Map
+
+**STATUS: ACTIVE / CONFORMANCE VERIFICATION REQUIRED**
+
+La verifica repository ha consolidato la seguente posizione.
+
+Il problema residuo non è l'assenza generale di primitive CREATE, MERGE o
+UPDATE, ma la conformità del loro **execution path** rispetto al boundary
+autorizzato dalla Learning Review.
+
+### CREATE
+
+Il percorso è già presente:
+
+```text
+ChangeProposalService.propose()
+        |
+        v
+LearningReviewService.review()
+        |
+        v
+ReviewDecisionTrace
+        |
+        +-- APPROVE
+        |
+        v
+LearningObjectChangeApplier.apply()
+        |
+        v
+CREATE LearningObject
+        |
+        +--> Version
+        +--> Audit
+        +--> Event
+```
+
+**Position: CONFORMANT PATH**
+
+La closure definitiva richiede comunque evidenza test focalizzata sul
+percorso completo e sul comportamento di una CREATE non approvata.
+
+### UPDATE
+
+Esiste una capability applicativa:
+
+```text
+LearningObjectService.update_knowledge()
+        |
+        +--> LearningObject.update_knowledge()
+        +--> Version
+        +--> Audit
+        +--> Event
+```
+
+Tuttavia questa capability non costituisce ancora il percorso autorizzato di
+una Change Proposal UPDATE.
+
+Il percorso richiesto è:
+
+```text
+APPROVED ChangeProposal(UPDATE)
+        |
+        v
+ChangeApplier
+        |
+        v
+LearningObject update
+        |
+        +--> Version
+        +--> Audit
+        +--> Event
+```
+
+**Position: PARTIAL / EXECUTION PATH MISSING**
+
+Non deve essere introdotta una nuova semantica UPDATE: deve essere verificato
+e, se necessario, collegato il percorso applicativo già esistente al boundary
+autorizzato.
+
+### MERGE
+
+Il modello definisce `ChangeType.MERGE`, ma non è stato identificato un
+execution path applicativo equivalente:
+
+```text
+APPROVED ChangeProposal(MERGE)
+        |
+        v
+ChangeApplier
+        |
+        X
+```
+
+**Position: MISSING / EXECUTION PATH TO BE IMPLEMENTED**
+
+L'implementazione dovrà essere determinata esclusivamente sulla base delle
+specifiche autoritative relative a Learning Object evolution, repository
+comparison, identity preservation, Versioning e Audit/Event.
+
+Non deve essere introdotta una nuova interpretazione semantica di MERGE.
+
+### Consolidated A01.2 Map
+
+```text
+                    Learning Review
+                          |
+                          v
+                 APPROVED Proposal
+                          |
+                          v
+                    ChangeApplier
+                          |
+             +------------+------------+
+             |            |            |
+             v            v            v
+           CREATE       MERGE        UPDATE
+             |            |            |
+             v            X            X
+          verified      missing     partial
+             |
+             v
+      Version / Audit / Event
+```
+
+### Controlled next step
+
+La prossima attività implementativa deve quindi essere limitata a:
+
+1. verificare il contratto applicativo del ChangeApplier;
+2. determinare il corretto mapping di UPDATE verso la capability esistente;
+3. determinare il corretto execution path di MERGE;
+4. aggiungere test focalizzati sui tre percorsi;
+5. verificare che REJECT e REQUEST_REVISION non producano mutazioni;
+6. eseguire la suite completa;
+7. aggiornare lo stato A01.2 solo dopo evidenza verificata.
+
+A01.2 **non è ancora CLOSED**.
+
+La presente mappa costituisce la baseline consolidata per la successiva
+implementazione e impedisce di considerare una capability isolata equivalente
+a un execution path conforme.
+
