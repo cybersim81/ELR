@@ -158,7 +158,7 @@ Therefore:
 This interpretation should be used when updating the IA-08 roadmap and the
 eventual consolidated implementation-conformance document.
 
-## Implementation Conformance
+## 4. A01 — Consolidated Implementation-Conformance Position
 
 **STATUS: PARTIAL / OPEN**
 
