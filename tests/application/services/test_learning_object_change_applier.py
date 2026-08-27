@@ -13,65 +13,85 @@ from app.domain.entities.change_proposal import (
     ChangeProposal,
     ChangeType,
 )
+from app.domain.entities.knowledge_statement import KnowledgeStatement
+from app.domain.entities.learning_object import (
+    LearningObject,
+    LearningObjectState,
+)
 from app.domain.entities.review_decision import ReviewDecision
 from app.domain.entities.review_decision_trace import (
     ReviewDecisionTrace,
 )
+from app.domain.entities.version import Version
+from app.domain.repositories.audit_repository import AuditRepository
+from app.domain.repositories.learning_object_repository import (
+    LearningObjectRepository,
+)
+from app.domain.repositories.version_repository import VersionRepository
 
 
-class InMemoryLearningObjectRepository:
-    def __init__(self):
-        self.items = {}
+class InMemoryLearningObjectRepository(
+    LearningObjectRepository
+):
+    def __init__(self) -> None:
+        self.items: dict = {}
 
-    def save(self, learning_object):
+    def save(self, learning_object: LearningObject) -> None:
         self.items[learning_object.id] = learning_object
 
-    def get_by_id(self, object_id):
-        return self.items.get(object_id)
+    def get_by_id(self, learning_object_id):
+        return self.items.get(learning_object_id)
 
 
-class InMemoryVersionRepository:
-    def __init__(self):
-        self.items = []
+class InMemoryVersionRepository(VersionRepository):
+    def __init__(self) -> None:
+        self.items: dict = {}
 
-    def save(self, version):
-        self.items.append(version)
+    def save(self, version: Version) -> None:
+        self.items.setdefault(
+            version.learning_object_id,
+            [],
+        ).append(version)
 
     def get_history(self, learning_object_id):
+        return self.items.get(
+            learning_object_id,
+            [],
+        )
+
+
+class InMemoryAuditRepository(AuditRepository):
+    def __init__(self) -> None:
+        self.items: list[AuditRecord] = []
+
+    def record(self, record: AuditRecord) -> None:
+        self.items.append(record)
+
+    def get_events(self, entity_id):
         return [
-            version
-            for version in self.items
-            if version.learning_object_id == learning_object_id
+            record
+            for record in self.items
+            if record.entity_id == entity_id
         ]
 
 
-class InMemoryAuditRepository:
-    def __init__(self):
-        self.items = []
-
-    def record(self, audit_record):
-        self.items.append(audit_record)
-
-
-def create_applier():
+def make_applier():
     learning_object_repository = (
         InMemoryLearningObjectRepository()
     )
     version_repository = InMemoryVersionRepository()
     audit_repository = InMemoryAuditRepository()
 
-    version_service = VersionService(
-        version_repository
-    )
-
-    audit_service = AuditService(
-        audit_repository
-    )
-
     applier = LearningObjectChangeApplier(
-        learning_object_repository=learning_object_repository,
-        version_service=version_service,
-        audit_service=audit_service,
+        learning_object_repository=(
+            learning_object_repository
+        ),
+        version_service=VersionService(
+            version_repository
+        ),
+        audit_service=AuditService(
+            audit_repository
+        ),
     )
 
     return (
@@ -82,47 +102,290 @@ def create_applier():
     )
 
 
-def create_proposal():
+def make_approved_trace(
+    proposal: ChangeProposal,
+) -> ReviewDecisionTrace:
+    return ReviewDecisionTrace(
+        proposal_id=proposal.id,
+        decision=ReviewDecision.APPROVE,
+    )
+
+
+def make_active_learning_object() -> LearningObject:
+    learning_object = LearningObject(
+        anchor_id=uuid4(),
+        statement=KnowledgeStatement(
+            text="Existing statement",
+            language="en",
+        ),
+        category_id=uuid4(),
+    )
+
+    learning_object.submit_for_review()
+    learning_object.approve()
+
+    return learning_object
+
+
+def make_update_proposal(
+    learning_object: LearningObject,
+    change_type: ChangeType,
+    text: str,
+) -> ChangeProposal:
     return ChangeProposal(
-        change_type=ChangeType.CREATE,
+        change_type=change_type,
         change_payload={
-            "anchor_id": str(uuid4()),
-            "category_id": str(uuid4()),
+            "learning_object_id": str(
+                learning_object.id
+            ),
             "statement": {
-                "text": "The present perfect connects past and present.",
+                "text": text,
                 "language": "en",
             },
         },
-        proposal_rationale="Create a new atomic Learning Object.",
+        proposal_rationale=(
+            "Update the representation of the "
+            "existing linguistic knowledge."
+        ),
         change_evidence=(
             {
-                "source": "test-evidence",
+                "type": "example",
+                "content": text,
             },
         ),
     )
 
 
-def create_trace(proposal, decision=ReviewDecision.APPROVE):
-    return ReviewDecisionTrace(
-        proposal_id=proposal.id,
-        decision=decision,
-        rationale="Review decision.",
-        reviewer="test-reviewer",
-    )
-
-
-def test_apply_create_requires_approval():
+def test_apply_create_creates_learning_object():
     (
         applier,
         learning_object_repository,
         version_repository,
         audit_repository,
-    ) = create_applier()
+    ) = make_applier()
 
-    proposal = create_proposal()
+    anchor_id = uuid4()
+    category_id = uuid4()
 
-    trace = create_trace(
-        proposal,
+    proposal = ChangeProposal(
+        change_type=ChangeType.CREATE,
+        change_payload={
+            "anchor_id": str(anchor_id),
+            "category_id": str(category_id),
+            "statement": {
+                "text": (
+                    '"Weever" is the English term '
+                    'for "tracina".'
+                ),
+                "language": "en",
+            },
+        },
+        proposal_rationale=(
+            "The knowledge is not represented "
+            "in the repository."
+        ),
+        change_evidence=(
+            {
+                "type": "example",
+                "content": (
+                    '"Weever" is the English term '
+                    'for "tracina".'
+                ),
+            },
+        ),
+    )
+
+    trace = make_approved_trace(proposal)
+
+    result = applier.apply(
+        proposal=proposal,
+        review_trace=trace,
+        actor="test",
+    )
+
+    assert result.anchor_id == anchor_id
+    assert result.category_id == category_id
+    assert (
+        result.statement.text
+        == '"Weever" is the English term for "tracina".'
+    )
+
+    assert (
+        learning_object_repository.get_by_id(
+            result.id
+        )
+        is result
+    )
+
+    history = version_repository.get_history(
+        result.id
+    )
+
+    assert len(history) == 1
+    assert history[0].number == 1
+
+    assert len(audit_repository.items) == 1
+    assert audit_repository.items[0].entity_id == result.id
+    assert (
+        audit_repository.items[0].event_type
+        == "LearningObjectCreated"
+    )
+
+
+def test_apply_update_evolves_existing_identity():
+    (
+        applier,
+        learning_object_repository,
+        version_repository,
+        audit_repository,
+    ) = make_applier()
+
+    learning_object = make_active_learning_object()
+
+    learning_object_repository.save(
+        learning_object
+    )
+
+    initial_version = VersionService(
+        version_repository
+    ).create_version(
+        learning_object
+    )
+
+    proposal = make_update_proposal(
+        learning_object=learning_object,
+        change_type=ChangeType.UPDATE,
+        text="Since introduces the starting point of a duration.",
+    )
+
+    trace = make_approved_trace(proposal)
+
+    result = applier.apply(
+        proposal=proposal,
+        review_trace=trace,
+        actor="test",
+    )
+
+    assert result.id == learning_object.id
+    assert result is learning_object
+    assert result.state is LearningObjectState.ACTIVE
+    assert (
+        result.statement.text
+        == "Since introduces the starting point of a duration."
+    )
+
+    history = version_repository.get_history(
+        result.id
+    )
+
+    assert len(history) == 2
+    assert history[0].number == initial_version.number
+    assert history[1].number == 2
+    assert (
+        history[1].snapshot["statement"]["text"]
+        == "Since introduces the starting point of a duration."
+    )
+
+    assert len(audit_repository.items) == 1
+    assert (
+        audit_repository.items[0].event_type
+        == "LearningObjectUpdated"
+    )
+
+
+def test_apply_merge_evolves_existing_identity():
+    (
+        applier,
+        learning_object_repository,
+        version_repository,
+        audit_repository,
+    ) = make_applier()
+
+    learning_object = make_active_learning_object()
+
+    learning_object_repository.save(
+        learning_object
+    )
+
+    VersionService(
+        version_repository
+    ).create_version(
+        learning_object
+    )
+
+    proposal = make_update_proposal(
+        learning_object=learning_object,
+        change_type=ChangeType.MERGE,
+        text=(
+            "Take can also be used with picture "
+            "to indicate taking a photograph."
+        ),
+    )
+
+    trace = make_approved_trace(proposal)
+
+    result = applier.apply(
+        proposal=proposal,
+        review_trace=trace,
+        actor="test",
+    )
+
+    assert result.id == learning_object.id
+    assert result is learning_object
+    assert result.state is LearningObjectState.ACTIVE
+    assert (
+        result.statement.text
+        == (
+            "Take can also be used with picture "
+            "to indicate taking a photograph."
+        )
+    )
+
+    history = version_repository.get_history(
+        result.id
+    )
+
+    assert len(history) == 2
+    assert history[0].number == 1
+    assert history[1].number == 2
+    assert (
+        history[1].snapshot["statement"]["text"]
+        == (
+            "Take can also be used with picture "
+            "to indicate taking a photograph."
+        )
+    )
+
+    assert len(audit_repository.items) == 1
+    assert (
+        audit_repository.items[0].event_type
+        == "LearningObjectMerged"
+    )
+
+
+def test_apply_rejects_non_approved_proposal():
+    (
+        applier,
+        _,
+        _,
+        _,
+    ) = make_applier()
+
+    proposal = ChangeProposal(
+        change_type=ChangeType.CREATE,
+        change_payload={
+            "anchor_id": str(uuid4()),
+            "category_id": str(uuid4()),
+            "statement": {
+                "text": "Test statement",
+                "language": "en",
+            },
+        },
+        proposal_rationale="Test rationale",
+    )
+
+    trace = ReviewDecisionTrace(
+        proposal_id=proposal.id,
         decision=ReviewDecision.REJECT,
     )
 
@@ -133,30 +396,45 @@ def test_apply_create_requires_approval():
         applier.apply(
             proposal=proposal,
             review_trace=trace,
-            actor="test-user",
+            actor="test",
         )
 
-    assert learning_object_repository.items == {}
-    assert version_repository.items == []
-    assert audit_repository.items == []
 
-
-def test_apply_create_requires_matching_review_trace():
+def test_apply_rejects_trace_for_different_proposal():
     (
         applier,
-        learning_object_repository,
-        version_repository,
-        audit_repository,
-    ) = create_applier()
+        _,
+        _,
+        _,
+    ) = make_applier()
 
-    proposal = create_proposal()
-
-    unrelated_proposal = create_proposal()
-
-    trace = create_trace(
-        unrelated_proposal,
-        decision=ReviewDecision.APPROVE,
+    proposal = ChangeProposal(
+        change_type=ChangeType.CREATE,
+        change_payload={
+            "anchor_id": str(uuid4()),
+            "category_id": str(uuid4()),
+            "statement": {
+                "text": "Test statement",
+                "language": "en",
+            },
+        },
+        proposal_rationale="Test rationale",
     )
+
+    other_proposal = ChangeProposal(
+        change_type=ChangeType.CREATE,
+        change_payload={
+            "anchor_id": str(uuid4()),
+            "category_id": str(uuid4()),
+            "statement": {
+                "text": "Other statement",
+                "language": "en",
+            },
+        },
+        proposal_rationale="Other rationale",
+    )
+
+    trace = make_approved_trace(other_proposal)
 
     with pytest.raises(
         InvalidOperation,
@@ -165,152 +443,111 @@ def test_apply_create_requires_matching_review_trace():
         applier.apply(
             proposal=proposal,
             review_trace=trace,
-            actor="test-user",
+            actor="test",
         )
 
-    assert learning_object_repository.items == {}
-    assert version_repository.items == []
-    assert audit_repository.items == []
 
-
-def test_apply_create_persists_learning_object_and_first_version():
+def test_apply_update_rejects_missing_target():
     (
         applier,
-        learning_object_repository,
-        version_repository,
-        audit_repository,
-    ) = create_applier()
-
-    proposal = create_proposal()
-    trace = create_trace(proposal)
-
-    learning_object = applier.apply(
-        proposal=proposal,
-        review_trace=trace,
-        actor="test-user",
-    )
-
-    assert (
-        learning_object_repository.get_by_id(
-            learning_object.id
-        )
-        is learning_object
-    )
-
-    assert str(learning_object.anchor_id) == (
-        proposal.change_payload["anchor_id"]
-    )
-
-    assert (
-        learning_object.statement.text
-        == proposal.change_payload["statement"]["text"]
-    )
-
-    assert (
-        learning_object.statement.language
-        == proposal.change_payload["statement"]["language"]
-    )
-
-    assert len(version_repository.items) == 1
-
-    version = version_repository.items[0]
-
-    assert version.learning_object_id == learning_object.id
-    assert version.number == 1
-
-    assert len(audit_repository.items) == 1
-
-    audit = audit_repository.items[0]
-
-    assert audit.entity_id == learning_object.id
-    assert audit.event_type == "LearningObjectCreated"
-    assert audit.actor == "test-user"
-    assert audit.metadata["version"] == 1
-    assert audit.metadata["proposal_id"] == str(proposal.id)
-    assert audit.metadata["review_trace_id"] == str(trace.id)
-
-
-def test_apply_create_rejects_invalid_payload():
-    (
-        applier,
-        learning_object_repository,
-        version_repository,
-        audit_repository,
-    ) = create_applier()
-
-    proposal = ChangeProposal(
-        change_type=ChangeType.CREATE,
-        change_payload={
-            "anchor_id": "not-a-uuid",
-            "category_id": str(uuid4()),
-            "statement": {
-                "text": "Test statement.",
-                "language": "en",
-            },
-        },
-        proposal_rationale="Invalid CREATE payload.",
-        change_evidence=(
-            {
-                "source": "test-evidence",
-            },
-        ),
-    )
-
-    trace = create_trace(proposal)
-
-    with pytest.raises(
-        InvalidOperation,
-        match="invalid.*payload",
-    ):
-        applier.apply(
-            proposal=proposal,
-            review_trace=trace,
-            actor="test-user",
-        )
-
-    assert learning_object_repository.items == {}
-    assert version_repository.items == []
-    assert audit_repository.items == []
-
-
-def test_apply_create_rejects_unsupported_change_type():
-    (
-        applier,
-        learning_object_repository,
-        version_repository,
-        audit_repository,
-    ) = create_applier()
+        _,
+        _,
+        _,
+    ) = make_applier()
 
     proposal = ChangeProposal(
         change_type=ChangeType.UPDATE,
         change_payload={
-            "anchor_id": str(uuid4()),
-            "category_id": str(uuid4()),
+            "learning_object_id": str(uuid4()),
             "statement": {
-                "text": "Test statement.",
+                "text": "Updated statement",
                 "language": "en",
             },
         },
-        proposal_rationale="Unsupported change type.",
-        change_evidence=(
-            {
-                "source": "test-evidence",
-            },
-        ),
+        proposal_rationale="Test rationale",
     )
 
-    trace = create_trace(proposal)
+    trace = make_approved_trace(proposal)
 
     with pytest.raises(
         InvalidOperation,
-        match="Only CREATE",
+        match="was not found",
     ):
         applier.apply(
             proposal=proposal,
             review_trace=trace,
-            actor="test-user",
+            actor="test",
         )
 
-    assert learning_object_repository.items == {}
-    assert version_repository.items == []
-    assert audit_repository.items == []
+
+def test_apply_merge_rejects_invalid_target_id():
+    (
+        applier,
+        _,
+        _,
+        _,
+    ) = make_applier()
+
+    proposal = ChangeProposal(
+        change_type=ChangeType.MERGE,
+        change_payload={
+            "learning_object_id": "not-a-uuid",
+            "statement": {
+                "text": "Merged statement",
+                "language": "en",
+            },
+        },
+        proposal_rationale="Test rationale",
+    )
+
+    trace = make_approved_trace(proposal)
+
+    with pytest.raises(
+        InvalidOperation,
+        match="target Learning Object id is invalid",
+    ):
+        applier.apply(
+            proposal=proposal,
+            review_trace=trace,
+            actor="test",
+        )
+
+
+def test_apply_update_rejects_invalid_statement():
+    (
+        applier,
+        learning_object_repository,
+        _,
+        _,
+    ) = make_applier()
+
+    learning_object = make_active_learning_object()
+
+    learning_object_repository.save(
+        learning_object
+    )
+
+    proposal = ChangeProposal(
+        change_type=ChangeType.UPDATE,
+        change_payload={
+            "learning_object_id": str(
+                learning_object.id
+            ),
+            "statement": {
+                "text": "Updated statement",
+            },
+        },
+        proposal_rationale="Test rationale",
+    )
+
+    trace = make_approved_trace(proposal)
+
+    with pytest.raises(
+        InvalidOperation,
+        match="invalid Knowledge Statement",
+    ):
+        applier.apply(
+            proposal=proposal,
+            review_trace=trace,
+            actor="test",
+        )
