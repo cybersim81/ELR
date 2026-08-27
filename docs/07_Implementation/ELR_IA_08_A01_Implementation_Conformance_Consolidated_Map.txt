@@ -808,4 +808,343 @@ Questo documento costituisce la baseline consolidata da utilizzare prima dell'im
 
 ---
 
+================================================================================
+CURRENT A01 CONFORMANCE VERIFICATION STATE
+================================================================================
+
+**Verification Checkpoint:** Current repository state
+**Status:** VERIFIED / COMPLETE / CLOSED
+
+Questo blocco aggiorna la baseline di conformità implementativa A01 sulla base
+dell'implementazione corrente e dell'evidenza di test disponibile nel repository.
+
+Le classificazioni precedenti contenute nella baseline che descrivono
+l'execution path `MERGE` e `UPDATE` come mancante sono da considerarsi
+superate dalla presente verifica.
+
+--------------------------------------------------------------------------------
+1. CURRENT EXECUTION PATH
+--------------------------------------------------------------------------------
+
+Il percorso corrente verificato è:
+
+Knowledge Candidate
+        |
+        v
+Change Proposal
+        |
+        v
+Learning Review
+        |
+        v
+Review Decision Trace
+        |
+        +---- REJECT -------------> NO MUTATION
+        |
+        +---- REQUEST_REVISION ---> NO MUTATION
+        |
+        +---- APPROVE
+                  |
+                  v
+          ChangeProposalService
+                  |
+                  v
+       LearningObjectChangeApplier
+                  |
+          +-------+-------+
+          |       |       |
+          v       v       v
+        CREATE  MERGE   UPDATE
+          |       |       |
+          +-------+-------+
+                  |
+                  v
+          Version / Audit
+```
+
+La verifica dell'approvazione e della ownership del Review Decision Trace
+precede la mutazione:
+
+```
+review_trace.proposal_id == proposal.id
+review_trace.decision == APPROVE
+```
+
+---
+
+2. CURRENT CHANGE APPLIER STATUS
+
+---
+
+### CREATE
+
+**VERIFIED / CONFORMANT**
+
+`LearningObjectChangeApplier`:
+
+* costruisce il Learning Object dal payload;
+* valida gli identificativi;
+* valida il Knowledge Statement;
+* persiste il Learning Object;
+* crea la Version iniziale;
+* registra l'Audit event.
+
+### MERGE
+
+**VERIFIED / CONFORMANT**
+
+`LearningObjectChangeApplier`:
+
+* risolve il Learning Object target;
+* verifica l'esistenza del target;
+* verifica l'identità del target;
+* applica `update_knowledge()`;
+* preserva l'identità del Learning Object;
+* crea una nuova Version;
+* registra `LearningObjectMerged`.
+
+### UPDATE
+
+**VERIFIED / CONFORMANT**
+
+`LearningObjectChangeApplier`:
+
+* risolve il Learning Object target;
+* verifica l'esistenza del target;
+* verifica l'identità del target;
+* applica `update_knowledge()`;
+* preserva l'identità del Learning Object;
+* crea una nuova Version;
+* registra `LearningObjectUpdated`.
+
+---
+
+3. CURRENT REVIEW GATE
+
+---
+
+**VERIFIED / CONFORMANT**
+
+La Change Proposal viene applicata esclusivamente dopo una decisione
+`APPROVE`.
+
+I seguenti percorsi non producono mutation:
+
+```
+REJECT
+    -> no ChangeApplier.apply()
+
+REQUEST_REVISION
+    -> no ChangeApplier.apply()
+```
+
+Il Change Applier verifica inoltre che il Review Decision Trace appartenga
+alla proposal ricevuta.
+
+---
+
+4. CURRENT NEGATIVE PATHS
+
+---
+
+**VERIFIED**
+
+Sono coperti i casi di:
+
+* decisione diversa da `APPROVE`;
+* Review Decision Trace appartenente a una proposal diversa;
+* target Learning Object inesistente;
+* target Learning Object identifier invalido;
+* Knowledge Statement payload invalido.
+
+---
+
+5. CURRENT VERSIONING STATUS
+
+---
+
+**VERIFIED / CONFORMANT**
+
+I percorsi verificati di `CREATE`, `MERGE` e `UPDATE` integrano
+`VersionService`.
+
+CREATE produce la Version iniziale.
+
+MERGE e UPDATE producono una nuova Version sul Learning Object esistente.
+
+L'identità del Learning Object viene preservata nei percorsi evolutivi.
+
+---
+
+6. CURRENT AUDIT STATUS
+
+---
+
+**VERIFIED / CONFORMANT**
+
+Gli execution paths verificati registrano gli eventi applicativi coerenti:
+
+```
+LearningObjectCreated
+LearningObjectMerged
+LearningObjectUpdated
+```
+
+I metadata includono il riferimento alla Change Proposal e al
+Review Decision Trace.
+
+---
+
+7. CURRENT TEST EVIDENCE
+
+---
+
+Focused ChangeApplier tests:
+
+```
+8 passed
+```
+
+Application test suite:
+
+```
+48 passed
+```
+
+Complete repository test suite:
+
+```
+148 passed
+```
+
+Current full-suite verification baseline:
+
+```
+pytest -q
+148 passed
+```
+
+---
+
+8. CURRENT RESPONSIBILITY DISPOSITION
+
+---
+
+```
+A01.1  CONFORMANT
+A01.2  COMPLETE / CLOSED
+A01.3  CONFORMANT
+A01.4  CONFORMANT
+A01.5  CONFORMANT
+A01.6  RESOLVED / CONFORMANT
+A01.7  RESOLVED / CONFORMANT
+```
+
+Current aggregate status:
+
+```
+A01 = COMPLETE / CLOSED
+```
+
+---
+
+9. SUPERSEDED GAP CLASSIFICATION
+
+---
+
+Le seguenti classificazioni presenti nella baseline precedente non descrivono
+più lo stato corrente:
+
+```
+MERGE execution through ChangeApplier = GAP
+UPDATE execution through ChangeApplier = GAP
+MERGE persistence integration        = GAP
+UPDATE persistence integration       = GAP
+```
+
+Esse sono sostituite dall'evidenza corrente:
+
+```
+MERGE execution through ChangeApplier = VERIFIED
+UPDATE execution through ChangeApplier = VERIFIED
+MERGE persistence integration         = VERIFIED
+UPDATE persistence integration        = VERIFIED
+```
+
+Analogamente, la precedente descrizione del Primary A01 Gap come assenza di
+una execution path completa per tutti e tre i tipi è stata risolta.
+
+---
+
+10. CURRENT CLOSURE CRITERIA
+
+---
+
+Il criterio di chiusura A01 è soddisfatto quando sono verificati:
+
+```
+APPROVED Change Proposal
+        |
+        v
+    ChangeApplier
+        |
+        v
+ELR mutation
+        |
+        v
+Version / Audit
+```
+
+```
+
+con execution path disponibile per:
+
+    CREATE
+    MERGE
+    UPDATE
+
+e con assenza di mutation per:
+
+    REJECT
+    REQUEST_REVISION
+
+Tali condizioni risultano attualmente verificate.
+
+--------------------------------------------------------------------------------
+11. CURRENT CONFORMANCE DECISION
+--------------------------------------------------------------------------------
+
+**A01 IMPLEMENTATION CONFORMANCE: COMPLETE / CLOSED**
+
+Evidence:
+
+    CREATE              VERIFIED
+    MERGE               VERIFIED
+    UPDATE              VERIFIED
+
+    REVIEW GATE         VERIFIED
+    PROPOSAL OWNERSHIP  VERIFIED
+    VERSIONING          VERIFIED
+    AUDIT               VERIFIED
+    IDENTITY            PRESERVED
+
+    FOCUSED TESTS       8 PASSED
+    APPLICATION TESTS   48 PASSED
+    FULL TEST SUITE     148 PASSED
+
+No implementation blocker remains within the verified A01 scope.
+
+This closure is limited to IA-08-A01 implementation conformance.
+
+A03 and A04 remain independent responsibilities and are not implied closed by
+this decision.
+
+Future changes affecting A01 require a new conformance assessment.
+
+================================================================================
+END CURRENT A01 CONFORMANCE VERIFICATION STATE
+================================================================================
+
+
+
 **Fine documento**
