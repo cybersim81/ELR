@@ -333,3 +333,215 @@ La presente mappa costituisce la baseline consolidata per la successiva
 implementazione e impedisce di considerare una capability isolata equivalente
 a un execution path conforme.
 
+
+================================================================================
+Current IA-08 Conformance State
+================================
+
+Questo blocco costituisce l'aggiornamento dello stato corrente del Resolution
+Plan sulla base dell'evidenza implementativa e di test disponibile al checkpoint
+corrente.
+
+Le sezioni precedenti che descrivono A01.2 come attività ancora necessaria per
+l'implementazione di MERGE/UPDATE rappresentano una fotografia precedente e
+devono essere considerate superate dalla presente verifica.
+
+## IA-08-A01 — Final Verified Position
+
+**STATUS: COMPLETE / CLOSED**
+
+A01 è stato verificato a livello implementativo attraverso:
+
+* Change Proposal boundary;
+* Learning Review decision gate;
+* Review Decision Trace;
+* ChangeApplier;
+* CREATE;
+* MERGE;
+* UPDATE;
+* Version integration;
+* Audit integration;
+* application-level error boundary;
+* transaction/persistence integration;
+* negative paths.
+
+## IA-08-A01.2
+
+**STATUS: COMPLETE / CLOSED**
+
+La precedente condizione:
+
+```text
+ACTIVE / CONFORMANCE VERIFICATION REQUIRED
+````
+
+è stata risolta.
+
+La precedente classificazione di:
+
+```text
+UPDATE = execution path missing
+MERGE  = execution path missing
+```
+
+non rappresenta più lo stato corrente.
+
+Il repository contiene ora l'execution path applicativo:
+
+```text
+Approved Change Proposal
+        |
+        v
+ChangeProposalService
+        |
+        v
+LearningObjectChangeApplier
+        |
+        +----------+----------+
+        |          |          |
+        v          v          v
+      CREATE     MERGE      UPDATE
+        |          |          |
+        +----------+----------+
+                   |
+                   v
+            Version / Audit
+```
+
+Il ChangeApplier verifica inoltre la corrispondenza tra proposal e review
+trace e richiede una decisione `APPROVE` prima della mutazione.
+
+## Verification Evidence
+
+Focused ChangeApplier tests:
+
+```text
+8 passed
+```
+
+Application Service suite:
+
+```text
+48 passed
+```
+
+Complete repository suite:
+
+```text
+148 passed
+```
+
+Current verification baseline:
+
+```text
+pytest -q
+148 passed
+```
+
+L'evidenza corrente dimostra che non rimane un implementation blocker nel
+perimetro A01 verificato.
+
+## Current Responsibility Map
+
+```text
+IA-08-A01
+    COMPLETE / CLOSED
+
+IA-08-A01.1
+    CONFORMANT
+
+IA-08-A01.2
+    COMPLETE / CLOSED
+
+IA-08-A01.3
+    CONFORMANT
+
+IA-08-A01.4
+    CONFORMANT
+
+IA-08-A01.5
+    CONFORMANT
+
+IA-08-A01.6
+    RESOLVED / CONFORMANT
+
+IA-08-A01.7
+    RESOLVED / CONFORMANT
+
+IA-08-A02
+    COMPLETE / CLOSED
+
+IA-08-A03
+    PENDING
+
+IA-08-A04
+    PENDING
+```
+
+## Current Roadmap
+
+La roadmap corrente è:
+
+```text
+IA-08-A01
+COMPLETE / CLOSED
+        |
+        v
+IA-08-A02
+COMPLETE / CLOSED
+        |
+        v
+IA-08-A03
+PENDING
+        |
+        v
+IA-08-A04
+PENDING
+        |
+        v
+Further IA-08 findings
+TO BE ASSESSED
+```
+
+A01 non deve essere riaperto per effetto della chiusura di A02.
+
+A03 e A04 devono essere valutati indipendentemente secondo le rispettive
+specifiche proprietarie.
+
+## Closure Decision
+
+Il gap di implementation conformance A01 verificato nel presente Resolution
+Plan è risolto.
+
+La decisione corrente è:
+
+```text
+A01 = COMPLETE / CLOSED
+```
+
+con evidenza repository e test:
+
+```text
+CREATE  = VERIFIED
+MERGE   = VERIFIED
+UPDATE  = VERIFIED
+
+Review Gate       = VERIFIED
+Versioning        = VERIFIED
+Audit             = VERIFIED
+Transaction Path  = VERIFIED
+
+Application Tests = 48 PASSED
+Full Test Suite   = 148 PASSED
+```
+
+Non è richiesta una nuova implementazione A01.
+
+Eventuali modifiche future che interessino A01 dovranno essere trattate come
+nuovi cambiamenti e sottoposte a una nuova verifica di conformità; non devono
+essere interpretate come prosecuzione del gap qui chiuso.
+
+================================================================================
+End Current IA-08 Conformance State
+===================================
+
