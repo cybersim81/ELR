@@ -1,3 +1,4 @@
+```python
 from uuid import uuid4
 
 import pytest
@@ -39,8 +40,8 @@ class InMemoryLearningObjectRepository(
     def save(self, learning_object: LearningObject) -> None:
         self.items[learning_object.id] = learning_object
 
-    def get_by_id(self, learning_object_id):
-        return self.items.get(learning_object_id)
+    def get_by_id(self, object_id):
+        return self.items.get(object_id)
 
 
 class InMemoryVersionRepository(VersionRepository):
@@ -64,14 +65,17 @@ class InMemoryAuditRepository(AuditRepository):
     def __init__(self) -> None:
         self.items: list[AuditRecord] = []
 
-    def record(self, record: AuditRecord) -> None:
-        self.items.append(record)
+    def record(self, audit: AuditRecord) -> None:
+        self.items.append(audit)
 
-    def get_events(self, entity_id):
+    def find_by_entity(
+        self,
+        entity_id,
+    ) -> list[AuditRecord]:
         return [
-            record
-            for record in self.items
-            if record.entity_id == entity_id
+            audit
+            for audit in self.items
+            if audit.entity_id == entity_id
         ]
 
 
@@ -255,7 +259,10 @@ def test_apply_update_evolves_existing_identity():
     proposal = make_update_proposal(
         learning_object=learning_object,
         change_type=ChangeType.UPDATE,
-        text="Since introduces the starting point of a duration.",
+        text=(
+            "Since introduces the starting point "
+            "of a duration."
+        ),
     )
 
     trace = make_approved_trace(proposal)
@@ -271,7 +278,10 @@ def test_apply_update_evolves_existing_identity():
     assert result.state is LearningObjectState.ACTIVE
     assert (
         result.statement.text
-        == "Since introduces the starting point of a duration."
+        == (
+            "Since introduces the starting point "
+            "of a duration."
+        )
     )
 
     history = version_repository.get_history(
@@ -283,7 +293,10 @@ def test_apply_update_evolves_existing_identity():
     assert history[1].number == 2
     assert (
         history[1].snapshot["statement"]["text"]
-        == "Since introduces the starting point of a duration."
+        == (
+            "Since introduces the starting point "
+            "of a duration."
+        )
     )
 
     assert len(audit_repository.items) == 1
