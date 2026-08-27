@@ -67,7 +67,7 @@ resolved.
 
 The verified path is:
 
-```text
+
 ChangeProposal
         |
         v
@@ -97,7 +97,7 @@ ReviewDecisionTrace
                   |
                   v
           Version / Audit
-````
+
 
 The ChangeApplier verifies proposal/trace ownership and requires an
 `APPROVE` decision before applying a mutation.
