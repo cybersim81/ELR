@@ -157,3 +157,105 @@ Therefore:
 
 This interpretation should be used when updating the IA-08 roadmap and the
 eventual consolidated implementation-conformance document.
+
+## Implementation Conformance
+
+**STATUS: PARTIAL / OPEN**
+
+La distinzione tra conformance semantica e conformance implementativa deve
+essere mantenuta.
+
+La semantica di CREATE, MERGE e UPDATE è già definita dalle specifiche
+autoritative ELR e non viene ridefinita da questa verifica.
+
+La verifica implementativa riguarda invece la raggiungibilità delle mutazioni
+attraverso il boundary autorizzato:
+
+```text
+Change Proposal
+      |
+      v
+Learning Review
+      |
+      v
+APPROVED Review Decision Trace
+      |
+      v
+ChangeApplier
+      |
+      v
+ELR mutation
+```
+
+La presenza di una primitive di dominio o di un Application Service non è
+sufficiente a dimostrare implementation conformance.
+
+### Current verified position
+
+| Change Type | Verified implementation position                                                                                                                                                                                              | Conformance         |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| CREATE      | `ChangeProposalService` invoca `LearningReviewService`; una decisione `APPROVE` conduce a `LearningObjectChangeApplier.apply()`, che attualmente implementa la creazione del Learning Object, Version, Audit e relativo Event | **CONFORMANT PATH** |
+| MERGE       | `ChangeType.MERGE` è riconosciuto dal modello, ma `LearningObjectChangeApplier` non implementa ancora un'operazione MERGE attraverso il boundary approvato                                                                    | **MISSING**         |
+| UPDATE      | `LearningObjectService.update_knowledge()` implementa modifica, Version, Audit ed Event, ma tale capability non è ancora raggiunta dal percorso `APPROVED ChangeProposal → ChangeApplier`                                     | **PARTIAL**         |
+
+### Consequence
+
+L'attuale repository dimostra quindi:
+
+```text
+APPROVED CREATE
+      |
+      v
+ChangeApplier
+      |
+      v
+Learning Object
+      |
+      +--> Version
+      +--> Audit
+      +--> Event
+
+APPROVED UPDATE
+      |
+      v
+ChangeApplier
+      |
+      X
+      |
+      +--> capability update esistente separatamente
+```
+
+e:
+
+```text
+APPROVED MERGE
+      |
+      v
+ChangeApplier
+      |
+      X
+      |
+      +--> execution path non ancora implementato
+```
+
+La capability `update_knowledge()` non deve essere considerata equivalente
+alla conformance del percorso UPDATE finché non è raggiungibile attraverso il
+boundary autorizzato della Change Proposal.
+
+Analogamente, la presenza di `ChangeType.MERGE` non dimostra l'esistenza di
+una implementazione MERGE.
+
+A01 rimane pertanto:
+
+**OPEN / PARTIAL IMPLEMENTATION CONFORMANCE**
+
+fino alla verifica dei tre execution path:
+
+```text
+CREATE  → VERIFIED
+MERGE   → VERIFIED
+UPDATE  → VERIFIED
+                |
+                v
+       A01 COMPLETE / CLOSED
+```
