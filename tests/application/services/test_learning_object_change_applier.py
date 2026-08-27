@@ -1,4 +1,4 @@
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 import pytest
 
@@ -34,18 +34,21 @@ class InMemoryLearningObjectRepository(
     LearningObjectRepository
 ):
     def __init__(self) -> None:
-        self.items: dict = {}
+        self.items: dict[UUID, LearningObject] = {}
 
     def save(self, learning_object: LearningObject) -> None:
         self.items[learning_object.id] = learning_object
 
-    def get_by_id(self, object_id):
+    def get_by_id(
+        self,
+        object_id: UUID,
+    ) -> LearningObject | None:
         return self.items.get(object_id)
 
 
 class InMemoryVersionRepository(VersionRepository):
     def __init__(self) -> None:
-        self.items: dict = {}
+        self.items: dict[UUID, list[Version]] = {}
 
     def save(self, version: Version) -> None:
         self.items.setdefault(
@@ -53,7 +56,10 @@ class InMemoryVersionRepository(VersionRepository):
             [],
         ).append(version)
 
-    def get_history(self, learning_object_id):
+    def get_history(
+        self,
+        learning_object_id: UUID,
+    ) -> list[Version]:
         return self.items.get(
             learning_object_id,
             [],
@@ -69,7 +75,7 @@ class InMemoryAuditRepository(AuditRepository):
 
     def find_by_entity(
         self,
-        entity_id,
+        entity_id: UUID,
     ) -> list[AuditRecord]:
         return [
             audit
@@ -111,6 +117,19 @@ def make_approved_trace(
     return ReviewDecisionTrace(
         proposal_id=proposal.id,
         decision=ReviewDecision.APPROVE,
+        rationale="Approved by Learning Review.",
+        reviewer="test-reviewer",
+    )
+
+
+def make_rejected_trace(
+    proposal: ChangeProposal,
+) -> ReviewDecisionTrace:
+    return ReviewDecisionTrace(
+        proposal_id=proposal.id,
+        decision=ReviewDecision.REJECT,
+        rationale="Rejected by Learning Review.",
+        reviewer="test-reviewer",
     )
 
 
@@ -396,10 +415,7 @@ def test_apply_rejects_non_approved_proposal():
         proposal_rationale="Test rationale",
     )
 
-    trace = ReviewDecisionTrace(
-        proposal_id=proposal.id,
-        decision=ReviewDecision.REJECT,
-    )
+    trace = make_rejected_trace(proposal)
 
     with pytest.raises(
         InvalidOperation,
