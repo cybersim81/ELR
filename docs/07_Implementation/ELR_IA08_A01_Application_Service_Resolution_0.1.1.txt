@@ -1,13 +1,15 @@
 # IA-08-A01 — Application Service Resolution
 
 **Version:** 0.1.1
-**Status:** ACTIVE — PARTIAL CONFORMANCE
+**Status:** COMPLETE / CLOSED
 
 ## Current Disposition
 
-IA-08-A01 is **not fully closed**.
+IA-08-A01 is **COMPLETE / CLOSED** at the verified implementation-conformance
+level documented by this resolution.
 
-The application-service layer contains implemented responsibilities for:
+The application-service layer contains implemented and verified
+responsibilities for:
 
 * Learning Object creation;
 * Learning Object submission for review;
@@ -18,9 +20,11 @@ The application-service layer contains implemented responsibilities for:
 * EventRecord creation for Learning Object updates;
 * ChangeProposal creation;
 * Learning Review invocation;
+* review-gated Change Proposal application;
 * transactional persistence boundaries where explicitly verified.
 
-The remaining A01 status shall therefore be assessed **by responsibility**, rather than by treating the entire A01 area as either open or closed.
+The status below is responsibility-based and is supported by repository
+evidence and the complete test suite.
 
 ## Responsibility Status
 
@@ -37,13 +41,13 @@ Evidence includes:
 
 ### A01.2 — Change Proposal / Learning Review Boundary
 
-**IMPLEMENTED / CONFORMANCE VERIFICATION PENDING**
+**IMPLEMENTED / VERIFIED / CONFORMANT**
 
-The current application-service implementation establishes the required Change Proposal / Learning Review boundary.
+The application-service implementation establishes the required Change Proposal
+/ Learning Review boundary.
 
-The previous implementation-level `BLOCKED` condition has been resolved.
-
-The repository contains the application components required to establish the review-gated change flow:
+The repository contains the application components required to establish the
+review-gated change flow:
 
 * `ChangeProposal`;
 * `ChangeType`, including `CREATE`, `UPDATE`, and `MERGE`;
@@ -60,32 +64,88 @@ The repository contains the application components required to establish the rev
 
 ```text
 Change Proposal
-        │
+        |
         v
 Learning Review
-        │
-        ├── APPROVE ───────────→ LearningObjectChangeApplier.apply()
-        │
-        ├── REJECT ─────────────→ no apply()
-        │
-        └── REQUEST_REVISION ───→ no apply()
+        |
+        +-- APPROVE ------------> LearningObjectChangeApplier.apply()
+        |
+        +-- REJECT -------------> no apply()
+        |
+        +-- REQUEST_REVISION ---> no apply()
+````
+
+The application service therefore does not apply a Change Proposal before
+Learning Review has produced an `APPROVE` decision.
+
+`REJECT` and `REQUEST_REVISION` do not invoke
+`LearningObjectChangeApplier.apply()`.
+
+The `LearningObjectChangeApplier` additionally verifies:
+
+```text
+review_trace.proposal_id == proposal.id
+review_trace.decision == APPROVE
 ```
 
-The application service therefore does not apply a Change Proposal before Learning Review has produced an `APPROVE` decision.
+before mutation is permitted.
 
-`REJECT` and `REQUEST_REVISION` do not invoke `LearningObjectChangeApplier.apply()`.
+#### CREATE
 
-The current implementation and focused tests resolve the previous implementation-level `BLOCKED` condition for the Change Proposal / Learning Review application boundary.
+**VERIFIED / CONFORMANT**
 
-The remaining A01.2 activity is responsibility-level conformance verification of the implemented `CREATE`, `UPDATE`, and `MERGE` semantics against the authoritative `03_Processes` and `06_System` specifications.
+An approved `CREATE` Change Proposal:
 
-Therefore A01.2 remains open only as a **conformance verification item**. It is no longer blocked by absence of the required application boundary or by absence of the `APPROVE` / `REJECT` / `REQUEST_REVISION` gating behavior.
+* creates a new Learning Object;
+* persists it;
+* creates the initial Version;
+* records the corresponding Audit event.
+
+#### UPDATE
+
+**VERIFIED / CONFORMANT**
+
+An approved `UPDATE` Change Proposal:
+
+* resolves the target Learning Object;
+* updates the existing Learning Object;
+* preserves its identity;
+* creates the next immutable Version;
+* records the corresponding Audit event.
+
+#### MERGE
+
+**VERIFIED / CONFORMANT**
+
+An approved `MERGE` Change Proposal:
+
+* resolves the target Learning Object;
+* updates the existing Learning Object;
+* preserves its identity;
+* creates the next immutable Version;
+* records the corresponding Audit event.
+
+The implementation therefore provides an execution path for all three
+Change Proposal types through the review-gated ChangeApplier boundary.
+
+#### Negative Paths
+
+The focused tests verify rejection of:
+
+* non-approved proposals;
+* Review Decision Traces belonging to a different proposal;
+* missing target Learning Objects;
+* invalid target identifiers;
+* invalid Knowledge Statement payloads.
+
+Non-approved proposals do not produce Learning Object mutation.
 
 ### A01.3 — Learning Object Approval
 
 **CONFORMANT**
 
-Approval transitions a proposed Learning Object to Active and creates the initial immutable Version.
+Approval transitions a proposed Learning Object to Active and creates the
+initial immutable Version.
 
 Evidence includes:
 
@@ -102,9 +162,10 @@ Evidence includes:
 
 Version creation is implemented through `VersionService`.
 
-The service determines the next Version number from the repository and persists a new immutable Version.
+The service determines the next Version number from the repository and
+persists a new immutable Version.
 
-The existing Version history is preserved.
+Existing Version history is preserved.
 
 ### A01.5 — Learning Object Update
 
@@ -118,13 +179,17 @@ The existing Version history is preserved.
 * records the corresponding AuditRecord;
 * records a `LearningObjectUpdated` EventRecord.
 
+The review-gated `UPDATE` execution path is provided separately through
+`LearningObjectChangeApplier`.
+
 Persistence and rollback behavior are covered by focused tests.
 
 ### A01.6 — Application Error Boundary
 
 **RESOLVED / CONFORMANT**
 
-The application service translates domain state-transition failures into application-level `InvalidOperation` errors.
+The application service translates domain state-transition failures into
+application-level `InvalidOperation` errors.
 
 The detailed responsibility remains documented by:
 
@@ -138,193 +203,37 @@ The verified transactional boundary uses the existing SQLAlchemy Session.
 
 Application services do not autonomously commit the relevant operations.
 
-Rollback tests verify that Learning Object, Version, AuditRecord and EventRecord persistence participate in the expected transaction boundary.
-
-## Final A01 Position
-
-A01 remains **ACTIVE / PARTIAL CONFORMANCE**.
-
-The previous implementation-level `BLOCKED` condition associated with the Change Proposal / Learning Review application boundary is **RESOLVED**.
-
-The implemented decision gate has been verified at implementation level:
-
-```text
-APPROVE
-    ↓
-LearningObjectChangeApplier.apply()
-
-REJECT
-    ↓
-no apply()
-
-REQUEST_REVISION
-    ↓
-no apply()
-```
-
-The remaining A01.2 activity is **responsibility-level conformance verification** of the implemented `CREATE`, `UPDATE`, and `MERGE` semantics against the authoritative `03_Processes` and `06_System` specifications.
-
-
-## Status
-
-**IA-08-A01 — ACTIVE / PARTIAL CONFORMANCE**
-
-**Implementation-level BLOCKED condition:** RESOLVED
-
-**Implementation status of Change Proposal / Learning Review boundary:** IMPLEMENTED AND VERIFIED
-
-**Primary remaining verification area:** A01.2 — Change Proposal / Learning Review / CREATE / UPDATE / MERGE semantics
-
-A01 remains open solely pending responsibility-level conformance verification against the authoritative `03_Processes` and `06_System` specifications.
-
-No implementation blocker remains for the Change Proposal / Learning Review application boundary.
-
-
-================================================================================
-Current A01 Verification State
-==============================
-
-Questo blocco aggiorna lo stato documentale di A01 sulla base dell'evidenza
-repository e test disponibile al checkpoint corrente.
-
-Le sezioni precedenti che descrivono A01.2 come "CONFORMANCE VERIFICATION
-PENDING", "EXECUTION PATH MISSING" o equivalente rappresentano la fotografia
-precedente al completamento dell'implementazione e non costituiscono più lo
-stato corrente.
-
-## A01.2 — Current Verified Position
-
-**STATUS: IMPLEMENTED / VERIFIED**
-
-Il boundary applicativo Change Proposal → Learning Review → ChangeApplier è
-presente e verificato.
-
-Il percorso corrente è:
-
-```text
-ChangeProposal
-        |
-        v
-Learning Review
-        |
-        v
-ReviewDecisionTrace
-        |
-        +---- REJECT -------------> no mutation
-        |
-        +---- REQUEST_REVISION ---> no mutation
-        |
-        +---- APPROVE
-                  |
-                  v
-          ChangeProposalService
-                  |
-                  v
-       LearningObjectChangeApplier
-                  |
-          +-------+-------+
-          |       |       |
-          v       v       v
-        CREATE  MERGE   UPDATE
-          |       |       |
-          +-------+-------+
-                  |
-                  v
-          Version / Audit
-````
-
-`LearningObjectChangeApplier` verifica inoltre:
-
-```text
-review_trace.proposal_id == proposal.id
-review_trace.decision == APPROVE
-```
-
-prima dell'applicazione della modifica.
-
-## CREATE
-
-**STATUS: VERIFIED**
-
-Una Change Proposal `CREATE` approvata:
-
-* crea un nuovo Learning Object;
-* lo persiste;
-* crea la Version iniziale;
-* registra l'Audit richiesto.
-
-Evidenza focalizzata:
-
-`tests/application/services/test_learning_object_change_applier.py`
-
-## MERGE
-
-**STATUS: VERIFIED**
-
-Una Change Proposal `MERGE` approvata:
-
-* risolve il Learning Object target;
-* modifica il target esistente;
-* preserva la sua identità;
-* crea la nuova Version;
-* registra l'Audit richiesto.
-
-Il percorso è implementato attraverso `LearningObjectChangeApplier`.
-
-## UPDATE
-
-**STATUS: VERIFIED**
-
-Una Change Proposal `UPDATE` approvata:
-
-* risolve il Learning Object target;
-* modifica il target esistente;
-* preserva la sua identità;
-* crea la nuova Version;
-* registra l'Audit richiesto.
-
-Il percorso è implementato attraverso `LearningObjectChangeApplier`.
-
-## Negative Paths
-
-Sono verificati i casi in cui:
-
-* la proposta non è APPROVE;
-* il Review Decision Trace appartiene a una proposal diversa;
-* il target Learning Object non esiste;
-* il target identifier è invalido;
-* il Knowledge Statement è invalido.
-
-Le proposte non approvate non vengono applicate.
+Rollback tests verify that Learning Object, Version, AuditRecord and EventRecord
+persistence participate in the expected transaction boundary.
 
 ## Verification Evidence
 
-Focused Application Service tests:
+Focused ChangeApplier tests:
 
-`8 passed`
+```text
+8 passed
+```
 
 Application test suite:
 
-`48 passed`
+```text
+48 passed
+```
 
 Complete repository test suite:
-
-`148 passed`
-
-Risultato:
 
 ```text
 pytest -q
 148 passed
 ```
 
-## Current A01 Disposition
+The complete repository test suite therefore passes with no failures.
 
-Alla luce dell'evidenza corrente:
+## Current A01 Disposition
 
 ```text
 A01.1  CONFORMANT
-A01.2  IMPLEMENTED / VERIFIED
+A01.2  IMPLEMENTED / VERIFIED / CONFORMANT
 A01.3  CONFORMANT
 A01.4  CONFORMANT
 A01.5  CONFORMANT
@@ -332,38 +241,52 @@ A01.6  RESOLVED / CONFORMANT
 A01.7  RESOLVED / CONFORMANT
 ```
 
-La precedente condizione implementation-level `BLOCKED` relativa al boundary
-Change Proposal / Learning Review è risolta.
+The previous implementation-level `BLOCKED` condition associated with the
+Change Proposal / Learning Review application boundary is resolved.
 
-La precedente condizione A01.2 relativa all'assenza dei percorsi applicativi
-CREATE / MERGE / UPDATE è risolta.
+The previous A01.2 conformance-verification condition is resolved by the
+implemented and tested `CREATE`, `MERGE`, and `UPDATE` execution paths.
 
-## Closure Position
+## Final A01 Position
 
-L'evidenza repository e test disponibile al checkpoint corrente è sufficiente
-a considerare risolto il gap implementativo A01 verificato.
+**IA-08-A01 — COMPLETE / CLOSED**
+
+The verified implementation state is:
 
 ```text
 IMPLEMENTATION       VERIFIED
+REVIEW GATE          VERIFIED
 CREATE               VERIFIED
 MERGE                VERIFIED
 UPDATE               VERIFIED
-REVIEW GATE          VERIFIED
+IDENTITY PRESERVATION VERIFIED
 VERSIONING           VERIFIED
 AUDIT                VERIFIED
+ERROR BOUNDARY       VERIFIED
+TRANSACTION BOUNDARY VERIFIED
+
+FOCUSED TESTS        8 PASSED
 APPLICATION TESTS    48 PASSED
 FULL TEST SUITE      148 PASSED
 ```
 
-**Current A01 Status: COMPLETE / CLOSED**
+The closure applies to the implementation-conformance scope of IA-08-A01.
 
-La chiusura si riferisce alla conformità implementativa verificata nel
-perimetro A01.
+No implementation blocker remains within the verified A01 scope.
 
-Le successive aree IA-08-A03 e IA-08-A04 rimangono indipendenti e non vengono
-chiuse o inferite dalla presente decisione.
+A future modification affecting A01 shall be treated as a new change and
+subjected to a new conformance verification. It shall not reopen this
+historical gap automatically.
+
+The subsequent IA-08 areas remain independent:
+
+```text
+IA-08-A03  PENDING
+IA-08-A04  PENDING
+```
+
+A01 closure does not imply closure of A03 or A04.
 
 ================================================================================
-End Current A01 Verification State
-==================================
-
+End IA-08-A01 Application Service Resolution
+============================================
