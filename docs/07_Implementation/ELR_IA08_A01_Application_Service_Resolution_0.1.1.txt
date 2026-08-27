@@ -62,7 +62,7 @@ review-gated change flow:
 
 `ChangeProposalService` coordinates the use case in the following order:
 
-```text
+
 Change Proposal
         |
         v
@@ -73,7 +73,7 @@ Learning Review
         +-- REJECT -------------> no apply()
         |
         +-- REQUEST_REVISION ---> no apply()
-````
+
 
 The application service therefore does not apply a Change Proposal before
 Learning Review has produced an `APPROVE` decision.
