@@ -76,9 +76,6 @@ A version change does not create a new canonical identity.
 
 # 4. CANONICAL NAME → CURRENT FILE RESOLUTION
 
-```text
-# 4. CANONICAL NAME → CURRENT FILE RESOLUTION
-
 Current canonical-to-file mapping:
 
 | Canonical name | Current repository file |
