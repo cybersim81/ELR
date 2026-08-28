@@ -28,10 +28,12 @@ The Bootstrap Pack consists of:
 5. `05_Implementation_Alignment_Roadmap.txt`
 6. `06_Session_Continuity_State.txt`
 7. `07_Session_Prompt.txt`
+8. `08_Current_Implementation_Checkpoint.txt`
 
 The files are intentionally ordered from normative baseline through
 implementation inventory, findings, end-to-end gaps, roadmap, continuity
-state, and session operating instructions.
+state, session operating instructions, and the current implementation
+checkpoint.
 
 The operational IA-08 implementation plan is maintained separately under:
 
@@ -46,8 +48,9 @@ The authority hierarchy is:
 1. Authoritative normative specifications and ADRs
 2. Repository source code and tests as implementation evidence
 3. IA-08 implementation conformance plan
-4. This Bootstrap Pack as consolidated continuity state
-5. Session-specific working notes
+4. Current Implementation Checkpoint
+5. This Bootstrap Pack as consolidated continuity state
+6. Session-specific working notes
 
 The Bootstrap Pack must never be used to override an authoritative
 specification.
@@ -68,140 +71,24 @@ implementation alignment.
 
 ---
 
-## IA-01 — Domain Semantic Alignment
+## IA-01 Through IA-07
 
-`COMPLETE`
+The following implementation phases and gates are complete:
 
-The following eight findings have been resolved:
+* IA-01 — Domain Semantic Alignment — COMPLETE;
+* IA-02 — Contract and Lifecycle Alignment — COMPLETE;
+* IA-03 — Persistence Model — COMPLETE;
+* IA-04 — Concrete Repository Layer — COMPLETE;
+* IA-05 — Database Wiring — COMPLETE;
+* IA-06 — Persistent Integration Tests — COMPLETE;
+* IA-07 / E2E-GATE-01 — COMPLETE / VERIFIED.
 
-### IA-001 — LearningObject Statement Representation
+The persistent LearningObject lifecycle has been verified across:
 
-`RESOLVED`
+Candidate → Proposed → Active → Retired
 
-LearningObject represents KnowledgeStatement explicitly as an immutable
-aggregate member / knowledge value.
-
-### IA-002 — KnowledgeStatement Identity Semantics
-
-`RESOLVED`
-
-KnowledgeStatement has no autonomous identity, lifecycle, repository, or
-versioning boundary.
-
-### IA-003 — Generic Version Entity
-
-`RESOLVED`
-
-Version identity is explicitly scoped to LearningObject through
-`learning_object_id`.
-
-### IA-005 — LearningObject Version Number
-
-`RESOLVED`
-
-LearningObject no longer stores mutable Version state.
-
-Immutable Version history represents historical knowledge state.
-
-### IA-010 — Generic VersionRepository History
-
-`RESOLVED`
-
-Version history is retrieved using `learning_object_id`.
-
-### IA-017 — Version Snapshot Representation
-
-`RESOLVED`
-
-Version snapshots preserve the structured KnowledgeStatement value.
-
-### IA-018 — Application / Repository Version Boundary
-
-`RESOLVED`
-
-Application and repository Version history semantics are aligned around
-LearningObject.
-
-### IA-019 — Version Snapshot Test Coverage
-
-`RESOLVED`
-
-Application tests verify Version creation, Version numbering, snapshot
-content, preservation of previous Versions, and resulting LearningObject
-state.
-
----
-
-## IA-01 Closure Rule
-
-The eight IA-01 findings listed above are closed.
-
-They must not be reopened merely because later implementation work introduces
-persistence, infrastructure, or integration gaps.
-
-They may only be reopened if new repository evidence demonstrates a direct
-contradiction with the authoritative normative corpus.
-
-Any such contradiction must first be identified against the authoritative
-source before changing the Bootstrap Pack.
-
----
-
-## Current LearningObject Lifecycle
-
-The normative LearningObject lifecycle is:
-
-Candidate
-↓
-Proposed
-↓
-Active
-↓
-Retired
-
-`Reviewed`, `Approved`, and `Rejected` are not LearningObject lifecycle
-states.
-
-They belong to the Change Proposal review process and must not be introduced
-into the LearningObject lifecycle.
-
----
-
-## Versioning Boundary
-
-LearningObject is the primary unit of knowledge versioning.
-
-KnowledgeStatement is an aggregate member / knowledge value.
-
-Version is immutable and explicitly belongs to LearningObject through
-`learning_object_id`.
-
-Version history is distinct from operational Audit history.
-
-Audit records must not be used as a substitute for immutable Version history.
-
----
-
-## Current Implementation State
-
-The implementation alignment process has completed the persistence and
-end-to-end lifecycle gates.
-
-Current verified state:
-
-* IA-01 Domain Semantic Alignment — COMPLETE;
-* IA-02 Contract and Lifecycle Alignment — COMPLETE;
-* IA-03 Persistence Model — COMPLETE;
-* IA-04 Concrete Repository Integration — COMPLETE;
-* IA-05 Database Wiring — COMPLETE;
-* IA-06 Persistence Test Conformance — COMPLETE;
-* E2E-07 Production Persistence — COMPLETE / VERIFIED;
-* E2E-08 Persistent Reload — VERIFIED;
-* E2E-09 Version History Recovery — VERIFIED;
-* E2E-10 Audit History Recovery — VERIFIED;
-* E2E-11 Persistent End-to-End Test — VERIFIED;
-* IA-07 / E2E-GATE-01 — COMPLETE / VERIFIED;
-* IA-08-A01 Application Service — COMPLETE / CLOSED.
+Persistent reload, Version history recovery, Audit history recovery, and the
+complete persistent end-to-end lifecycle have been verified.
 
 Historical E2E-GATE-01 checkpoint:
 
@@ -211,146 +98,89 @@ Historical E2E-GATE-01 verification:
 
 `74 passed`
 
-The historical E2E verification remains a historical baseline and is not
-replaced by later verification results.
+The historical E2E verification remains a historical baseline.
 
 ---
 
 ## IA-08 — Implementation Conformance
 
+Status:
+
 `IN PROGRESS`
 
-The current IA-08 finding is:
+### Completed Findings
 
-`IA-08-A02 — Transactional Event Record`
-
-The completed IA-08 finding is:
-
-`IA-08-A01 — Application Service`
-
-Status:
+#### IA-08-A01 — Application Service
 
 `COMPLETE / CLOSED`
 
-### IA-08-A01 Responsibility Status
+The A01 implementation and responsibility set has been verified.
 
-A01.2 — Review / Change Proposal
-
-`IMPLEMENTATION VERIFIED / RESOLVED`
-
-A01.3 — Category Service
-
-`CONFORMANT`
-
-A01.4 — Version Service
-
-`CONFORMANT`
-
-A01.5 — Audit Service
-
-`CONFORMANT`
-
-A01.6 — Application Error Boundary
-
-`RESOLVED`
-
-A01.7 — Transaction Boundary
-
-`IMPLEMENTATION VERIFIED / RESOLVED`
-
-No remaining non-resolved A01 responsibility is currently identified.
-
-A01.2, A01.3, A01.4, A01.5, A01.6 and A01.7 are closed unless new
-authoritative or repository evidence demonstrates a direct contradiction or
-regression.
-
-### IA-08-A01 Verification
-
-Current complete-suite verification:
-
-`123 passed`
-
-The verification covers the completed A01 responsibility set, including:
+Verified areas include:
 
 * Review / Change Proposal coordination;
-* Category Service behavior;
-* Version creation and history behavior;
-* Audit creation and persistence;
-* Application Error Boundary behavior;
-* transactional approval behavior;
-* rollback behavior when Audit persistence fails;
-* commit behavior when all persistence operations succeed.
+* Category Service;
+* Version behavior;
+* Audit behavior;
+* application error boundary;
+* transaction boundary;
+* review-gated ChangeApplier execution;
+* CREATE;
+* MERGE;
+* UPDATE;
+* identity preservation;
+* Version creation;
+* Audit creation;
+* negative-path rejection.
+
+#### IA-08-A02 — Transactional Event Record
+
+`COMPLETE / CLOSED`
+
+The A02 implementation and transactional event-record responsibility has been
+verified.
+
+A01 and A02 must not be reopened without contradictory authoritative or
+repository evidence.
 
 ---
 
-## Current Open IA-08 Findings
+## Current Finding
 
-The remaining IA-08 findings are:
+The next implementation-conformance finding is:
 
-### IA-08-A02 — Transactional Event Record
+`IA-08-A03 — Security and Authorization`
 
-`NEXT`
+Status:
+
+`NEXT / PENDING`
+
+---
+
+## Remaining IA-08 Findings
 
 ### IA-08-A03 — Security and Authorization
 
-`PENDING`
+`NEXT / PENDING`
 
 ### IA-08-A04 — API Implementation
 
 `PENDING`
 
-No A01 responsibility remains open.
+No A01 or A02 responsibility remains open.
 
 ---
 
-## Current Persistence State
+## Verification Baseline
 
-Production persistence is implemented and verified for:
+Current full-suite verification:
 
-* LearningObject;
-* KnowledgeStatement representation;
-* Version;
-* AuditRecord;
-* Anchor relationships;
-* concrete LearningObject repository;
-* concrete Version repository;
-* concrete Audit repository;
-* database/session wiring;
-* transaction rollback;
-* atomic persistence behavior;
-* persistent reload through a new session;
-* persistent Version history recovery;
-* persistent Audit history recovery;
-* complete persistent end-to-end lifecycle.
+`148 passed`
 
-The verified persistence boundary is:
+This is the current implementation verification baseline.
 
-`Application → Concrete Repository → Persistence Model → Database → New Session → Reconstructed Aggregate`
-
-The persistent LearningObject lifecycle is verified across:
-
-`Candidate → Proposed → Active → Retired`
-
----
-
-## Current Open Findings
-
-### Persistence / End-to-End
-
-No remaining E2E persistence finding is currently open within
-E2E-GATE-01.
-
-The following recovery and end-to-end objectives are verified:
-
-* E2E-08 — Persistent Reload;
-* E2E-09 — Version History Recovery;
-* E2E-10 — Audit History Recovery;
-* E2E-11 — Persistent End-to-End Test;
-* IA-07 / E2E-GATE-01 — Persistent LearningObject Lifecycle.
-
-The next implementation work is tracked by:
-
-`IA-08 — Implementation Conformance`
+Earlier counts such as `123 passed` are historical and must not be treated as
+the current verification state.
 
 ---
 
@@ -373,61 +203,69 @@ IA-04 Concrete Repository Layer
 IA-05 Database Wiring
 ↓
 E2E-07 Production Persistence
-│
-│ COMPLETE — VERIFIED
-│
 ↓
 IA-06 Persistence Test Conformance
-│
-│ COMPLETE — 100%
-│
-│ E2E-08 → E2E-11 VERIFIED
 ↓
 IA-07 E2E-GATE-01
 │
 │ COMPLETE — VERIFIED
 │ checkpoint: d679299
-│ historical test suite: 74 passed
+│
 ↓
 IA-08 Implementation Conformance
 │
 │ CURRENT — IN PROGRESS
 │
 ├── IA-08-A01 Application Service
-│       │
 │       └── COMPLETE / CLOSED
 │
-└── IA-08-A02 Transactional Event Record
-│
-└── NEXT
+├── IA-08-A02 Transactional Event Record
+│       └── COMPLETE / CLOSED
 │
 ├── IA-08-A03 Security and Authorization
-│       └── PENDING
+│       └── NEXT / PENDING
 │
 └── IA-08-A04 API Implementation
-└── PENDING
+        └── PENDING
+
+---
+
+## Current Status Summary
+
+| Phase / Finding | Status |
+| --- | --- |
+| IA-01 Domain Semantic Alignment | COMPLETE |
+| IA-02 Contract and Lifecycle Alignment | COMPLETE |
+| IA-03 Persistence Model | COMPLETE |
+| IA-04 Concrete Repository Layer | COMPLETE |
+| IA-05 Database Wiring | COMPLETE |
+| IA-06 Persistent Integration Tests | COMPLETE |
+| IA-07 / E2E-GATE-01 | COMPLETE / VERIFIED |
+| IA-08-A01 Application Service | COMPLETE / CLOSED |
+| IA-08-A02 Transactional Event Record | COMPLETE / CLOSED |
+| IA-08-A03 Security and Authorization | NEXT / PENDING |
+| IA-08-A04 API Implementation | PENDING |
+| IA-08 Implementation Conformance | IN PROGRESS |
 
 ---
 
 ## Last Completed Gate
 
-IA-08-A01 — APPLICATION SERVICE
+`IA-08-A02 — TRANSACTIONAL EVENT RECORD — COMPLETE / CLOSED`
 
-`COMPLETE / CLOSED`
+Verification baseline:
 
-Verification:
-
-`123 passed`
+`148 passed`
 
 ---
 
-## Current Work Package / Gate
+## Current Work Package
 
-IA-08 — IMPLEMENTATION CONFORMANCE
+`IA-08 — IMPLEMENTATION CONFORMANCE — IN PROGRESS`
 
 Current finding:
 
-`IA-08-A02 — Transactional Event Record`
+`IA-08-A03 — SECURITY AND AUTHORIZATION`
 
 ---
 
@@ -435,58 +273,51 @@ Current finding:
 
 The next implementation session must resume at:
 
-**IA-08-A02 — Transactional Event Record**
+**IA-08-A03 — Security and Authorization**
 
 The session must first inspect the authoritative normative requirement and
 then inspect the current repository implementation.
 
-The session must not assume that A02 is a gap.
+The session must not assume that A03 is a gap.
 
-The absence of a named class, service, repository, or file is not sufficient
-evidence of non-conformance.
+The absence of a named class, service, repository, file, or architectural
+label is not sufficient evidence of non-conformance.
 
 Responsibility and behavior must be evaluated against the authoritative
 specification.
 
 ---
 
-## IA-08-A01 Closure Rule
+## Closure Rule
 
-The following responsibilities are closed:
+IA-01 through IA-07 are closed.
 
-* A01.2 — Review / Change Proposal;
-* A01.3 — Category Service;
-* A01.4 — Version Service;
-* A01.5 — Audit Service;
-* A01.6 — Application Error Boundary;
-* A01.7 — Transaction Boundary.
+IA-08-A01 is closed.
 
-They must not be reopened unless new contradictory authoritative or repository
-evidence is discovered.
+IA-08-A02 is closed.
 
-The resolution process may now proceed to IA-08-A02.
+Closed phases and findings must not be reopened unless new contradictory
+authoritative or repository evidence demonstrates a direct contradiction or
+regression.
 
 ---
 
-## Bootstrap Pack Reading Order
+## Bootstrap Reading Order
 
-A new session should read the Bootstrap Pack in this order:
+A new session should read:
 
-1. `01_Normative_Baseline_State.txt`
-2. `02_Implementation_Baseline_Inventory.txt`
-3. `03_Implementation_Finding_Register.txt`
-4. `04_End_to_End_Gap_Map.txt`
-5. `05_Implementation_Alignment_Roadmap.txt`
-6. `06_Session_Continuity_State.txt`
-7. `07_Session_Prompt.txt`
+1. `08_Current_Implementation_Checkpoint.txt`
+2. `05_Implementation_Alignment_Roadmap.txt`
+3. `06_Session_Continuity_State.txt`
+4. `07_Session_Prompt.txt`
+5. `03_Implementation_Finding_Register.txt`
+6. `04_End_to_End_Gap_Map.txt`
+7. `02_Implementation_Baseline_Inventory.txt`
+8. `01_Normative_Baseline_State.txt`
 
-The index provides orientation only.
+The checkpoint is the fastest operational entry point.
 
-The detailed operational IA-08 plan is:
-
-`docs/07_Implementation/ELR_IA08_Implementation_Conformance_Gap_Resolution_Plan_0.1.0.txt`
-
-The individual Bootstrap files contain the detailed continuity state.
+The normative corpus remains authoritative.
 
 ---
 
@@ -494,29 +325,27 @@ The individual Bootstrap files contain the detailed continuity state.
 
 A future session must:
 
-1. Read the complete `docs/00_Bootstrap/` directory.
-2. Read the current IA-08 implementation conformance plan.
-3. Treat the authoritative normative corpus as the final authority.
-4. Treat the Bootstrap Pack as the consolidated implementation continuity
-   state.
-5. Verify repository evidence before declaring a finding resolved.
-6. Preserve the closure of IA-01 through IA-07 and E2E-07 through
-   E2E-GATE-01 unless contradictory authoritative or repository evidence is
-   found.
-7. Preserve the closure of IA-08-A01 unless contradictory evidence is found.
-8. Resume at IA-08-A02.
-9. Distinguish domain/application alignment from production persistence.
-10. Distinguish immutable Version history from operational Audit history.
-11. Keep LearningObject lifecycle states separate from Change Proposal review
-    decisions.
-12. Do not restart completed implementation phases without new contradictory
-    evidence.
+1. Read the current implementation checkpoint.
+2. Read the current roadmap.
+3. Read the current IA-08 implementation plan.
+4. Read the authoritative normative source relevant to the current finding.
+5. Inspect repository implementation evidence.
+6. Dispose the finding based on evidence.
+7. Implement only a confirmed gap.
+8. Run focused tests.
+9. Run the complete test suite.
+10. Record the resulting checkpoint.
+11. Update continuity documentation only after verification.
+
+Use:
+
+`inspect → responsibility disposition → implement only confirmed gap → test → verify → checkpoint → next finding`
 
 ---
 
 ## Operational Consistency Rule
 
-The following three operational Bootstrap documents must remain synchronized:
+The following operational documents must remain synchronized:
 
 `05_Implementation_Alignment_Roadmap.txt`
 
@@ -524,37 +353,38 @@ The following three operational Bootstrap documents must remain synchronized:
 
 `07_Session_Prompt.txt`
 
+`08_Current_Implementation_Checkpoint.txt`
+
 They must describe the same:
 
 * current IA-08 finding;
 * completed IA-08 findings;
 * current status;
-* verification state;
+* verification baseline;
 * next action.
 
-Baseline documents such as `01`, `02`, `03` and `04` must not be modified merely
-to reflect an operational checkpoint unless their actual baseline content has
-changed.
-
-The IA-08 implementation plan under `docs/07_Implementation/` is the
-operational plan and must remain consistent with the current Bootstrap
-continuity state.
+Baseline documents must not be modified merely to reflect an operational
+checkpoint unless their actual baseline content has changed.
 
 ---
 
 ## Final Resume Instruction
 
-**RESUME AT: IA-08-A02 — TRANSACTIONAL EVENT RECORD**
+**RESUME AT: IA-08-A03 — SECURITY AND AUTHORIZATION**
 
 **IA-08-A01 — COMPLETE / CLOSED**
 
-**A01.2, A01.3, A01.4, A01.5, A01.6 AND A01.7 — CLOSED**
+**IA-08-A02 — COMPLETE / CLOSED**
 
-**CURRENT VERIFICATION — 123 PASSED**
+**IA-08-A03 — NEXT / PENDING**
 
-**DO NOT REOPEN A01 WITHOUT CONTRADICTORY EVIDENCE**
+**IA-08-A04 — PENDING**
 
-**DO NOT ASSUME A02 IS A GAP**
+**CURRENT FULL-SUITE BASELINE — 148 PASSED**
+
+**DO NOT REOPEN A01 OR A02 WITHOUT CONTRADICTORY EVIDENCE**
+
+**DO NOT ASSUME A03 IS A GAP**
 
 **INSPECT THE AUTHORITATIVE REQUIREMENT FIRST**
 
@@ -568,4 +398,4 @@ continuity state.
 
 **VERIFY THE COMPLETE TEST SUITE**
 
-**UPDATE ROADMAP AND BOOTSTRAP STATE AFTER VERIFICATION**
+**UPDATE THE CHECKPOINT AND CONTINUITY DOCUMENTATION AFTER VERIFICATION**
