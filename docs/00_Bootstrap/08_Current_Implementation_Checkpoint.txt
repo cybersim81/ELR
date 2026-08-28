@@ -1,0 +1,273 @@
+# 08_Current_Implementation_Checkpoint.txt
+
+## ELR Current Implementation Checkpoint
+
+### Purpose
+
+This document is the authoritative operational checkpoint for resuming ELR
+implementation work across sessions.
+
+It does not replace the normative specifications, ADRs, architecture
+documents, repository source code, tests, or implementation plans.
+
+It records the currently verified implementation state and the exact point from
+which the next implementation session must resume.
+
+---
+
+## Authority
+
+Authority order remains:
+
+1. Authoritative normative specifications and ADRs
+2. Repository source code and tests as implementation evidence
+3. IA-08 implementation conformance plan
+4. Current Implementation Checkpoint
+5. Bootstrap continuity documents
+6. Session-specific working notes
+
+This checkpoint must never override an authoritative normative requirement.
+
+---
+
+## Current Global Implementation State
+
+The following implementation phases have been completed and verified:
+
+* IA-01 — Domain Semantic Alignment — COMPLETE;
+* IA-02 — Contract and Lifecycle Alignment — COMPLETE;
+* IA-03 — Persistence Model — COMPLETE;
+* IA-04 — Concrete Repository Layer — COMPLETE;
+* IA-05 — Database Wiring — COMPLETE;
+* IA-06 — Persistent Integration Tests — COMPLETE;
+* IA-07 — E2E-GATE-01 — COMPLETE.
+
+The persistent LearningObject lifecycle has been verified across:
+
+Candidate → Proposed → Active → Retired
+
+Persistent reload, Version history recovery, Audit history recovery, and the
+complete persistent end-to-end lifecycle have been verified.
+
+---
+
+## IA-08 — Implementation Conformance
+
+Status:
+
+`IN PROGRESS`
+
+IA-08 is the current implementation-conformance work package.
+
+### Completed Findings
+
+#### IA-08-A01 — Application Service
+
+Status:
+
+`COMPLETE / CLOSED`
+
+Verified responsibilities include:
+
+* Review / Change Proposal coordination;
+* Category Service behavior;
+* Version behavior;
+* Audit behavior;
+* application error boundary;
+* transaction boundary;
+* review-gated ChangeApplier execution;
+* CREATE execution;
+* MERGE execution;
+* UPDATE execution;
+* LearningObject target resolution;
+* LearningObject identity preservation;
+* Version creation;
+* Audit event creation;
+* negative-path rejection for invalid or non-approved proposals.
+
+A01 responsibilities must not be reopened without contradictory authoritative or
+repository evidence.
+
+#### IA-08-A02 — Transactional Event Record
+
+Status:
+
+`COMPLETE / CLOSED`
+
+The transactional event-record responsibility has been implemented and
+verified.
+
+A02 must not be reopened without contradictory authoritative or repository
+evidence.
+
+---
+
+## Current Finding
+
+The next implementation-conformance finding is:
+
+`IA-08-A03 — Security and Authorization`
+
+Status:
+
+`NEXT / PENDING`
+
+This is the exact resumption point for the next implementation session.
+
+---
+
+## Remaining IA-08 Findings
+
+### IA-08-A03 — Security and Authorization
+
+`NEXT / PENDING`
+
+### IA-08-A04 — API Implementation
+
+`PENDING`
+
+No other IA-08 finding is currently open.
+
+---
+
+## Verification Baseline
+
+Current full-suite verification:
+
+`148 passed`
+
+This is the current verification baseline associated with the closure of
+IA-08-A01 and IA-08-A02.
+
+Earlier verification counts such as `123 passed` are historical and must not
+be treated as the current implementation baseline.
+
+---
+
+## Closure Rules
+
+The following are closed:
+
+* IA-01;
+* IA-02;
+* IA-03;
+* IA-04;
+* IA-05;
+* IA-06;
+* IA-07;
+* IA-08-A01;
+* IA-08-A02.
+
+A closed phase or finding must not be reopened merely because subsequent work
+is being performed.
+
+Reopening requires new authoritative or repository evidence demonstrating a
+direct contradiction or regression.
+
+---
+
+## Next Session Procedure
+
+A new implementation session must proceed in this order:
+
+1. Read this checkpoint completely.
+2. Read `docs/00_Bootstrap/05_Implementation_Alignment_Roadmap.txt`.
+3. Read the current IA-08 implementation conformance plan under
+   `docs/07_Implementation/`.
+4. Read the relevant authoritative normative source for IA-08-A03.
+5. Inspect the existing repository implementation.
+6. Determine whether IA-08-A03 represents an actual behavioral or structural
+   conformance gap.
+7. Do not infer a gap merely from the absence of a particular class, file,
+   service, or naming convention.
+8. Implement only a confirmed gap.
+9. Run focused tests.
+10. Run the complete test suite.
+11. Record the verification result.
+12. Update implementation documentation and continuity state.
+13. Only then establish the next finding.
+
+---
+
+## Required Analysis Rule
+
+The next session must not assume that:
+
+* Security and Authorization requires a specific implementation structure;
+* a missing named component is automatically non-conformant;
+* the architecture roadmap itself is sufficient evidence of an implementation
+  gap.
+
+The normative responsibility and the current repository behavior must be
+compared directly.
+
+---
+
+## Separation of Concerns
+
+The following boundaries remain normative:
+
+* LearningObject lifecycle states are:
+  Candidate → Proposed → Active → Retired;
+* Review decisions are not LearningObject lifecycle states;
+* KnowledgeStatement remains an aggregate member / knowledge value;
+* Version history is immutable and LearningObject-centered;
+* Audit history is operational and distinct from Version history;
+* application services operate through domain repository contracts;
+* production persistence remains downstream of the aligned domain model.
+
+---
+
+## Operational Documents
+
+The following documents must remain synchronized with this checkpoint:
+
+`docs/00_Bootstrap/00_Bootstrap_Pack_Index.txt`
+
+`docs/00_Bootstrap/05_Implementation_Alignment_Roadmap.txt`
+
+`docs/00_Bootstrap/06_Session_Continuity_State.txt`
+
+`docs/00_Bootstrap/07_Session_Prompt.txt`
+
+The current IA-08 implementation plan remains:
+
+`docs/07_Implementation/ELR_IA08_Implementation_Conformance_Gap_Resolution_Plan_0.1.0.txt`
+
+---
+
+## Final Resume Point
+
+`IA-08 — IMPLEMENTATION CONFORMANCE — IN PROGRESS`
+
+`IA-08-A01 — COMPLETE / CLOSED`
+
+`IA-08-A02 — COMPLETE / CLOSED`
+
+`IA-08-A03 — NEXT / PENDING`
+
+`IA-08-A04 — PENDING`
+
+`FULL TEST SUITE — 148 PASSED`
+
+---
+
+## Final Instruction
+
+**RESUME AT IA-08-A03 — SECURITY AND AUTHORIZATION**
+
+**DO NOT REOPEN IA-08-A01 OR IA-08-A02 WITHOUT CONTRADICTORY EVIDENCE**
+
+**READ THE AUTHORITATIVE REQUIREMENT FIRST**
+
+**INSPECT THE EXISTING REPOSITORY IMPLEMENTATION SECOND**
+
+**DISPOSE THE RESPONSIBILITY BASED ON EVIDENCE**
+
+**IMPLEMENT ONLY A CONFIRMED GAP**
+
+**VERIFY FOCUSED TESTS**
+
+**VERIFY THE COMPLETE TEST SUITE**
+
+**UPDATE CONTINUITY DOCUMENTATION AFTER VERIFICATION**
