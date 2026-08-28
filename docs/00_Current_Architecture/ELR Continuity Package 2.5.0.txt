@@ -1,0 +1,683 @@
+# English Learning Repository (ELR)
+
+## Continuity Package
+
+**Version:** 2.5.0
+**Status:** ACTIVE
+**Document Type:** Session Continuity and Architectural Recovery Package
+
+---
+
+# 1. PURPOSE
+
+This document defines the persistent continuity model for ELR architectural
+and implementation work across separate sessions.
+
+Its purpose is to ensure that a new session can reconstruct the current
+working state from repository evidence without relying on conversational
+memory.
+
+The repository is the source of truth.
+
+This document does not replace:
+
+* Architecture Specification;
+* Architecture Decision Log;
+* Architecture Consistency Matrix;
+* domain specifications;
+* implementation specifications;
+* implementation plans;
+* Roadmap;
+* Handoff;
+* Session Prompt;
+* Current Implementation Checkpoint.
+
+It defines how those artifacts are used together for continuity.
+
+---
+
+# 2. SOURCE OF TRUTH
+
+The ELR repository is the authoritative source for:
+
+* document existence;
+* document content;
+* document version;
+* document status;
+* canonical document identity;
+* current versioned filename;
+* architecture decisions;
+* implementation state;
+* roadmap state;
+* continuity state;
+* verification evidence.
+
+Conversational memory must not override repository evidence.
+
+If the current repository state differs from a previous conversation, the
+repository state is authoritative.
+
+---
+
+# 3. CANONICAL DOCUMENT IDENTITY
+
+ELR continuity artifacts distinguish between:
+
+* **canonical logical name**;
+* **versioned repository filename**.
+
+The canonical logical name identifies the artifact independently of version.
+
+The versioned repository filename identifies the current physical document
+version stored in the repository.
+
+A version change does not create a new canonical identity.
+
+---
+
+# 4. CANONICAL NAME → CURRENT FILE RESOLUTION
+
+Current canonical-to-file mapping:
+
+| Canonical name | Current repository file |
+| --- | --- |
+| `ELR Architectural Work State — Handoff` | `ELR Architectural Work State - Handoff 6.5.0.txt` |
+| `ELR Continuity Package` | `ELR Continuity Package 2.5.0.txt` |
+| `ELR Roadmap` | `ELR Roadmap 1.4.0.txt` |
+| `ELR Session Prompt` | `ELR Session Prompt 1.5.0.txt` |
+| `ELR Implementation Status` | `ELR Implementation Status 2.0.0.txt` |
+| `ELR Current Implementation Checkpoint` | `ELR Current Implementation Checkpoint 1.0.0.txt` |
+
+Resolution rule:
+
+**canonical name → repository lookup → current versioned filename**
+
+When a document is referenced semantically, use the canonical name.
+
+When a document must be read, modified or verified, resolve the canonical
+name to the current versioned filename using repository evidence.
+
+Never assume that a previous versioned filename remains current.
+
+---
+
+# 5. VERSION RESOLUTION RULES
+
+When opening or modifying a continuity artifact:
+
+1. identify the canonical document name;
+2. inspect the repository;
+3. determine the current versioned filename;
+4. verify the version contained in the document;
+5. verify that all continuity references point to the current version;
+6. only then perform READ, WRITE or VERIFY operations.
+
+A reference to a canonical name must not silently imply a historical version.
+
+A reference to a versioned filename must be verified explicitly against the
+repository.
+
+---
+
+# 5A. ARCHITECTURAL MAP REFERENCE
+
+The directory:
+
+`docs/01_Architecture/`
+
+is the architectural map of ELR.
+
+It is a structured corpus of architectural artifacts used for repository
+navigation, dependency identification and cross-document consistency checks.
+
+The architectural map is not a single specification and does not replace the
+normative scope of its individual documents.
+
+When architectural context is required, the relevant documents in
+`docs/01_Architecture/` must be consulted before interpreting specialist
+documents in isolation.
+
+---
+
+# 6. CONTINUITY ARTIFACT RESPONSIBILITIES
+
+The primary continuity artifacts have different responsibilities.
+
+## 6.1 ELR Session Prompt
+
+Canonical name:
+
+`ELR Session Prompt`
+
+Current file:
+
+`ELR Session Prompt 1.5.0.txt`
+
+Responsibility:
+
+Defines how a new session must bootstrap, verify the repository and work.
+
+The Session Prompt is the bootstrap entry point.
+
+---
+
+## 6.2 ELR Continuity Package
+
+Canonical name:
+
+`ELR Continuity Package`
+
+Current file:
+
+`ELR Continuity Package 2.5.0.txt`
+
+Responsibility:
+
+Defines the persistent continuity model and recovery rules.
+
+---
+
+## 6.3 ELR Architectural Work State — Handoff
+
+Canonical name:
+
+`ELR Architectural Work State — Handoff`
+
+Current file:
+
+`ELR Architectural Work State - Handoff 6.5.0.txt`
+
+Responsibility:
+
+Records the latest verified operational architectural and implementation
+checkpoint and the next authorized action.
+
+---
+
+## 6.4 ELR Roadmap
+
+Canonical name:
+
+`ELR Roadmap`
+
+Current file:
+
+`ELR Roadmap 1.4.0.txt`
+
+Responsibility:
+
+Defines architectural phases, sequencing and future architectural gates.
+
+The architectural Roadmap must not be interpreted as the implementation
+conformance roadmap.
+
+---
+
+## 6.5 ELR Implementation Status
+
+Canonical name:
+
+`ELR Implementation Status`
+
+Current file:
+
+`ELR Implementation Status 2.0.0.txt`
+
+Responsibility:
+
+Records the actual current implementation state and implementation milestone
+status.
+
+---
+
+## 6.6 ELR Current Implementation Checkpoint
+
+Canonical name:
+
+`ELR Current Implementation Checkpoint`
+
+Current file:
+
+`ELR Current Implementation Checkpoint 1.0.0.txt`
+
+Responsibility:
+
+Provides the current implementation resume point independently of
+conversation history.
+
+---
+
+# 7. CURRENT ARCHITECTURAL STATE
+
+The architectural roadmap has been completed through:
+
+**Fase 10 — Interaction Layer**
+
+Status:
+
+**COMPLETE / PASS — 100%**
+
+No unresolved architectural finding remains in the completed architectural
+roadmap.
+
+The architectural roadmap must not be interpreted as an implementation
+roadmap.
+
+No Phase 11 is assumed or authorized by this continuity package.
+
+The completed architectural phases remain closed unless new authoritative
+evidence demonstrates a contradiction, regression, material specification
+change or newly discovered responsibility.
+
+---
+
+# 8. CURRENT IMPLEMENTATION STATE
+
+Current implementation work package:
+
+**IA-08 — Implementation Conformance**
+
+Status:
+
+**IN PROGRESS**
+
+Completed findings:
+
+* IA-08-A01 — Application Service — COMPLETE / CLOSED;
+* IA-08-A02 — Transactional Event Record — COMPLETE / CLOSED.
+
+Current finding:
+
+**IA-08-A03 — Security and Authorization — NEXT / PENDING**
+
+Next finding:
+
+**IA-08-A04 — API Implementation — PENDING**
+
+The `NEXT / PENDING` designation does not establish that a gap exists.
+
+A new session must first inspect the authoritative requirement and the actual
+repository implementation.
+
+---
+
+# 9. CURRENT VERIFICATION STATE
+
+Current complete-suite verification baseline:
+
+**148 PASSED**
+
+This is the current implementation verification baseline.
+
+Earlier test counts are historical.
+
+Historical counts must not replace the current verified baseline.
+
+A new verification result must only be recorded after the corresponding test
+suite has actually been executed.
+
+---
+
+# 10. IMPLEMENTATION CONFORMANCE RULE
+
+Implementation conformance is determined by comparing:
+
+**authoritative responsibility**
+
+against
+
+**actual repository behavior**
+
+The following classifications are permitted:
+
+* CONFORMANT;
+* IMPLEMENTATION VERIFIED / RESOLVED;
+* PARTIAL;
+* GAP;
+* BLOCKED.
+
+The absence of a named implementation component is not sufficient evidence of
+a GAP.
+
+The presence of a named implementation component is not sufficient evidence
+of CONFORMANCE.
+
+Responsibility and behavior are authoritative.
+
+Naming is secondary.
+
+---
+
+# 11. CURRENT IA-08 RESUME POINT
+
+The next authorized implementation activity is:
+
+**IA-08-A03 — Security and Authorization**
+
+The session must:
+
+1. read the authoritative requirement;
+2. inspect the current implementation;
+3. identify the responsibility actually implemented;
+4. compare behavior against the requirement;
+5. classify the result;
+6. implement only a confirmed gap;
+7. run focused tests;
+8. run the complete test suite;
+9. update the implementation checkpoint;
+10. update continuity artifacts;
+11. establish the next resume point.
+
+---
+
+# 12. BOOTSTRAP READ ORDER
+
+A new session must resolve and read the current physical files in this order:
+
+1. `ELR Session Prompt`;
+2. `ELR Continuity Package`;
+3. `ELR Architectural Work State — Handoff`;
+4. `ELR Roadmap`.
+
+The implementation continuity checkpoint and implementation status must then be
+read when implementation state is required:
+
+5. `ELR Current Implementation Checkpoint`;
+6. `ELR Implementation Status`.
+
+The physical filenames must always be resolved from repository evidence before
+reading them.
+
+The bootstrap read order must not be changed merely because artifact versions
+change.
+
+---
+
+# 13. CHECKPOINT UPDATE ORDER
+
+When a continuity checkpoint requires versioned updates of the continuity
+artifacts, the update order is:
+
+1. Continuity Package;
+2. Architectural Work State — Handoff;
+3. Roadmap;
+4. Session Prompt.
+
+Each artifact must be applied and verified in the repository before the next
+artifact is versioned.
+
+The Session Prompt must always be the last continuity artifact updated.
+
+This update order does not alter bootstrap read order.
+
+Therefore:
+
+**Bootstrap read order:**
+
+Session Prompt → Continuity Package → Handoff → Roadmap
+
+**Checkpoint update order:**
+
+Continuity Package → Handoff → Roadmap → Session Prompt
+
+---
+
+# 14. CROSS-REFERENCE CONSISTENCY
+
+Before accepting the continuity chain as verified, inspect the current
+references between:
+
+* Session Prompt;
+* Continuity Package;
+* Architectural Work State — Handoff;
+* Roadmap.
+
+For each physical versioned reference determine whether it is:
+
+1. current;
+2. historical;
+3. stale;
+4. future / not yet materialized.
+
+Current bootstrap references must resolve to existing current repository files.
+
+Historical references are allowed only when their historical meaning is
+explicit.
+
+Future filenames must not be represented as current verified artifacts.
+
+No stale versioned filename may remain in the current bootstrap chain.
+
+---
+
+# 15. ARCHITECTURAL AUTHORITY
+
+The following principles remain mandatory:
+
+* the repository is the source of truth;
+* Architecture Specification defines architectural responsibility;
+* Architecture Decision Log records architectural decisions;
+* Architecture Consistency Matrix records cross-document consistency;
+* specifications define detailed behavior;
+* implementation does not acquire architectural authority merely because it
+  exists;
+* persistence structures must not be used to infer Domain semantics;
+* Domain semantics must not be inferred from ORM structures;
+* APPROVED architectural decisions must not be reopened without a real
+  documented contradiction;
+* implementation findings must not silently become architectural changes.
+
+---
+
+# 16. FROZEN SPECIFICATION RULE
+
+The specifications consolidated during the Specification Consistency checkpoint
+remain frozen with respect to their verified architectural boundaries.
+
+They must not be reopened merely to:
+
+* improve wording;
+* introduce implementation preferences;
+* accommodate an ORM structure;
+* accommodate an existing code structure;
+* change a previously approved architectural decision without contradiction.
+
+A real contradiction may trigger a controlled reopening.
+
+Completion of the Implementation Readiness Review does not by itself reopen
+the frozen specification set.
+
+The Derived Learning Systems and Interaction Layer checkpoints have also been
+completed and remain closed unless new evidence requires controlled
+reassessment.
+
+---
+
+# 17. IMPLEMENTATION READINESS RULE
+
+The Implementation Readiness Review was a completed architectural gate.
+
+Result:
+
+**GO**
+
+The gate verified that the specifications were sufficiently precise for
+implementation.
+
+It did not itself define the current implementation state.
+
+Current implementation state is maintained by:
+
+* Implementation Status;
+* Current Implementation Checkpoint;
+* Bootstrap Implementation Alignment Roadmap;
+* repository source code;
+* tests.
+
+---
+
+# 18. SESSION CLOSURE CHECKPOINT
+
+A session may propose closure when:
+
+* the current work item has a verified disposition;
+* no partially applied correction remains;
+* required tests have been executed;
+* verification results are recorded;
+* continuity artifacts describe the same state;
+* the next authorized activity is explicit;
+* the repository can reconstruct the working state without conversational
+  memory.
+
+The assistant must explicitly state when a clean checkpoint has been reached.
+
+The assistant must not close the session automatically.
+
+The user must explicitly approve closure.
+
+---
+
+# 19. CURRENT CHECKPOINT
+
+Architectural position:
+
+**Fase 10 — Interaction Layer — COMPLETE / PASS — 100%**
+
+Implementation position:
+
+**IA-08 — Implementation Conformance — IN PROGRESS**
+
+Last completed implementation finding:
+
+**IA-08-A02 — Transactional Event Record — COMPLETE / CLOSED**
+
+Current implementation finding:
+
+**IA-08-A03 — Security and Authorization — NEXT / PENDING**
+
+Following implementation finding:
+
+**IA-08-A04 — API Implementation — PENDING**
+
+Current complete-suite baseline:
+
+**148 PASSED**
+
+Current architectural findings:
+
+**0**
+
+Current implementation finding count:
+
+**No confirmed A03 GAP recorded yet.**
+
+---
+
+# 20. SESSION RECOVERY RULE
+
+A new session must be able to reconstruct the current state from repository
+evidence alone.
+
+Minimum reconstruction state:
+
+* architectural position;
+* implementation work package;
+* last completed implementation finding;
+* current implementation finding;
+* next implementation finding;
+* current verification baseline;
+* current continuity artifact versions;
+* current physical filenames.
+
+If any of these cannot be established from repository evidence, continuity
+must be considered incomplete.
+
+The session must resolve the discrepancy before implementation work proceeds.
+
+---
+
+# 21. REOPENING RULE
+
+Completed work must not be reopened without evidence.
+
+Valid reopening evidence includes:
+
+* authoritative contradiction;
+* implementation regression;
+* material specification change;
+* newly discovered responsibility;
+* explicit reassessment requirement.
+
+Conversation history alone is not sufficient evidence.
+
+---
+
+# 22. FINAL CONTINUITY MARKER
+
+ARCHITECTURE:
+
+**FASE 10 COMPLETE / PASS — 100%**
+
+IMPLEMENTATION:
+
+**IA-08 IN PROGRESS**
+
+A01:
+
+**COMPLETE / CLOSED**
+
+A02:
+
+**COMPLETE / CLOSED**
+
+A03:
+
+**NEXT / PENDING**
+
+A04:
+
+**PENDING**
+
+FULL SUITE:
+
+**148 PASSED**
+
+CURRENT RESUME POINT:
+
+**IA-08-A03 — SECURITY AND AUTHORIZATION**
+
+---
+
+# 23. FINAL INSTRUCTION
+
+**THE ARCHITECTURAL ROADMAP IS COMPLETE THROUGH FASE 10.**
+
+**DO NOT INVENT OR ASSUME PHASE 11.**
+
+**CURRENT IMPLEMENTATION WORK RESUMES AT IA-08-A03.**
+
+**DO NOT REOPEN IA-08-A01 OR IA-08-A02 WITHOUT CONTRADICTORY EVIDENCE.**
+
+**DO NOT ASSUME IA-08-A03 IS A GAP.**
+
+**READ THE AUTHORITATIVE REQUIREMENT FIRST.**
+
+**INSPECT THE EXISTING REPOSITORY SECOND.**
+
+**DISPOSE THE RESPONSIBILITY BASED ON EVIDENCE.**
+
+**IMPLEMENT ONLY A CONFIRMED GAP.**
+
+**VERIFY FOCUSED TESTS.**
+
+**VERIFY THE COMPLETE TEST SUITE.**
+
+**UPDATE THE IMPLEMENTATION CHECKPOINT AFTER VERIFICATION.**
+
+**UPDATE THE CONTINUITY ARTIFACTS AFTER VERIFICATION.**
+
+**ESTABLISH THE NEXT RESUME POINT BEFORE MOVING FORWARD.**
+
+---
+
+**END OF DOCUMENT**
