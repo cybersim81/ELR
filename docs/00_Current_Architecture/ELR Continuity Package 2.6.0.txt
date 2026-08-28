@@ -76,6 +76,9 @@ A version change does not create a new canonical identity.
 
 # 4. CANONICAL NAME → CURRENT FILE RESOLUTION
 
+```text
+# 4. CANONICAL NAME → CURRENT FILE RESOLUTION
+
 Current canonical-to-file mapping:
 
 | Canonical name | Current repository file |
@@ -83,9 +86,10 @@ Current canonical-to-file mapping:
 | `ELR Architectural Work State — Handoff` | `ELR Architectural Work State - Handoff 6.5.0.txt` |
 | `ELR Continuity Package` | `ELR Continuity Package 2.6.0.txt` |
 | `ELR Roadmap` | `ELR Roadmap 1.4.0.txt` |
-| `ELR Session Prompt` | `ELR Session Prompt 1.6.0.txt` |
+| `ELR Session Prompt` | `ELR Session Prompt 1.7.0.txt` |
 | `ELR Implementation Status` | `ELR Implementation Status 2.0.0.txt` |
 | `ELR Current Implementation Checkpoint` | `ELR Current Implementation Checkpoint 1.0.0.txt` |
+
 
 Resolution rule:
 
@@ -148,13 +152,14 @@ Canonical name:
 
 Current file:
 
-`ELR Session Prompt 1.6.0.txt`
+`ELR Session Prompt 1.7.0.txt`
 
 Responsibility:
 
 Defines how a new session must bootstrap, verify the repository and work.
 
 The Session Prompt is the bootstrap entry point.
+
 
 ---
 
