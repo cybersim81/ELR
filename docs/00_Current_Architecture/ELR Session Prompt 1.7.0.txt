@@ -3,7 +3,7 @@ Educational Learning Repository (ELR)
 
 ELR Session Prompt
 
-Version: 1.6.0
+Version: 1.7.0
 Status: ACTIVE
 Document Type: Session Bootstrap and Continuity Prompt
 ================================================================================
@@ -50,8 +50,8 @@ Canonical continuity artifacts:
 
 Current repository versions:
 
-* ELR Session Prompt → 1.6.0
-* ELR Continuity Package → 2.5.0
+* ELR Session Prompt → 1.7.0
+* ELR Continuity Package → 2.6.0
 * ELR Architectural Work State — Handoff → 6.5.0
 * ELR Roadmap → 1.4.0
 * ELR Implementation Status → 2.0.0
@@ -64,9 +64,9 @@ Current repository versions:
 
 Current physical files:
 
-`docs/00_Current_Architecture/ELR Session Prompt 1.6.0.txt`
+`docs/00_Current_Architecture/ELR Session Prompt 1.7.0.txt`
 
-`docs/00_Current_Architecture/ELR Continuity Package 2.5.0.txt`
+`docs/00_Current_Architecture/ELR Continuity Package 2.6.0.txt`
 
 `docs/00_Current_Architecture/ELR Architectural Work State - Handoff 6.5.0.txt`
 
@@ -236,18 +236,20 @@ evidence.
 For IA-08-A03:
 
 1. identify the authoritative normative requirement;
-2. read the relevant authoritative material;
-3. inspect the current repository implementation;
-4. identify the responsibility actually implemented;
-5. compare implementation behavior against the authoritative requirement;
-6. classify the result;
-7. implement only if a confirmed implementation gap exists;
-8. run focused tests;
-9. run the complete test suite;
-10. record the verification result;
-11. update the Current Implementation Checkpoint;
-12. update the relevant continuity artifacts;
-13. establish the next authorized resume point.
+2. read the authoritative requirement;
+3. resolve any referenced implementation-plan or supporting-document filename
+   from the current repository;
+4. inspect the current repository implementation;
+5. identify the responsibility actually implemented;
+6. compare implementation behavior against the authoritative requirement;
+7. classify the result;
+8. implement only if a confirmed implementation gap exists;
+9. run focused tests;
+10. run the complete test suite;
+11. record the verification result;
+12. update the Current Implementation Checkpoint;
+13. update the relevant continuity artifacts;
+14. establish the next authorized resume point.
 
 Permitted dispositions:
 
@@ -256,6 +258,9 @@ Permitted dispositions:
 * PARTIAL
 * GAP
 * BLOCKED
+
+Never treat a historical implementation-plan filename as authoritative merely
+because it appears in an older continuity artifact.
 
 
 ================================================================================
@@ -388,6 +393,8 @@ Before declaring continuity stable, verify:
 * all current versioned filenames exist;
 * all current references resolve;
 * no current artifact points to a stale versioned filename;
+* no current artifact presents a non-existent implementation-plan path as the
+  current authoritative source;
 * architectural position is consistent across architectural artifacts;
 * implementation position is consistent across implementation artifacts;
 * the current finding is identical across continuity artifacts;
@@ -487,11 +494,11 @@ FULL-SUITE BASELINE:
 
 CURRENT SESSION PROMPT:
 
-**VERSION 1.6.0**
+**VERSION 1.7.0**
 
 CURRENT CONTINUITY PACKAGE:
 
-**VERSION 2.5.0**
+**VERSION 2.6.0**
 
 CURRENT HANDOFF:
 
@@ -530,7 +537,9 @@ CURRENT IMPLEMENTATION CHECKPOINT:
 
 **READ THE AUTHORITATIVE REQUIREMENT FIRST.**
 
-**INSPECT THE EXISTING REPOSITORY SECOND.**
+**RESOLVE CURRENT SUPPORTING DOCUMENT FILENAMES FROM REPOSITORY EVIDENCE.**
+
+**INSPECT THE EXISTING REPOSITORY IMPLEMENTATION SECOND.**
 
 **COMPARE RESPONSIBILITY AND BEHAVIOR.**
 
