@@ -63,7 +63,7 @@ The current implementation work is governed by:
 
 and:
 
-`docs/00_Bootstrap/08_Current_Implementation_Checkpoint.txt`
+`docs/00_Bootstrap/08_Current_Implementation_Checkpoint 1.0.0.txt`
 
 Current implementation work package:
 
