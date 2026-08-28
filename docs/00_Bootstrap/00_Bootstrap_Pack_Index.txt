@@ -37,7 +37,7 @@ checkpoint.
 
 The operational IA-08 implementation plan is maintained separately under:
 
-`docs/07_Implementation/ELR_IA08_Implementation_Conformance_Gap_Resolution_Plan_0.1.0.txt`
+`docs/07_Implementation/ELR_IA08_Implementation_Conformance_Gap_Resolution_Plan_0.1.2.txt`
 
 ---
 
