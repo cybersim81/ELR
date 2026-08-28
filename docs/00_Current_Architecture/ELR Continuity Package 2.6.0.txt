@@ -2,7 +2,7 @@
 
 ## Continuity Package
 
-**Version:** 2.5.0
+**Version:** 2.6.0
 **Status:** ACTIVE
 **Document Type:** Session Continuity and Architectural Recovery Package
 
@@ -43,7 +43,6 @@ The ELR repository is the authoritative source for:
 * document existence;
 * document content;
 * document version;
-* document status;
 * canonical document identity;
 * current versioned filename;
 * architecture decisions;
@@ -63,8 +62,8 @@ repository state is authoritative.
 
 ELR continuity artifacts distinguish between:
 
-* **canonical logical name**;
-* **versioned repository filename**.
+* canonical logical name;
+* versioned repository filename.
 
 The canonical logical name identifies the artifact independently of version.
 
@@ -82,9 +81,9 @@ Current canonical-to-file mapping:
 | Canonical name | Current repository file |
 | --- | --- |
 | `ELR Architectural Work State — Handoff` | `ELR Architectural Work State - Handoff 6.5.0.txt` |
-| `ELR Continuity Package` | `ELR Continuity Package 2.5.0.txt` |
+| `ELR Continuity Package` | `ELR Continuity Package 2.6.0.txt` |
 | `ELR Roadmap` | `ELR Roadmap 1.4.0.txt` |
-| `ELR Session Prompt` | `ELR Session Prompt 1.5.0.txt` |
+| `ELR Session Prompt` | `ELR Session Prompt 1.6.0.txt` |
 | `ELR Implementation Status` | `ELR Implementation Status 2.0.0.txt` |
 | `ELR Current Implementation Checkpoint` | `ELR Current Implementation Checkpoint 1.0.0.txt` |
 
@@ -92,9 +91,9 @@ Resolution rule:
 
 **canonical name → repository lookup → current versioned filename**
 
-When a document is referenced semantically, use the canonical name.
+When an artifact is referenced semantically, use the canonical name.
 
-When a document must be read, modified or verified, resolve the canonical
+When an artifact must be read, modified or verified, resolve the canonical
 name to the current versioned filename using repository evidence.
 
 Never assume that a previous versioned filename remains current.
@@ -119,7 +118,7 @@ repository.
 
 ---
 
-# 5A. ARCHITECTURAL MAP REFERENCE
+# 6. ARCHITECTURAL MAP REFERENCE
 
 The directory:
 
@@ -139,11 +138,9 @@ documents in isolation.
 
 ---
 
-# 6. CONTINUITY ARTIFACT RESPONSIBILITIES
+# 7. CONTINUITY ARTIFACT RESPONSIBILITIES
 
-The primary continuity artifacts have different responsibilities.
-
-## 6.1 ELR Session Prompt
+## 7.1 ELR Session Prompt
 
 Canonical name:
 
@@ -151,7 +148,7 @@ Canonical name:
 
 Current file:
 
-`ELR Session Prompt 1.5.0.txt`
+`ELR Session Prompt 1.6.0.txt`
 
 Responsibility:
 
@@ -161,7 +158,7 @@ The Session Prompt is the bootstrap entry point.
 
 ---
 
-## 6.2 ELR Continuity Package
+## 7.2 ELR Continuity Package
 
 Canonical name:
 
@@ -169,7 +166,7 @@ Canonical name:
 
 Current file:
 
-`ELR Continuity Package 2.5.0.txt`
+`ELR Continuity Package 2.6.0.txt`
 
 Responsibility:
 
@@ -177,7 +174,7 @@ Defines the persistent continuity model and recovery rules.
 
 ---
 
-## 6.3 ELR Architectural Work State — Handoff
+## 7.3 ELR Architectural Work State — Handoff
 
 Canonical name:
 
@@ -194,7 +191,7 @@ checkpoint and the next authorized action.
 
 ---
 
-## 6.4 ELR Roadmap
+## 7.4 ELR Roadmap
 
 Canonical name:
 
@@ -213,7 +210,7 @@ conformance roadmap.
 
 ---
 
-## 6.5 ELR Implementation Status
+## 7.5 ELR Implementation Status
 
 Canonical name:
 
@@ -230,7 +227,7 @@ status.
 
 ---
 
-## 6.6 ELR Current Implementation Checkpoint
+## 7.6 ELR Current Implementation Checkpoint
 
 Canonical name:
 
@@ -247,7 +244,7 @@ conversation history.
 
 ---
 
-# 7. CURRENT ARCHITECTURAL STATE
+# 8. CURRENT ARCHITECTURAL STATE
 
 The architectural roadmap has been completed through:
 
@@ -271,7 +268,7 @@ change or newly discovered responsibility.
 
 ---
 
-# 8. CURRENT IMPLEMENTATION STATE
+# 9. CURRENT IMPLEMENTATION STATE
 
 Current implementation work package:
 
@@ -301,7 +298,7 @@ repository implementation.
 
 ---
 
-# 9. CURRENT VERIFICATION STATE
+# 10. CURRENT VERIFICATION STATE
 
 Current complete-suite verification baseline:
 
@@ -318,7 +315,7 @@ suite has actually been executed.
 
 ---
 
-# 10. IMPLEMENTATION CONFORMANCE RULE
+# 11. IMPLEMENTATION CONFORMANCE RULE
 
 Implementation conformance is determined by comparing:
 
@@ -348,7 +345,7 @@ Naming is secondary.
 
 ---
 
-# 11. CURRENT IA-08 RESUME POINT
+# 12. CURRENT IA-08 RESUME POINT
 
 The next authorized implementation activity is:
 
@@ -368,9 +365,15 @@ The session must:
 10. update continuity artifacts;
 11. establish the next resume point.
 
+The authoritative IA-08 requirement source must be resolved from the current
+repository contents.
+
+Do not assume a historical or previously referenced implementation-plan
+filename exists.
+
 ---
 
-# 12. BOOTSTRAP READ ORDER
+# 13. BOOTSTRAP READ ORDER
 
 A new session must resolve and read the current physical files in this order:
 
@@ -388,19 +391,16 @@ read when implementation state is required:
 The physical filenames must always be resolved from repository evidence before
 reading them.
 
-The bootstrap read order must not be changed merely because artifact versions
-change.
-
 ---
 
-# 13. CHECKPOINT UPDATE ORDER
+# 14. CHECKPOINT UPDATE ORDER
 
 When a continuity checkpoint requires versioned updates of the continuity
 artifacts, the update order is:
 
 1. Continuity Package;
 2. Architectural Work State — Handoff;
-3. Roadmap;
+3. Roadmap, only if its architectural state genuinely changes;
 4. Session Prompt.
 
 Each artifact must be applied and verified in the repository before the next
@@ -408,21 +408,9 @@ artifact is versioned.
 
 The Session Prompt must always be the last continuity artifact updated.
 
-This update order does not alter bootstrap read order.
-
-Therefore:
-
-**Bootstrap read order:**
-
-Session Prompt → Continuity Package → Handoff → Roadmap
-
-**Checkpoint update order:**
-
-Continuity Package → Handoff → Roadmap → Session Prompt
-
 ---
 
-# 14. CROSS-REFERENCE CONSISTENCY
+# 15. CROSS-REFERENCE CONSISTENCY
 
 Before accepting the continuity chain as verified, inspect the current
 references between:
@@ -430,7 +418,10 @@ references between:
 * Session Prompt;
 * Continuity Package;
 * Architectural Work State — Handoff;
-* Roadmap.
+* Roadmap;
+* Current Implementation Checkpoint;
+* Implementation Status;
+* Bootstrap continuity artifacts.
 
 For each physical versioned reference determine whether it is:
 
@@ -448,9 +439,12 @@ Future filenames must not be represented as current verified artifacts.
 
 No stale versioned filename may remain in the current bootstrap chain.
 
+No continuity artifact may present a non-existent implementation-plan path as
+the current authoritative source.
+
 ---
 
-# 15. ARCHITECTURAL AUTHORITY
+# 16. ARCHITECTURAL AUTHORITY
 
 The following principles remain mandatory:
 
@@ -463,13 +457,13 @@ The following principles remain mandatory:
   exists;
 * persistence structures must not be used to infer Domain semantics;
 * Domain semantics must not be inferred from ORM structures;
-* APPROVED architectural decisions must not be reopened without a real
+* approved architectural decisions must not be reopened without a real
   documented contradiction;
 * implementation findings must not silently become architectural changes.
 
 ---
 
-# 16. FROZEN SPECIFICATION RULE
+# 17. FROZEN SPECIFICATION RULE
 
 The specifications consolidated during the Specification Consistency checkpoint
 remain frozen with respect to their verified architectural boundaries.
@@ -484,16 +478,12 @@ They must not be reopened merely to:
 
 A real contradiction may trigger a controlled reopening.
 
-Completion of the Implementation Readiness Review does not by itself reopen
-the frozen specification set.
-
-The Derived Learning Systems and Interaction Layer checkpoints have also been
-completed and remain closed unless new evidence requires controlled
-reassessment.
+The Implementation Readiness Review and completed architectural checkpoints
+remain closed unless new evidence requires controlled reassessment.
 
 ---
 
-# 17. IMPLEMENTATION READINESS RULE
+# 18. IMPLEMENTATION READINESS RULE
 
 The Implementation Readiness Review was a completed architectural gate.
 
@@ -516,7 +506,7 @@ Current implementation state is maintained by:
 
 ---
 
-# 18. SESSION CLOSURE CHECKPOINT
+# 19. SESSION CLOSURE CHECKPOINT
 
 A session may propose closure when:
 
@@ -537,7 +527,7 @@ The user must explicitly approve closure.
 
 ---
 
-# 19. CURRENT CHECKPOINT
+# 20. CURRENT CHECKPOINT
 
 Architectural position:
 
@@ -573,7 +563,7 @@ Current implementation finding count:
 
 ---
 
-# 20. SESSION RECOVERY RULE
+# 21. SESSION RECOVERY RULE
 
 A new session must be able to reconstruct the current state from repository
 evidence alone.
@@ -596,7 +586,7 @@ The session must resolve the discrepancy before implementation work proceeds.
 
 ---
 
-# 21. REOPENING RULE
+# 22. REOPENING RULE
 
 Completed work must not be reopened without evidence.
 
@@ -612,7 +602,7 @@ Conversation history alone is not sufficient evidence.
 
 ---
 
-# 22. FINAL CONTINUITY MARKER
+# 23. FINAL CONTINUITY MARKER
 
 ARCHITECTURE:
 
@@ -646,9 +636,29 @@ CURRENT RESUME POINT:
 
 **IA-08-A03 — SECURITY AND AUTHORIZATION**
 
+CONTINUITY PACKAGE:
+
+**VERSION 2.6.0**
+
+SESSION PROMPT:
+
+**VERSION 1.6.0**
+
+HANDOFF:
+
+**VERSION 6.5.0**
+
+IMPLEMENTATION STATUS:
+
+**VERSION 2.0.0**
+
+CURRENT IMPLEMENTATION CHECKPOINT:
+
+**VERSION 1.0.0**
+
 ---
 
-# 23. FINAL INSTRUCTION
+# 24. FINAL INSTRUCTION
 
 **THE ARCHITECTURAL ROADMAP IS COMPLETE THROUGH FASE 10.**
 
@@ -663,6 +673,8 @@ CURRENT RESUME POINT:
 **READ THE AUTHORITATIVE REQUIREMENT FIRST.**
 
 **INSPECT THE EXISTING REPOSITORY SECOND.**
+
+**RESOLVE CURRENT DOCUMENT AND PLAN FILENAMES FROM REPOSITORY EVIDENCE.**
 
 **DISPOSE THE RESPONSIBILITY BASED ON EVIDENCE.**
 
