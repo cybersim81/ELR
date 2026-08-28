@@ -13,7 +13,7 @@ evidence.
 For the current implementation checkpoint, the authoritative operational
 resume point is additionally recorded in:
 
-`docs/00_Bootstrap/08_Current_Implementation_Checkpoint 1.0.0.txt`
+`docs/00_Bootstrap/08_Current_Implementation_Checkpoint.txt`
 
 ---
 
