@@ -13,7 +13,7 @@ evidence.
 For the current implementation checkpoint, the authoritative operational
 resume point is additionally recorded in:
 
-`docs/00_Bootstrap/08_Current_Implementation_Checkpoint.txt`
+`docs/00_Bootstrap/08_Current_Implementation_Checkpoint 1.0.0.txt`
 
 ---
 
@@ -135,7 +135,7 @@ Only a confirmed deviation may be implemented.
 
 ## Required Resume Procedure
 
-1. Read `docs/00_Bootstrap/08_Current_Implementation_Checkpoint.txt`.
+1. Read `docs/00_Bootstrap/08_Current_Implementation_Checkpoint 1.0.0.txt`.
 2. Read `docs/00_Bootstrap/05_Implementation_Alignment_Roadmap.txt`.
 3. Read the IA-08 implementation conformance plan.
 4. Identify the authoritative responsibility for A03.
@@ -199,7 +199,7 @@ The following remain unchanged:
 
 The current continuity chain is:
 
-`08_Current_Implementation_Checkpoint.txt`
+`08_Current_Implementation_Checkpoint 1.0.0.txt`
 ↓
 `05_Implementation_Alignment_Roadmap.txt`
 ↓
