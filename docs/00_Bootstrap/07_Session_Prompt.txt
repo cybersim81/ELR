@@ -18,6 +18,7 @@ The Bootstrap Pack provides:
 * E2E gap map;
 * implementation alignment roadmap;
 * session continuity state;
+* current implementation checkpoint;
 * this operational session prompt.
 
 The authoritative normative specifications remain the final authority in case
@@ -47,10 +48,39 @@ The current implementation work is NOT a new architectural redesign.
 The current task is responsibility-level conformance inspection against the
 authoritative normative corpus.
 
+---
+
+## Current Implementation Checkpoint
+
+The authoritative operational checkpoint is:
+
+`docs/00_Bootstrap/08_Current_Implementation_Checkpoint.txt`
+
+The new session MUST read this document first when establishing the current
+implementation state.
+
+Current checkpoint:
+
+`IA-08-A01 — COMPLETE / CLOSED`
+
+`IA-08-A02 — COMPLETE / CLOSED`
+
+`IA-08-A03 — NEXT / PENDING`
+
+`IA-08-A04 — PENDING`
+
+Current complete-suite verification baseline:
+
+`148 passed`
+
+Historical verification counts MUST NOT be interpreted as the current
+verification baseline.
+
+---
+
 ## Primary IA-08 Implementation Plan
 
-The authoritative operational implementation plan for the current IA-08
-conformance work is:
+The operational implementation plan for the current IA-08 conformance work is:
 
 `docs/07_Implementation/ELR_IA08_Implementation_Conformance_Gap_Resolution_Plan_0.1.0.txt`
 
@@ -65,9 +95,13 @@ of contradiction.
 
 ---
 
-## Completed IA-08 Finding
+================================================================================
 
-`IA-08-A01 — Application Service`
+# Completed IA-08 Findings
+
+================================================================================
+
+## IA-08-A01 — Application Service
 
 Status:
 
@@ -101,25 +135,42 @@ responsibility.
 
 ---
 
-## Verification State
+## IA-08-A02 — Transactional Event Record
 
-The completed A01 implementation has been verified through the existing
-application-service and focused verification tests.
+Status:
 
-Current complete-suite result:
+`COMPLETE / CLOSED`
+
+The transactional event-record responsibility has been implemented and
+verified.
+
+A02 MUST NOT be reopened unless new authoritative or repository evidence
+demonstrates a direct contradiction, regression, or previously undiscovered
+responsibility.
+
+---
+
+================================================================================
+
+# Verification State
+
+================================================================================
+
+Current complete-suite verification baseline:
+
+`148 passed`
+
+This is the current verification baseline associated with the completed
+IA-08-A01 and IA-08-A02 implementation-conformance work.
+
+Earlier verification counts, including:
 
 `123 passed`
 
-A01 verification includes:
+are historical and MUST NOT be treated as the current implementation
+verification state.
 
-* Review / Change Proposal coordination;
-* Category Service behavior;
-* Version behavior and persistence;
-* Audit behavior and persistence;
-* Application Error Boundary behavior;
-* transactional approval behavior;
-* rollback behavior when Audit persistence fails;
-* commit behavior when all persistence operations succeed.
+Verification claims MUST always be based on an actually executed test run.
 
 ---
 
@@ -129,23 +180,26 @@ A01 verification includes:
 
 ================================================================================
 
-`IA-08-A02 — Transactional Event Record`
+`IA-08-A03 — Security and Authorization`
 
 Status:
 
-`NEXT`
+`NEXT / PENDING`
 
-The new session MUST begin by inspecting IA-08-A02.
+The new session MUST begin by inspecting IA-08-A03.
 
-Do NOT begin by re-inspecting IA-08-A01 unless contradictory evidence is
-discovered.
+Do NOT begin by re-inspecting IA-08-A01 or IA-08-A02 unless contradictory
+evidence is discovered.
+
+The designation `NEXT / PENDING` identifies the next controlled inspection
+target. It does NOT establish that a gap exists.
 
 ---
 
-## IA-08-A02 Objective
+## IA-08-A03 Objective
 
 Determine whether the repository implementation conforms to the authoritative
-normative responsibility for the Transactional Event Record.
+normative responsibility for Security and Authorization.
 
 The inspection MUST establish:
 
@@ -175,24 +229,31 @@ Follow this sequence:
 
 `inspect → compare → responsibility disposition → implement only confirmed gap → test → verify → checkpoint → roadmap/bootstrap update → next finding`
 
-### Step 1 — Normative Inspection
+---
 
-Read the authoritative normative specifications relevant to IA-08-A02.
+## Step 1 — Normative Inspection
+
+Read the authoritative normative specifications relevant to IA-08-A03.
 
 Identify:
 
 * required responsibility;
 * required semantics;
-* persistence expectations;
-* transaction expectations;
-* lifecycle/event expectations;
-* actor/context requirements;
+* authorization rules;
+* security invariants;
+* identity and actor requirements;
+* permission boundaries;
+* persistence expectations where applicable;
+* transaction expectations where applicable;
 * required integration points;
-* explicit invariants.
+* explicit negative-path requirements;
+* required failure behavior.
 
 Do not infer requirements from filenames alone.
 
-### Step 2 — Repository Inspection
+---
+
+## Step 2 — Repository Inspection
 
 Inspect the current repository implementation.
 
@@ -200,10 +261,15 @@ Search for:
 
 * domain entities;
 * application services;
+* authorization mechanisms;
+* authentication / identity boundaries;
 * repositories;
 * persistence models;
+* API boundaries;
 * transaction boundaries;
-* event or audit representations;
+* actor propagation;
+* permission checks;
+* security-related exceptions;
 * existing tests;
 * adapters;
 * wiring;
@@ -212,7 +278,9 @@ Search for:
 Prefer existing implementation boundaries when they already satisfy the
 normative responsibility.
 
-### Step 3 — Responsibility Disposition
+---
+
+## Step 3 — Responsibility Disposition
 
 Classify the inspected responsibility as one of:
 
@@ -230,44 +298,59 @@ Use the smallest classification supported by evidence.
 
 Do not create implementation work merely to eliminate a naming difference.
 
-### Step 4 — Implementation
+Do not classify an absent named abstraction as a GAP unless the authoritative
+responsibility itself is demonstrably unfulfilled.
+
+---
+
+## Step 4 — Implementation
 
 If and only if a confirmed implementation gap exists:
 
 * modify only the necessary repository files;
 * preserve previously verified behavior;
 * preserve A01 closure;
+* preserve A02 closure;
 * avoid unrelated refactoring;
 * avoid speculative architecture;
-* keep the transaction model coherent;
-* maintain existing repository abstractions where sufficient.
+* maintain existing repository abstractions where sufficient;
+* maintain transaction semantics;
+* maintain existing domain lifecycle semantics;
+* preserve audit and version behavior.
 
-### Step 5 — Verification
+---
+
+## Step 5 — Verification
 
 After implementation:
 
 * run focused tests for the changed responsibility;
 * run relevant application-service tests;
+* run relevant integration tests;
 * run the complete test suite;
 * record exact verification results.
 
 A responsibility is not considered complete merely because the code appears
 correct.
 
-### Step 6 — Documentation
+---
+
+## Step 6 — Documentation
 
 After verification:
 
 * update the relevant IA-08 implementation roadmap;
-* update the current status;
+* update the current implementation checkpoint;
 * update the Bootstrap Pack operational state;
 * update the session continuity state;
-* update the session prompt if the next resume point changes.
+* update this session prompt if the next resume point changes.
 
 Do not modify baseline documents unless the baseline itself has materially
 changed.
 
-### Step 7 — Checkpoint
+---
+
+## Step 7 — Checkpoint
 
 A checkpoint MUST be established after a responsibility receives a final
 disposition and verification is complete.
@@ -298,6 +381,8 @@ The following operational documents MUST remain mutually consistent:
 
 `07_Session_Prompt.txt`
 
+`08_Current_Implementation_Checkpoint.txt`
+
 They MUST describe the same:
 
 * current IA-08 finding;
@@ -319,20 +404,24 @@ changed.
 ================================================================================
 
 `IA-08-A01 — Application Service`
+
 `COMPLETE / CLOSED`
 
 `IA-08-A02 — Transactional Event Record`
-`NEXT`
+
+`COMPLETE / CLOSED`
 
 `IA-08-A03 — Security and Authorization`
-`PENDING`
+
+`NEXT / PENDING`
 
 `IA-08-A04 — API Implementation`
+
 `PENDING`
 
 Current sequence:
 
-`A01 CLOSED → A02 NEXT → A03 PENDING → A04 PENDING`
+`A01 CLOSED → A02 CLOSED → A03 NEXT / PENDING → A04 PENDING`
 
 ---
 
@@ -355,7 +444,8 @@ restart:
 * IA-05 Database Wiring;
 * IA-06 Persistence Test Conformance;
 * IA-07 E2E-GATE-01;
-* IA-08-A01 Application Service.
+* IA-08-A01 Application Service;
+* IA-08-A02 Transactional Event Record.
 
 The following A01 responsibilities are closed:
 
@@ -366,8 +456,10 @@ The following A01 responsibilities are closed:
 * A01.6;
 * A01.7.
 
-They MUST remain closed unless new authoritative or repository evidence
-establishes a contradiction or regression.
+A02 is also closed.
+
+Closed responsibilities MUST remain closed unless new authoritative or
+repository evidence establishes a contradiction or regression.
 
 ---
 
@@ -411,11 +503,13 @@ Focused tests MUST pass before considering the responsibility complete.
 The complete test suite MUST be executed before declaring a finding resolved or
 conformant.
 
-Current baseline verification:
+Current verification baseline:
 
-`123 passed`
+`148 passed`
 
 Do not claim a new verification result until the test has actually been run.
+
+Historical results such as `123 passed` MUST NOT replace the current baseline.
 
 ---
 
@@ -428,17 +522,19 @@ Do not claim a new verification result until the test has actually been run.
 A new session MUST:
 
 1. read the complete Bootstrap Pack;
-2. read the current IA-08 implementation conformance roadmap;
-3. verify repository HEAD and current branch state;
-4. confirm that the Bootstrap Pack operational documents agree;
-5. resume at:
+2. read `08_Current_Implementation_Checkpoint.txt`;
+3. read the current IA-08 implementation conformance roadmap;
+4. verify repository HEAD and current branch state;
+5. confirm that the Bootstrap Pack operational documents agree;
+6. confirm the current verification baseline;
+7. resume at:
 
-`IA-08-A02 — Transactional Event Record`
+`IA-08-A03 — Security and Authorization`
 
-The new session MUST NOT assume that A02 is a gap.
+The new session MUST NOT assume that A03 is a gap.
 
-It MUST first inspect and compare the authoritative requirement with the
-existing implementation.
+It MUST first inspect and compare the authoritative requirement with the existing
+implementation.
 
 ---
 
@@ -452,25 +548,17 @@ existing implementation.
 
 `IA-08-A01 — COMPLETE / CLOSED`
 
-`A01.2 — IMPLEMENTATION VERIFIED / RESOLVED`
+`IA-08-A02 — COMPLETE / CLOSED`
 
-`A01.3 — CONFORMANT`
+`IA-08-A03 — NEXT / PENDING`
 
-`A01.4 — CONFORMANT`
+`IA-08-A04 — PENDING`
 
-`A01.5 — CONFORMANT`
+`CURRENT FULL-SUITE BASELINE — 148 PASSED`
 
-`A01.6 — RESOLVED`
+`LAST COMPLETED FINDING — IA-08-A02`
 
-`A01.7 — IMPLEMENTATION VERIFIED / RESOLVED`
-
-`A01 VERIFICATION — 123 PASSED`
-
-`IA-08-A02 — TRANSACTIONAL EVENT RECORD — NEXT`
-
-`IA-08-A03 — SECURITY AND AUTHORIZATION — PENDING`
-
-`IA-08-A04 — API IMPLEMENTATION — PENDING`
+`CURRENT FINDING — IA-08-A03`
 
 ---
 
@@ -480,11 +568,21 @@ existing implementation.
 
 ================================================================================
 
-**RESUME AT: IA-08-A02 — TRANSACTIONAL EVENT RECORD**
+**RESUME AT: IA-08-A03 — SECURITY AND AUTHORIZATION**
 
-**DO NOT REOPEN IA-08-A01 WITHOUT CONTRADICTORY EVIDENCE.**
+**IA-08-A01 — COMPLETE / CLOSED**
 
-**DO NOT ASSUME IA-08-A02 IS A GAP.**
+**IA-08-A02 — COMPLETE / CLOSED**
+
+**IA-08-A03 — NEXT / PENDING**
+
+**IA-08-A04 — PENDING**
+
+**CURRENT FULL-SUITE BASELINE — 148 PASSED**
+
+**DO NOT REOPEN IA-08-A01 OR IA-08-A02 WITHOUT CONTRADICTORY EVIDENCE.**
+
+**DO NOT ASSUME IA-08-A03 IS A GAP.**
 
 **INSPECT THE AUTHORITATIVE REQUIREMENT FIRST.**
 
@@ -498,6 +596,6 @@ existing implementation.
 
 **VERIFY THE COMPLETE TEST SUITE.**
 
-**UPDATE ROADMAP AND BOOTSTRAP STATE AFTER VERIFICATION.**
+**UPDATE THE CURRENT CHECKPOINT AND BOOTSTRAP STATE AFTER VERIFICATION.**
 
 **ESTABLISH THE NEXT CHECKPOINT BEFORE MOVING TO THE NEXT FINDING.**
