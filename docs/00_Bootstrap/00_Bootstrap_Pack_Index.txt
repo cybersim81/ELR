@@ -28,7 +28,7 @@ The Bootstrap Pack consists of:
 5. `05_Implementation_Alignment_Roadmap.txt`
 6. `06_Session_Continuity_State.txt`
 7. `07_Session_Prompt.txt`
-8. `08_Current_Implementation_Checkpoint.txt`
+8. `08_Current_Implementation_Checkpoint 1.0.0.txt`
 
 The files are intentionally ordered from normative baseline through
 implementation inventory, findings, end-to-end gaps, roadmap, continuity
@@ -306,7 +306,7 @@ regression.
 
 A new session should read:
 
-1. `08_Current_Implementation_Checkpoint.txt`
+1. `08_Current_Implementation_Checkpoint 1.0.0.txt`
 2. `05_Implementation_Alignment_Roadmap.txt`
 3. `06_Session_Continuity_State.txt`
 4. `07_Session_Prompt.txt`
@@ -353,7 +353,7 @@ The following operational documents must remain synchronized:
 
 `07_Session_Prompt.txt`
 
-`08_Current_Implementation_Checkpoint.txt`
+`08_Current_Implementation_Checkpoint 1.0.0.txt`
 
 They must describe the same:
 
