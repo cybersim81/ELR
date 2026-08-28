@@ -409,17 +409,15 @@ Status:
 
 CURRENT — IN PROGRESS
 
-Current Finding:
-
-IA-08-A02 — Transactional Event Record
-
-Completed Finding:
+Completed Findings:
 
 IA-08-A01 — Application Service
+IA-08-A02 — Transactional Event Record
 
 Status:
 
-COMPLETE / CLOSED
+A01 = COMPLETE / CLOSED
+A02 = COMPLETE / CLOSED
 
 IA-08-A01 Responsibility Status:
 
@@ -441,7 +439,7 @@ RESOLVED
 A01.7 — Transaction Boundary
 IMPLEMENTATION VERIFIED / RESOLVED
 
-A01.2 — Review / Change Proposal
+### IA-08-A01 — Application Service
 
 Implementation and verification are complete.
 
@@ -457,7 +455,16 @@ Verified:
 * REJECT coordination;
 * REQUEST REVISION coordination;
 * ReviewDecisionTrace persistence;
-* final review outcomes through the LearningReviewAdapter.
+* final review outcomes through the LearningReviewAdapter;
+* review-gated ChangeApplier execution;
+* CREATE execution;
+* MERGE execution;
+* UPDATE execution;
+* target Learning Object resolution;
+* identity preservation;
+* Version creation;
+* Audit event creation;
+* negative-path rejection for invalid or non-approved proposals.
 
 A01.2 is closed and shall not be reopened unless new contradictory evidence is
 discovered.
@@ -562,9 +569,30 @@ IA-08-A01 Closure Evidence:
 * A01.5 is CONFORMANT;
 * A01.6 is RESOLVED;
 * A01.7 is IMPLEMENTATION VERIFIED / RESOLVED;
-* full test suite: 123 passed.
+* focused ChangeApplier tests: `8 passed`;
+* application service tests: `48 passed`;
+* full test suite: `148 passed`.
 
 IA-08-A01 is therefore COMPLETE / CLOSED.
+
+### IA-08-A02 — Transactional Event Record
+
+Implementation and verification are complete.
+
+Verified:
+
+* EventRecord domain representation;
+* EventRecord persistence boundary;
+* transactional event creation;
+* LearningObjectUpdated event creation;
+* persistence integration;
+* transaction rollback behavior;
+* repository/session consistency;
+* event retrieval and read-back behavior;
+* EventRecord immutability;
+* complete integration with the existing application transaction boundary.
+
+IA-08-A02 is COMPLETE / CLOSED.
 
 ### Gate
 
@@ -572,14 +600,14 @@ IA-08-A01 is therefore COMPLETE / CLOSED.
 
 Status: `IN PROGRESS`
 
-The gate remains open because IA-08-A02 and the subsequent IA-08 findings
-remain to be assessed.
+The gate remains open because IA-08-A03 and IA-08-A04 remain to be assessed.
 
 IA-08-A01 is complete and closed.
 
+IA-08-A02 is complete and closed.
+
 Remaining IA-08 Findings:
 
-* IA-08-A02 — Transactional Event Record;
 * IA-08-A03 — Security and Authorization;
 * IA-08-A04 — API Implementation.
 
@@ -640,23 +668,18 @@ IA-08 Implementation Conformance
 │ CURRENT — IN PROGRESS
 │
 │ IA-08-A01 — COMPLETE / CLOSED
-│
-│ IA-08-A02 — NEXT
-│
-│ Transactional Event Record
+│ IA-08-A02 — COMPLETE / CLOSED
 │
 ▼
 IA-08-A03
 │
-│ PENDING
-│
+│ NEXT — PENDING
 │ Security and Authorization
 │
 ▼
 IA-08-A04
 │
 │ PENDING
-│
 │ API Implementation
 
 ## Current Status Summary
@@ -676,18 +699,22 @@ IA-08-A04
 | IA-06 Persistent Integration Tests     | COMPLETE    |     100% |
 | IA-07 E2E-GATE-01                      | COMPLETE    |     100% |
 | IA-08-A01 Application Service          | COMPLETE    |     100% |
-| IA-08-A02 Transactional Event Record   | NEXT        |        — |
-| IA-08-A03 Security and Authorization   | PENDING     |        — |
+| IA-08-A02 Transactional Event Record   | COMPLETE    |     100% |
+| IA-08-A03 Security and Authorization   | NEXT        |        — |
 | IA-08-A04 API Implementation           | PENDING     |        — |
 | IA-08 Implementation Conformance       | IN PROGRESS |        — |
 
 ## Last Completed Gate
 
+`IA-08-A02 — TRANSACTIONAL EVENT RECORD — COMPLETE / CLOSED`
+
+Verification baseline:
+
+`148 passed`
+
+The preceding completed gate was:
+
 `IA-08-A01 — APPLICATION SERVICE — COMPLETE / CLOSED`
-
-Verification:
-
-`123 passed`
 
 ## Current Work Package
 
@@ -695,15 +722,17 @@ Verification:
 
 Current finding:
 
-`IA-08-A02 — Transactional Event Record`
+`IA-08-A03 — Security and Authorization`
 
-Completed finding:
+Completed findings:
 
 `IA-08-A01 — Application Service — COMPLETE / CLOSED`
 
+`IA-08-A02 — Transactional Event Record — COMPLETE / CLOSED`
+
 ## Next Action
 
-Inspect IA-08-A02 — Transactional Event Record against the authoritative
+Inspect IA-08-A03 — Security and Authorization against the authoritative
 normative corpus and the current repository implementation.
 
 The next implementation action shall:
@@ -711,7 +740,7 @@ The next implementation action shall:
 1. inspect the authoritative responsibility semantics;
 2. inspect the existing implementation boundary;
 3. identify only confirmed implementation deviations;
-4. preserve IA-08-A01 and all previously closed responsibilities;
+4. preserve IA-08-A01 and IA-08-A02 and all previously closed responsibilities;
 5. implement only a confirmed gap;
 6. verify focused tests;
 7. verify the complete test suite;
@@ -746,6 +775,8 @@ IA-01 through IA-07 are closed.
 
 IA-08-A01 is complete and closed.
 
+IA-08-A02 is complete and closed.
+
 The next confirmed work package is:
 
-`IA-08-A02 — Transactional Event Record`
+`IA-08-A03 — Security and Authorization`
