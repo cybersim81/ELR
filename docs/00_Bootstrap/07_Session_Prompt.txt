@@ -54,7 +54,7 @@ authoritative normative corpus.
 
 The authoritative operational checkpoint is:
 
-`docs/00_Bootstrap/08_Current_Implementation_Checkpoint.txt`
+`docs/00_Bootstrap/08_Current_Implementation_Checkpoint 1.0.0.txt`
 
 The new session MUST read this document first when establishing the current
 implementation state.
@@ -381,7 +381,7 @@ The following operational documents MUST remain mutually consistent:
 
 `07_Session_Prompt.txt`
 
-`08_Current_Implementation_Checkpoint.txt`
+`08_Current_Implementation_Checkpoint 1.0.0.txt`
 
 They MUST describe the same:
 
@@ -522,7 +522,7 @@ Historical results such as `123 passed` MUST NOT replace the current baseline.
 A new session MUST:
 
 1. read the complete Bootstrap Pack;
-2. read `08_Current_Implementation_Checkpoint.txt`;
+2. read `08_Current_Implementation_Checkpoint 1.0.0.txt`;
 3. read the current IA-08 implementation conformance roadmap;
 4. verify repository HEAD and current branch state;
 5. confirm that the Bootstrap Pack operational documents agree;
