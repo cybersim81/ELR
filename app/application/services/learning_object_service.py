@@ -1,9 +1,17 @@
+from contextlib import nullcontext
 from uuid import UUID
 
 from app.application.errors import (
     EntityNotFound,
     InvalidOperation,
 )
+from app.application.security.authorization import (
+    AuthorizationService,
+)
+from app.application.security.identity import IdentityContext
+from app.application.security.permissions import Permission
+from app.application.services.audit_service import AuditService
+from app.application.services.version_service import VersionService
 from app.domain.entities.audit_record import AuditRecord
 from app.domain.entities.knowledge_statement import KnowledgeStatement
 from app.domain.entities.learning_object import (
@@ -20,10 +28,6 @@ from app.domain.repositories.learning_object_repository import (
 )
 from app.domain.repositories.version_repository import VersionRepository
 from app.events.event_record import EventRecord
-from contextlib import nullcontext
-from app.application.services.audit_service import AuditService
-from app.application.services.version_service import VersionService
-
 
 
 class LearningObjectService:
@@ -43,13 +47,14 @@ class LearningObjectService:
         transaction_factory=None,
         version_service: VersionService | None = None,
         audit_service: AuditService | None = None,
+        authorization_service: AuthorizationService | None = None,
     ):
         self.learning_object_repository = learning_object_repository
         self.version_repository = version_repository
         self.audit_repository = audit_repository
         self.event_record_repository = event_record_repository
         self.transaction_factory = (
-        transaction_factory or nullcontext
+            transaction_factory or nullcontext
         )
 
         self.version_service = (
@@ -62,17 +67,26 @@ class LearningObjectService:
             or AuditService(audit_repository)
         )
 
+        self.authorization_service = (
+            authorization_service
+            or AuthorizationService()
+        )
 
     def create_candidate(
         self,
         anchor_id: UUID,
         statement: KnowledgeStatement,
         category_id: UUID,
-        actor: str,
+        actor: IdentityContext,
     ) -> LearningObject:
         """
         Create a new Learning Object in Candidate state.
         """
+
+        self.authorization_service.require(
+            actor,
+            Permission.CREATE_CANDIDATE,
+        )
 
         learning_object = LearningObject(
             anchor_id=anchor_id,
@@ -88,7 +102,7 @@ class LearningObjectService:
             AuditRecord(
                 entity_id=learning_object.id,
                 event_type="LearningObjectCreated",
-                actor=actor,
+                actor=str(actor.actor_id),
             )
         )
 
@@ -170,8 +184,6 @@ class LearningObjectService:
 
             return learning_object
 
-
-    
     def update_knowledge(
         self,
         learning_object_id: UUID,
@@ -237,8 +249,6 @@ class LearningObjectService:
         )
 
         return learning_object
-
-
 
     def retire(
         self,
