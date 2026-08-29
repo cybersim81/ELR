@@ -198,68 +198,50 @@ class LearningObjectService:
     def update_knowledge(
         self,
         learning_object_id: UUID,
-        statement: KnowledgeStatement,
-        actor: str,
+        knowledge: KnowledgePayload,
+        actor: IdentityContext,
     ) -> LearningObject:
         """
-        Update the knowledge of an Active Learning Object.
-
-        The LearningObject remains Active.
-        A new immutable Version is created and the
-        previous Version remains preserved in history.
-
-        Persistence is coordinated through the current repository
-        session. The service does not commit autonomously; the
-        transaction boundary is owned by the caller.
+        Update knowledge and create a new immutable Version.
         """
 
-        learning_object = self._get_or_raise(
-            learning_object_id
+        self.authorization_service.require(
+            actor,
+            Permission.PROPOSE_CHANGE,
         )
 
-        try:
-            learning_object.update_knowledge(
-                statement
+        with self.transaction_factory():
+            learning_object = self._get_or_raise(
+                learning_object_id
             )
-        except InvalidStateTransition as exc:
-            raise InvalidOperation(
-                "Learning object cannot be updated."
-            ) from exc
 
-        self.learning_object_repository.save(
-            learning_object
-        )
+            try:
+                learning_object.update_knowledge(
+                    knowledge
+                )
+            except InvalidStateTransition as exc:
+                raise InvalidOperation(
+                    "Learning object cannot be updated."
+                ) from exc
 
-        version = self.version_service.create_version(
-            learning_object
-        )
+            version = self.version_service.create_version(
+                learning_object
+            )
 
-        self.audit_service.record_event(
-            entity_id=learning_object.id,
-            event_type="LearningObjectUpdated",
-            actor=actor,
-            metadata={
-                "version": version.number,
-            },
-        )
+            self.learning_object_repository.save(
+                learning_object
+            )
 
-        self.event_record_repository.save(
-            EventRecord(
+            self.audit_service.record_event(
+                entity_id=learning_object.id,
                 event_type="LearningObjectUpdated",
-                event_source="LearningObjectService",
-                aggregate_type="LearningObject",
-                aggregate_id=learning_object.id,
-                version=version.number,
-                payload={
-                    "learning_object_id": str(
-                        learning_object.id
-                    ),
-                    "new_version": version.number,
+                actor=str(actor.actor_id),
+                metadata={
+                    "version": version.number,
                 },
             )
-        )
 
-        return learning_object
+            return learning_object
 
     def retire(
         self,
