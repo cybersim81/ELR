@@ -19,12 +19,13 @@ class StubLearningReview(LearningReview):
     def review(
         self,
         proposal: ChangeProposal,
+        reviewer: str,
     ) -> ReviewDecisionTrace:
         return ReviewDecisionTrace(
             proposal_id=proposal.id,
             decision=ReviewDecision.APPROVE,
             rationale="Stub review.",
-            reviewer="test-reviewer",
+            reviewer=reviewer,
         )
 
 
@@ -42,9 +43,13 @@ def test_learning_review_returns_review_decision_trace():
 
     reviewer = StubLearningReview()
 
-    trace = reviewer.review(proposal)
+    trace = reviewer.review(
+        proposal,
+        "test-reviewer",
+    )
 
     assert isinstance(trace, ReviewDecisionTrace)
     assert trace.proposal_id == proposal.id
     assert trace.decision is ReviewDecision.APPROVE
+    assert trace.reviewer == "test-reviewer"
     assert isinstance(trace.proposal_id, UUID)
