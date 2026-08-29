@@ -108,44 +108,44 @@ class LearningObjectService:
 
         return learning_object
 
-        def submit_for_review(
-            self,
-            learning_object_id: UUID,
-            actor: IdentityContext,
-        ) -> LearningObject:
-            """
-            Candidate -> Proposed
-            """
+    def submit_for_review(
+        self,
+        learning_object_id: UUID,
+        actor: IdentityContext,
+    ) -> LearningObject:
+        """
+        Candidate -> Proposed
+        """
 
-            self.authorization_service.require(
-                actor,
-                Permission.REVIEW_KNOWLEDGE,
+        self.authorization_service.require(
+            actor,
+            Permission.REVIEW_KNOWLEDGE,
+        )
+
+        learning_object = self._get_or_raise(
+            learning_object_id
+        )
+
+        try:
+            learning_object.submit_for_review()
+        except InvalidStateTransition as exc:
+            raise InvalidOperation(
+                "Learning object cannot be submitted for review."
+            ) from exc
+
+        self.learning_object_repository.save(
+            learning_object
+        )
+
+        self.audit_repository.record(
+            AuditRecord(
+                entity_id=learning_object.id,
+                event_type="LearningObjectSubmitted",
+                actor=str(actor.actor_id),
             )
-    
-            learning_object = self._get_or_raise(
-                learning_object_id
-            )
-    
-            try:
-                learning_object.submit_for_review()
-            except InvalidStateTransition as exc:
-                raise InvalidOperation(
-                    "Learning object cannot be submitted for review."
-                ) from exc
-    
-            self.learning_object_repository.save(
-                learning_object
-            )
-    
-            self.audit_repository.record(
-                AuditRecord(
-                    entity_id=learning_object.id,
-                    event_type="LearningObjectSubmitted",
-                    actor=str(actor.actor_id),
-                )
-            )
-    
-            return learning_object
+        )
+
+        return learning_object
 
     def approve(
         self,
