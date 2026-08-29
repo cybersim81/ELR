@@ -1,6 +1,5 @@
 from datetime import datetime, timezone
 
-from app.application.security.identity import IdentityContext
 from app.domain.entities.change_proposal import ChangeProposal
 from app.domain.entities.review_decision import ReviewDecision
 from app.domain.entities.review_decision_trace import (
@@ -56,7 +55,7 @@ class LearningReviewAdapter(LearningReview):
     def review(
         self,
         proposal: ChangeProposal,
-        reviewer: IdentityContext,
+        reviewer: str,
     ) -> ReviewDecisionTrace:
         self.change_proposal_repository.add(proposal)
 
@@ -66,7 +65,7 @@ class LearningReviewAdapter(LearningReview):
             proposal_id=proposal.id,
             decision=decision,
             rationale=rationale,
-            reviewer=str(reviewer.actor_id),
+            reviewer=reviewer,
             created_at=datetime.now(timezone.utc),
         )
 
