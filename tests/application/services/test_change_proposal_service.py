@@ -35,7 +35,7 @@ class StubLearningReview(LearningReview):
     def review(
         self,
         proposal: ChangeProposal,
-        reviewer: IdentityContext,
+        reviewer: str,
     ) -> ReviewDecisionTrace:
         self.reviewer = reviewer
 
@@ -43,7 +43,7 @@ class StubLearningReview(LearningReview):
             proposal_id=proposal.id,
             decision=ReviewDecision.APPROVE,
             rationale="Approved for testing.",
-            reviewer=str(reviewer.actor_id),
+            reviewer=reviewer,
         )
 
 
@@ -74,13 +74,13 @@ class RejectingLearningReview(LearningReview):
     def review(
         self,
         proposal: ChangeProposal,
-        reviewer: IdentityContext,
+        reviewer: str,
     ) -> ReviewDecisionTrace:
         return ReviewDecisionTrace(
             proposal_id=proposal.id,
             decision=self.decision,
             rationale=self.rationale,
-            reviewer=str(reviewer.actor_id),
+            reviewer=reviewer,
         )
 
 
@@ -119,7 +119,9 @@ def test_change_proposal_service_separates_proposer_and_reviewer():
     assert isinstance(trace, ReviewDecisionTrace)
     assert trace.decision is ReviewDecision.APPROVE
 
-    assert review.reviewer is reviewer
+    assert review.reviewer == str(
+        reviewer.actor_id,
+    )
     assert len(change_applier.calls) == 1
 
     proposal, applied_trace, actor = (
