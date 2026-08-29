@@ -298,11 +298,17 @@ class LearningObjectService:
     def get(
         self,
         learning_object_id: UUID,
+        actor: IdentityContext,
     ) -> LearningObject:
         """
         Retrieve a Learning Object.
         """
-
+    
+        self.authorization_service.require(
+            actor,
+            Permission.READ_KNOWLEDGE,
+        )
+    
         return self._get_or_raise(
             learning_object_id
         )
