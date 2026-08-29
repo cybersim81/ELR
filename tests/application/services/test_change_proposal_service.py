@@ -1,6 +1,7 @@
 import pytest
 from uuid import uuid4
 
+from app.application.errors import UnauthorizedOperation
 from app.application.security.identity import IdentityContext
 from app.application.security.roles import Role
 from app.application.services.change_proposal_service import (
@@ -133,6 +134,43 @@ def test_change_proposal_service_separates_proposer_and_reviewer():
     assert actor == str(reviewer.actor_id)
 
 
+def test_change_proposal_service_rejects_unauthorized_proposer():
+    review = StubLearningReview()
+
+    review_service = LearningReviewService(
+        learning_review=review,
+    )
+
+    change_applier = StubChangeApplier()
+
+    service = ChangeProposalService(
+        learning_review_service=review_service,
+        change_applier=change_applier,
+    )
+
+    proposer = make_identity(
+        Role.KNOWLEDGE_REVIEWER,
+    )
+    reviewer = make_identity(
+        Role.KNOWLEDGE_REVIEWER,
+    )
+
+    with pytest.raises(UnauthorizedOperation):
+        service.propose(
+            change_type=ChangeType.CREATE,
+            change_payload={"statement": "Test statement"},
+            proposal_rationale="Test proposal.",
+            change_evidence=(
+                {"type": "change", "source": "test"},
+            ),
+            proposer=proposer,
+            reviewer=reviewer,
+        )
+
+    assert review.reviewer is None
+    assert change_applier.calls == []
+
+
 def test_change_proposal_service_requires_change_evidence():
     review_service = LearningReviewService(
         learning_review=StubLearningReview(),
@@ -225,6 +263,60 @@ def test_change_proposal_service_creates_revision_with_provenance():
     assert proposal.revision_number == 2
     assert applied_trace is trace
     assert actor == str(reviewer.actor_id)
+
+
+def test_change_proposal_service_rejects_unauthorized_proposer_revision():
+    review = StubLearningReview()
+
+    review_service = LearningReviewService(
+        learning_review=review,
+    )
+
+    change_applier = StubChangeApplier()
+
+    service = ChangeProposalService(
+        learning_review_service=review_service,
+        change_applier=change_applier,
+    )
+
+    previous = ChangeProposal(
+        change_type=ChangeType.CREATE,
+        change_payload={"statement": "Original"},
+        proposal_rationale="Original proposal.",
+        change_evidence=(
+            {"type": "change", "source": "test"},
+        ),
+    )
+
+    previous_trace = ReviewDecisionTrace(
+        proposal_id=previous.id,
+        decision=ReviewDecision.REQUEST_REVISION,
+        rationale="Additional evidence required.",
+        reviewer="test-reviewer",
+    )
+
+    proposer = make_identity(
+        Role.KNOWLEDGE_REVIEWER,
+    )
+    reviewer = make_identity(
+        Role.KNOWLEDGE_REVIEWER,
+    )
+
+    with pytest.raises(UnauthorizedOperation):
+        service.revise(
+            previous_proposal=previous,
+            previous_trace=previous_trace,
+            change_payload={"statement": "Revised"},
+            proposal_rationale="Revised proposal.",
+            change_evidence=(
+                {"type": "change", "source": "test-revised"},
+            ),
+            proposer=proposer,
+            reviewer=reviewer,
+        )
+
+    assert review.reviewer is None
+    assert change_applier.calls == []
 
 
 def test_change_proposal_service_does_not_apply_rejected_proposal():
