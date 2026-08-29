@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+from app.application.security.identity import IdentityContext
 from app.domain.entities.change_proposal import ChangeProposal
 from app.domain.entities.review_decision_trace import (
     ReviewDecisionTrace,
@@ -18,5 +19,6 @@ class LearningReview(ABC):
     def review(
         self,
         proposal: ChangeProposal,
+        reviewer: IdentityContext,
     ) -> ReviewDecisionTrace:
         pass
