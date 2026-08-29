@@ -1,3 +1,6 @@
+from app.application.security.authentication import (
+    AuthenticationProvider,
+)
 from app.application.security.authorization import (
     AuthorizationService,
 )
@@ -12,6 +15,7 @@ from app.application.security.roles import (
 )
 
 __all__ = [
+    "AuthenticationProvider",
     "AuthorizationService",
     "IdentityContext",
     "Permission",
