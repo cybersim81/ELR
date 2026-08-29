@@ -1,3 +1,4 @@
+from app.application.security.identity import IdentityContext
 from app.application.services.change_applier import (
     ChangeApplier,
 )
@@ -23,6 +24,7 @@ class ChangeProposalService:
     This service coordinates proposal creation, Learning Review,
     and application of approved Change Proposals.
 
+    Proposer and reviewer identities are kept separate.
     Review semantics remain delegated to Learning Review.
     Repository mutation remains delegated to ChangeApplier.
     """
@@ -41,7 +43,8 @@ class ChangeProposalService:
         change_payload: dict,
         proposal_rationale: str,
         change_evidence: tuple[dict, ...],
-        actor: str,
+        proposer: IdentityContext,
+        reviewer: IdentityContext,
         change_metadata: dict | None = None,
     ) -> ReviewDecisionTrace:
         """
@@ -57,13 +60,16 @@ class ChangeProposalService:
             change_metadata=change_metadata or {},
         )
 
-        trace = self.learning_review_service.review(proposal)
+        trace = self.learning_review_service.review(
+            proposal,
+            reviewer,
+        )
 
         if trace.decision is ReviewDecision.APPROVE:
             self.change_applier.apply(
                 proposal=proposal,
                 review_trace=trace,
-                actor=actor,
+                actor=str(reviewer.actor_id),
             )
 
         return trace
@@ -75,7 +81,8 @@ class ChangeProposalService:
         change_payload: dict,
         proposal_rationale: str,
         change_evidence: tuple[dict, ...],
-        actor: str,
+        proposer: IdentityContext,
+        reviewer: IdentityContext,
         change_metadata: dict | None = None,
     ) -> ReviewDecisionTrace:
         """
@@ -96,13 +103,16 @@ class ChangeProposalService:
             ),
         )
 
-        trace = self.learning_review_service.review(proposal)
+        trace = self.learning_review_service.review(
+            proposal,
+            reviewer,
+        )
 
         if trace.decision is ReviewDecision.APPROVE:
             self.change_applier.apply(
                 proposal=proposal,
                 review_trace=trace,
-                actor=actor,
+                actor=str(reviewer.actor_id),
             )
 
         return trace
