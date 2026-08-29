@@ -1,30 +1,24 @@
+from abc import ABC, abstractmethod
+
+from app.application.security.identity import IdentityContext
 from app.domain.entities.change_proposal import ChangeProposal
 from app.domain.entities.review_decision_trace import (
     ReviewDecisionTrace,
 )
-from app.domain.repositories.learning_review import LearningReview
 
 
-class LearningReviewService:
+class LearningReview(ABC):
     """
-    Application service for Learning Review use cases.
+    Contract for the Learning Review process.
 
-    This service coordinates the Learning Review boundary.
-    It does not implement review semantics.
+    The implementation owns review semantics.
+    Application services only coordinate the process.
     """
 
-    def __init__(
-        self,
-        learning_review: LearningReview,
-    ):
-        self.learning_review = learning_review
-
+    @abstractmethod
     def review(
         self,
         proposal: ChangeProposal,
+        reviewer: IdentityContext,
     ) -> ReviewDecisionTrace:
-        """
-        Submit a Change Proposal to the Learning Review process.
-        """
-
-        return self.learning_review.review(proposal)
+        pass
