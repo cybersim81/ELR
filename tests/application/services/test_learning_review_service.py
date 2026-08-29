@@ -33,7 +33,7 @@ class StubLearningReview(LearningReview):
     def review(
         self,
         proposal: ChangeProposal,
-        reviewer: IdentityContext,
+        reviewer: str,
     ) -> ReviewDecisionTrace:
         self.reviewer = reviewer
 
@@ -41,7 +41,7 @@ class StubLearningReview(LearningReview):
             proposal_id=proposal.id,
             decision=ReviewDecision.APPROVE,
             rationale="Approved for testing.",
-            reviewer=str(reviewer.actor_id),
+            reviewer=reviewer,
         )
 
 
@@ -50,8 +50,11 @@ def test_learning_review_service_delegates_authorized_review():
 
     proposal = ChangeProposal(
         change_type=ChangeType.CREATE,
-        change_payload={},
+        change_payload={"statement": "Test statement"},
         proposal_rationale="Test proposal.",
+        change_evidence=(
+            {"type": "change", "source": "test"},
+        ),
     )
 
     reviewer = make_identity(
@@ -70,7 +73,9 @@ def test_learning_review_service_delegates_authorized_review():
     assert isinstance(trace, ReviewDecisionTrace)
     assert trace.proposal_id == proposal.id
     assert trace.decision is ReviewDecision.APPROVE
-    assert learning_review.reviewer is reviewer
+    assert learning_review.reviewer == str(
+        reviewer.actor_id,
+    )
 
 
 def test_learning_review_service_rejects_unauthorized_reviewer():
@@ -78,8 +83,11 @@ def test_learning_review_service_rejects_unauthorized_reviewer():
 
     proposal = ChangeProposal(
         change_type=ChangeType.CREATE,
-        change_payload={},
+        change_payload={"statement": "Test statement"},
         proposal_rationale="Test proposal.",
+        change_evidence=(
+            {"type": "change", "source": "test"},
+        ),
     )
 
     reviewer = make_identity(
