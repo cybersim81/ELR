@@ -1,99 +1,45 @@
-import pytest
-from uuid import uuid4
-
-from app.application.errors import UnauthorizedOperation
+from app.application.security.authorization import (
+    AuthorizationService,
+)
 from app.application.security.identity import IdentityContext
-from app.application.security.roles import Role
-from app.application.services.learning_review_service import (
-    LearningReviewService,
-)
-from app.domain.entities.change_proposal import (
-    ChangeProposal,
-    ChangeType,
-)
-from app.domain.entities.review_decision import ReviewDecision
+from app.application.security.permissions import Permission
+from app.domain.entities.change_proposal import ChangeProposal
 from app.domain.entities.review_decision_trace import (
     ReviewDecisionTrace,
 )
 from app.domain.repositories.learning_review import LearningReview
 
 
-def make_identity(role: Role) -> IdentityContext:
-    return IdentityContext(
-        actor_id=uuid4(),
-        actor_type="Human Reviewer",
-        roles=frozenset({role.value}),
-    )
+class LearningReviewService:
+    """
+    Application service for Learning Review use cases.
 
+    This service enforces reviewer authorization before
+    delegating the review operation to the domain boundary.
+    """
 
-class StubLearningReview(LearningReview):
-    def __init__(self):
-        self.reviewer = None
+    def __init__(
+        self,
+        learning_review: LearningReview,
+        authorization_service: AuthorizationService | None = None,
+    ) -> None:
+        self.learning_review = learning_review
+        self.authorization_service = (
+            authorization_service
+            or AuthorizationService()
+        )
 
     def review(
         self,
         proposal: ChangeProposal,
         reviewer: IdentityContext,
     ) -> ReviewDecisionTrace:
-        self.reviewer = reviewer
-
-        return ReviewDecisionTrace(
-            proposal_id=proposal.id,
-            decision=ReviewDecision.APPROVE,
-            rationale="Approved for testing.",
-            reviewer=str(reviewer.actor_id),
-        )
-
-
-def test_learning_review_service_delegates_authorized_review():
-    learning_review = StubLearningReview()
-
-    proposal = ChangeProposal(
-        change_type=ChangeType.CREATE,
-        change_payload={},
-        proposal_rationale="Test proposal.",
-    )
-
-    reviewer = make_identity(
-        Role.KNOWLEDGE_REVIEWER,
-    )
-
-    service = LearningReviewService(
-        learning_review=learning_review,
-    )
-
-    trace = service.review(
-        proposal,
-        reviewer,
-    )
-
-    assert isinstance(trace, ReviewDecisionTrace)
-    assert trace.proposal_id == proposal.id
-    assert trace.decision is ReviewDecision.APPROVE
-    assert learning_review.reviewer is reviewer
-
-
-def test_learning_review_service_rejects_unauthorized_reviewer():
-    learning_review = StubLearningReview()
-
-    proposal = ChangeProposal(
-        change_type=ChangeType.CREATE,
-        change_payload={},
-        proposal_rationale="Test proposal.",
-    )
-
-    reviewer = make_identity(
-        Role.KNOWLEDGE_PRODUCER,
-    )
-
-    service = LearningReviewService(
-        learning_review=learning_review,
-    )
-
-    with pytest.raises(UnauthorizedOperation):
-        service.review(
-            proposal,
+        self.authorization_service.require(
             reviewer,
+            Permission.REVIEW_KNOWLEDGE,
         )
 
-    assert learning_review.reviewer is None
+        return self.learning_review.review(
+            proposal,
+            str(reviewer.actor_id),
+        )
