@@ -14,5 +14,9 @@ class ValidationFailure(ApplicationError):
     """Raised when application-level validation fails."""
 
 
+class UnauthenticatedOperation(ApplicationError):
+    """Raised when no valid authenticated identity is available."""
+
+
 class UnauthorizedOperation(ApplicationError):
-    """Raised when an operation is not authorized."""
+    """Raised when an authenticated identity lacks required permissions."""
