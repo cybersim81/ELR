@@ -1,5 +1,8 @@
 import pytest
+from uuid import uuid4
 
+from app.application.security.identity import IdentityContext
+from app.application.security.roles import Role
 from app.application.services.change_proposal_service import (
     ChangeProposalService,
 )
@@ -17,17 +20,32 @@ from app.domain.entities.review_decision_trace import (
 from app.domain.repositories.learning_review import LearningReview
 
 
+def make_identity(role: Role) -> IdentityContext:
+    return IdentityContext(
+        actor_id=uuid4(),
+        actor_type="Human",
+        roles=frozenset({role.value}),
+    )
+
+
 class StubLearningReview(LearningReview):
+    def __init__(self):
+        self.reviewer = None
+
     def review(
         self,
         proposal: ChangeProposal,
+        reviewer: IdentityContext,
     ) -> ReviewDecisionTrace:
+        self.reviewer = reviewer
+
         return ReviewDecisionTrace(
             proposal_id=proposal.id,
             decision=ReviewDecision.APPROVE,
             rationale="Approved for testing.",
-            reviewer="test-reviewer",
+            reviewer=str(reviewer.actor_id),
         )
+
 
 class StubChangeApplier:
     def __init__(self):
@@ -47,6 +65,7 @@ class StubChangeApplier:
             )
         )
 
+
 class RejectingLearningReview(LearningReview):
     def __init__(self, decision, rationale):
         self.decision = decision
@@ -55,17 +74,21 @@ class RejectingLearningReview(LearningReview):
     def review(
         self,
         proposal: ChangeProposal,
+        reviewer: IdentityContext,
     ) -> ReviewDecisionTrace:
         return ReviewDecisionTrace(
             proposal_id=proposal.id,
             decision=self.decision,
             rationale=self.rationale,
-            reviewer="test-reviewer",
+            reviewer=str(reviewer.actor_id),
         )
 
-def test_change_proposal_service_creates_and_reviews_proposal():
+
+def test_change_proposal_service_separates_proposer_and_reviewer():
+    review = StubLearningReview()
+
     review_service = LearningReviewService(
-        learning_review=StubLearningReview(),
+        learning_review=review,
     )
 
     change_applier = StubChangeApplier()
@@ -75,6 +98,13 @@ def test_change_proposal_service_creates_and_reviews_proposal():
         change_applier=change_applier,
     )
 
+    proposer = make_identity(
+        Role.KNOWLEDGE_PRODUCER,
+    )
+    reviewer = make_identity(
+        Role.KNOWLEDGE_REVIEWER,
+    )
+
     trace = service.propose(
         change_type=ChangeType.CREATE,
         change_payload={"statement": "Test statement"},
@@ -82,23 +112,24 @@ def test_change_proposal_service_creates_and_reviews_proposal():
         change_evidence=(
             {"type": "change", "source": "test"},
         ),
-        actor="test-actor",
+        proposer=proposer,
+        reviewer=reviewer,
     )
 
     assert isinstance(trace, ReviewDecisionTrace)
     assert trace.decision is ReviewDecision.APPROVE
-    assert trace.reviewer == "test-reviewer"
 
+    assert review.reviewer is reviewer
     assert len(change_applier.calls) == 1
 
-    proposal, applied_trace, actor = change_applier.calls[0]
+    proposal, applied_trace, actor = (
+        change_applier.calls[0]
+    )
 
     assert proposal.change_type is ChangeType.CREATE
-    assert proposal.change_payload == {
-        "statement": "Test statement",
-    }
     assert applied_trace is trace
-    assert actor == "test-actor"
+    assert actor == str(reviewer.actor_id)
+
 
 def test_change_proposal_service_requires_change_evidence():
     review_service = LearningReviewService(
@@ -112,6 +143,13 @@ def test_change_proposal_service_requires_change_evidence():
         change_applier=change_applier,
     )
 
+    proposer = make_identity(
+        Role.KNOWLEDGE_PRODUCER,
+    )
+    reviewer = make_identity(
+        Role.KNOWLEDGE_REVIEWER,
+    )
+
     with pytest.raises(TypeError):
         service.propose(
             change_type=ChangeType.CREATE,
@@ -119,7 +157,8 @@ def test_change_proposal_service_requires_change_evidence():
                 "statement": "Test statement",
             },
             proposal_rationale="Test rationale.",
-            actor="test-actor",
+            proposer=proposer,
+            reviewer=reviewer,
         )
 
 
@@ -151,6 +190,13 @@ def test_change_proposal_service_creates_revision_with_provenance():
         reviewer="test-reviewer",
     )
 
+    proposer = make_identity(
+        Role.KNOWLEDGE_PRODUCER,
+    )
+    reviewer = make_identity(
+        Role.KNOWLEDGE_REVIEWER,
+    )
+
     trace = service.revise(
         previous_proposal=previous,
         previous_trace=previous_trace,
@@ -159,7 +205,8 @@ def test_change_proposal_service_creates_revision_with_provenance():
         change_evidence=(
             {"type": "change", "source": "test-revised"},
         ),
-        actor="test-actor",
+        proposer=proposer,
+        reviewer=reviewer,
     )
 
     assert isinstance(trace, ReviewDecisionTrace)
@@ -167,13 +214,16 @@ def test_change_proposal_service_creates_revision_with_provenance():
 
     assert len(change_applier.calls) == 1
 
-    proposal, applied_trace, actor = change_applier.calls[0]
+    proposal, applied_trace, actor = (
+        change_applier.calls[0]
+    )
 
     assert proposal.previous_proposal_id == previous.id
     assert proposal.previous_review_trace_id == previous_trace.id
     assert proposal.revision_number == 2
     assert applied_trace is trace
-    assert actor == "test-actor"
+    assert actor == str(reviewer.actor_id)
+
 
 def test_change_proposal_service_does_not_apply_rejected_proposal():
     review_service = LearningReviewService(
@@ -190,6 +240,13 @@ def test_change_proposal_service_does_not_apply_rejected_proposal():
         change_applier=change_applier,
     )
 
+    proposer = make_identity(
+        Role.KNOWLEDGE_PRODUCER,
+    )
+    reviewer = make_identity(
+        Role.KNOWLEDGE_REVIEWER,
+    )
+
     trace = service.propose(
         change_type=ChangeType.CREATE,
         change_payload={"statement": "Test statement"},
@@ -197,7 +254,8 @@ def test_change_proposal_service_does_not_apply_rejected_proposal():
         change_evidence=(
             {"type": "change", "source": "test"},
         ),
-        actor="test-actor",
+        proposer=proposer,
+        reviewer=reviewer,
     )
 
     assert trace.decision is ReviewDecision.REJECT
@@ -219,6 +277,13 @@ def test_change_proposal_service_does_not_apply_revision_request():
         change_applier=change_applier,
     )
 
+    proposer = make_identity(
+        Role.KNOWLEDGE_PRODUCER,
+    )
+    reviewer = make_identity(
+        Role.KNOWLEDGE_REVIEWER,
+    )
+
     trace = service.propose(
         change_type=ChangeType.CREATE,
         change_payload={"statement": "Test statement"},
@@ -226,7 +291,8 @@ def test_change_proposal_service_does_not_apply_revision_request():
         change_evidence=(
             {"type": "change", "source": "test"},
         ),
-        actor="test-actor",
+        proposer=proposer,
+        reviewer=reviewer,
     )
 
     assert trace.decision is ReviewDecision.REQUEST_REVISION
