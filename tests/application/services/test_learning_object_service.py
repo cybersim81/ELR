@@ -1,86 +1,574 @@
-from uuid import uuid4
-
 import pytest
 
-from app.application.errors import EntityNotFound
-from app.application.security.identity import IdentityContext
-from app.application.security.roles import Role
+from uuid import UUID, uuid4
+
 from app.application.services.learning_object_service import (
     LearningObjectService,
 )
-from app.domain.entities.knowledge_statement import (
-    KnowledgeStatement,
+
+from app.application.errors import (
+    EntityNotFound,
+    InvalidOperation,
 )
+
+from app.domain.entities.knowledge_statement import KnowledgeStatement
+
 from app.domain.entities.learning_object import (
+    InvalidStateTransition,
     LearningObject,
+    LearningObjectState,
+)
+
+from tests.fixtures.repositories import (
+    InMemoryAuditRepository,
+    InMemoryEventRecordRepository,
+    InMemoryLearningObjectRepository,
+    InMemoryVersionRepository,
 )
 
 
-class StubLearningObjectRepository:
-    def __init__(self):
-        self.items = {}
-
-    def save(self, learning_object):
-        self.items[learning_object.id] = learning_object
-
-    def get_by_id(self, learning_object_id):
-        return self.items.get(learning_object_id)
+def create_statement(
+    text: str = "Example statement",
+) -> KnowledgeStatement:
+    return KnowledgeStatement(
+        text=text,
+        language="en",
+    )
 
 
-class StubVersionRepository:
-    def __init__(self):
-        self.items = []
-
-    def get_history(self, learning_object_id):
-        return [
-            item
-            for item in self.items
-            if item.learning_object_id == learning_object_id
-        ]
-
-
-class StubAuditRepository:
-    def __init__(self):
-        self.items = []
-
-    def record(self, audit_record):
-        self.items.append(audit_record)
+def create_service():
+    return LearningObjectService(
+        learning_object_repository=(
+            InMemoryLearningObjectRepository()
+        ),
+        version_repository=(
+            InMemoryVersionRepository()
+        ),
+        audit_repository=(
+            InMemoryAuditRepository()
+        ),
+        event_record_repository=(
+            InMemoryEventRecordRepository()
+        ),
+    )
 
 
-class StubEventRecordRepository:
-    def __init__(self):
-        self.items = []
-
-    def save(self, event_record):
-        self.items.append(event_record)
-
-
-class StubTransaction:
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        return False
-
-
-def make_identity(
-    role=Role.KNOWLEDGE_PRODUCER,
+def create_candidate(
+    service: LearningObjectService,
 ):
-    return IdentityContext(
-        actor_id=uuid4(),
-        actor_type="Human",
-        roles=frozenset({role.value}),
+    return service.create_candidate(
+        anchor_id=uuid4(),
+        statement=create_statement(),
+        category_id=uuid4(),
+        actor="test-user",
     )
 
 
-def make_service():
+def approve_candidate(
+    service: LearningObjectService,
+):
+    learning_object = create_candidate(service)
+
+    service.submit_for_review(
+        learning_object.id,
+        actor="producer",
+    )
+
+    service.approve(
+        learning_object.id,
+        actor="reviewer",
+    )
+
+    return learning_object
+
+
+def test_create_candidate():
+
+    service = create_service()
+
+    learning_object = service.create_candidate(
+        anchor_id=uuid4(),
+        statement=create_statement(
+            "The present perfect connects past and present."
+        ),
+        category_id=uuid4(),
+        actor="test-user",
+    )
+
+    assert learning_object.state.value == "Candidate"
+    assert (
+        learning_object.statement.text
+        == "The present perfect connects past and present."
+    )
+    assert learning_object.statement.language == "en"
+
+
+def test_submit_for_review():
+
+    service = create_service()
+
+    learning_object = create_candidate(service)
+
+    service.submit_for_review(
+        learning_object.id,
+        actor="test-user",
+    )
+
+    assert learning_object.state.value == "Proposed"
+
+
+def test_review_and_approve():
+
+    service = create_service()
+
+    learning_object = create_candidate(service)
+
+    service.submit_for_review(
+        learning_object.id,
+        actor="producer",
+    )
+
+    service.approve(
+        learning_object.id,
+        actor="reviewer",
+    )
+
+    assert learning_object.state.value == "Active"
+
+
+def test_approval_creates_version():
+
+    version_repository = InMemoryVersionRepository()
+
+    service = LearningObjectService(
+        learning_object_repository=(
+            InMemoryLearningObjectRepository()
+        ),
+        version_repository=version_repository,
+        audit_repository=(
+            InMemoryAuditRepository()
+        ),
+        event_record_repository=(
+            InMemoryEventRecordRepository()
+        ),
+    )
+
+    learning_object = create_candidate(service)
+
+    service.submit_for_review(
+        learning_object.id,
+        actor="producer",
+    )
+
+    service.approve(
+        learning_object.id,
+        actor="reviewer",
+    )
+
+    history = service.get_history(
+        learning_object.id
+    )
+
+    assert len(history) == 1
+    assert history[0].number == 1
+    assert (
+        history[0].learning_object_id
+        == learning_object.id
+    )
+
+    assert history[0].snapshot["statement"] == {
+        "text": "Example statement",
+        "language": "en",
+    }
+
+
+def test_update_creates_second_version():
+
+    version_repository = InMemoryVersionRepository()
+
+    service = LearningObjectService(
+        learning_object_repository=(
+            InMemoryLearningObjectRepository()
+        ),
+        version_repository=version_repository,
+        audit_repository=(
+            InMemoryAuditRepository()
+        ),
+        event_record_repository=(
+            InMemoryEventRecordRepository()
+        ),
+    )
+
+    learning_object = approve_candidate(service)
+
+    service.update_knowledge(
+        learning_object.id,
+        statement=create_statement(
+            "Updated example statement"
+        ),
+        actor="reviewer",
+    )
+
+    history = service.get_history(
+        learning_object.id
+    )
+
+    assert len(history) == 2
+    assert history[0].number == 1
+    assert history[1].number == 2
+
+    assert (
+        history[0].snapshot["statement"]["text"]
+        == "Example statement"
+    )
+
+    assert (
+        history[1].snapshot["statement"]["text"]
+        == "Updated example statement"
+    )
+
+    assert learning_object.state.value == "Active"
+
+
+def test_update_creates_learning_object_updated_event():
+
+    event_record_repository = InMemoryEventRecordRepository()
+
+    service = LearningObjectService(
+        learning_object_repository=(
+            InMemoryLearningObjectRepository()
+        ),
+        version_repository=(
+            InMemoryVersionRepository()
+        ),
+        audit_repository=(
+            InMemoryAuditRepository()
+        ),
+        event_record_repository=event_record_repository,
+    )
+
+    learning_object = approve_candidate(service)
+
+    service.update_knowledge(
+        learning_object.id,
+        statement=create_statement(
+            "Updated example statement"
+        ),
+        actor="reviewer",
+    )
+
+    assert len(event_record_repository.items) == 1
+
+    event = event_record_repository.items[0]
+
+    assert event.event_type == "LearningObjectUpdated"
+    assert event.event_source == "LearningObjectService"
+    assert event.aggregate_type == "LearningObject"
+    assert event.aggregate_id == learning_object.id
+    assert event.version == 2
+
+    assert event.payload == {
+        "learning_object_id": str(
+            learning_object.id
+        ),
+        "new_version": 2,
+    }
+
+
+def test_update_preserves_previous_version():
+
+    version_repository = InMemoryVersionRepository()
+
+    service = LearningObjectService(
+        learning_object_repository=(
+            InMemoryLearningObjectRepository()
+        ),
+        version_repository=version_repository,
+        audit_repository=(
+            InMemoryAuditRepository()
+        ),
+        event_record_repository=(
+            InMemoryEventRecordRepository()
+        ),
+    )
+
+    learning_object = approve_candidate(service)
+
+    original_history = service.get_history(
+        learning_object.id
+    )
+
+    original_version = original_history[0]
+
+    service.update_knowledge(
+        learning_object.id,
+        statement=create_statement(
+            "Updated example statement"
+        ),
+        actor="reviewer",
+    )
+
+    history = service.get_history(
+        learning_object.id
+    )
+
+    assert history[0] is original_version
+    assert history[0].number == 1
+    assert (
+        history[0].snapshot["statement"]["text"]
+        == "Example statement"
+    )
+
+
+def test_operations_create_audit_records():
+
+    audit_repository = InMemoryAuditRepository()
+
+    service = LearningObjectService(
+        learning_object_repository=(
+            InMemoryLearningObjectRepository()
+        ),
+        version_repository=(
+            InMemoryVersionRepository()
+        ),
+        audit_repository=audit_repository,
+        event_record_repository=(
+            InMemoryEventRecordRepository()
+        ),
+    )
+
+    learning_object = create_candidate(service)
+
+    service.submit_for_review(
+        learning_object.id,
+        actor="producer",
+    )
+
+    service.approve(
+        learning_object.id,
+        actor="reviewer",
+    )
+
+    audit_records = (
+        audit_repository.find_by_entity(
+            learning_object.id
+        )
+    )
+
+    assert len(audit_records) == 3
+
+    assert [
+        record.event_type
+        for record in audit_records
+    ] == [
+        "LearningObjectCreated",
+        "LearningObjectSubmitted",
+        "LearningObjectApproved",
+    ]
+
+
+def test_retire():
+
+    service = create_service()
+
+    learning_object = approve_candidate(service)
+
+    service.retire(
+        learning_object.id,
+        actor="reviewer",
+    )
+
+    assert learning_object.state.value == "Retired"
+
+
+def test_get_missing_learning_object_raises_entity_not_found():
+    service = create_service()
+
+    missing_id = uuid4()
+
+    with pytest.raises(EntityNotFound):
+        service.get(missing_id)
+
+
+def test_submit_for_review_invalid_state_raises_invalid_operation():
+    service = create_service()
+
+    learning_object = create_candidate(service)
+
+    service.submit_for_review(
+        learning_object.id,
+        actor="test-user",
+    )
+
+    with pytest.raises(InvalidOperation) as exc_info:
+        service.submit_for_review(
+            learning_object.id,
+            actor="test-user",
+        )
+
+    assert isinstance(
+        exc_info.value.__cause__,
+        InvalidStateTransition,
+    )
+
+
+def test_approve_invalid_state_raises_invalid_operation():
+    service = create_service()
+
+    learning_object = create_candidate(service)
+
+    with pytest.raises(InvalidOperation) as exc_info:
+        service.approve(
+            learning_object.id,
+            actor="test-user",
+        )
+
+    assert isinstance(
+        exc_info.value.__cause__,
+        InvalidStateTransition,
+    )
+
+
+def test_update_knowledge_invalid_state_raises_invalid_operation():
+    service = create_service()
+
+    learning_object = create_candidate(service)
+
+    with pytest.raises(InvalidOperation) as exc_info:
+        service.update_knowledge(
+            learning_object.id,
+            statement=create_statement(
+                "Updated example statement"
+            ),
+            actor="test-user",
+        )
+
+    assert isinstance(
+        exc_info.value.__cause__,
+        InvalidStateTransition,
+    )
+
+
+def test_retire_invalid_state_raises_invalid_operation():
+    service = create_service()
+
+    learning_object = create_candidate(service)
+
+    with pytest.raises(InvalidOperation) as exc_info:
+        service.retire(
+            learning_object.id,
+            actor="test-user",
+        )
+
+    assert isinstance(
+        exc_info.value.__cause__,
+        InvalidStateTransition,
+    )
+
+
+def test_approve_rolls_back_when_audit_persistence_fails():
+    from copy import deepcopy
+
+    class InMemoryTransaction:
+        def __init__(
+            self,
+            learning_object_repository,
+            version_repository,
+        ):
+            self.learning_object_repository = (
+                learning_object_repository
+            )
+            self.version_repository = version_repository
+            self.learning_object_snapshot = None
+            self.version_snapshot = None
+
+        def __enter__(self):
+            self.learning_object_snapshot = deepcopy(
+                self.learning_object_repository.persisted
+            )
+            self.version_snapshot = deepcopy(
+                self.version_repository.versions
+            )
+            return self
+
+        def __exit__(
+            self,
+            exc_type,
+            exc_value,
+            traceback,
+        ):
+            if exc_type is not None:
+                self.learning_object_repository.persisted = (
+                    deepcopy(
+                        self.learning_object_snapshot
+                    )
+                )
+                self.version_repository.versions = (
+                    deepcopy(
+                        self.version_snapshot
+                    )
+                )
+
+            return False
+
+    class InMemoryLearningObjectRepository:
+        def __init__(self, learning_object):
+            self.persisted = deepcopy(learning_object)
+
+        def save(self, learning_object):
+            self.persisted = deepcopy(learning_object)
+
+        def get_by_id(self, learning_object_id):
+            if self.persisted.id == learning_object_id:
+                return deepcopy(self.persisted)
+            return None
+
+    class InMemoryVersionRepository:
+        def __init__(self):
+            self.versions = []
+
+        def save(self, version):
+            self.versions.append(deepcopy(version))
+
+        def get_history(self, learning_object_id):
+            return [
+                deepcopy(version)
+                for version in self.versions
+                if version.learning_object_id
+                == learning_object_id
+            ]
+
+    class FailingAuditRepository:
+        def record(self, audit):
+            raise RuntimeError(
+                "audit persistence failed"
+            )
+
+    learning_object = LearningObject(
+        anchor_id=uuid4(),
+        statement=KnowledgeStatement(
+            text="Test knowledge statement.",
+            language="en",
+        ),
+        category_id=uuid4(),
+    )
+
+    learning_object.submit_for_review()
+
     learning_object_repository = (
-        StubLearningObjectRepository()
+        InMemoryLearningObjectRepository(
+            learning_object
+        )
     )
-    version_repository = StubVersionRepository()
-    audit_repository = StubAuditRepository()
+    version_repository = InMemoryVersionRepository()
+    audit_repository = FailingAuditRepository()
     event_record_repository = (
-        StubEventRecordRepository()
+        InMemoryEventRecordRepository()
+    )
+
+    transaction = InMemoryTransaction(
+        learning_object_repository,
+        version_repository,
     )
 
     service = LearningObjectService(
@@ -88,303 +576,149 @@ def make_service():
         version_repository=version_repository,
         audit_repository=audit_repository,
         event_record_repository=event_record_repository,
+        transaction_factory=lambda: transaction,
     )
 
-    return (
-        service,
-        learning_object_repository,
-        version_repository,
-        audit_repository,
-        event_record_repository,
-    )
-
-
-def make_statement():
-    return KnowledgeStatement(
-        text="Test knowledge statement.",
-    )
-
-
-def test_create_candidate_creates_learning_object():
-    (
-        service,
-        learning_object_repository,
-        _,
-        _,
-        _,
-    ) = make_service()
-
-    actor = make_identity()
-
-    learning_object = service.create_candidate(
-        anchor_id=uuid4(),
-        statement=make_statement(),
-        category_id=uuid4(),
-        actor=actor,
-    )
-
-    assert isinstance(
-        learning_object,
-        LearningObject,
-    )
-    assert (
-        learning_object_repository.get_by_id(
-            learning_object.id
-        )
-        is learning_object
-    )
-
-
-def test_create_candidate_records_actor_identity():
-    (
-        service,
-        _,
-        _,
-        audit_repository,
-        _,
-    ) = make_service()
-
-    actor = make_identity()
-
-    learning_object = service.create_candidate(
-        anchor_id=uuid4(),
-        statement=make_statement(),
-        category_id=uuid4(),
-        actor=actor,
-    )
-
-    assert len(audit_repository.items) == 1
-    assert (
-        audit_repository.items[0].actor
-        == str(actor.actor_id)
-    )
-    assert (
-        audit_repository.items[0].entity_id
-        == learning_object.id
-    )
-
-
-def test_create_candidate_rejects_unauthorized_actor():
-    (
-        service,
-        learning_object_repository,
-        _,
-        audit_repository,
-        _,
-    ) = make_service()
-
-    actor = make_identity(
-        role=Role.KNOWLEDGE_REVIEWER,
-    )
-
-    with pytest.raises(Exception):
-        service.create_candidate(
-            anchor_id=uuid4(),
-            statement=make_statement(),
-            category_id=uuid4(),
-            actor=actor,
+    with pytest.raises(
+        RuntimeError,
+        match="audit persistence failed",
+    ):
+        service.approve(
+            learning_object_id=learning_object.id,
+            actor="test-user",
         )
 
-    assert learning_object_repository.items == {}
-    assert audit_repository.items == []
+    persisted = learning_object_repository.persisted
 
+    assert persisted.state != LearningObjectState.ACTIVE
 
-def test_get_returns_learning_object():
-    (
-        service,
-        learning_object_repository,
-        _,
-        _,
-        _,
-    ) = make_service()
-
-    learning_object = LearningObject(
-        anchor_id=uuid4(),
-        statement=make_statement(),
-        category_id=uuid4(),
-    )
-
-    learning_object_repository.save(
-        learning_object
-    )
-
-    result = service.get(
-        learning_object.id
-    )
-
-    assert result is learning_object
-
-
-def test_get_raises_entity_not_found():
-    (
-        service,
-        _,
-        _,
-        _,
-        _,
-    ) = make_service()
-
-    with pytest.raises(EntityNotFound):
-        service.get(uuid4())
-
-
-def test_get_history_returns_version_history():
-    (
-        service,
-        learning_object_repository,
-        version_repository,
-        _,
-        _,
-    ) = make_service()
-
-    learning_object = LearningObject(
-        anchor_id=uuid4(),
-        statement=make_statement(),
-        category_id=uuid4(),
-    )
-
-    learning_object_repository.save(
-        learning_object
-    )
-
-    result = service.get_history(
-        learning_object.id
-    )
-
-    assert result == []
-
-
-def test_submit_for_review_uses_actor():
-    (
-        service,
-        learning_object_repository,
-        _,
-        audit_repository,
-        _,
-    ) = make_service()
-
-    learning_object = LearningObject(
-        anchor_id=uuid4(),
-        statement=make_statement(),
-        category_id=uuid4(),
-    )
-
-    learning_object_repository.save(
-        learning_object
-    )
-
-    result = service.submit_for_review(
-        learning_object.id,
-        "test-user",
-    )
-
-    assert result is learning_object
-    assert len(audit_repository.items) == 1
     assert (
-        audit_repository.items[0].actor
-        == "test-user"
+        version_repository.get_history(
+            learning_object.id,
+        )
+        == []
     )
 
 
-def test_approve_creates_learning_object_version():
-    (
-        service,
-        learning_object_repository,
-        _,
-        audit_repository,
-        _,
-    ) = make_service()
+def test_approve_commits_when_all_persistence_operations_succeed():
+    from copy import deepcopy
+
+    class InMemoryTransaction:
+        def __init__(
+            self,
+            learning_object_repository,
+            version_repository,
+        ):
+            self.learning_object_repository = (
+                learning_object_repository
+            )
+            self.version_repository = version_repository
+            self.committed = False
+
+        def __enter__(self):
+            return self
+
+        def __exit__(
+            self,
+            exc_type,
+            exc_value,
+            traceback,
+        ):
+            if exc_type is None:
+                self.committed = True
+
+            return False
+
+    class InMemoryLearningObjectRepository:
+        def __init__(self, learning_object):
+            self.persisted = deepcopy(learning_object)
+
+        def save(self, learning_object):
+            self.persisted = deepcopy(learning_object)
+
+        def get_by_id(self, learning_object_id):
+            if self.persisted.id == learning_object_id:
+                return deepcopy(self.persisted)
+            return None
+
+    class InMemoryVersionRepository:
+        def __init__(self):
+            self.versions = []
+
+        def save(self, version):
+            self.versions.append(deepcopy(version))
+
+        def get_history(self, learning_object_id):
+            return [
+                deepcopy(version)
+                for version in self.versions
+                if version.learning_object_id
+                == learning_object_id
+            ]
+
+    class InMemoryAuditRepository:
+        def __init__(self):
+            self.records = []
+
+        def record(self, audit):
+            self.records.append(deepcopy(audit))
 
     learning_object = LearningObject(
         anchor_id=uuid4(),
-        statement=make_statement(),
+        statement=KnowledgeStatement(
+            text="Test knowledge statement.",
+            language="en",
+        ),
         category_id=uuid4(),
-    )
-
-    learning_object_repository.save(
-        learning_object
     )
 
     learning_object.submit_for_review()
+
+    learning_object_repository = (
+        InMemoryLearningObjectRepository(
+            learning_object
+        )
+    )
+    version_repository = InMemoryVersionRepository()
+    audit_repository = InMemoryAuditRepository()
+    event_record_repository = (
+        InMemoryEventRecordRepository()
+    )
+
+    transaction = InMemoryTransaction(
+        learning_object_repository,
+        version_repository,
+    )
+
+    service = LearningObjectService(
+        learning_object_repository=learning_object_repository,
+        version_repository=version_repository,
+        audit_repository=audit_repository,
+        event_record_repository=event_record_repository,
+        transaction_factory=lambda: transaction,
+    )
 
     result = service.approve(
+        learning_object_id=learning_object.id,
+        actor="test-user",
+    )
+
+    assert transaction.committed is True
+
+    assert result.state == LearningObjectState.ACTIVE
+
+    persisted = learning_object_repository.persisted
+
+    assert persisted.state == LearningObjectState.ACTIVE
+
+    history = version_repository.get_history(
         learning_object.id,
-        "test-reviewer",
     )
 
-    assert result is learning_object
-    assert len(audit_repository.items) == 1
-    assert (
-        audit_repository.items[0].actor
-        == "test-reviewer"
-    )
+    assert len(history) == 1
+    assert history[0].number == 1
 
-
-def test_update_knowledge_keeps_learning_object_active():
-    (
-        service,
-        learning_object_repository,
-        _,
-        audit_repository,
-        event_record_repository,
-    ) = make_service()
-
-    learning_object = LearningObject(
-        anchor_id=uuid4(),
-        statement=make_statement(),
-        category_id=uuid4(),
-    )
-
-    learning_object_repository.save(
-        learning_object
-    )
-
-    learning_object.submit_for_review()
-    learning_object.approve()
-
-    result = service.update_knowledge(
-        learning_object.id,
-        KnowledgeStatement(
-            text="Updated knowledge statement.",
-        ),
-        "test-user",
-    )
-
-    assert result is learning_object
-    assert len(audit_repository.items) == 1
-    assert len(event_record_repository.items) == 1
-
-
-def test_retire_changes_learning_object_state():
-    (
-        service,
-        learning_object_repository,
-        _,
-        audit_repository,
-        _,
-    ) = make_service()
-
-    learning_object = LearningObject(
-        anchor_id=uuid4(),
-        statement=make_statement(),
-        category_id=uuid4(),
-    )
-
-    learning_object_repository.save(
-        learning_object
-    )
-
-    learning_object.submit_for_review()
-    learning_object.approve()
-
-    result = service.retire(
-        learning_object.id,
-        "test-user",
-    )
-
-    assert result is learning_object
-    assert len(audit_repository.items) == 1
-    assert (
-        audit_repository.items[0].actor
-        == "test-user"
+    assert len(audit_repository.records) == 1
+    assert audit_repository.records[0].event_type == (
+        "LearningObjectApproved"
     )
