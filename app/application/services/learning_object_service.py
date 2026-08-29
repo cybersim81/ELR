@@ -150,7 +150,7 @@ class LearningObjectService:
     def approve(
         self,
         learning_object_id: UUID,
-        actor: str,
+        actor: IdentityContext,
     ) -> LearningObject:
         """
         Proposed -> Active.
@@ -158,6 +158,12 @@ class LearningObjectService:
         Approval creates the first immutable Version and records
         the audit event within one transaction boundary.
         """
+
+        self.authorization_service.require(
+            actor,
+            Permission.APPROVE_KNOWLEDGE,
+        )
+
         with self.transaction_factory():
             learning_object = self._get_or_raise(
                 learning_object_id
@@ -181,7 +187,7 @@ class LearningObjectService:
             self.audit_service.record_event(
                 entity_id=learning_object.id,
                 event_type="LearningObjectApproved",
-                actor=actor,
+                actor=str(actor.actor_id),
                 metadata={
                     "version": version.number,
                 },
