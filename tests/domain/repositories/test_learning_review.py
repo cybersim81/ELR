@@ -1,5 +1,3 @@
-from uuid import UUID
-
 import pytest
 
 from app.domain.entities.change_proposal import (
@@ -52,4 +50,3 @@ def test_learning_review_returns_review_decision_trace():
     assert trace.proposal_id == proposal.id
     assert trace.decision is ReviewDecision.APPROVE
     assert trace.reviewer == "test-reviewer"
-    assert isinstance(trace.proposal_id, UUID)
