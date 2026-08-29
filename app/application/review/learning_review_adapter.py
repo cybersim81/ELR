@@ -1,5 +1,6 @@
 from datetime import datetime, timezone
 
+from app.application.security.identity import IdentityContext
 from app.domain.entities.change_proposal import ChangeProposal
 from app.domain.entities.review_decision import ReviewDecision
 from app.domain.entities.review_decision_trace import (
@@ -41,7 +42,6 @@ class LearningReviewAdapter(LearningReview):
         knowledge_validation: KnowledgeValidation,
         repository_consistency: RepositoryConsistency,
         review_decision_service: ReviewDecisionService,
-        reviewer: str = "learning-review",
     ):
         self.change_proposal_repository = (
             change_proposal_repository
@@ -52,11 +52,11 @@ class LearningReviewAdapter(LearningReview):
         self.knowledge_validation = knowledge_validation
         self.repository_consistency = repository_consistency
         self.review_decision_service = review_decision_service
-        self.reviewer = reviewer
 
     def review(
         self,
         proposal: ChangeProposal,
+        reviewer: IdentityContext,
     ) -> ReviewDecisionTrace:
         self.change_proposal_repository.add(proposal)
 
@@ -66,7 +66,7 @@ class LearningReviewAdapter(LearningReview):
             proposal_id=proposal.id,
             decision=decision,
             rationale=rationale,
-            reviewer=self.reviewer,
+            reviewer=str(reviewer.actor_id),
             created_at=datetime.now(timezone.utc),
         )
 
