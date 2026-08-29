@@ -1,390 +1,337 @@
-from uuid import uuid4
+from contextlib import nullcontext
+from uuid import UUID
 
-import pytest
-
-from app.application.errors import EntityNotFound
+from app.application.errors import (
+    EntityNotFound,
+    InvalidOperation,
+)
+from app.application.security.authorization import (
+    AuthorizationService,
+)
 from app.application.security.identity import IdentityContext
-from app.application.security.roles import Role
-from app.application.services.learning_object_service import (
-    LearningObjectService,
-)
-from app.domain.entities.knowledge_statement import (
-    KnowledgeStatement,
-)
+from app.application.security.permissions import Permission
+from app.application.services.audit_service import AuditService
+from app.application.services.version_service import VersionService
+from app.domain.entities.audit_record import AuditRecord
+from app.domain.entities.knowledge_statement import KnowledgeStatement
 from app.domain.entities.learning_object import (
+    InvalidStateTransition,
     LearningObject,
 )
+from app.domain.entities.version import Version
+from app.domain.repositories.audit_repository import AuditRepository
+from app.domain.repositories.event_record_repository import (
+    EventRecordRepository,
+)
+from app.domain.repositories.learning_object_repository import (
+    LearningObjectRepository,
+)
+from app.domain.repositories.version_repository import VersionRepository
+from app.events.event_record import EventRecord
 
 
-class StubLearningObjectRepository:
-    def __init__(self):
-        self.items = {}
+class LearningObjectService:
+    """
+    Application service for Learning Object use cases.
 
-    def save(self, learning_object):
-        self.items[learning_object.id] = learning_object
+    This service coordinates domain operations and repositories.
+    It contains no database or HTTP-specific logic.
+    """
 
-    def get_by_id(self, learning_object_id):
-        return self.items.get(learning_object_id)
-
-
-class StubVersionRepository:
-    def __init__(self):
-        self.items = []
-
-    def get_history(self, learning_object_id):
-        return [
-            item
-            for item in self.items
-            if item.learning_object_id == learning_object_id
-        ]
-
-
-class StubAuditRepository:
-    def __init__(self):
-        self.items = []
-
-    def record(self, audit_record):
-        self.items.append(audit_record)
-
-
-class StubEventRecordRepository:
-    def __init__(self):
-        self.items = []
-
-    def save(self, event_record):
-        self.items.append(event_record)
-
-
-class StubTransaction:
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        return False
-
-
-def make_identity(
-    role=Role.KNOWLEDGE_PRODUCER,
-):
-    return IdentityContext(
-        actor_id=uuid4(),
-        actor_type="Human",
-        roles=frozenset({role.value}),
-    )
-
-
-def make_service():
-    learning_object_repository = (
-        StubLearningObjectRepository()
-    )
-    version_repository = StubVersionRepository()
-    audit_repository = StubAuditRepository()
-    event_record_repository = (
-        StubEventRecordRepository()
-    )
-
-    service = LearningObjectService(
-        learning_object_repository=learning_object_repository,
-        version_repository=version_repository,
-        audit_repository=audit_repository,
-        event_record_repository=event_record_repository,
-    )
-
-    return (
-        service,
-        learning_object_repository,
-        version_repository,
-        audit_repository,
-        event_record_repository,
-    )
-
-
-def make_statement():
-    return KnowledgeStatement(
-        text="Test knowledge statement.",
-    )
-
-
-def test_create_candidate_creates_learning_object():
-    (
-        service,
-        learning_object_repository,
-        _,
-        _,
-        _,
-    ) = make_service()
-
-    actor = make_identity()
-
-    learning_object = service.create_candidate(
-        anchor_id=uuid4(),
-        statement=make_statement(),
-        category_id=uuid4(),
-        actor=actor,
-    )
-
-    assert isinstance(
-        learning_object,
-        LearningObject,
-    )
-    assert (
-        learning_object_repository.get_by_id(
-            learning_object.id
+    def __init__(
+        self,
+        learning_object_repository: LearningObjectRepository,
+        version_repository: VersionRepository,
+        audit_repository: AuditRepository,
+        event_record_repository: EventRecordRepository,
+        transaction_factory=None,
+        version_service: VersionService | None = None,
+        audit_service: AuditService | None = None,
+        authorization_service: AuthorizationService | None = None,
+    ):
+        self.learning_object_repository = learning_object_repository
+        self.version_repository = version_repository
+        self.audit_repository = audit_repository
+        self.event_record_repository = event_record_repository
+        self.transaction_factory = (
+            transaction_factory or nullcontext
         )
-        is learning_object
-    )
 
+        self.version_service = (
+            version_service
+            or VersionService(version_repository)
+        )
 
-def test_create_candidate_records_actor_identity():
-    (
-        service,
-        _,
-        _,
-        audit_repository,
-        _,
-    ) = make_service()
+        self.audit_service = (
+            audit_service
+            or AuditService(audit_repository)
+        )
 
-    actor = make_identity()
+        self.authorization_service = (
+            authorization_service
+            or AuthorizationService()
+        )
 
-    learning_object = service.create_candidate(
-        anchor_id=uuid4(),
-        statement=make_statement(),
-        category_id=uuid4(),
-        actor=actor,
-    )
+    def create_candidate(
+        self,
+        anchor_id: UUID,
+        statement: KnowledgeStatement,
+        category_id: UUID,
+        actor: IdentityContext,
+    ) -> LearningObject:
+        """
+        Create a new Learning Object in Candidate state.
+        """
 
-    assert len(audit_repository.items) == 1
-    assert (
-        audit_repository.items[0].actor
-        == str(actor.actor_id)
-    )
-    assert (
-        audit_repository.items[0].entity_id
-        == learning_object.id
-    )
+        self.authorization_service.require(
+            actor,
+            Permission.CREATE_CANDIDATE,
+        )
 
+        learning_object = LearningObject(
+            anchor_id=anchor_id,
+            statement=statement,
+            category_id=category_id,
+        )
 
-def test_create_candidate_rejects_unauthorized_actor():
-    (
-        service,
-        learning_object_repository,
-        _,
-        audit_repository,
-        _,
-    ) = make_service()
+        self.learning_object_repository.save(
+            learning_object
+        )
 
-    actor = make_identity(
-        role=Role.KNOWLEDGE_REVIEWER,
-    )
+        self.audit_repository.record(
+            AuditRecord(
+                entity_id=learning_object.id,
+                event_type="LearningObjectCreated",
+                actor=str(actor.actor_id),
+            )
+        )
 
-    with pytest.raises(Exception):
-        service.create_candidate(
-            anchor_id=uuid4(),
-            statement=make_statement(),
-            category_id=uuid4(),
+        return learning_object
+
+    def submit_for_review(
+        self,
+        learning_object_id: UUID,
+        actor: str,
+    ) -> LearningObject:
+        """
+        Candidate -> Proposed
+        """
+
+        learning_object = self._get_or_raise(
+            learning_object_id
+        )
+
+        try:
+            learning_object.submit_for_review()
+        except InvalidStateTransition as exc:
+            raise InvalidOperation(
+                "Learning object cannot be submitted for review."
+            ) from exc
+
+        self.learning_object_repository.save(
+            learning_object
+        )
+
+        self.audit_repository.record(
+            AuditRecord(
+                entity_id=learning_object.id,
+                event_type="LearningObjectSubmitted",
+                actor=actor,
+            )
+        )
+
+        return learning_object
+
+    def approve(
+        self,
+        learning_object_id: UUID,
+        actor: str,
+    ) -> LearningObject:
+        """
+        Proposed -> Active.
+
+        Approval creates the first immutable Version and records
+        the audit event within one transaction boundary.
+        """
+        with self.transaction_factory():
+            learning_object = self._get_or_raise(
+                learning_object_id
+            )
+
+            try:
+                learning_object.approve()
+            except InvalidStateTransition as exc:
+                raise InvalidOperation(
+                    "Learning object cannot be approved."
+                ) from exc
+
+            version = self.version_service.create_version(
+                learning_object
+            )
+
+            self.learning_object_repository.save(
+                learning_object
+            )
+
+            self.audit_service.record_event(
+                entity_id=learning_object.id,
+                event_type="LearningObjectApproved",
+                actor=actor,
+                metadata={
+                    "version": version.number,
+                },
+            )
+
+            return learning_object
+
+    def update_knowledge(
+        self,
+        learning_object_id: UUID,
+        statement: KnowledgeStatement,
+        actor: str,
+    ) -> LearningObject:
+        """
+        Update the knowledge of an Active Learning Object.
+
+        The LearningObject remains Active.
+        A new immutable Version is created and the
+        previous Version remains preserved in history.
+
+        Persistence is coordinated through the current repository
+        session. The service does not commit autonomously; the
+        transaction boundary is owned by the caller.
+        """
+
+        learning_object = self._get_or_raise(
+            learning_object_id
+        )
+
+        try:
+            learning_object.update_knowledge(
+                statement
+            )
+        except InvalidStateTransition as exc:
+            raise InvalidOperation(
+                "Learning object cannot be updated."
+            ) from exc
+
+        self.learning_object_repository.save(
+            learning_object
+        )
+
+        version = self.version_service.create_version(
+            learning_object
+        )
+
+        self.audit_service.record_event(
+            entity_id=learning_object.id,
+            event_type="LearningObjectUpdated",
             actor=actor,
+            metadata={
+                "version": version.number,
+            },
         )
 
-    assert learning_object_repository.items == {}
-    assert audit_repository.items == []
+        self.event_record_repository.save(
+            EventRecord(
+                event_type="LearningObjectUpdated",
+                event_source="LearningObjectService",
+                aggregate_type="LearningObject",
+                aggregate_id=learning_object.id,
+                version=version.number,
+                payload={
+                    "learning_object_id": str(
+                        learning_object.id
+                    ),
+                    "new_version": version.number,
+                },
+            )
+        )
 
+        return learning_object
 
-def test_get_returns_learning_object():
-    (
-        service,
-        learning_object_repository,
-        _,
-        _,
-        _,
-    ) = make_service()
+    def retire(
+        self,
+        learning_object_id: UUID,
+        actor: str,
+    ) -> LearningObject:
+        """
+        Active -> Retired
+        """
 
-    learning_object = LearningObject(
-        anchor_id=uuid4(),
-        statement=make_statement(),
-        category_id=uuid4(),
-    )
+        learning_object = self._get_or_raise(
+            learning_object_id
+        )
 
-    learning_object_repository.save(
-        learning_object
-    )
+        try:
+            learning_object.retire()
+        except InvalidStateTransition as exc:
+            raise InvalidOperation(
+                "Learning object cannot be retired."
+            ) from exc
 
-    result = service.get(
-        learning_object.id
-    )
+        self.learning_object_repository.save(
+            learning_object
+        )
 
-    assert result is learning_object
+        self.audit_repository.record(
+            AuditRecord(
+                entity_id=learning_object.id,
+                event_type="LearningObjectRetired",
+                actor=actor,
+            )
+        )
 
+        return learning_object
 
-def test_get_raises_entity_not_found():
-    (
-        service,
-        _,
-        _,
-        _,
-        _,
-    ) = make_service()
+    def get(
+        self,
+        learning_object_id: UUID,
+    ) -> LearningObject:
+        """
+        Retrieve a Learning Object.
+        """
 
-    with pytest.raises(EntityNotFound):
-        service.get(uuid4())
+        return self._get_or_raise(
+            learning_object_id
+        )
 
+    def get_history(
+        self,
+        learning_object_id: UUID,
+    ) -> list[Version]:
+        """
+        Retrieve the immutable Version history
+        of a Learning Object.
+        """
 
-def test_get_history_returns_version_history():
-    (
-        service,
-        learning_object_repository,
-        version_repository,
-        _,
-        _,
-    ) = make_service()
+        self._get_or_raise(
+            learning_object_id
+        )
 
-    learning_object = LearningObject(
-        anchor_id=uuid4(),
-        statement=make_statement(),
-        category_id=uuid4(),
-    )
+        return self.version_repository.get_history(
+            learning_object_id
+        )
 
-    learning_object_repository.save(
-        learning_object
-    )
+    def _get_or_raise(
+        self,
+        learning_object_id: UUID,
+    ) -> LearningObject:
+        """
+        Retrieve a Learning Object or raise a
+        domain-level application exception.
+        """
 
-    result = service.get_history(
-        learning_object.id
-    )
+        learning_object = (
+            self.learning_object_repository.get_by_id(
+                learning_object_id
+            )
+        )
 
-    assert result == []
+        if learning_object is None:
+            raise EntityNotFound(
+                f"Learning Object "
+                f"{learning_object_id} not found"
+            )
 
-
-def test_submit_for_review_uses_actor():
-    (
-        service,
-        learning_object_repository,
-        _,
-        audit_repository,
-        _,
-    ) = make_service()
-
-    learning_object = LearningObject(
-        anchor_id=uuid4(),
-        statement=make_statement(),
-        category_id=uuid4(),
-    )
-
-    learning_object_repository.save(
-        learning_object
-    )
-
-    result = service.submit_for_review(
-        learning_object.id,
-        "test-user",
-    )
-
-    assert result is learning_object
-    assert len(audit_repository.items) == 1
-    assert (
-        audit_repository.items[0].actor
-        == "test-user"
-    )
-
-
-def test_approve_creates_learning_object_version():
-    (
-        service,
-        learning_object_repository,
-        _,
-        audit_repository,
-        _,
-    ) = make_service()
-
-    learning_object = LearningObject(
-        anchor_id=uuid4(),
-        statement=make_statement(),
-        category_id=uuid4(),
-    )
-
-    learning_object_repository.save(
-        learning_object
-    )
-
-    learning_object.submit_for_review()
-
-    result = service.approve(
-        learning_object.id,
-        "test-reviewer",
-    )
-
-    assert result is learning_object
-    assert len(audit_repository.items) == 1
-    assert (
-        audit_repository.items[0].actor
-        == "test-reviewer"
-    )
-
-
-def test_update_knowledge_keeps_learning_object_active():
-    (
-        service,
-        learning_object_repository,
-        _,
-        audit_repository,
-        event_record_repository,
-    ) = make_service()
-
-    learning_object = LearningObject(
-        anchor_id=uuid4(),
-        statement=make_statement(),
-        category_id=uuid4(),
-    )
-
-    learning_object_repository.save(
-        learning_object
-    )
-
-    learning_object.submit_for_review()
-    learning_object.approve()
-
-    result = service.update_knowledge(
-        learning_object.id,
-        KnowledgeStatement(
-            text="Updated knowledge statement.",
-        ),
-        "test-user",
-    )
-
-    assert result is learning_object
-    assert len(audit_repository.items) == 1
-    assert len(event_record_repository.items) == 1
-
-
-def test_retire_changes_learning_object_state():
-    (
-        service,
-        learning_object_repository,
-        _,
-        audit_repository,
-        _,
-    ) = make_service()
-
-    learning_object = LearningObject(
-        anchor_id=uuid4(),
-        statement=make_statement(),
-        category_id=uuid4(),
-    )
-
-    learning_object_repository.save(
-        learning_object
-    )
-
-    learning_object.submit_for_review()
-    learning_object.approve()
-
-    result = service.retire(
-        learning_object.id,
-        "test-user",
-    )
-
-    assert result is learning_object
-    assert len(audit_repository.items) == 1
-    assert (
-        audit_repository.items[0].actor
-        == "test-user"
-    )
+        return learning_object
