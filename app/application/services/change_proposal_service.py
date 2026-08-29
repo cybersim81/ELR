@@ -1,4 +1,8 @@
+from app.application.security.authorization import (
+    AuthorizationService,
+)
 from app.application.security.identity import IdentityContext
+from app.application.security.permissions import Permission
 from app.application.services.change_applier import (
     ChangeApplier,
 )
@@ -33,9 +37,14 @@ class ChangeProposalService:
         self,
         learning_review_service: LearningReviewService,
         change_applier: ChangeApplier,
+        authorization_service: AuthorizationService | None = None,
     ) -> None:
         self.learning_review_service = learning_review_service
         self.change_applier = change_applier
+        self.authorization_service = (
+            authorization_service
+            or AuthorizationService()
+        )
 
     def propose(
         self,
@@ -51,6 +60,11 @@ class ChangeProposalService:
         Create a Change Proposal, submit it to Learning Review,
         and apply it only when the decision is APPROVE.
         """
+
+        self.authorization_service.require(
+            proposer,
+            Permission.PROPOSE_CHANGE,
+        )
 
         proposal = ChangeProposal(
             change_type=change_type,
@@ -89,6 +103,11 @@ class ChangeProposalService:
         Create a revision preserving proposal provenance,
         submit it to Learning Review, and apply it only if approved.
         """
+
+        self.authorization_service.require(
+            proposer,
+            Permission.PROPOSE_CHANGE,
+        )
 
         proposal = ChangeProposal(
             change_type=previous_proposal.change_type,
