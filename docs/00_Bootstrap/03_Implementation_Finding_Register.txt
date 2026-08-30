@@ -490,6 +490,35 @@ Verified lifecycle:
 
 ---
 
+## IA-024 — Audit Service Responsibility Boundary
+
+**Area:** Application Service / Audit
+
+**Finding:** AuditRecord coordination is now exposed through a dedicated `AuditService`, but the application does not yet apply that service boundary uniformly across all lifecycle operations that require AuditRecord coordination.
+
+**Normative expectation:** AuditRecord creation and retrieval belong to the explicit Audit Service application boundary. Audit persistence remains the responsibility of `AuditRepository`, while AuditRecord domain semantics remain owned by the domain entity.
+
+**Required change:** Ensure that application-level AuditRecord coordination is consistently routed through `AuditService`, without moving persistence responsibility out of `AuditRepository` or redefining AuditRecord domain semantics.
+
+**Resolution:** `AuditService` is implemented with `record_event()` and `get_events()` and delegates persistence and retrieval to `AuditRepository`. The verified `approve()` and `update_knowledge()` flows use the Audit Service boundary.
+
+A remaining alignment gap exists where other LearningObject lifecycle operations invoke `AuditRepository` directly instead of coordinating AuditRecord operations through `AuditService`.
+
+**Evidence:**
+
+* `app/application/services/audit_service.py`
+* `app/application/services/learning_object_service.py`
+* `app/domain/entities/audit_record.py`
+* `app/domain/repositories/audit_repository.py`
+* `app/persistence/repositories/audit_repository.py`
+* `tests/application/services/test_learning_object_service.py`
+* `tests/persistence/test_learning_object_service_persistence.py`
+
+**Status:** `ALIGNMENT REQUIRED`
+
+**Resolution note:** The dedicated Audit Service boundary is implemented and verified, but A01.5 requires uniform application of that boundary before the finding can be classified as `RESOLVED`.
+
+
 ## Finding Summary
 
 ### Resolved Findings
@@ -520,6 +549,7 @@ Verified lifecycle:
 
 * IA-011 — PRELIMINARILY CONSISTENT
 * IA-012 — PRELIMINARILY CONSISTENT
+* IA-024 — ALIGNMENT REQUIRED
 
 ### Current Interpretation
 
