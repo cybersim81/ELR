@@ -622,14 +622,26 @@ IA-08-A01 Closure Evidence:
 * A01.2 is IMPLEMENTATION VERIFIED / RESOLVED;
 * A01.3 is CONFORMANT;
 * A01.4 is CONFORMANT;
-* A01.5 is CONFORMANT;
+* A01.5 is ALIGNMENT REQUIRED;
 * A01.6 is RESOLVED;
 * A01.7 is IMPLEMENTATION VERIFIED / RESOLVED;
 * focused ChangeApplier tests: `8 passed`;
 * application service tests: `48 passed`;
 * full test suite: `148 passed`.
 
-IA-08-A01 is therefore COMPLETE / CLOSED.
+IA-08-A01 remains IN PROGRESS pending closure of A01.5.
+
+A01.5 remains open pending resolution of the Audit Service responsibility-boundary alignment identified in IA-024 of the Implementation Finding Register.
+
+The required distinction is:
+
+`AuditService` → application-level AuditRecord coordination
+
+`AuditRepository` → AuditRecord persistence and retrieval
+
+Closure of A01.5 requires verification that applicable application operations consistently use the `AuditService` boundary and that the corresponding responsibility boundary is covered by the relevant tests.
+
+Until that verification is complete, IA-08-A01 must not be recorded as COMPLETE / CLOSED.
 
 ### IA-08-A02 — Transactional Event Record
 
@@ -723,7 +735,7 @@ IA-08 Implementation Conformance
 │
 │ CURRENT — IN PROGRESS
 │
-│ IA-08-A01 — COMPLETE / CLOSED
+│ IA-08-A01 — IN PROGRESS
 │ IA-08-A02 — COMPLETE / CLOSED
 │
 ▼
@@ -754,7 +766,7 @@ IA-08-A04
 | E2E-11 Persistent End-to-End Test      | VERIFIED    |     100% |
 | IA-06 Persistent Integration Tests     | COMPLETE    |     100% |
 | IA-07 E2E-GATE-01                      | COMPLETE    |     100% |
-| IA-08-A01 Application Service          | COMPLETE    |     100% |
+| IA-08-A01 Application Service          | IN PROGRESS |        — |
 | IA-08-A02 Transactional Event Record   | COMPLETE    |     100% |
 | IA-08-A03 Security and Authorization   | NEXT        |        — |
 | IA-08-A04 API Implementation           | PENDING     |        — |
