@@ -1,0 +1,499 @@
+================================================================================
+ELR
+
+A01.4 — Version Service
+Responsibility and Conformance Guide
+
+Version: 0.1.1
+Status: RESOLVED / CONFORMANT
+=============================
+
+# 1. Purpose
+
+================================================================================
+
+This document defines the implementation and conformance disposition for
+A01.4 — Version Service.
+
+Its purpose is to establish and document the responsibility boundary for
+Version-specific application operations.
+
+This document does not redefine Version domain semantics.
+
+The authoritative ELR specification corpus remains the controlling authority.
+
+The implementation boundary documented here distinguishes:
+
+* Learning Object use-case coordination;
+* Version-specific application coordination;
+* Version domain semantics;
+* Version persistence;
+* operational audit coordination.
+
+================================================================================
+
+# 2. Current Disposition
+
+================================================================================
+
+A01.4 — Version Service
+
+Status:
+
+RESOLVED / CONFORMANT
+
+The applicable Application Service Implementation Specification defines an
+explicit Version Service responsibility with the following operations:
+
+create_version();
+get_versions().
+
+The current implementation satisfies this responsibility through the concrete
+VersionService implementation.
+
+VersionService is therefore an implemented application-service boundary and
+is not merely an optional refactoring introduced because of a naming
+difference.
+
+The implementation establishes the following responsibility placement:
+
+LearningObjectService
+│
+└── VersionService
+│
+└── VersionRepository
+
+LearningObjectService remains responsible for coordinating the originating
+Learning Object use cases.
+
+VersionService coordinates Version-specific application operations.
+
+VersionRepository remains responsible for Version persistence.
+
+Version domain semantics remain owned by the Domain Layer and the applicable
+Versioning Model.
+
+================================================================================
+
+# 3. Implementation Evidence
+
+================================================================================
+
+The current implementation provides:
+
+* `app/application/services/version_service.py`;
+* `VersionService.create_version()`;
+* `VersionService.get_versions()`;
+* injection of VersionService into LearningObjectService;
+* delegation from LearningObjectService to VersionService;
+* delegation from VersionService to VersionRepository;
+* Version history retrieval through VersionService;
+* Version numbering through the applicable Versioning Model;
+* immutable Version snapshot construction;
+* Version persistence through VersionRepository.
+
+The concrete application flow is:
+
+LearningObjectService
+↓
+VersionService.create_version()
+↓
+VersionRepository.save()
+
+Version history access is similarly coordinated through:
+
+LearningObjectService
+↓
+VersionService.get_versions()
+↓
+VersionRepository.find_by_entity()
+
+The implementation therefore establishes the Version Service responsibility
+through actual application behavior and delegation, rather than through the
+existence of a class named VersionService alone.
+
+================================================================================
+
+# 4. Responsibility Boundary
+
+================================================================================
+
+The Version Service is an application-service responsibility.
+
+Its responsibility includes:
+
+* coordinating Version creation;
+* coordinating Version history access;
+* determining the required Version operation according to the applicable
+  Versioning Model;
+* constructing the required Version state;
+* delegating Version persistence to VersionRepository;
+* participating in the transaction boundary established by the originating
+  application operation.
+
+The Version Service does not own independent Version domain semantics.
+
+The following remain outside VersionService:
+
+* Version numbering rules as domain semantics;
+* Version immutability rules;
+* snapshot semantics;
+* historical preservation semantics;
+* Learning Object lifecycle semantics;
+* persistence implementation details.
+
+The responsibility separation is therefore:
+
+Application use-case coordination
+↓
+LearningObjectService
+
+Version-specific application coordination
+↓
+VersionService
+
+Version domain semantics
+↓
+Domain Layer / Versioning Model
+
+Version persistence
+↓
+VersionRepository
+
+Operational audit coordination
+↓
+AuditService
+
+================================================================================
+
+# 5. LearningObjectService Delegation
+
+================================================================================
+
+LearningObjectService coordinates the originating Learning Object operation.
+
+When an operation requires Version creation, LearningObjectService delegates
+the Version-specific responsibility to VersionService.
+
+The implementation therefore does not require LearningObjectService to
+directly coordinate Version persistence.
+
+The resulting boundary is:
+
+LearningObjectService
+│
+└── VersionService
+│
+└── VersionRepository
+
+This separation isolates Version-specific application coordination without
+transferring ownership of Version domain semantics.
+
+================================================================================
+
+# 6. Version Persistence
+
+================================================================================
+
+Version persistence remains the responsibility of VersionRepository.
+
+VersionService does not implement an alternative persistence mechanism.
+
+VersionService delegates persistence to VersionRepository.
+
+The persistence flow is:
+
+VersionService
+↓
+VersionRepository
+↓
+Persistence Model
+↓
+Database
+
+VersionRepository therefore remains the persistence boundary for Version
+state.
+
+The introduction or use of VersionService does not alter VersionRepository
+semantics.
+
+================================================================================
+
+# 7. Transaction Boundary
+
+================================================================================
+
+VersionService participates in the transaction boundary established by the
+originating application operation.
+
+VersionService does not own an independent transaction boundary.
+
+It does not independently:
+
+* begin a transaction;
+* commit Version persistence;
+* terminate the originating transaction;
+* persist Version state outside the originating application operation.
+
+When LearningObjectService executes an operation requiring Version creation,
+Version persistence participates in the same persistence operation as the
+other state changes belonging to that application operation.
+
+The transaction relationship is therefore:
+
+Originating application operation
+↓
+Existing transaction boundary
+↓
+Learning Object persistence
++
+Version persistence
++
+Audit persistence
++
+other participating persistence
+
+VersionService coordinates Version work within this boundary.
+
+It does not replace or redefine transaction ownership.
+
+================================================================================
+
+# 8. Domain Responsibility
+
+================================================================================
+
+VersionService must not duplicate or redefine Version domain invariants.
+
+Version domain responsibility remains with the Domain Layer and applicable
+Versioning Model.
+
+In particular, VersionService does not independently redefine:
+
+* Version numbering semantics;
+* Version immutability;
+* snapshot semantics;
+* historical preservation;
+* Learning Object lifecycle semantics.
+
+The service coordinates application behavior around these domain rules.
+
+This preserves the separation between:
+
+application orchestration;
+domain semantics;
+persistence.
+
+================================================================================
+
+# 9. Verification Evidence
+
+================================================================================
+
+The existing implementation verification covers Version behavior including:
+
+* approval creates the first Version;
+* the first Version is numbered correctly;
+* the Version references the correct Learning Object;
+* the expected snapshot is preserved;
+* knowledge update creates a subsequent Version;
+* Version numbers increment correctly;
+* previous Versions remain unchanged;
+* previous snapshots remain preserved;
+* updated knowledge is represented by the new Version;
+* Version history can be retrieved;
+* Version persistence participates in the originating transaction;
+* persistence failure produces the required rollback behavior.
+
+Responsibility-boundary verification additionally establishes that:
+
+* Version creation is coordinated through VersionService;
+* Version history access is coordinated through VersionService;
+* LearningObjectService delegates Version-specific operations;
+* VersionService delegates persistence to VersionRepository;
+* VersionService does not redefine Version domain semantics;
+* VersionService does not introduce an independent transaction boundary.
+
+The A01.4 verification criterion is therefore satisfied at both levels:
+
+Behavioral Conformance
+│
+├── Version semantics
+├── Version numbering
+├── Snapshot preservation
+├── Immutability
+└── Transaction / rollback behavior
+
+Responsibility Conformance
+│
+├── Version creation
+│       └── VersionService
+│
+├── Version history
+│       └── VersionService
+│
+└── Version persistence
+└── VersionRepository
+
+================================================================================
+
+# 10. Responsibility Mapping
+
+================================================================================
+
+| Responsibility                           | Component                   |
+| ---------------------------------------- | --------------------------- |
+| Coordinate Learning Object use cases     | LearningObjectService       |
+| Coordinate Version creation              | VersionService              |
+| Coordinate Version history access        | VersionService              |
+| Enforce Version domain invariants        | Domain Layer                |
+| Define Version semantics                 | Versioning Model            |
+| Persist Version state                    | VersionRepository           |
+| Apply authorized Learning Object changes | LearningObjectChangeApplier |
+| Record operational audit information     | AuditService                |
+
+The mapping is aligned with the current implementation.
+
+The Version-specific application boundary is:
+
+```text
+LearningObjectService
+        │
+        └── VersionService
+                │
+                └── VersionRepository
+```
+
+The mapping does not transfer Version domain ownership to VersionService.
+
+================================================================================
+
+# 11. Prohibited Changes
+
+================================================================================
+
+The following changes shall not be introduced under A01.4 without authoritative
+specification or new implementation evidence:
+
+* changing Version numbering semantics;
+* changing Version immutability;
+* changing snapshot semantics;
+* changing historical preservation;
+* moving domain rules into VersionService;
+* introducing independent Version domain rules;
+* changing VersionRepository semantics;
+* bypassing the originating transaction boundary;
+* introducing an independent VersionService transaction;
+* replacing existing behavioral tests without equivalent coverage;
+* moving unrelated application responsibilities into VersionService.
+
+A01.4 must not be interpreted as requiring additional Version abstractions,
+additional domain services, or unrelated application-service restructuring.
+
+================================================================================
+
+# 12. Resolution Rule
+
+================================================================================
+
+A01.4 is resolved on the basis of responsibility-level conformance.
+
+The resolution criterion is not the existence of a class named VersionService
+alone.
+
+The required responsibility placement is:
+
+Version creation
+↓
+VersionService
+
+Version history access
+↓
+VersionService
+
+Version persistence
+↓
+VersionRepository
+
+Learning Object use-case coordination
+↓
+LearningObjectService
+
+Version domain semantics
+↓
+Domain Layer / Versioning Model
+
+The implementation satisfies this responsibility boundary.
+
+The following conditions define the resolved state:
+
+* Version creation is isolated behind VersionService;
+* Version history coordination is isolated behind VersionService;
+* LearningObjectService delegates Version-specific operations to
+  VersionService;
+* VersionService delegates persistence to VersionRepository;
+* Version domain semantics remain owned by the Domain Layer and Versioning
+  Model;
+* Version persistence remains within the originating application transaction;
+* existing Version behavior remains preserved;
+* existing behavioral verification remains satisfied.
+
+================================================================================
+
+# 13. Final Disposition
+
+================================================================================
+
+A01.4
+
+```
+    ↓
+```
+
+Version responsibility boundary established
+
+```
+    ↓
+```
+
+VersionService
+
+```
+    ↓
+```
+
+VersionRepository
+
+```
+    ↓
+```
+
+Behavioral and responsibility verification satisfied
+
+```
+    ↓
+```
+
+RESOLVED / CONFORMANT
+
+No additional Version responsibility restructuring is required by A01.4.
+
+Resolution does not require:
+
+* additional Version abstractions;
+* additional domain services;
+* changes to Version semantics;
+* changes to VersionRepository semantics;
+* changes to transaction ownership;
+* restructuring unrelated application services.
+
+Future changes affecting the documented responsibility boundary shall be
+assessed as new implementation changes.
+
+A01.4 shall not be reopened merely because an internal implementation detail
+changes, provided that the authoritative responsibility boundary and required
+behavior remain satisfied.
+
+================================================================================
+End of Document
+===============
