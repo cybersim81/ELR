@@ -36,42 +36,49 @@ The implementation boundary documented here distinguishes:
 
 ================================================================================
 
-A01.4 — Version Service
+### A01.4 — Version Service
 
-Status:
+The Version Service responsibility is explicitly established by the applicable
+Application Service Implementation Specification.
 
-RESOLVED / CONFORMANT
+The current implementation satisfies the Version Service responsibility for
+Version creation and Version-specific application coordination through
+`VersionService`.
 
-The applicable Application Service Implementation Specification defines an
-explicit Version Service responsibility with the following operations:
+`VersionService` coordinates:
 
-create_version();
-get_versions().
+* Version creation;
+* Version-specific application coordination;
+* delegation of Version persistence to `VersionRepository`.
 
-The current implementation satisfies this responsibility through the concrete
-VersionService implementation.
+However, Version history access is not yet fully isolated behind `VersionService`.
+The current `LearningObjectService` implementation performs Version history
+retrieval through the Version repository directly.
 
-VersionService is therefore an implemented application-service boundary and
-is not merely an optional refactoring introduced because of a naming
-difference.
+Therefore, the implementation currently exhibits two Version access paths:
 
-The implementation establishes the following responsibility placement:
-
+```text
 LearningObjectService
-│
-└── VersionService
-│
-└── VersionRepository
+        │
+        ├── VersionService
+        │       │
+        │       └── VersionRepository
+        │
+        └── VersionRepository
+                └── Version history retrieval
+```
 
-LearningObjectService remains responsible for coordinating the originating
-Learning Object use cases.
-
-VersionService coordinates Version-specific application operations.
-
-VersionRepository remains responsible for Version persistence.
-
+This does not transfer Version domain ownership to `VersionService`.
 Version domain semantics remain owned by the Domain Layer and the applicable
 Versioning Model.
+
+Version persistence remains owned by `VersionRepository`.
+
+The remaining A01.4 alignment item is therefore the isolation of Version
+history access behind `VersionService`, so that the documented responsibility
+boundary and the concrete application implementation converge on the same
+path.
+
 
 ================================================================================
 
