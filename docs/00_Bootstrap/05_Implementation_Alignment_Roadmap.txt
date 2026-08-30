@@ -566,6 +566,8 @@ AuditRepository provides the required persistence boundary through:
 * record();
 * find_by_entity().
 
+`AuditRepository` and `AuditService` represent distinct responsibility boundaries. `AuditRepository` owns persistence and retrieval of `AuditRecord` data, while `AuditService` owns application-level coordination of AuditRecord operations. The existence of `AuditService` does not transfer persistence responsibility from `AuditRepository` to the application service.
+
 A dedicated `AuditService` is implemented as the explicit application-service boundary for AuditRecord coordination.
 
 The implementation provides the required audit coordination operations through `record_event()` and `get_events()`, with persistence delegated to `AuditRepository`.
