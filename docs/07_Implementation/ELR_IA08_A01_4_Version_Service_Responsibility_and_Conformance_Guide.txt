@@ -4,8 +4,9 @@ ELR
 A01.4 — Version Service
 Responsibility and Conformance Guide
 
-Version: 0.1.1
+Version: 0.1.2
 Status: RESOLVED / CONFORMANT
+
 =============================
 
 # 1. Purpose
@@ -51,33 +52,28 @@ Version creation and Version-specific application coordination through
 * Version-specific application coordination;
 * delegation of Version persistence to `VersionRepository`.
 
-However, Version history access is not yet fully isolated behind `VersionService`.
-The current `LearningObjectService` implementation performs Version history
-retrieval through the Version repository directly.
+Version history access is coordinated through `VersionService`.
 
-Therefore, the implementation currently exhibits two Version access paths:
+`VersionService` therefore provides the application-service boundary for both Version creation and Version history access.
+
+The current responsibility path is:
 
 ```text
 LearningObjectService
         │
-        ├── VersionService
-        │       │
-        │       └── VersionRepository
-        │
-        └── VersionRepository
-                └── Version history retrieval
+        └── VersionService
+                │
+                └── VersionRepository
 ```
 
+Version-specific application operations are therefore isolated behind `VersionService`, while Version persistence remains delegated to `VersionRepository`.
+
 This does not transfer Version domain ownership to `VersionService`.
-Version domain semantics remain owned by the Domain Layer and the applicable
-Versioning Model.
+Version domain semantics remain owned by the Domain Layer and the applicable Versioning Model.
 
 Version persistence remains owned by `VersionRepository`.
 
-The remaining A01.4 alignment item is therefore the isolation of Version
-history access behind `VersionService`, so that the documented responsibility
-boundary and the concrete application implementation converge on the same
-path.
+The A01.4 responsibility boundary is therefore established consistently across Version creation, Version history access, and Version persistence.
 
 
 ================================================================================
@@ -106,25 +102,35 @@ VersionService.create_version()
 ↓
 VersionRepository.save()
 
-Version history retrieval is currently implemented through a direct repository path:
+Version history retrieval is implemented through the Version Service boundary:
 
-LearningObjectService
-↓
-VersionRepository.find_by_entity()
-
-Although VersionService provides `get_versions()`, the current LearningObjectService implementation does not yet consistently route Version history access through that service boundary.
-
-The implementation therefore establishes the Version Service responsibility for Version creation and persistence delegation, while Version history coordination remains an outstanding responsibility-boundary alignment item.
-
-The remaining implementation alignment is:
-
+```text
 LearningObjectService
 ↓
 VersionService.get_versions()
 ↓
 VersionRepository.find_by_entity()
+```
 
-No change to Version domain semantics or VersionRepository persistence responsibility is implied by this alignment.
+`VersionService.get_versions()` provides the application-level coordination point for Version history access, while `VersionRepository.find_by_entity()` remains responsible for the underlying persistence operation.
+
+The concrete Version application boundary is therefore:
+
+```text
+LearningObjectService
+↓
+VersionService
+├── create_version()
+└── get_versions()
+        ↓
+VersionRepository
+```
+
+The implementation establishes the required Version Service responsibility for both Version creation and Version history access.
+
+VersionService delegates Version persistence and Version history retrieval to VersionRepository without redefining Version domain semantics or persistence responsibility.
+
+No independent transaction boundary is introduced by VersionService.
 
 
 ================================================================================
@@ -328,10 +334,20 @@ Responsibility-boundary verification establishes that:
 * VersionService does not redefine Version domain semantics;
 * VersionService does not introduce an independent transaction boundary.
 
-Version history responsibility is not yet fully conformant to the documented boundary because LearningObjectService currently retains a direct VersionRepository history-retrieval path.
+Version history responsibility is coordinated through VersionService.
+
+Responsibility-boundary verification therefore establishes that:
+
+* Version creation is coordinated through VersionService;
+* Version history access is coordinated through VersionService;
+* LearningObjectService delegates Version responsibilities to VersionService;
+* VersionService delegates Version persistence and Version history retrieval to VersionRepository;
+* VersionService does not redefine Version domain semantics;
+* VersionService does not introduce an independent transaction boundary.
 
 Therefore:
 
+```text
 Behavioral Conformance
 │
 ├── Version semantics
@@ -339,19 +355,24 @@ Behavioral Conformance
 ├── Snapshot preservation
 ├── Immutability
 └── Transaction / rollback behavior
+```
 
+```text
 Responsibility Conformance
 │
 ├── Version creation
 │       └── VersionService
 │
 ├── Version history
-│       └── Alignment remaining
+│       └── VersionService
 │
 └── Version persistence
-└── VersionRepository
+        └── VersionRepository
+```
 
-The verification therefore confirms the implemented VersionService boundary for Version creation and persistence delegation, but does not establish full A01.4 responsibility-level conformance until Version history access is isolated behind VersionService.
+The verification confirms the implemented VersionService responsibility boundary for Version creation and Version history access, together with delegation of Version persistence to VersionRepository.
+
+A01.4 responsibility-level conformance is therefore established.
 
 
 ================================================================================
@@ -364,7 +385,7 @@ The verification therefore confirms the implemented VersionService boundary for 
 | ---------------------------------------- | --------------------------- |
 | Coordinate Learning Object use cases     | LearningObjectService       |
 | Coordinate Version creation              | VersionService              |
-| Coordinate Version history access        | VersionService (alignment remaining) |
+| Coordinate Version history access        | VersionService              |
 | Enforce Version domain invariants        | Domain Layer                |
 | Define Version semantics                 | Versioning Model            |
 | Persist Version state                    | VersionRepository           |
@@ -373,28 +394,31 @@ The verification therefore confirms the implemented VersionService boundary for 
 
 The mapping is aligned with the current implementation.
 
-The intended Version-specific application boundary is:
+The Version-specific application boundary is:
 
 ```text
 LearningObjectService
         │
         └── VersionService
                 │
+                ├── Version creation
+                │
+                ├── Version history access
+                │
                 └── VersionRepository
+                        └── Version persistence
 ```
 
-The current implementation still contains the following Version history path:
-
-```text
-LearningObjectService
-        │
-        └── VersionRepository
-                └── Version history retrieval
-```
-
-The direct history path is the remaining A01.4 implementation-alignment item.
+`VersionService` owns the application-level coordination of Version operations.
 
 The mapping does not transfer Version domain ownership to VersionService.
+
+The Domain Layer and applicable Versioning Model remain authoritative for Version semantics, numbering, immutability, snapshot behavior, and historical preservation.
+
+VersionRepository remains the persistence boundary for Version state.
+
+The responsibility mapping therefore establishes a single documented application path for Version-specific operations.
+
 
 ================================================================================
 
@@ -419,10 +443,6 @@ specification or new implementation evidence:
 
 A01.4 must not be interpreted as requiring additional Version abstractions,
 additional domain services, or unrelated application-service restructuring.
-
-================================================================================
-
-# 12. Resolution Rule
 
 ================================================================================
 
@@ -456,23 +476,19 @@ Version domain semantics
 ↓
 Domain Layer / Versioning Model
 
-The current implementation satisfies the required VersionService responsibility for Version creation and persistence delegation.
+The current implementation satisfies the required VersionService responsibility for Version creation and Version history access.
 
-The Version history responsibility is not yet fully satisfied because LearningObjectService retains a direct VersionRepository history-retrieval path.
+VersionService delegates Version persistence and Version history retrieval to VersionRepository.
 
-The remaining alignment condition is:
+LearningObjectService delegates Version-specific application operations to VersionService.
 
-* Version history access must be coordinated through VersionService;
-* LearningObjectService must delegate Version history access to VersionService;
-* VersionService must delegate Version history retrieval to VersionRepository;
-* Version domain semantics must remain owned by the Domain Layer and Versioning Model;
-* Version persistence must remain within the originating application transaction;
-* existing Version behavior must remain preserved.
+Version domain semantics remain owned by the Domain Layer and applicable Versioning Model.
 
-Until the Version history path is isolated behind VersionService, A01.4 shall remain classified as partially implemented / alignment remaining.
+Version persistence remains within the originating application transaction.
 
-No additional Version abstractions, domain services, or unrelated application-service restructuring are required by this alignment item.
+Existing Version behavior remains preserved and verified.
 
+No additional Version abstractions, domain services, or unrelated application-service restructuring are required by A01.4.
 
 ================================================================================
 
@@ -486,7 +502,13 @@ A01.4
     ↓
 ```
 
-VersionService responsibility for Version creation established
+Version creation coordinated through VersionService
+
+```
+    ↓
+```
+
+Version history access coordinated through VersionService
 
 ```
     ↓
@@ -498,21 +520,35 @@ Version persistence delegated to VersionRepository
     ↓
 ```
 
-Version history access remains partially outside the VersionService boundary
+Version domain semantics remain within the Domain Layer / Versioning Model
 
 ```
     ↓
 ```
 
-Implementation alignment remaining
+Existing transaction boundary preserved
 
 ```
     ↓
 ```
 
-PARTIALLY IMPLEMENTED / ALIGNMENT REMAINING
+Behavioral and responsibility-level verification established
 
-The remaining A01.4 alignment item is limited to routing Version history access through VersionService.
+```
+    ↓
+```
+
+RESOLVED / CONFORMANT
+
+A01.4 is therefore considered resolved and conformant.
+
+The Version Service responsibility boundary is explicitly established through VersionService for:
+
+* Version creation;
+* Version history access;
+* Version-specific application coordination.
+
+VersionService delegates persistence to VersionRepository and does not redefine Version domain semantics or transaction ownership.
 
 No change is required to:
 
@@ -525,7 +561,7 @@ No change is required to:
 * transaction ownership;
 * unrelated application services.
 
-A01.4 shall be reassessed as fully conformant after the Version history responsibility is isolated behind VersionService and the corresponding implementation evidence and tests confirm the resulting boundary.
+The implementation and the architectural documentation are therefore aligned on the A01.4 Version Service responsibility boundary.
 
 ================================================================================
 End of Document
