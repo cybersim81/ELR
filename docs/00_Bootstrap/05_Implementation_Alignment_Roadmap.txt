@@ -566,10 +566,26 @@ AuditRepository provides the required persistence boundary through:
 * record();
 * find_by_entity().
 
-No dedicated AuditService is required solely by naming difference.
+A dedicated `AuditService` is implemented as the explicit application-service boundary for AuditRecord coordination.
 
-A01.5 is CONFORMANT and shall not be reopened unless new contradictory
-evidence is discovered.
+The implementation provides the required audit coordination operations through `record_event()` and `get_events()`, with persistence delegated to `AuditRepository`.
+
+The existence of `AuditService` is therefore an implementation responsibility established by the current application-service specification and implementation. Conformance must be assessed on the responsibility boundary and its usage, not merely on the presence of a class with the expected name.
+
+Full A01.5 conformance shall require:
+
+* `AuditService` to remain the explicit application-service boundary for AuditRecord coordination;
+* application-level AuditRecord creation and retrieval to be coordinated through `AuditService`;
+* `AuditService` to delegate AuditRecord persistence to `AuditRepository`;
+* `AuditService` not to redefine or duplicate the domain semantics of `AuditRecord`;
+* application-level lifecycle operations that require AuditRecord coordination to use the `AuditService` boundary rather than invoking `AuditRepository` directly;
+* AuditRecord persistence to remain within the originating application transaction boundary;
+* audit persistence failure to preserve the required rollback behavior;
+* the resulting Audit Service responsibility boundary to be covered by appropriate tests.
+
+The presence of `AuditService` alone is not sufficient to establish full A01.5 conformance. Conformance depends on consistent application of the responsibility boundary across the applicable application operations.
+
+
 
 A01.6 — Application Error Boundary
 
