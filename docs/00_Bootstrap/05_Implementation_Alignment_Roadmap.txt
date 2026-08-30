@@ -487,25 +487,51 @@ evidence is discovered.
 
 A01.4 — Version Service
 
-Versioning behavior is implemented and verified.
+The Version Service responsibility is explicitly established by the applicable
+Application Service Implementation Specification.
 
-Verified:
+The current implementation satisfies this responsibility through
+`VersionService`.
 
-* Version domain entity;
-* immutable Version representation;
-* VersionRepository;
-* version history retrieval;
-* first-version creation during approval;
-* subsequent-version creation during knowledge update;
-* sequential version numbering;
-* immutable historical snapshots;
-* preservation of previous versions;
-* transactional integration with Learning Object persistence.
+`VersionService` coordinates:
 
-No dedicated VersionService is required solely by naming difference.
+* Version creation;
+* Version history access;
+* Version-specific application coordination;
+* delegation of Version persistence to `VersionRepository`.
 
-A01.4 is CONFORMANT and shall not be reopened unless new contradictory
-evidence is discovered.
+`LearningObjectService` remains responsible for coordinating the originating
+Learning Object use cases and delegates Version-specific operations to
+`VersionService`.
+
+Version domain semantics remain owned by the Domain Layer and the applicable
+Versioning Model.
+
+Version persistence remains owned by `VersionRepository`.
+
+The resulting responsibility boundary is:
+
+```text
+LearningObjectService
+        │
+        └── VersionService
+                │
+                └── VersionRepository
+```
+
+VersionService participates in the originating application transaction and
+does not establish an independent transaction boundary.
+
+A01.4 is therefore an implementation-conformance item with the required
+Version Service responsibility boundary already established.
+
+No additional VersionService introduction, naming-only refactoring, or
+responsibility restructuring is required.
+
+Status:
+
+RESOLVED / CONFORMANT
+
 
 A01.5 — Audit Service
 
