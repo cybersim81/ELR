@@ -485,52 +485,47 @@ Verified:
 A01.3 is CONFORMANT and shall not be reopened unless new contradictory
 evidence is discovered.
 
-A01.4 — Version Service
+### A01.4 — Version Service
 
 The Version Service responsibility is explicitly established by the applicable
 Application Service Implementation Specification.
 
-The current implementation satisfies this responsibility through
-`VersionService`.
+The current implementation provides a dedicated `VersionService` for
+Version-specific application coordination.
 
 `VersionService` coordinates:
 
 * Version creation;
-* Version history access;
 * Version-specific application coordination;
 * delegation of Version persistence to `VersionRepository`.
 
+Version history retrieval is currently exposed through the
+`LearningObjectService` application boundary and delegates directly to the
+applicable Version repository operation.
+
 `LearningObjectService` remains responsible for coordinating the originating
-Learning Object use cases and delegates Version-specific operations to
-`VersionService`.
+Learning Object use cases.
 
 Version domain semantics remain owned by the Domain Layer and the applicable
 Versioning Model.
 
 Version persistence remains owned by `VersionRepository`.
 
-The resulting responsibility boundary is:
+The resulting implementation responsibility boundary is therefore:
 
 ```text
 LearningObjectService
         │
-        └── VersionService
-                │
-                └── VersionRepository
+        ├── VersionService
+        │       │
+        │       └── VersionRepository
+        │
+        └── VersionRepository
+                └── Version history retrieval
 ```
 
-VersionService participates in the originating application transaction and
-does not establish an independent transaction boundary.
-
-A01.4 is therefore an implementation-conformance item with the required
-Version Service responsibility boundary already established.
-
-No additional VersionService introduction, naming-only refactoring, or
-responsibility restructuring is required.
-
-Status:
-
-RESOLVED / CONFORMANT
+Accordingly, A01.4 is implemented in part, but the Version history access
+responsibility is not yet fully isolated behind `VersionService`.
 
 
 A01.5 — Audit Service
