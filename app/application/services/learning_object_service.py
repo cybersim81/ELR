@@ -301,7 +301,7 @@ class LearningObjectService:
             learning_object_id
         )
 
-        return self.version_repository.get_history(
+        return self.version_service.get_versions(
             learning_object_id
         )
 
