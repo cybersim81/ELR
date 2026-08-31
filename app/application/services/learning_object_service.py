@@ -266,7 +266,7 @@ class LearningObjectService:
         self.audit_service.record_event(
             entity_id=learning_object.id,
             event_type="LearningObjectRetired",
-            actor=actor,
+            actor=str(actor.actor_id),
         )
 
         return learning_object
