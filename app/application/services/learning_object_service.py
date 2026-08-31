@@ -51,8 +51,11 @@ class LearningObjectService:
     ):
         self.learning_object_repository = learning_object_repository
         self.version_repository = version_repository
-        self.audit_repository = audit_repository
         self.event_record_repository = event_record_repository
+	    self.audit_service = (
+    	    audit_service
+    	    or AuditService(audit_repository)
+	    )
         self.transaction_factory = (
             transaction_factory or nullcontext
         )
