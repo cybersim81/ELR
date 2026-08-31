@@ -12,6 +12,7 @@ from app.application.security.identity import IdentityContext
 from app.application.security.permissions import Permission
 from app.application.services.audit_service import AuditService
 from app.application.services.version_service import VersionService
+from app.domain.entities.audit_record import AuditRecord
 from app.domain.entities.knowledge_statement import KnowledgeStatement
 from app.domain.entities.learning_object import (
     InvalidStateTransition,
@@ -278,12 +279,12 @@ class LearningObjectService:
         """
         Retrieve a Learning Object.
         """
-
+    
         self.authorization_service.require(
             actor,
             Permission.READ_KNOWLEDGE,
         )
-
+    
         return self._get_or_raise(
             learning_object_id
         )
@@ -302,23 +303,6 @@ class LearningObjectService:
         )
 
         return self.version_repository.get_history(
-            learning_object_id
-        )
-
-    def get_audit_history(
-        self,
-        learning_object_id: UUID,
-    ) -> list:
-        """
-        Retrieve AuditRecord history through the
-        explicit AuditService application boundary.
-        """
-
-        self._get_or_raise(
-            learning_object_id
-        )
-
-        return self.audit_service.get_events(
             learning_object_id
         )
 
