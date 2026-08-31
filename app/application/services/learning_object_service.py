@@ -19,6 +19,7 @@ from app.domain.entities.learning_object import (
     LearningObject,
 )
 from app.domain.entities.version import Version
+from app.domain.value_objects.knowledge_payload import KnowledgePayload
 from app.domain.repositories.audit_repository import AuditRepository
 from app.domain.repositories.event_record_repository import (
     EventRecordRepository,
@@ -241,7 +242,7 @@ class LearningObjectService:
     def retire(
         self,
         learning_object_id: UUID,
-        actor: str,
+        actor: IdentityContext,
     ) -> LearningObject:
         """
         Active -> Retired
@@ -278,7 +279,6 @@ class LearningObjectService:
         """
         Retrieve a Learning Object.
         """
-    
         self.authorization_service.require(
             actor,
             Permission.READ_KNOWLEDGE,
