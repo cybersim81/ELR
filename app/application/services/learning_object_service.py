@@ -283,7 +283,7 @@ class LearningObjectService:
             actor,
             Permission.READ_KNOWLEDGE,
         )
-    
+
         return self._get_or_raise(
             learning_object_id
         )
